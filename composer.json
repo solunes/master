@@ -15,6 +15,9 @@
         ]
     },
     "autoload": {
+        "classmap": [
+            "src/database/migrations"
+        ],
         "psr-4": {
             "Solunes\\Master\\": "src/"
         }
