@@ -1,0 +1,25 @@
+{
+    "name": "solunes/master",
+    "description": "Paquete maestro para Solunes Digital.",
+    "keywords": ["laravel", "solunes", "master"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Solunes Digital",
+            "email": "info@solunes.com"
+        }
+    ],
+    "autoload-dev": {
+        "classmap": [
+            "tests/GeneralTest.php"
+        ]
+    },
+    "autoload": {
+        "psr-4": {
+            "Solunes\\Master\\": "src/"
+        }
+    },
+    "require": {
+        "illuminate/support": "~5"
+    }
+}

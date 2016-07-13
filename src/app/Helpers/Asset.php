@@ -1,0 +1,168 @@
+<?php 
+
+namespace Solunes\Master\App\Helpers;
+
+use Image;
+use Storage;
+
+class Asset {
+
+    public static function get_image($folder, $code, $file, $class = 'img-responsive') {
+    	$response = Asset::get_image_path($folder, $code, $file);
+		if($response){
+			return '<img src="'.$response.'" class="'.$class.'" />';
+		} else {
+			return false;
+		}
+    }
+
+    public static function get_image_path($folder, $code, $file) {
+		switch (config('filesystems.default')) {
+		  case 's3':
+			return Storage::disk('s3')->getDriver()->getAdapter()->getClient()->getObjectUrl(config('filesystems.disks.s3.bucket'), $folder.'/'.$code.'/'.$file);			
+			break;
+		  default:
+			return asset('storage/'.$folder.'/'.$code.'/'.$file);
+			break;
+		}
+    }
+
+    public static function upload_image($file, $folder, $encode = false) {
+		$filename = $folder.'_'.substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 20);
+		$image_folder = \Solunes\Master\App\ImageFolder::where('name', $folder)->first();
+		if($image_folder&&count($image_folder->image_sizes)>0){
+		  $size_extension = $image_folder->extension;
+		  $new_filename = public_path('tmp/'.$filename.'.'.$size_extension);
+		  $image_sizes = $image_folder->image_sizes()->get(['code','type','width','height'])->toArray();
+		  array_push($image_sizes, ['code'=>'mini','type'=>'fit','width'=>150,'height'=>150]);
+		  foreach($image_sizes as $size){
+		    $type = $size['type'];
+		    if($encode===true){
+		    	if(config('app.system')=='linux'){
+			    	$encoded_file = utf8_decode(utf8_encode($file));
+			    } else {
+			    	$encoded_file = utf8_decode($file);
+			    }
+		    } else {
+		    	$encoded_file = $file;
+		    }
+		    try {
+				$img = \Image::make($encoded_file)->$type($size['width'], $size['height'], function ($constraint) {
+					$constraint->aspectRatio();
+	    			//$constraint->upsize();
+				})->encode($size_extension)->save($new_filename);
+			} catch (\Intervention\Image\Exception\NotReadableException $e) {
+				return false;
+			}
+			$handle = fopen($new_filename, 'r+');
+    		Storage::put($folder.'/'.$size['code'].'/'.$filename.'.'.$size_extension, $handle);
+    		fclose($handle);
+    		unlink($new_filename);
+		  }
+		  return $filename.'.'.$size_extension;
+		} else {
+			return false;
+		}
+    }
+
+    public static function get_file($folder, $file) {
+    	$url = $folder.'/'.$file;
+		switch (config('filesystems.default')) {
+		  case 's3':
+			return Storage::disk('s3')->getDriver()->getAdapter()->getClient()->getObjectUrl(config('filesystems.disks.s3.bucket'), $url);
+			break;
+		  default:
+			return asset('storage/'.$folder.'/'.$file);
+			break;
+		}
+    }
+
+    public static function upload_file($file, $folder, $encode = false) {
+    	if(is_object($file)){
+    		$file_info = pathinfo($file->getClientOriginalName());
+			$filename = time().'_'.\Illuminate\Support\Str::slug($file_info['filename']).'.'.$file->getClientOriginalExtension();
+			$file->move('tmp', $filename);
+    	} else {
+			$file_info = pathinfo($file);
+		    if($encode===true){
+			    if(config('app.system')=='linux'){
+			    	$file = utf8_decode(utf8_encode($file_info['dirname'].'/'.$file_info['basename']));
+			    } else {
+			    	$file = utf8_decode($file_info['dirname'].'/'.$file_info['basename']);
+			    }
+			} else {
+				$file = $file_info['dirname'].'/'.$file_info['basename'];
+			}
+			$filename = time().'_'.\Illuminate\Support\Str::slug($file_info['filename']).'.'.$file_info['extension'];
+			copy($file, 'tmp/'.$filename);
+    	}
+		$handle = fopen('tmp/'.$filename, 'r+');
+	    Storage::put($folder.'/'.$filename, $handle);
+	    fclose($handle);
+	    unlink('tmp/'.$filename);
+		return $filename;
+    }
+
+    public static function seed($folder, $extension = 'JPG') {
+	    $files = glob('seed/'.$folder . '/*.'.$extension);
+	    $file = array_rand($files);
+	    return $files[$file];
+    }
+
+    public static function delete_temp($type = NULL, $folder = NULL, $file = NULL) {
+    	if($type&&$folder&&$file){
+	  		$temp_files = \Solunes\Master\App\TempFile::where('type', $type)->where('folder', $folder)->where('file', $file)->get();
+    	} else {
+    		$date = date('Y-m-d H:i:s', strtotime(' -1 day'));
+        	$temp_files = \Solunes\Master\App\TempFile::where('created_at', '<', $date)->get();
+    	}
+        if(count($temp_files)>0){
+        	foreach($temp_files as $temp){
+			  	\Asset::delete_file($temp->type, $temp->folder, $temp->file);
+        		$temp->delete();
+        	}
+        } else if($type&&$folder&&$file){
+        	\Asset::delete_file($type, $folder, $file);
+        }
+        return true;
+    }
+
+    public static function delete_saved_files($file_fields, $item) {
+        if(count($file_fields)>0){
+            foreach($file_fields as $field){
+                $file_name = $field->name;
+                $folder = $field->field_extras()->where('type','folder')->first()->value;
+                if($field->multiple){
+                	foreach(json_decode($item->$file_name) as $subfile){
+                		\Asset::delete_file($field->type, $folder, $subfile);
+                	}
+                } else {
+                	\Asset::delete_file($field->type, $folder, $item->$file_name);
+                }
+            }
+        }
+        return true;
+    }
+
+    public static function delete_file($type, $folder, $file) {
+    	if($folder&&$file&&$file!=''&&$file!=NULL){
+			if($type=='image'){
+				if(\Solunes\Master\App\ImageSize::where('folder', $folder)->count()>0){
+					foreach(\App\ImageSize::where('folder', $folder)->orWhere('folder', 'mini')->get() as $size){
+					  	if(\Storage::has($folder.'/'.$size->code.'/'.$file)){
+					  		\Storage::delete($folder.'/'.$size->code.'/'.$file);
+					  	}
+					}
+				} 
+			} else {
+				if(\Storage::has($folder.'/'.$file)){
+					\Storage::delete($folder.'/'.$file);
+				}
+	        }
+        	return true;
+    	} else {
+    		return false;
+    	}
+    }
+
+}
