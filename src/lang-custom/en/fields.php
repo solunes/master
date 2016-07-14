@@ -15,6 +15,7 @@ return [
     'code' => 'Code',
     'content' => 'Content',
     'created_at' => 'Creation Date',
+    'deleted_at' => 'Deletion Date',
     'email' => 'Email',
     'id' => 'ID',
     'image' => 'Image',

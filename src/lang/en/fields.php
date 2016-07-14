@@ -27,6 +27,7 @@ return [
     'day' => 'Día',
     'delay' => 'Retraso',
     'description' => 'Descripción',
+    'deleted_at' => 'Deletion Date',
     'display' => 'Mostrar',
     'display_item' => 'Mostrar Item',
     'display_list' => 'Mostrar Lista',

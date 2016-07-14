@@ -34,4 +34,9 @@ return [
     'activity' => 'Activity|Activities',
     'notification' => 'Notification|Notifications',
 
+    // MENU
+    'my_account' => 'My Account',
+    'profile' => 'Profile',
+    'logout' => 'Logout',
+
 ];

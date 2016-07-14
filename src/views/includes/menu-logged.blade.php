@@ -31,11 +31,11 @@
   @endforeach
 </ul>
 @if(Auth::check())
-  <p class="dnl-nav-title">{{ trans('main.account') }}</p>
+  <p class="dnl-nav-title">{{ trans('master::model.my_account') }}</p>
   <ul class="dnl-nav">
     <li><a href="{{ url('account') }}"><span class="dnl-link-icon"><i class="fa fa-user"></i></span>
-    <span class="dnl-link-text">{{ trans('main.profile') }}</span></a></li>
+    <span class="dnl-link-text">{{ trans('master::model.profile') }}</span></a></li>
     <li><a href="{{ url('auth/logout') }}"><span class="dnl-link-icon"><i class="fa fa-sign-out"></i></span>
-    <span class="dnl-link-text">{{ trans('main.logout') }}</span></a></li>
+    <span class="dnl-link-text">{{ trans('master::model.logout') }}</span></a></li>
   </ul>
 @endif

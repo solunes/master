@@ -526,12 +526,12 @@ class AdminList {
     public static function generate_query_excel($array) {
         $dir = public_path('excel');
         array_map('unlink', glob($dir.'/*'));
-        $file = \Excel::create(trans_choice('model.'.$array['model'], 2).'_'.date('Y-m-d'), function($excel) use($array) {
+        $file = \Excel::create($array['node']->plural.'_'.date('Y-m-d'), function($excel) use($array) {
             $excel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $excel->sheet(trans_choice('model.'.$array['model'], 2), function($sheet) use($array) {
+            $excel->sheet($array['node']->plural, function($sheet) use($array) {
                 $col_array = [];
                 foreach($array['fields'] as $field){
-                    array_push($col_array, trans('fields.'.$field->name));
+                    array_push($col_array, $field->label);
                 }
                 $sheet->row(1, $col_array);
                 $sheet->row(1, function($row) {
