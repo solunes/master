@@ -14,7 +14,7 @@
     {!! Form::open(AdminItem::make_form($module, $model, $action, $files)) !!}
   @endif
   @if(($action=='edit'||$action=='view')&&isset($parent_nodes)&&count($parent_nodes)>0)
-    @include('includes.parent-form')
+    @include('master::includes.parent-form')
     <h4>{{ trans_choice('model.'.$model, 1) }}</h4>
   @endif
   @include('master::includes.form')
