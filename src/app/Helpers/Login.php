@@ -101,7 +101,7 @@ class Login {
         if($custom_check!='none'){
             if($custom_check=='true'){
                 $return = true;
-            } else {
+            } else if($custom_check=='false') {
                 $return = false;
             }
         } else {
