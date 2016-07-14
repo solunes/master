@@ -10,6 +10,7 @@ return [
     */
 
     // GLOBAL FIELDS
+    'active' => 'Active?',
     'address' => 'Address',
     'city' => 'City',
     'code' => 'Code',
@@ -28,6 +29,7 @@ return [
     'message' => 'Message',
     'name' => 'Name',
     'node' => 'Node',
+    'observations' => 'Observations',
     'order' => 'Order',
     'parent' => 'From',
     'password' => 'Password',
@@ -35,7 +37,9 @@ return [
     'remember_token' => 'Remember Token',
     'role_user' => 'Role User',
     'section' => 'Section',
+    'slug' => 'Slug',
     'status' => 'Status',
+    'title' => 'Title',
     'updated_at' => 'Last Update',
     'url' => 'URL',
     'user' => 'User',

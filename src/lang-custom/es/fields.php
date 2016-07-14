@@ -10,6 +10,7 @@ return [
     */
 
     // GLOBAL FIELDS
+    'active' => 'Activo?',
     'address' => 'Dirección',
     'city' => 'Ciudad',
     'code' => 'Código',
@@ -28,6 +29,7 @@ return [
     'message' => 'Mensaje',
     'name' => 'Nombre',
     'node' => 'Nodo',
+    'observations' => 'Observaciones',
     'order' => 'Ordren',
     'parent' => 'De',
     'password' => 'Contraseña',
@@ -35,7 +37,9 @@ return [
     'remember_token' => 'Token de Sesión',
     'role_user' => 'Rol',
     'section' => 'Sección',
+    'slug' => 'Slug',
     'status' => 'Estado',
+    'title' => 'Título',
     'updated_at' => 'Última Edición',
     'url' => 'URL',
     'user' => 'Usuario',

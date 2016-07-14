@@ -105,6 +105,7 @@ return [
     'singular' => 'Singular',
     'slug' => 'Slug',
     'social_networks' => 'Redes Sociales',
+    'soft_delete' => 'Soft Delete',
     'status' => 'Estado',
     'table_name' => 'Nombre de Tabla',
     'title' => 'Título',
