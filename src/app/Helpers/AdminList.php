@@ -20,7 +20,7 @@ class AdminList {
         $module = $object->module;
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
         $model = $node->model;
-        if(\Login::check_permission('list', $module, $node)===false){
+        if(\Login::check_permission('list', $module, $node, 'list')===false){
             return \Login::redirect_dashboard('no_permission');
         }
 
