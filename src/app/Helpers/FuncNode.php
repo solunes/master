@@ -160,7 +160,7 @@ class FuncNode {
         $menu_array = \Solunes\Master\App\Menu::where('menu_type', 'admin')->where('level', 1)->lists('id');
         if($node->type=='site'&&!$node->parent_id){
             if(!$menu_site = \Solunes\Master\App\MenuTranslation::whereIn('menu_id', $menu_array)->where('name', 'Secciones')->first()){
-                $menu_site = \Solunes\Master\App\Menu::create(['type'=>'blank', 'menu_type'=>'admin', 'icon'=>'th-list', 'es'=>['name'=>'Secciones']]);
+                $menu_site = \Solunes\Master\App\Menu::create(['type'=>'blank', 'menu_type'=>'admin', 'permission'=>'dashboard', 'icon'=>'th-list', 'es'=>['name'=>'Secciones']]);
             }
             \Solunes\Master\App\Menu::create(['menu_type'=>'admin', 'permission'=>$node->permission, 'parent_id'=>$menu_site->id, 'level'=>2, 'icon'=>'th-list', 'es'=>['name'=>$node->plural, 'link'=>'admin/model-list/'.$node->name]]);
         } else if($node->type=='system'&&!$node->parent_id) {

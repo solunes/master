@@ -30,7 +30,7 @@ class GenerateNodes extends Command
         $this->info('20%: Las tablas fueron limpiadas.');
         $nodes = \Solunes\Master\App\Node::get();
         $total_count = 0;
-        \Solunes\Master\App\Menu::create(['menu_type'=>'admin', 'icon'=>'dashboard', 'es'=>['name'=>'Dashboard', 'link'=>'admin']]);
+        \Solunes\Master\App\Menu::create(['menu_type'=>'admin', 'permission'=>'dashboard', 'icon'=>'dashboard', 'es'=>['name'=>'Dashboard', 'link'=>'admin']]);
         foreach($nodes as $node){
           $table_name = $node->table_name;
           $columns = \Schema::getColumnListing($table_name);
