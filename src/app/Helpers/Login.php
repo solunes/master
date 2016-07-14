@@ -96,8 +96,8 @@ class Login {
         return $return;
     }
 
-    public static function check_permission($type, $module, $node) {
-        if(\CustomFunc::check_permission($type, $module, $node)===true){
+    public static function check_permission($type, $module, $node, $action, $id = NULL) {
+        if(\CustomFunc::check_permission($type, $module, $node, $action, $id)===true){
             $return = true;
         } else {
             if($module=='process'){
