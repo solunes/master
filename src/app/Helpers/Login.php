@@ -99,7 +99,11 @@ class Login {
     public static function check_permission($type, $module, $node, $action, $id = NULL) {
         $custom_check = \CustomFunc::check_permission($type, $module, $node, $action, $id);
         if($custom_check!='none'){
-            $return = $custom_check;
+            if($custom_check=='true'){
+                $return = true;
+            } else {
+                $return = false;
+            }
         } else {
             if($module=='process'){
                 $return = true;
