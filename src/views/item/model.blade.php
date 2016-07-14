@@ -15,7 +15,7 @@
   @endif
   @if(($action=='edit'||$action=='view')&&isset($parent_nodes)&&count($parent_nodes)>0)
     @include('master::includes.parent-form')
-    <h4>{{ trans_choice('model.'.$model, 1) }}</h4>
+    <h4>{{ $node->singular }}</h4>
   @endif
   @include('master::includes.form')
   @if($dt!='view')
