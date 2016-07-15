@@ -22,7 +22,7 @@ class AccountController extends Controller {
 
     public function postPassword(Request $request) {
 	  $error_messages = array(
-		'password.confirmed' => trans('form.email_exists_error'),
+		'password.confirmed' => trans('form.password_match_error'),
   	  );
 	  $validator = Validator::make($request->all(), User::$rules_edit_pass, $error_messages);
 	  if ($validator->passes()) {
@@ -30,7 +30,14 @@ class AccountController extends Controller {
 		$user->password = $request->input('password');
 		$user->status = 'Normal';
 		$user->save();
-		return redirect('admin')->with('message_success', trans('form.password_edited'));
+		if($request->has('intended_url')){
+			$redirect = urldecode($request->input('intended_url'));
+		} else if(!\Auth::user()->can('dashboard')) {
+			$redirect = '';
+		} else {
+			$redirect = 'admin';
+		}
+		return redirect($redirect)->with('message_success', trans('form.password_edited'));
 	  } else {
 		return redirect('account')->with(array('message_error' => trans('form.error_form')))->withErrors($validator)->withInput();
 	  }

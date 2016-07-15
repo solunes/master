@@ -50,6 +50,9 @@ class Login {
         if($type==false){
             return redirect()->intended($redirect)->with('message_success', $message);
         } else {
+            if($session->has('url.intended')){
+                $redirect .= '?intended_url='.urlencode($session->get('url.intended'));
+            }
             return redirect($redirect)->with('message_success', $message);
         }
     }
@@ -77,7 +80,7 @@ class Login {
             $password_reminder->save();
         }
         Mail::send('emails.auth.reminder', ['token' => $token], function($m) use($email) {
-            $m->to($email, 'User')->subject(env('APP_NAME').' | '.trans('mail.remind_password_title'));
+            $m->to($email, 'User')->subject(config()->get('app.name').' | '.trans('mail.remind_password_title'));
         });          
         return redirect($redirect)->with('message_success', $message);
     }
