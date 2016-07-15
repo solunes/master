@@ -66,8 +66,8 @@ return array(
 	"no_permission" => "You do not have the right permission to access this page.",
 
 	// FILE LIMITATIONS
-	"file_limitations" => "The file must be: PDF, DOC, DOCX, XLSX, XLS, JPG, JPEG, PNG or GIF.";
-	"image_limitations" => "The file must be: JPG, JPEG, PNG or GIF.";
+	"file_limitations" => "The file must be: PDF, DOC, DOCX, XLSX, XLS, JPG, JPEG, PNG or GIF.",
+	"image_limitations" => "The file must be: JPG, JPEG, PNG or GIF.",
 
 	// RANKS
 	"superadmin" => "Super Admin",
