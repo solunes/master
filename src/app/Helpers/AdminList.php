@@ -363,10 +363,10 @@ class AdminList {
             foreach($filters as $filter){
                 $filter_value = json_decode($filter->value_array, true);
                 foreach($filter_value as $fil_val){
-                    if($filter->parameter=='custom'||$filter->parameter=='parent_field'){
+                    if($filter->parameter=='custom'||$filter->parameter=='parent_field'||$filter->parameter=='custom_function'){
                         $field_name = $fil_val['name'];
                         if($filter->parameter=='parent_field'){
-                            $parent_node = \App\Node::where('name', $fil_val['parent'])->first();
+                            $parent_node = \Solunes\Master\App\Node::where('name', $fil_val['parent'])->first();
                         }
                         $custom_data = $fil_val['data'];
                    } else {
@@ -387,26 +387,6 @@ class AdminList {
                         if($f_date_to){
                           $items = $items->where($field_name, '<=', $f_date_to.' 23:59:59');
                           $appends['f_date_to'] = $f_date_to;
-                        }
-                    } else if($filter->parameter=='point'){
-                        $array['customer_object'] = \App\Customer::orderBy('name','ASC')->with('points')->get();
-                        $array['search_customer'] = ['any'=>trans('admin.any')]+\App\Customer::orderBy('name','ASC')->lists('name','id')->toArray();
-                        $f_point='any';
-                        $f_customer='any';
-                        if(request()->input('f_point')){ $f_point = request()->input('f_point'); }
-                        if(request()->input('f_customer')){ $f_customer = request()->input('f_customer'); }
-                        if($f_customer!='any'){
-                          $array['search_point'] = ['any'=>trans('admin.any')]+\App\CustomerPoint::where('customer_id',$f_customer)->orderBy('name','ASC')->lists('name','id')->toArray();
-                          $appends['f_customer'] = $f_customer;
-                        } else {
-                          $array['search_point'] = ['any'=>trans('admin.any')];
-                        }
-                        if($f_point!='any'){ 
-                          $items = $items->where('point_id', $f_point);
-                          $appends['f_point'] = $f_point;
-                        } else if($f_customer!='any'){ 
-                          $customers_array = \App\Customer::find($f_customer)->points()->lists('id')->toArray();
-                          $items = $items->whereIn('point_id', $customers_array);
                         }
                     } else if($filter->parameter=='field'){
                         $field = $node->fields()->where('name', $field_name)->first();
@@ -453,6 +433,8 @@ class AdminList {
                         if($custom_value!='any'){
                             $appends['f_'.$field_name] = $custom_value;
                         }
+                    } else if($filter->parameter=='custom_function'){
+                        $items = \CustomFunc::custom_filter($array, $items, $field_name, $custom_data);
                     }
                 }
             }

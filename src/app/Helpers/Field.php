@@ -252,6 +252,7 @@ class Field {
           } else if($type=='image') {
             $response .= trans('admin.image_limitations');
           }
+          $response .= '</p></div>';
           if($folder&&$value){
             $i = $parameters['i'];
             $multiple = false;
@@ -270,7 +271,6 @@ class Field {
             } else {
                 $array_value = [$value];
             }
-            $response .= '</p></div>';
             if(is_array($array_value)&&count($array_value)>0){
               foreach($array_value as $key => $value){
                 $response .= '<div class="upload_thumb '.$type.'_thumb">';
