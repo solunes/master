@@ -246,6 +246,12 @@ class Field {
           $folder = $parameters['folder'];
           $array['data-count'] = 0;
           $response = '<div class="file_container">';
+          $response .= '<div class="file_limitations"><p>';
+          if($type=='file'){
+            $response .= trans('admin.file_limitations');
+          } else if($type=='image') {
+            $response .= trans('admin.image_limitations');
+          }
           if($folder&&$value){
             $i = $parameters['i'];
             $multiple = false;
@@ -263,12 +269,6 @@ class Field {
                 $array_value = json_decode($value, true);
             } else {
                 $array_value = [$value];
-            }
-            $response .= '<div class="file_limitations"><p>';
-            if($type=='file'){
-                $response .= trans('admin.file_limitations');
-            } else if($type=='image') {
-                $response .= trans('admin.image_limitations');
             }
             $response .= '</p></div>';
             if(is_array($array_value)&&count($array_value)>0){
