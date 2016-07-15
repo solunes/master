@@ -115,7 +115,7 @@ class AdminItem {
         } else {
             $variables['files'] = false;
         }
-        foreach($node->fields()->has('field_conditionals')->get() as $field){
+        foreach($node->fields()->has('field_conditionals')->with('field_conditionals')->get() as $field){
             foreach($field->field_conditionals as $conditional){
                 $variables['conditional_array'][$conditional->id] = $conditional;
             }
