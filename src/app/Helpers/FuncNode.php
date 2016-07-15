@@ -181,14 +181,19 @@ class FuncNode {
         }
     }
 
-    public static function load_nodes_excel($lang_folder, $path, $return = '') {
-        \Excel::load($path, function($reader) use($lang_folder, $return) {
+    public static function load_nodes_excel($path, $return = '') {
+        \Excel::load($path, function($reader) use($return) {
           foreach($reader->get() as $sheet){
             $sheet_name = $sheet->getTitle();
-            $sheet->each(function($row) use ($sheet_name, $lang_folder, $return) {
+            $sheet->each(function($row) use ($sheet_name, $return) {
               $node = \Solunes\Master\App\Node::where('name', $row->node)->first();
               if($sheet_name=='create-fields'){
                 if($node){
+                  if($node->location=='package'){
+                      $lang_folder = 'master::fields.';
+                  } else {
+                      $lang_folder = 'fields.';
+                  }
                   $field = new \Solunes\Master\App\Field;
                   $field->parent_id = $node->id;
                   $field->name = $row->name;

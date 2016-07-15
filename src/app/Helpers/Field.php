@@ -48,6 +48,13 @@ class Field {
             $class .= $extras['class'];
         }
 
+        // FIELD CLASS
+        $field_class = 'flex-item ';
+        if(array_key_exists('field_class', $extras)){
+            $field_class .= $extras['field_class'];
+        }
+        $parameters['field_class'] = $field_class;
+
         // COL
         $col = 6;
         if(array_key_exists('cols', $extras)){
@@ -156,7 +163,7 @@ class Field {
     }
 
     public static function form_field_builder($name, $type, $parameters, $array, $label, $col, $i, $value, $data_type) {
-        $response = '<div id="field_'.$name.'" class="col-sm-'.$col.' flex-item">';
+        $response = '<div id="field_'.$name.'" class="col-sm-'.$col.' '.$parameters['field_class'].'">';
         $response .= '<label for="'.$name.'" class="control-label">'.$label.'</label>';
         $response .= Field::form_input_builder($name, $type, $parameters, $array, $value, $data_type);
         if($data_type!='view'&&isset($array['disabled'])){
@@ -210,7 +217,7 @@ class Field {
                 unset($option_array[0]);
             }
         }
-        $response = '<div id="field_'.$name.'" class="col-sm-'.$col.' flex-item">';
+        $response = '<div id="field_'.$name.'" class="col-sm-'.$col.' '.$parameters['field_class'].'">';
         $response .= '<label for="'.$name.'" class="control-label">'.$label.'</label><div class="row">';
         if($col==12){
             $subcol = 4;

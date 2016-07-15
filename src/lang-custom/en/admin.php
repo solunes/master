@@ -117,6 +117,7 @@ return array(
 	"excel" => "Excel",
 	"none" => "None",
 	"class" => "Class",
+	"field_class" => "Field Class",
 	"options" => "Options",
 	"folder" => "Folder",
 	"append" => "Append",

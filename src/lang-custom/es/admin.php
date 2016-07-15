@@ -118,6 +118,7 @@ return array(
 	"excel" => "Excel",
 	"none" => "Ninguno",
 	"class" => "Clase",
+	"field_class" => "Clase del Campo",
 	"options" => "Opciones",
 	"folder" => "Carpeta",
 	"append" => "Anexar (Adelante)",

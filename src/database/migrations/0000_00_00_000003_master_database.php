@@ -178,7 +178,7 @@ class MasterDatabase extends Migration
         Schema::create('field_extras', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->unsigned();
-            $table->enum('type', ['class','options','folder','append','prepend','placeholder','label','cols','rows','disabled','ponderation']);
+            $table->enum('type', ['class','field_class','options','folder','append','prepend','placeholder','label','cols','rows','disabled','ponderation']);
             $table->string('value');
             $table->foreign('parent_id')->references('id')->on('fields')->onDelete('cascade');
         });

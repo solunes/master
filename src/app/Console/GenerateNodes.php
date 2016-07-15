@@ -88,11 +88,7 @@ class GenerateNodes extends Command
             }
             $total_count += $count;
           }
-        }
-        $this->info('95%: Se importara el excel de nodes para corregir los campos.');
-        $this->info(\FuncNode::load_nodes_excel('master::fields.', base_path('vendor/solunes/master/src/nodes.xlsx')));
-        $this->info(\FuncNode::load_nodes_excel('fields.', public_path('seed/nodes.xlsx')));
-        foreach($nodes as $node){
+          $node->load('fields');
           foreach($node->fields as $field) {
             $saved = false;
             if(!$field->label){
@@ -109,6 +105,9 @@ class GenerateNodes extends Command
             }
           }
         }
+        $this->info('95%: Se importara el excel de nodes para corregir los campos.');
+        $this->info(\FuncNode::load_nodes_excel(base_path('vendor/solunes/master/src/nodes.xlsx')));
+        $this->info(\FuncNode::load_nodes_excel(public_path('seed/nodes.xlsx')));
         $this->info('100%: Se crearon '.$total_count.' campos.');
     }
 }
