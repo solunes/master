@@ -302,10 +302,31 @@ class FuncNode {
         }
     }
 
-    public static function make_email($email_name, $to_array, $vars = []) {
+    public static function make_email($email_name, $to_array, $vars = [], $vars_if = [], $vars_foreach = []) {
       // $vars = ['@search@'=>'Reemplazar con esto']
       if($email = \Solunes\Master\App\Email::where('name', $email_name)->first()){
-        $msg = str_replace(array_keys($vars), array_values($vars), html_entity_decode($email->content));
+        $msg = $email->content;
+        if(count($vars_if)>0){
+          foreach($vars_if as $var_name => $var_value){           
+            $beggining = '@'.$var_name.'@';
+            $end = '@end'.$var_name.'@';
+            if($var_value===true){
+              $msg = str_replace($beggining, '', $msg);
+              $msg = str_replace($end, '', $msg);
+            } else {
+              $beginningPos = strpos($msg, $beginning);
+              $endPos = strpos($msg, $end);
+              $textToDelete = substr($msg, $beginningPos, ($endPos + strlen($end)) - $beginningPos);
+              $msg = str_replace($textToDelete, '', $msg);
+            }
+          }
+        }
+        if(count($vars_foreach)>0){
+          
+        }
+        if(count($vars)>0){
+          $msg = str_replace(array_keys($vars), array_values($vars), html_entity_decode($msg));
+        }
         \Mail::send('master::emails.default', ['msg' => $msg], function ($m) use($email, $to_array, $msg) {
             $m->to($to_array)->subject($email->title);
         });
