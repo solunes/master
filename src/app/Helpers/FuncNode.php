@@ -294,4 +294,25 @@ class FuncNode {
         return true;
     }
 
+    public static function check_var($name) {
+        if($item = \Solunes\Master\App\Variable::where('name', $name)->first()){
+            return $item->value;
+        } else {
+            return NULL;
+        }
+    }
+
+    public static function make_email($email_name, $to_array, $vars = []) {
+      // $vars = ['@search@'=>'Reemplazar con esto']
+      if($email = \Solunes\Master\App\Email::where('name', $email_name)->first()){
+        $msg = str_replace(array_keys($vars), array_values($vars), html_entity_decode($email->content));
+        \Mail::send('master::emails.default', ['msg' => $msg], function ($m) use($email, $to_array, $msg) {
+            $m->to($to_array)->subject($email->title);
+        });
+        return true;
+      } else {
+        return false;
+      }
+    }
+
 }

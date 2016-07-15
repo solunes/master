@@ -11,7 +11,7 @@
 						@if($activity->action!='node_deleted')
 							<a target="_blank" href="{{ url('admin/model/'.$activity->node->name.'/edit/'.$activity->item_id) }}">
 						@endif
-							<strong>{{ trans_choice('model.'.$activity->node->name, 1) }}</strong> 
+							<strong>{{ $activity->node->singular }}</strong> 
 						@if($activity->action!='node_deleted')
 							</a>
 						@endif

@@ -109,7 +109,7 @@ class AdminItem {
         }
         $variables['parent_id'] = $parent_id;
         $variables['i'] = $item;
-        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->whereNotIn('display_item', $hidden_array)->get();
+        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->whereNotIn('display_item', $hidden_array)->with('translations')->get();
         if($node->fields()->whereIn('type', ['image', 'file'])->count()>0){
             $variables['files'] = true;
         } else {
@@ -160,7 +160,7 @@ class AdminItem {
             $display_array = ['item_admin','none'];
         }
         $total_ponderation = 0;
-        foreach($node->fields()->whereNotIn('type', ['child', 'subchild', 'field'])->whereNotIn('display_item', $display_array)->get() as $field){
+        foreach($node->fields()->whereNotIn('type', ['child', 'subchild', 'field'])->whereNotIn('display_item', $display_array)->with('field_extras')->get() as $field){
             $field_name = $field->name;
             $input = NULL;
             if($request->has($field_name)) {

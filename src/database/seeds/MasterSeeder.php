@@ -31,6 +31,7 @@ class MasterSeeder extends Seeder {
         $node_user = \Solunes\Master\App\Node::create(['name'=>'user', 'location'=>'app', 'type'=>'global', 'model'=>'\App\User']);
         \Solunes\Master\App\NodeExtra::create(['parent_id'=>$node_user->id, 'display'=>'admin', 'type'=>'filter', 'parameter'=>'field', 'value_array'=>json_encode(['status'])]);
         $node_role_user = \Solunes\Master\App\Node::create(['name'=>'role-user', 'table_name'=>'role_user', 'type'=>'field', 'model'=>'\Solunes\Master\App\Role', 'parent_id'=>$node_user->id]);
+        $node_email = \Solunes\Master\App\Node::create(['name'=>'email', 'type'=>'global']);
         $node_activity = \Solunes\Master\App\Node::create(['name'=>'activity', 'table_name'=>'activities', 'type'=>'system']);
         $node_notification = \Solunes\Master\App\Node::create(['name'=>'notification', 'type'=>'system']);
         $node_variable = \Solunes\Master\App\Node::create(['name'=>'variable', 'type'=>'global']);

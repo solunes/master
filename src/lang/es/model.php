@@ -31,6 +31,7 @@ return [
     'menu' => 'Menú|Menús',
     'section' => 'Sección|Secciones',
     'variable' => 'Variable|Variables',
+    'email' => 'Email|Emails',
     'activity' => 'Actividad|Actividades',
     'notification' => 'Notificación|Notificaciones',
 

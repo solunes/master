@@ -31,6 +31,7 @@ return [
     'menu' => 'Menu|Menus',
     'section' => 'Section|Sections',
     'variable' => 'Variable|Variables',
+    'email' => 'Email|Emails',
     'activity' => 'Activity|Activities',
     'notification' => 'Notification|Notifications',
 

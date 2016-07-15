@@ -26,6 +26,8 @@ class TruncateSeeder extends Seeder {
         \Solunes\Master\App\Role::truncate();
         \Solunes\Master\App\Permission::truncate();
         \App\User::truncate();
+        \Solunes\Master\App\EmailTranslation::truncate();
+        \Solunes\Master\App\Email::truncate();
         \Solunes\Master\App\FieldConditional::truncate();
         \Solunes\Master\App\FieldExtra::truncate();
         \Solunes\Master\App\FieldTranslation::truncate();

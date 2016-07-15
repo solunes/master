@@ -13,6 +13,23 @@ class NodesDatabase extends Migration
     public function up()
     {
         // Global
+        Schema::create('emails', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('site_id')->unsigned()->default(1);
+            $table->string('name');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
+        });
+        Schema::create('email_translation', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('email_id')->unsigned();
+            $table->string('locale')->index();
+            $table->string('title')->nullable();
+            $table->text('content')->nullable();
+            $table->unique(['email_id','locale']);
+            $table->foreign('email_id')->references('id')->on('emails')->onDelete('cascade');
+        });
         Schema::create('activities', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('node_id')->unsigned();
@@ -93,5 +110,7 @@ class NodesDatabase extends Migration
         Schema::dropIfExists('variables');
         Schema::dropIfExists('notifications');
         Schema::dropIfExists('activities');
+        Schema::dropIfExists('email_translation');
+        Schema::dropIfExists('emails');
     }
 }
