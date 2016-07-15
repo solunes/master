@@ -198,7 +198,7 @@ class FuncNode {
                   $field->parent_id = $node->id;
                   $field->name = $row->name;
                   $field->trans_name = $row->trans_name;
-                  $field->label = $lang_folder.$row->trans_name;
+                  $field->label = trans($lang_folder.$row->trans_name);
                   $field->type = $row->type;
                   $field->display_list = $row->display_list;
                   $field->display_item = $row->display_item;
@@ -308,10 +308,10 @@ class FuncNode {
         $msg = $email->content;
         if(count($vars_if)>0){
           foreach($vars_if as $var_name => $var_value){           
-            $beggining = '@'.$var_name.'@';
+            $beginning = '@'.$var_name.'@';
             $end = '@end'.$var_name.'@';
             if($var_value===true){
-              $msg = str_replace($beggining, '', $msg);
+              $msg = str_replace($beginning, '', $msg);
               $msg = str_replace($end, '', $msg);
             } else {
               $beginningPos = strpos($msg, $beginning);

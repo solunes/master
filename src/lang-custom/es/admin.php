@@ -65,6 +65,10 @@ return array(
 	"put_off_fail" => "No se pudo quitar el item por los siguientes errores.",
 	"put_off_confirmation" => "¿Está seguro que desea quitar este item?",
 	"no_permission" => "No tiene los permisos necesarios para acceder a esta página.",
+	
+	// FILE LIMITATIONS
+	"file_limitations" => "El archivo debe ser: PDF, DOC, DOCX, XLSX, XLS, JPG, JPEG, PNG or GIF.";
+	"image_limitations" => "La imagen debe ser: JPG, JPEG, PNG or GIF.";
 
 	// RANKS
 	"superadmin" => "Super Admin",
