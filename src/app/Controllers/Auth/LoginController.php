@@ -3,6 +3,7 @@
 namespace Solunes\Master\App\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\UrlGenerator;
 use Validator;
 use Auth;
 use Login;
