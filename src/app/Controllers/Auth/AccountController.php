@@ -12,8 +12,9 @@ use App\Http\Controllers\Controller;
 
 class AccountController extends Controller {
 
-	public function __construct() {
+	public function __construct(UrlGenerator $url) {
 		$this->middleware('auth');
+	  	$this->prev = $url->previous();
 	}
 
     public function getIndex() {
@@ -39,7 +40,7 @@ class AccountController extends Controller {
 		}
 		return redirect($redirect)->with('message_success', trans('form.password_edited'));
 	  } else {
-		return redirect('account')->with(array('message_error' => trans('form.error_form')))->withErrors($validator)->withInput();
+		return redirect($this->prev)->with(array('message_error' => trans('form.error_form')))->withErrors($validator)->withInput();
 	  }
     }
 	
