@@ -43,6 +43,7 @@ return [
     'file' => 'Archivo',
     'files' => 'Archivos',
     'filled_forms' => 'Formularios Llenados',
+    'final_label' => 'Etiqueta Final',
     'folder' => 'Carpeta',
     'form' => 'Formulario',
     'form_type' => 'Tipo de Formulario',

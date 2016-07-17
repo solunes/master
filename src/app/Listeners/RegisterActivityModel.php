@@ -36,10 +36,15 @@ class RegisterActivityModel {
 		    	$action = 'node_edited';
 		    }
 		    $message = '';
+		    if($node->location=='package'){
+		    	$lang_folder = 'master::fields.';
+		    } else {
+		    	$lang_folder = 'fields.';
+		    }
 		    if(count($event_decoded)>0){
 			    foreach($event_decoded as $key => $i){
 			    	if(is_string($i)&&is_string($key)&&strpos($key, '_id') === false&&$key!='id'&&$key!='created_at'&&$key!='updated_at'){
-			    		$message .= '<strong>'.trans('fields.'.$key).':</strong> '.$i.'<br>';
+			    		$message .= '<strong>'.trans($lang_folder.$key).':</strong> '.$i.'<br>';
 			    	}
 			    }
 			}

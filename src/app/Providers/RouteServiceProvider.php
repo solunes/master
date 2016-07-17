@@ -37,9 +37,23 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(Router $router)
     {
-        $router->group(['namespace' => $this->solunesNamespace], function ($router) {
+        //$this->mapWebRoutes($router);
+    }
+
+    /**
+     * Define the "web" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @param  \Illuminate\Routing\Router  $router
+     * @return void
+     */
+    protected function mapWebRoutes(Router $router)
+    {
+        $router->group(['namespace' => $this->solunesNamespace, 'middleware' => 'web',], function ($router) {
             require __DIR__ . '/../Routes/routes.php';
             require __DIR__ . '/../Routes/artisan.php';
         });
     }
+
 }

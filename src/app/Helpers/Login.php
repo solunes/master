@@ -113,8 +113,8 @@ class Login {
             } else {
                 $return = false;
                 if($node->permission){
-                    if(\Auth::check()){
-                        if(\Entrust::can($node->permission)){
+                    if(auth()->check()){
+                        if(auth()->user()->hasPermission($node->permission)){
                             $return = true;
                         }
                     }

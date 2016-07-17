@@ -13,8 +13,9 @@ use App\Http\Controllers\Controller;
 
 class LoginController extends Controller {
 
-    public function __construct() {
+    public function __construct(UrlGenerator $url) {
         $this->middleware('guest', ['except' => 'getLogout']);
+	  	$this->prev = $url->previous();
     }
 
 	public function getLogin(Request $request) {

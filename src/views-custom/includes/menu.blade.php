@@ -27,10 +27,10 @@
         <li{{\HTML::attributes($item->divider)}}></li>
     @endif
 @endforeach
-@if(Auth::check()&&!\Entrust::hasRole('member'))
+@if(auth()->check()&&!auth()->user()->hasRole('member'))
     <li><a href="{{ url('admin') }}">Admin</a></li>
     <li><a href="{{ url('auth/logout') }}">Salir</a></li>
-@elseif(Auth::check())
+@elseif(auth()->check())
     <li><a href="{{ url('postulaciones') }}">Formularios</a></li>
     <li><a href="{{ url('auth/logout') }}">Salir</a></li>
 @else

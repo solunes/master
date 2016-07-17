@@ -2,9 +2,9 @@
 
 namespace Solunes\Master\App;
 
-use Zizaco\Entrust\EntrustPermission;
+use Illuminate\Database\Eloquent\Model;
 
-class Permission extends EntrustPermission {
+class Permission extends Model {
 	
 	protected $table = 'permissions';
 	public $timestamps = true;

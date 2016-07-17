@@ -3,18 +3,23 @@
 namespace Solunes\Master\App;
 
 use Illuminate\Database\Eloquent\Model;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 
-use Cviebrock\EloquentSluggable\SluggableInterface;
-use Cviebrock\EloquentSluggable\SluggableTrait;
-
-class PageTranslation extends Model implements SluggableInterface {
+class PageTranslation extends Model {
 	
 	protected $table = 'page_translation';
     public $timestamps = false;
     protected $fillable = ['name', 'link'];
 	
-    use SluggableTrait;
-    protected $sluggable = array('build_from'=>'name');
+    use Sluggable, SluggableScopeHelpers;
+    public function sluggable(){
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
 	
     public function page() {
         return $this->belongsTo('Solunes\Master\App\Page', 'page_id', 'id');

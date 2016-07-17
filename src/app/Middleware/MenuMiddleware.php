@@ -28,7 +28,7 @@ class MenuMiddleware
         }
         Menu::make('main', function($menu) use($request, $menu_options) {
           foreach($menu_options as $menu_option){
-            if(!$menu_option->permission||\Entrust::can($menu_option->permission)){
+            if(!$menu_option->permission||auth()->user()->hasPermission($menu_option->permission)){
               $first_level = $menu->add($menu_option->name, $menu_option->real_link);
               if(\Func::check_layout()=='admin'){
                 if($menu_option->icon){
@@ -46,7 +46,7 @@ class MenuMiddleware
                   $first_level->attribute(['class' => 'dropdown']);
                 }
                 foreach($menu_option->children as $menu_children){
-                  if(!$menu_children->permission||\Entrust::can($menu_children->permission)){
+                  if(!$menu_children->permission||auth()->user()->hasPermission($menu_children->permission)){
                     $second_level = $first_level->add($menu_children->name, $menu_children->real_link);
                     if(\Func::check_layout()=='admin'){
                       if($menu_children->icon){

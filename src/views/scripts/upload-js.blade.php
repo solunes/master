@@ -14,7 +14,7 @@
       url: '{{ url("asset/upload") }}',
       dataType: 'json',
       paramName: 'file',
-      formData: [{name: 'type', value: type}, {name: 'folder', value: folder}],
+      formData: [{name: 'type', value: type}, {name: 'folder', value: folder}, {name: '_token', value: "{{ csrf_token() }}" }],
       dropZone: $(this),
       add: function (e, data) {
         $fprogress.show('fast');

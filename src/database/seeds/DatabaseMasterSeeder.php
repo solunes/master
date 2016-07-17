@@ -15,8 +15,6 @@ class DatabaseMasterSeeder extends Seeder
      */
     public function run()
     {
-        Model::unguard();
         $this->call(MasterSeeder::class);
-        Model::reguard();
 	}
 }

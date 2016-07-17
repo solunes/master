@@ -11,8 +11,31 @@
 |
 */
 
-Route::controller('admin', 'AdminController');
-Route::controller('auth', 'Auth\LoginController');
-Route::controller('password', 'Auth\PasswordController');
-Route::controller('account', 'Auth\AccountController');
-Route::controller('asset', 'AssetController');
+Route::group(['prefix'=>'admin'], function(){
+    Route::get('/', 'AdminController@getIndex');
+    Route::get('generate-manual/{role_name?}', 'AdminController@getGenerateManual');
+    Route::get('model-list/{model}', 'AdminController@getModelList');
+    Route::get('model/{model}/{action}/{id?}/{lang?}', 'AdminController@getModel');
+    Route::post('model', 'AdminController@postModel');
+});
+Route::group(['prefix'=>'auth'], function(){
+    Route::get('login', 'Auth\LoginController@getLogin');
+    Route::post('login', 'Auth\LoginController@postLogin');
+    Route::get('logout', 'Auth\LoginController@getLogout');
+});
+Route::group(['prefix'=>'password'], function(){
+    Route::get('recover', 'Auth\PasswordController@getRecover');
+    Route::post('request', 'Auth\PasswordController@postRequest');
+    Route::get('reset', 'Auth\PasswordController@getReset');
+    Route::post('update', 'Auth\PasswordController@postUpdate');
+});
+Route::group(['prefix'=>'account'], function(){
+    Route::get('/', 'Auth\AccountController@getIndex');
+    Route::post('password', 'Auth\AccountController@postPassword');
+});
+Route::group(['prefix'=>'asset'], function(){
+    Route::post('froala-image-upload', 'AssetController@postFroalaImageUpload');
+    Route::post('froala-file-upload', 'AssetController@postFroalaFileUpload');
+    Route::post('upload', 'AssetController@postUpload');
+    Route::post('delete', 'AssetController@postDelete');
+});
