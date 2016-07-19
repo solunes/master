@@ -44,7 +44,7 @@ class RegisterActivityModel {
 		    if(count($event_decoded)>0){
 			    foreach($event_decoded as $key => $i){
 			    	if(is_string($i)&&is_string($key)&&strpos($key, '_id') === false&&$key!='id'&&$key!='created_at'&&$key!='updated_at'){
-			    		$message .= '<strong>'.trans($lang_folder.$key).':</strong> '.$i.'<br>';
+			    		$message .= '<strong>'.trans($lang_folder.$key).':</strong> '.strip_tags($i).'<br>';
 			    	}
 			    }
 			}

@@ -437,10 +437,14 @@ class AdminList {
                         $custom_value = 'any';
                         if(request()->input('f_'.$field_name)){ $custom_value = request()->input('f_'.$field_name); }
                         if($custom_value!='any'){
+                            $items = $items->where($field_name, $custom_value);
                             $appends['f_'.$field_name] = $custom_value;
                         }
                     } else if($filter->parameter=='custom_function'){
-                        $items = \CustomFunc::custom_filter($array, $items, $field_name, $custom_data);
+                        $custom_array = \CustomFunc::custom_filter($array, $items, $appends, $field_name, $custom_data);
+                        $array = $custom_array['array'];
+                        $appends = $custom_array['appends'];
+                        $items = $custom_array['items'];
                     }
                 }
             }
