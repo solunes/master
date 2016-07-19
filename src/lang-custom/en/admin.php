@@ -102,6 +102,8 @@ return array(
 	"blank" => "Blank",
 	"ask_password" => "Ask Password",
 	"banned" => "Banned",
+	"package" => "Package",
+	"app" => "App",
 	"string" => "Text String",
 	"select" => "Select",
 	"password" => "Password",

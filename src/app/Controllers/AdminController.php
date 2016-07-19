@@ -39,7 +39,7 @@ class AdminController extends Controller {
 	    $array['nodes'] = \Solunes\Master\App\Node::whereNull('parent_id')->whereIn('permission', $permission_array)->with('fields', 'children.fields', 'children.children.fields')->get();
 	    $pdf = \PDF::loadView('master::pdf.manual', $array);
 	    $header = \View::make('pdf.header', $array);
-	    return $pdf->setPaper('letter')->setOption('header-html', $header->render())->stream(trans('admin.manual').'_'.date('Y-m-d').'.pdf');
+	    return $pdf->setPaper('letter')->setOption('header-html', $header->render())->stream(trans('master::admin.manual').'_'.date('Y-m-d').'.pdf');
 	}
 
 	public function getModelList($model) {

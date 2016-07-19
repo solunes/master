@@ -1,4 +1,4 @@
-<p class="dnl-nav-title">{{ trans('main.dashboard') }}</p>
+<p class="dnl-nav-title">{{ trans('master::model.my_dashboard') }}</p>
 <ul class="dnl-nav">
   <li><a href="{{ url('') }}"><span class="dnl-link-icon"><i class="fa fa-rotate-left"></i></span> Volver a Sitio</a></li>
   @foreach($items as $item)

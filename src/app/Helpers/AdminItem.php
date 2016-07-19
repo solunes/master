@@ -9,7 +9,7 @@ class AdminItem {
     public static function get_request($single_model, $action, $id, $data, $options = [], $additional_vars = NULL) {
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
         $model = $node->model;
-        if(\Login::check_permission('item', $data->module, $node, $action, $id)===false){
+        if (\Gate::denies('node-admin', ['item', $data->module, $node, $action, $id])) {
             return \Login::redirect_dashboard('no_permission');
         }
 
@@ -151,7 +151,7 @@ class AdminItem {
 
     public static function post_request_success($request, $model, $item, $type = 'admin') {
         $node = \Solunes\Master\App\Node::where('name', $model)->first();
-        if(\Login::check_permission('item', $type, $node, $request->input('action'), $request->input('id'))===false){
+        if (\Gate::denies('node-admin', ['item', $type, $node, $request->input('action'), $request->input('id')])) {
             return \Login::redirect_dashboard('no_permission');
         }
         if($type=='admin'){

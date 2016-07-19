@@ -8,7 +8,7 @@ class Segment {
          
     public static function get_node_array($array, $node, $admin = false) {
         $sub_array = [];
-        if($node->type=='form'){
+        if($node->folder=='form'){
             $admin = true;
         }
         $sub_array = \Segment::get_node_items($sub_array, $node, $admin);

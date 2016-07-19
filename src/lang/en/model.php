@@ -36,6 +36,7 @@ return [
     'notification' => 'Notification|Notifications',
 
     // MENU
+    'my_dashboard' => 'My Dashboard',
     'my_account' => 'My Account',
     'profile' => 'Profile',
     'logout' => 'Logout',

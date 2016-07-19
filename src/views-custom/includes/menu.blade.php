@@ -27,7 +27,7 @@
         <li{{\HTML::attributes($item->divider)}}></li>
     @endif
 @endforeach
-@if(auth()->check()&&!auth()->user()->hasRole('member'))
+@if(!auth()->user()->isAdmin())
     <li><a href="{{ url('admin') }}">Admin</a></li>
     <li><a href="{{ url('auth/logout') }}">Salir</a></li>
 @elseif(auth()->check())

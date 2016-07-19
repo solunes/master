@@ -7,13 +7,13 @@
     <table class="admin-table table table-striped table-bordered dt-responsive">
       <thead>
         <tr class="title">
-          {!! AdminList::make_fields($fields, $action_fields) !!}
+          {!! AdminList::make_fields($langs, $fields, $action_fields) !!}
         </tr>
       </thead>
       <tbody>
         @foreach ($items as $item)
           <tr>
-            {!! AdminList::make_fields_values_rows($module, $model, $item, $fields, $appends, $action_fields) !!}
+            {!! AdminList::make_fields_values_rows($langs, $module, $model, $item, $fields, $appends, $action_fields) !!}
           </tr>
         @endforeach
       </tbody>

@@ -51,11 +51,4 @@ class Node extends Model {
         return $this->hasOne('App\Deadline');
     }
 
-    public function setNameAttribute($value){
-        if(!isset($this->attributes['table_name'])){
-            $this->attributes['table_name'] = $value.'s';
-        }
-        $this->attributes['name'] = $value;
-    }
-
 }

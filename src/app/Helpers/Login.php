@@ -99,34 +99,6 @@ class Login {
         return $return;
     }
 
-    public static function check_permission($type, $module, $node, $action, $id = NULL) {
-        $custom_check = \CustomFunc::check_permission($type, $module, $node, $action, $id);
-        if($custom_check!='none'){
-            if($custom_check=='true'){
-                $return = true;
-            } else if($custom_check=='false') {
-                $return = false;
-            }
-        } else {
-            if($module=='process'){
-                $return = true;
-            } else {
-                $return = false;
-                if($node->permission){
-                    if(auth()->check()){
-                        if(auth()->user()->hasPermission($node->permission)){
-                            $return = true;
-                        }
-                    }
-                } else {
-                    $return = true;
-                }
-            }
-
-        }
-        return $return;
-    }
-
     public static function redirect_dashboard($error) {
         return redirect('admin')->with('message_error', trans('admin.'.$error));
     }

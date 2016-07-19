@@ -6,25 +6,33 @@ class CreatedNode {
 
     public function handle($node) {
         $saved = false;
-        if(!$node->model){
-            if($node->type&&($node->type=='global'||$node->type=='system')){
-                $node->model = '\Solunes\Master\App\\'.str_replace('_','-',studly_case($node->name));
-            } else {
-                $node->model = '\App\\'.str_replace('_','-',studly_case($node->name));
-            }
+        if(!$node->folder&&(!$node->type||$node->type=='normal')){
+            $node->folder = 'site';
             $saved = true;
         }
         if(!$node->location){
-            if(strpos($node->model, '\Solunes\Master') !== false){
+            if($node->folder=='system'||$node->folder=='global'){
                 $node->location = 'package';
             } else {
                 $node->location = 'app';
             }
             $saved = true;
         }
+        if(!$node->table_name){
+            $node->table_name = str_replace('-','_',$node->name).'s';
+            $saved = true;
+        }
+        if(!$node->model){
+            if($node->location=='package'){
+                $node->model = '\Solunes\Master\App\\'.str_replace('_','-',studly_case($node->name));
+            } else {
+                $node->model = '\App\\'.str_replace('_','-',studly_case($node->name));
+            }
+            $saved = true;
+        }
         if(!$node->permission){
-            if($node->type&&!in_array($node->type, ['child','subchild','field'])){
-                $node->permission = $node->type;
+            if($node->type&&$node->type=='normal'){
+                $node->permission = $node->folder;
                 $saved = true;
             } 
         }

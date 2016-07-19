@@ -20,7 +20,7 @@ class AdminList {
         $module = $object->module;
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
         $model = $node->model;
-        if(\Login::check_permission('list', $module, $node, 'list')===false){
+        if (\Gate::denies('node-admin', ['list', $module, $node, 'list'])) {
             return \Login::redirect_dashboard('no_permission');
         }
 
@@ -56,7 +56,7 @@ class AdminList {
             } else {
                 $display_fields = ['show'];
             }
-            $array['fields'] = $node->fields()->whereIn('display_list', $display_fields)->where('type', '!=', 'field')->get();
+            $array['fields'] = $node->fields()->whereIn('display_list', $display_fields)->where('type', '!=', 'field')->with('translations')->get();
             $relation_fields = $node->fields()->whereIn('display_list', $display_fields)->where('type','relation')->get();
             if(count($relation_fields)>0){
                 foreach($relation_fields as $relation){
@@ -76,7 +76,15 @@ class AdminList {
         $graphs = $node->node_extras()->whereIn('type', ['graph','parent_graph'])->get();
         $array = \AdminList::graph_node($array, $node, $model, $items, $graphs);
 
+        $items_relations = $node->fields()->where('name','!=','parent_id')->whereIn('type', ['relation','child','subchild'])->get();
+        if(count($items_relations)>0){
+            foreach($items_relations as $item_relation){
+                $items->with($item_relation->trans_name);
+            }
+        }
+
         $array['items'] = $items->get();
+        $array['langs'] = \Solunes\Master\App\Language::get();
 
         if(request()->has('download-excel')){
             return AdminList::generate_query_excel($array);
@@ -86,7 +94,7 @@ class AdminList {
 
     }
 
-    public static function make_fields($fields, $action_fields = ['edit', 'delete']) {
+    public static function make_fields($langs, $fields, $action_fields = ['edit', 'delete']) {
         if(count($fields)>0){
             $response = '';
             foreach($fields as $field){
@@ -94,9 +102,8 @@ class AdminList {
             }
             if(is_array($action_fields)){
                 if(in_array('edit', $action_fields)){
-                    $languages = \Solunes\Master\App\Language::get();
-                    if(count($languages)>0){
-                        foreach($languages as $language){
+                    if(count($langs)>0){
+                        foreach($langs as $language){
                             $response .= '<td class="edit">'.$language->name.'</td>';
                         }
                     } else {
@@ -198,15 +205,14 @@ class AdminList {
         return $response;
     }
 
-    public static function make_fields_values_rows($module, $model, $item, $fields, $appends, $action_fields = ['edit', 'delete']) {
+    public static function make_fields_values_rows($langs, $module, $model, $item, $fields, $appends, $action_fields = ['edit', 'delete']) {
         if(count($fields)>0){
             $response = '';
             $response .= \AdminList::make_fields_values($item, $fields, $appends, 'table');
             if(is_array($action_fields)){
                 if(in_array('edit', $action_fields)){
-                    $languages = \Solunes\Master\App\Language::get();
-                    if(count($languages)>0){
-                        foreach($languages as $language){
+                    if(count($langs)>0){
+                        foreach($langs as $language){
                             $response .= '<td class="edit">'.AdminList::make_edit($module, $model, $appends, $item, $language->code).'</td>';
                         }
                     } else {
