@@ -48,7 +48,6 @@ class MasterSeeder extends Seeder {
         $site_perm = \Solunes\Master\App\Permission::create(['name'=>'site', 'display_name'=>'Site']);
         $form_perm = \Solunes\Master\App\Permission::create(['name'=>'form', 'display_name'=>'Formulario']);
         $dashboard_perm = \Solunes\Master\App\Permission::create(['name'=>'dashboard', 'display_name'=>'Dashboard']);
-        $superadmin->permission_role()->sync(\Solunes\Master\App\Permission::lists('id')->toArray());
         $admin->permission_role()->sync([$global_perm->id, $site_perm->id, $form_perm->id, $dashboard_perm->id]);
 
     }

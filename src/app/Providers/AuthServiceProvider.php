@@ -10,18 +10,30 @@ class AuthServiceProvider extends ServiceProvider
 
     public function boot(GateContract $gate) {
 
+        $gate->before(function ($user, $ability) {
+            if ($user->isSuperAdmin()) {
+                return true;
+            }
+        });
+
         $gate->define('dashboard', function ($user) {
             return $user->isAdmin();
         });
 
         $gate->define('node-admin', function ($user, $type, $module, $node, $action, $id = NULL) {
             $custom_check = \CustomFunc::check_permission($type, $module, $node, $action, $id);
-            if($module=='process'){
+            if($custom_check!='none'){
+                if($custom_check=='true'){
+                    $return = true;
+                } else {
+                    $return = false;
+                }
+            } else if($module=='process'){
                 $return = true;
             } else {
                 $return = false;
                 if($node->permission){
-                    if(auth()->check()&&$user->hasPermission($node->permission)){
+                    if($user->hasPermission($node->permission)){
                         $return = true;
                     }
                 } else {

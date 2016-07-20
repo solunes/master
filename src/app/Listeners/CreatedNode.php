@@ -6,6 +6,9 @@ class CreatedNode {
 
     public function handle($node) {
         $saved = false;
+        if(!$node->type){
+            $node->type = 'normal';
+        }
         if(!$node->folder&&(!$node->type||$node->type=='normal')){
             $node->folder = 'site';
             $saved = true;
@@ -31,7 +34,7 @@ class CreatedNode {
             $saved = true;
         }
         if(!$node->permission){
-            if($node->type&&$node->type=='normal'){
+            if($node->type=='normal'){
                 $node->permission = $node->folder;
                 $saved = true;
             } 

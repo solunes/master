@@ -16,7 +16,9 @@ class MenuMiddleware
      * @return mixed
      */
     public function handle($request, Closure $next){
-      if(auth()->check()){
+      if(auth()->check()&&auth()->user()->isSuperAdmin()){
+        $user_permissions = \Solunes\Master\App\Permission::lists('name');
+      } else if(auth()->check()){
         $user_permissions = auth()->user()->getPermission();
       } else {
         $user_permissions = [];
