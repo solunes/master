@@ -52,6 +52,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $router->group(['namespace' => $this->solunesNamespace, 'middleware' => 'web',], function ($router) {
             require __DIR__ . '/../Routes/routes.php';
+            require __DIR__ . '/../Routes/sitemap.php';
             require __DIR__ . '/../Routes/artisan.php';
         });
     }

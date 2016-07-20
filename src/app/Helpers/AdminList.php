@@ -437,7 +437,6 @@ class AdminList {
                         $custom_value = 'any';
                         if(request()->input('f_'.$field_name)){ $custom_value = request()->input('f_'.$field_name); }
                         if($custom_value!='any'){
-                            $items = $items->where($field_name, $custom_value);
                             $appends['f_'.$field_name] = $custom_value;
                         }
                     } else if($filter->parameter=='custom_function'){
