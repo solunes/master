@@ -1,6 +1,6 @@
 <?php
 
-Route::get('sitemap', function(){
+Route::get('sitemap.xml', function(){
 
     // create new sitemap object
     $sitemap = App::make("sitemap");
@@ -15,14 +15,16 @@ Route::get('sitemap', function(){
                 } else {
                     $priority = '0.9';
                 }
-                $sitemap->add($page->translate()->slug, $page->created_at, $priority, 'daily');
+                $sitemap->add($page->translate($lang->code)->slug, $page->created_at, $priority, 'daily');
             }
             $node_array = \CustomFunc::get_sitemap_array($lang->code);
-            foreach($node_array as $node_key => $node_item){
-                $node = \Solunes\Master\App\Node::where('name',$node_key)->first();
-                $node_model = $node->model;
-                foreach($node_model::orderBy('created_at','desc')->get() as $post){
-                    $sitemap->add($node_item['url'].$post->$node_item['url_id'], $post->created_at, $node_item['priority'], 'monthly');
+            if(count($node_array)>0){
+                foreach($node_array as $node_key => $node_item){
+                    $node = \Solunes\Master\App\Node::where('name',$node_key)->first();
+                    $node_model = $node->model;
+                    foreach($node_model::orderBy('created_at','desc')->get() as $post){
+                        $sitemap->add($node_item['url'].$post->$node_item['url_id'], $post->created_at, $node_item['priority'], 'monthly');
+                    }
                 }
             }
         }
