@@ -17,7 +17,7 @@ Route::get('sitemap', function(){
                 }
                 $sitemap->add($page->translate()->slug, $page->created_at, $priority, 'daily');
             }
-            $node_array = \CustomFunc::getSitemapArray($lang->code);
+            $node_array = \CustomFunc::get_sitemap_array($lang->code);
             foreach($node_array as $node_key => $node_item){
                 $node = \Solunes\Master\App\Node::where('name',$node_key)->first();
                 $node_model = $node->model;
