@@ -26,14 +26,18 @@ class Deploy extends Command
      * @return mixed
      */
     public function handle(){
-        $this->info('0%: Deploy iniciado.');
-        $this->callSilent('migrate:reset');
-        $this->info('20%: Reset migrate ejecutado correctamente.');
-        $this->callSilent('migrate', ['--path'=>'/vendor/solunes/master/src/database/migrations']);
-        $this->callSilent('migrate', ['--path'=>'/database/migrations']);
-        $this->info('60%: Migrate ejecutado correctamente.');
-        $this->callSilent('seed');
-        $this->info('75%: Database seed ejecutado correctamente con nodos.');
-        $this->info('100%: Deploy finalizado.');
+        if(\App::environment('local')){
+            $this->info('0%: Deploy iniciado.');
+            $this->callSilent('migrate:reset');
+            $this->info('20%: Reset migrate ejecutado correctamente.');
+            $this->callSilent('migrate', ['--path'=>'/'.config('solunes.vendor_path').'/src/database/migrations']);
+            $this->callSilent('migrate', ['--path'=>'/database/migrations']);
+            $this->info('60%: Migrate ejecutado correctamente.');
+            $this->callSilent('seed');
+            $this->info('75%: Database seed ejecutado correctamente con nodos.');
+            $this->info('100%: Deploy finalizado.');
+        } else {
+            $this->info('Solo se puede realizar esta tarea en modo local.');
+        }
     }
 }

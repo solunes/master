@@ -1,2 +1,3 @@
-# Master
-Paquete Genérico de Solunes
+# Solunes Master Package
+
+Prohibido su uso sin autorización.

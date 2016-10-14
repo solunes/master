@@ -45,14 +45,41 @@ class NodesDatabase extends Migration
         Schema::create('notifications', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
+            $table->boolean('checked')->default(0);
+            $table->enum('type', ['none','email','sms','all'])->default('email');
+            $table->text('message')->nullable();
+            $table->string('url')->nullable();
+            $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+        Schema::create('inbox', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+        Schema::create('inbox_users', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('parent_id')->unsigned();
+            $table->integer('user_id')->unsigned();
+            $table->boolean('checked')->default(0);
+            $table->timestamps();
+            $table->foreign('parent_id')->references('id')->on('inbox')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });
+        Schema::create('inbox_messages', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('parent_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->text('message')->nullable();
             $table->timestamps();
+            $table->foreign('parent_id')->references('id')->on('inbox')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
         Schema::create('variables', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('site_id')->unsigned()->default(1);
-            $table->integer('order')->default(0);
+            $table->integer('order')->nullable()->default(0);
             $table->string('name');
             $table->enum('type', ['string', 'text', 'image']);
             $table->timestamps();
@@ -108,6 +135,9 @@ class NodesDatabase extends Migration
         Schema::dropIfExists('temp_files');
         Schema::dropIfExists('variable_translation');
         Schema::dropIfExists('variables');
+        Schema::dropIfExists('inbox_messages');
+        Schema::dropIfExists('inbox_users');
+        Schema::dropIfExists('inbox');
         Schema::dropIfExists('notifications');
         Schema::dropIfExists('activities');
         Schema::dropIfExists('email_translation');

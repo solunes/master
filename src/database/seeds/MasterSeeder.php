@@ -14,33 +14,54 @@ class MasterSeeder extends Seeder {
     public function run()
     {
 
+        // General
+        \Solunes\Master\App\Language::create([
+            'code' => 'es',
+            'name' => 'Español',
+            'image' => 'es.png'
+        ]);
+        \Solunes\Master\App\Site::create([
+            'name' => 'Plataforma',
+            'domain' => 'http://master.dev/',
+            'root' => '/',
+            'google_verification' => '',
+            'analytics' => ''
+        ]);
+
         // Nodos
         $node_node = \Solunes\Master\App\Node::create(['name'=>'node', 'folder'=>'system']);
         $node_node_requests = \Solunes\Master\App\Node::create(['name'=>'node-request', 'location'=>'package', 'type'=>'subchild', 'parent_id'=>$node_node->id]);
         $node_node_extras = \Solunes\Master\App\Node::create(['name'=>'node-extra', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_node->id]);
+        $node_filter = \Solunes\Master\App\Node::create(['name'=>'filter', 'folder'=>'system']);
         $node_field = \Solunes\Master\App\Node::create(['name'=>'field', 'type'=>'child', 'location'=>'package', 'parent_id'=>$node_node->id]);
         $node_field_extras = \Solunes\Master\App\Node::create(['name'=>'field-extra', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_field->id]);
         $node_field_conditional = \Solunes\Master\App\Node::create(['name'=>'field-conditional', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_field->id]);
+        $node_indicator = \Solunes\Master\App\Node::create(['name'=>'indicator', 'folder'=>'system', 'customized'=>1]);
+        $node_indicator_alert = \Solunes\Master\App\Node::create(['name'=>'indicator-alert', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_indicator->id]);
+        $node_indicator_graph = \Solunes\Master\App\Node::create(['name'=>'indicator-graph', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_indicator->id]);
+        $node_indicator_value = \Solunes\Master\App\Node::create(['name'=>'indicator-value', 'type'=>'child', 'location'=>'package', 'parent_id'=>$node_indicator->id]);
         $node_site = \Solunes\Master\App\Node::create(['name'=>'site', 'folder'=>'global']);
         $node_page = \Solunes\Master\App\Node::create(['name'=>'page', 'folder'=>'global']);
         $node_menu = \Solunes\Master\App\Node::create(['name'=>'menu', 'folder'=>'global']);
         $node_section = \Solunes\Master\App\Node::create(['name'=>'section', 'folder'=>'global']);
         $node_permission = \Solunes\Master\App\Node::create(['name'=>'permission', 'folder'=>'system']);
         $node_role = \Solunes\Master\App\Node::create(['name'=>'role', 'folder'=>'system']);
-        $node_permission_role = \Solunes\Master\App\Node::create(['name'=>'permission-role', 'table_name'=>'permission_role', 'type'=>'field', 'model'=>'\Solunes\Master\App\Permission', 'parent_id'=>$node_role->id]);
+        $node_permission_role = \Solunes\Master\App\Node::create(['name'=>'permission-role', 'table_name'=>'permission_role', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\Permission', 'parent_id'=>$node_role->id]);
         $node_user = \Solunes\Master\App\Node::create(['name'=>'user', 'location'=>'app', 'folder'=>'global']);
-        \Solunes\Master\App\NodeExtra::create(['parent_id'=>$node_user->id, 'display'=>'admin', 'type'=>'filter', 'parameter'=>'field', 'value_array'=>json_encode(['status'])]);
-        $node_role_user = \Solunes\Master\App\Node::create(['name'=>'role-user', 'table_name'=>'role_user', 'type'=>'field', 'model'=>'\Solunes\Master\App\Role', 'parent_id'=>$node_user->id]);
+        \Solunes\Master\App\Filter::create(['node_id'=>$node_user->id, 'parameter'=>'status']);
+        $node_role_user = \Solunes\Master\App\Node::create(['name'=>'role-user', 'table_name'=>'role_user', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\Role', 'parent_id'=>$node_user->id]);
         $node_email = \Solunes\Master\App\Node::create(['name'=>'email', 'folder'=>'global']);
         $node_activity = \Solunes\Master\App\Node::create(['name'=>'activity', 'table_name'=>'activities', 'folder'=>'system']);
         $node_notification = \Solunes\Master\App\Node::create(['name'=>'notification', 'folder'=>'system']);
+        $node_inbox = \Solunes\Master\App\Node::create(['name'=>'inbox', 'table_name'=>'inbox', 'folder'=>'system']);
+        $node_inbox_users = \Solunes\Master\App\Node::create(['name'=>'inbox-user', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_inbox->id]);
+        $node_inbox_messages = \Solunes\Master\App\Node::create(['name'=>'inbox-message', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_inbox->id]);
         $node_variable = \Solunes\Master\App\Node::create(['name'=>'variable', 'folder'=>'global']);
         $node_image_folder = \Solunes\Master\App\Node::create(['name'=>'image-folder', 'folder'=>'system']);
         $node_image_size = \Solunes\Master\App\Node::create(['name'=>'image-size', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_image_folder->id]);
         $node_temp_file = \Solunes\Master\App\Node::create(['name'=>'temp-file', 'folder'=>'system']);
 
         // Usuarios
-        $superadmin = \Solunes\Master\App\Role::create(['name'=>'superadmin', 'display_name'=>'Super Admin']);
         $admin = \Solunes\Master\App\Role::create(['name'=>'admin', 'display_name'=>'Admin']);
         $member = \Solunes\Master\App\Role::create(['name'=>'member', 'display_name'=>'Miembro']);
         $system_perm = \Solunes\Master\App\Permission::create(['name'=>'system', 'display_name'=>'Sistema']);
@@ -49,6 +70,28 @@ class MasterSeeder extends Seeder {
         $form_perm = \Solunes\Master\App\Permission::create(['name'=>'form', 'display_name'=>'Formulario']);
         $dashboard_perm = \Solunes\Master\App\Permission::create(['name'=>'dashboard', 'display_name'=>'Dashboard']);
         $admin->permission_role()->sync([$global_perm->id, $site_perm->id, $form_perm->id, $dashboard_perm->id]);
+
+        // Tamaños de archivos
+        \Solunes\Master\App\Variable::create([
+            'name' => 'image_size',
+            'type' => 'string',
+            'es' => ['value'=>'5'],
+        ]);
+        \Solunes\Master\App\Variable::create([
+            'name' => 'file_size',
+            'type' => 'string',
+            'es' => ['value'=>'10'],
+        ]);
+        \Solunes\Master\App\Variable::create([
+            'name' => 'image_extension',
+            'type' => 'string',
+            'es' => ['value'=>'jpg,jpeg,png,gif'],
+        ]);
+        \Solunes\Master\App\Variable::create([
+            'name' => 'file_extension',
+            'type' => 'string',
+            'es' => ['value'=>'doc,docx,xls,xlsx,pdf,txt,jpg,jpeg,png,gif'],
+        ]);
 
     }
 }

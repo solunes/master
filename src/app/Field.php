@@ -21,12 +21,18 @@ class Field extends Model {
     public static $rules_create = array(
         'parent_id'=>'required',
         'name'=>'required',
+        'order'=>'required',
+        'trans_name'=>'required',
+        'label'=>'required',
     );
 
     /* Updating rules */
     public static $rules_edit = array(
         'id'=>'required',
         'name'=>'required',
+        'order'=>'required',
+        'trans_name'=>'required',
+        'label'=>'required',
     );
 
     public function parent() {
@@ -38,7 +44,15 @@ class Field extends Model {
     }
 
     public function getExtrasAttribute() {
-        return $this->field_extras()->lists('value','type')->toArray();
+        return $this->field_extras->lists('value','type')->toArray();
+    }
+
+    public function field_conditionals() {
+        return $this->hasMany('Solunes\Master\App\FieldConditional', 'parent_id');
+    }
+
+    public function field_options() {
+        return $this->hasMany('Solunes\Master\App\FieldOption', 'parent_id')->where('active', 1)->with('translations');
     }
 
     public function getFinalLabelAttribute() {
@@ -49,32 +63,23 @@ class Field extends Model {
         }
     }
 
-    public function field_conditionals() {
-        return $this->hasMany('Solunes\Master\App\FieldConditional', 'parent_id');
-    }
-
     public function getOptionsAttribute() {
-        if($this->required){
-            $return = [];
-        } else {
-            $return[0] = ' ';
-        }
-        if($this->type=='select'){
-            $explode = explode("','", substr($this->value, 1, -1));
-            foreach($explode as $item){
-                $return[$item] = trans('admin.'.$item);
+        $return = [];
+        if($this->type=='select'||$this->type=='radio'||$this->type=='checkbox'){
+            foreach($this->field_options as $item){
+                $return[$item->name] = $item->label;
             }
         } else if($this->type=='relation'||$this->type=='field'){
             if($subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $this->value))->first()){
-                $submodel = $subnode->model;
+                $submodel = \FuncNode::node_check_model($subnode);
                 if($this->type=='relation'){
                     if($this->value=='section'){
-                        $return = $return+$submodel::where('node_id', $this->parent_id)->get()->lists('name', 'id')->toArray();
+                        $return = $return+$submodel->where('node_id', $this->parent_id)->get()->lists('name', 'id')->toArray();
                     } else {
-                        $return = $return+$submodel::get()->lists('name', 'id')->toArray();
+                        $return = $return+$submodel->get()->lists('name', 'id')->toArray();
                     }
                 } else {
-                    $return = $return+$submodel::lists('name', 'id')->toArray();
+                    $return = $return+$submodel->lists('name', 'id')->toArray();
                 }
             }
         }

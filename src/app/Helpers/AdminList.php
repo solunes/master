@@ -5,40 +5,29 @@ namespace Solunes\Master\App\Helpers;
 use Validator;
 
 class AdminList {
-
-    public static function make_section_buttons($model, $item, $page_id = NULL) {
-        if(\Auth::check()){
-            $result = '<table class="admin-table section-buttons"><tr>'.AdminList::make_panel_title().'</tr>';
-            $result .= '<tr>'.AdminList::make_panel_buttons($model, $item, $page_id).'</tr></table>';            
-        } else {
-            $result = NULL;
-        }
-        return $result;
-    }
-    
+   
     public static function get_list($object, $single_model, $extra = []) {
         $module = $object->module;
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
-        $model = $node->model;
+        $model = \FuncNode::node_check_model($node);
         if (\Gate::denies('node-admin', ['list', $module, $node, 'list'])) {
             return \Login::redirect_dashboard('no_permission');
         }
 
-        $array = ['module'=>$module, 'node'=>$node, 'model'=>$single_model, 'i'=>NULL,  'dt'=>'form', 'id'=>NULL, 'parent'=>NULL, 'action_fields'=>['create','edit','delete']];
+        $array = ['module'=>$module, 'node'=>$node, 'model'=>$single_model, 'i'=>NULL, 'filter_category'=>'admin', 'filter_category_id'=>'0', 'filter_type'=>'field', 'filter_node'=>$node->name, 'dt'=>'form', 'id'=>NULL, 'parent'=>NULL, 'action_fields'=>['create','edit','delete']];
         
         if($action_field = $node->node_extras()->where('type','action_field')->first()){
             $array['action_fields'] = json_decode($action_field->value_array, true);
-            // PROBAR
         }
 
         if(request()->has('parent_id')){
             $id = request()->input('parent_id');
             $array['id'] = $id;
-            $items = $model::whereHas('parent', function($q) use($id) {
+            $items = $model->whereHas('parent', function($q) use($id) {
                 $q->where('id', $id);
             });
         } else {
-            $items = $model::whereNotNull('id');
+            $items = $model->whereNotNull('id');
         }
 
         if($node){
@@ -84,14 +73,17 @@ class AdminList {
         }
 
         $array['items'] = $items->get();
-        $array['langs'] = \Solunes\Master\App\Language::get();
+        if($node->translation==1){
+            $array['langs'] = \Solunes\Master\App\Language::get();
+        } else {
+            $array['langs'] = [];
+        }
 
         if(request()->has('download-excel')){
             return AdminList::generate_query_excel($array);
         } else {
             return view('master::list.general-list', $array);
         }
-
     }
 
     public static function make_fields($langs, $fields, $action_fields = ['edit', 'delete']) {
@@ -101,6 +93,15 @@ class AdminList {
                 $response .= '<td>'.$field->label.'</td>';
             }
             if(is_array($action_fields)){
+                if(in_array('view', $action_fields)){
+                    if(count($langs)>0){
+                        foreach($langs as $language){
+                            $response .= '<td class="edit">'.$language->name.'</td>';
+                        }
+                    } else {
+                        $response .= '<td class="edit">'.trans('admin.view').'</td>';
+                    }
+                }
                 if(in_array('edit', $action_fields)){
                     if(count($langs)>0){
                         foreach($langs as $language){
@@ -135,6 +136,7 @@ class AdminList {
             $field_trans_name = $field->trans_name;
             $field_type = $field->type;
             $item_val = $item->$field_trans_name;
+            $count = 0;
             if($field_type=='string'){
                 $value = $item_val;
             } else if($field_type=='text') {
@@ -142,8 +144,8 @@ class AdminList {
                 if (strlen($value) > 300) {
                     $value = substr($value, 0, 300).'...';
                 }
-            } else if($field_type=='select') {
-                $value = trans('admin.'.$item_val);
+            } else if(($item_val||$item_val===0)&&($field_type=='select'||$field_type=='radio')) {
+                $value = $field->field_options()->where('name', $item_val)->first()->label;
             } else if($field_type=='relation') {
                 if($item->$field_trans_name){
                     $value = $item->$field_trans_name->name;
@@ -164,7 +166,6 @@ class AdminList {
                 } else {
                     $array_value = [$item_val];
                 }
-                $count = 0;
                 $value = '';
                 $folder = $field->field_extras()->where('type', 'folder')->first()->value;
                 foreach($array_value as $key => $val){
@@ -182,6 +183,16 @@ class AdminList {
                     } else {
                       $value .= '<a href="'.$file_url.'" target="_blank">'.$val.'</a>';
                     }
+                }
+            } else if($item_val&&$field_type=='checkbox') {
+                $array_value = json_decode($item_val, true);
+                $value = '';
+                foreach($array_value as $val){
+                    $count++;
+                    if($count>1){
+                        $value .= ' | ';
+                    }
+                    $value .= $field->field_options()->where('name', $val)->first()->label;
                 }
             } else if($field_type=='datetime'||$field->type=='date'||$field->type=='time') {
                 if($item_val){
@@ -210,13 +221,22 @@ class AdminList {
             $response = '';
             $response .= \AdminList::make_fields_values($item, $fields, $appends, 'table');
             if(is_array($action_fields)){
+                if(in_array('view', $action_fields)){
+                    if(count($langs)>0){
+                        foreach($langs as $language){
+                            $response .= '<td class="edit">'.AdminList::make_view($module, $model, $appends, $item, $language->code).'</td>';
+                        }
+                    } else {
+                        $response .= '<td class="edit">'.AdminList::make_view($module, $model, $appends, $item, 'es').'</td>';
+                    }
+                }
                 if(in_array('edit', $action_fields)){
                     if(count($langs)>0){
                         foreach($langs as $language){
                             $response .= '<td class="edit">'.AdminList::make_edit($module, $model, $appends, $item, $language->code).'</td>';
                         }
                     } else {
-                        $response .= '<td class="edit">'.AdminList::make_edit($module, $model, $appends, $item, $language->code).'</td>';
+                        $response .= '<td class="edit">'.AdminList::make_edit($module, $model, $appends, $item, 'es').'</td>';
                     }
                 }
                 if(in_array('delete', $action_fields)){
@@ -233,6 +253,16 @@ class AdminList {
         }
     }
 
+    public static function make_section_buttons($model, $item, $page_id = NULL) {
+        if(\Auth::check()){
+            $result = '<table class="admin-table section-buttons"><tr>'.AdminList::make_panel_title().'</tr>';
+            $result .= '<tr>'.AdminList::make_panel_buttons($model, $item, $page_id).'</tr></table>';            
+        } else {
+            $result = NULL;
+        }
+        return $result;
+    }
+
     public static function make_create($module, $model, $appends, $id = NULL) {
         if($id==NULL){
             $url = url($module.'/model/'.$model.'/create');
@@ -245,7 +275,7 @@ class AdminList {
             $url .= $string_separator.$appends;
         }
         $action = trans('admin.create');
-        return '<a class="admin_link" href="'.$url.'"><i class="fa fa-plus"></i> '.$action.'</a>';   
+        return ' | <a class="admin_link" href="'.$url.'"><i class="fa fa-plus"></i> '.$action.'</a>';   
     }
 
     public static function make_edit($module, $model, $appends, $item, $lang_code = NULL) {
@@ -260,6 +290,18 @@ class AdminList {
         return '<a href="'.$url.'">'.trans('admin.edit').'</a>';
     }
 
+    public static function make_view($module, $model, $appends, $item, $lang_code = NULL) {
+        $preurl = $module.'/model/'.$model.'/view/'.$item->id;
+        if($lang_code){
+            $preurl .= '/'.$lang_code;
+        }
+        $url = url($preurl);
+        if($appends!=NULL){
+            $url .= '?'.$appends;
+        }
+        return '<a href="'.$url.'">'.trans('admin.view').'</a>';
+    }
+
     public static function make_delete($module, $model, $item, $restore = false) {
         if($restore==true){
             $action = 'restore';
@@ -272,7 +314,8 @@ class AdminList {
     }
 
     public static function make_put_off($module, $model, $item) {
-        return '<a href="'.url($module.'/model/'.$model.'/put-off/'.$item->id).'" onclick="return confirm(\''.trans('admin.put_off_confirmation').'\');"><div class="delete"><i class="fa fa-times"></i> '.trans('admin.put_off').' '.trans('admin.'.$model).'</div></a>';
+        $url = url($module.'/model/'.$model.'/put-off/'.$item->id);
+        return '<a href="'.$url.'" onclick="return confirm(\''.trans('admin.put_off_confirmation').'\');"><div class="delete"><i class="fa fa-times"></i> '.trans('admin.put_off').' '.trans('admin.'.$model).'</div></a>';
     }
 
     public static function make_panel_title($lang = false) {
@@ -305,12 +348,15 @@ class AdminList {
         return $panel;
     }
 
-    public static function make_list_header($module, $node, $id, $parent, $appends, $action_fields = ['create']) {
-        $title = $node->plural;
+    public static function make_list_header($module, $node, $id, $parent, $appends, $count = 0, $action_fields = ['create']) {
+        $title = $node->plural.' ('.$count.')';
         $create = NULL;
         if($id!=NULL){
             if(in_array('create', $action_fields)){
                 $create = AdminList::make_create($module, $node->name, $appends, $id);
+            } 
+            if(in_array('create_anonym', $action_fields)){
+                $create .= ' | <a target="_blank" href="'.url('formulario/'.$node->name).'"><i class="fa fa-plus"></i> Link Anonimo</a>';
             }
             $back_url = url($module.'/model-list/'.$parent);
             if(request()->has('parameters')){
@@ -321,6 +367,9 @@ class AdminList {
         } else {
             if(in_array('create', $action_fields)){
                 $create = AdminList::make_create($module, $node->name, $appends);
+            } 
+            if(in_array('create_anonym', $action_fields)){
+                $create .= ' | <a target="_blank" href="'.url('formulario/'.$node->name).'"><i class="fa fa-plus"></i> Link Anonimo</a>';
             }
             $back = '';
         }
@@ -347,106 +396,69 @@ class AdminList {
         } else {
             $archive = '';
         }
-        $download = '<a href="'.url($url.$download_url).'"><i class="fa fa-download"></i> '.trans('admin.download').'</a>';
-        $result = '<h3>'.$title.$back.' | '.$create.$archive.' | '.$download.'</h3>';
+        $download = ' | <a href="'.url($url.$download_url).'"><i class="fa fa-download"></i> '.trans('admin.download').'</a>';
+        $result = '<h3>'.$title.$back.$create.$archive.$download.'</h3>';
         return $result;
     }
 
-    public static function filter_node($array, $node, $model, $items, $type = 'admin') {
-        $filters = $node->node_extras()->where('type','filter')->get();
-        if(count($filters)>0&&$model::count()>0){
+    public static function filter_node($array, $node, $model, $items, $type = 'admin', $parent_field_join = 'parent_id') {
+        if($type=='custom'||$type=='indicator'){
+            $filters = \Solunes\Master\App\Filter::checkCategory($type)->checkDisplay()->where('category_id', $array['filter_category_id']);
+        } else {
+            $filters = $node->filters()->checkCategory($type)->checkDisplay();
+        }
+        $filters = $filters->orderBy('order','ASC')->get();
+        $custom_check = \CustomFunc::check_custom_filter($type, $node);
+        if(count($filters)>0){
             $appends = NULL;
             $array['additional_queries'] = [];
-            foreach(request()->all() as $input_key => $input_val){
+            /*foreach(request()->all() as $input_key => $input_val){
                 if(stripos($input_key, 'f_') === false){
                     $array['additional_queries'][$input_key] = $input_val;
                 }
-            }
+            }*/
             if(request()->input('search')){
                 $array['search'] = 1;
             }
             $array['filters'] = [];
+            $array['filter_string_options'] = ['none'=>trans('master::fields.none'),'is'=>trans('master::fields.is'),'is_not'=>trans('master::fields.is_not'),'is_greater'=>trans('master::fields.is_greater'),'is_less'=>trans('master::fields.is_less'),'where_in'=>trans('master::fields.where_in')];
             foreach($filters as $filter){
-                $filter_value = json_decode($filter->value_array, true);
-                foreach($filter_value as $fil_val){
-                    if($filter->parameter=='custom'||$filter->parameter=='parent_field'||$filter->parameter=='custom_function'){
-                        $field_name = $fil_val['name'];
-                        if($filter->parameter=='parent_field'){
-                            $parent_node = \Solunes\Master\App\Node::where('name', $fil_val['parent'])->first();
-                        }
-                        $custom_data = $fil_val['data'];
-                   } else {
-                        $field_name = $fil_val;
+                $field_name = $filter->parameter;
+                $array['filters'][$field_name] = ['subtype'=>$filter->subtype, 'id'=>$filter->id];
+                if($type=='custom'||$type=='indicator'){
+                    $node = $filter->node;
+                    if($type=='custom'){
+                        $array['filters'][$field_name]['node_name'] = $node->name;
                     }
-                    $array['filters'][$field_name] = $filter->parameter;
-                    if($filter->parameter=='dates'){
-                        $array['first_day'] = $model::orderBy($field_name,'ASC')->first()->$field_name->format('Y-m-d');
-                        $array['last_day'] = $model::orderBy($field_name,'DESC')->first()->$field_name->format('Y-m-d');
-                        $f_date_from = NULL;
-                        $f_date_to = NULL;
-                        if(request()->input('f_date_from')){ $f_date_from = request()->input('f_date_from'); }
-                        if(request()->input('f_date_to')){ $f_date_to = request()->input('f_date_to'); }
-                        if($f_date_from){
-                          $items = $items->where($field_name, '>=', $f_date_from.' 00:00:00');
-                          $appends['f_date_from'] = $f_date_from;
-                        }
-                        if($f_date_to){
-                          $items = $items->where($field_name, '<=', $f_date_to.' 23:59:59');
-                          $appends['f_date_to'] = $f_date_to;
-                        }
-                    } else if($filter->parameter=='field'){
-                        $field = $node->fields()->where('name', $field_name)->first();
-                        $options = $field->options;
-                        if(isset($options[0])){
-                            unset($options[0]);
-                        }
-                        $array['filter_options'][$field_name] = ['any'=>trans('admin.any')]+$options;
-                        $custom_value = 'any';
-                        if(request()->input('f_'.$field_name)){ $custom_value = request()->input('f_'.$field_name); }
-                        if($custom_value!='any'){
-                            if($field->type=='field'){
-                              $items = $items->whereHas($field_name, function ($query) use($field, $field_name, $custom_value) {
-                                $query->where($field->value.'_id', $custom_value);
-                              });
-                            } else {
-                              $items = $items->where($field->name, $custom_value);
-                            }
-                            $appends['f_'.$field_name] = $custom_value;
-                        }
-                    } else if($filter->parameter=='parent_field'){
-                        $parent_model = $parent_node->model;
-                        $field = $parent_node->fields()->where('name', $field_name)->first();
-                        $options = $field->options;
-                        if(isset($options[0])){
-                            unset($options[0]);
-                        }
-                        $array['filter_options'][$field_name] = ['any'=>trans('admin.any')]+$options;
-                        $custom_value = 'any';
-                        if(request()->input('f_'.$field_name)){ $custom_value = request()->input('f_'.$field_name); }
-                        if($custom_value!='any'){
-                            $parent_array = $parent_model::where($field->name, $custom_value)->lists('id')->toArray();
-                            $items = $items->whereIn($custom_data, $parent_array);
-                            $appends['f_'.$field_name] = $custom_value;
-                        }
-                    } else if($filter->parameter=='custom'){
-                        $custom_options = [];
-                        foreach($custom_data as $custom_item){
-                            $custom_options[$custom_item] = trans('admin.'.$custom_item);
-                        }
-                        $array['filter_options'][$field_name] = $custom_options;
-                        $custom_value = 'any';
-                        if(request()->input('f_'.$field_name)){ $custom_value = request()->input('f_'.$field_name); }
-                        if($custom_value!='any'){
-                            $appends['f_'.$field_name] = $custom_value;
-                        }
-                    } else if($filter->parameter=='custom_function'){
-                        $custom_array = \CustomFunc::custom_filter($array, $items, $appends, $field_name, $custom_data);
+                }
+                if($custom_check!='false'){
+                    $custom_array = \CustomFunc::custom_filter($custom_check, $array, $items, $appends, $node, $model, $filter, $type, $field_name, $parent_field_join);
+                    $array = $custom_array['array'];
+                    $appends = $custom_array['appends'];
+                    $items = $custom_array['items'];
+                } else {
+                    if($filter->type=='custom'){
+                        $custom_array = \CustomFunc::custom_filter_field($array, $items, $appends, $field_name, $custom_data);
                         $array = $custom_array['array'];
                         $appends = $custom_array['appends'];
                         $items = $custom_array['items'];
+                    } else {
+                        // Calcular Custom Value
+                        $custom_array = \AdminList::filter_custom_value($array, $appends, $node, $filter, $type, $field_name);
+                        $array = $custom_array['array'];
+                        $appends = $custom_array['appends'];
+                        $custom_value = $custom_array['custom_value'];
+                        $field = $custom_array['field'];
+                        // Obtener items segun tipo
+                        $custom_array = \AdminList::filter_items_get($items, $node, $model, $filter, $field, $field_name, $custom_value);
+                        $items = $custom_array['items'];
+                        $date_model = $custom_array['date_model'];
+                        // Corregir campos de fecha
+                        $array = \AdminList::filter_date_field($array, $date_model, $filter, $field_name);
                     }
                 }
             }
+            $array['filter_values'] = $appends;
             if($appends){
                 $appends = 'parameters='.htmlentities(json_encode($appends));
             }
@@ -457,6 +469,150 @@ class AdminList {
         }
         $array['items'] = $items;
         return $array;
+    }
+
+    public static function filter_custom_value($array, $appends, $node, $filter, $type, $field_name) {
+        $custom_value = [];
+        if($filter->subtype=='date'){
+            $appends['f_'.$field_name.'_from'] = NULL;
+            $appends['f_'.$field_name.'_to'] = NULL;
+        } else if($filter->subtype=='string'){
+            $appends['f_'.$field_name] = NULL;
+            $appends['f_'.$field_name.'_action'] = NULL;
+        } else {
+            $appends['f_'.$field_name] = NULL;
+        }
+        if($type=='indicator'){
+            $custom_value = json_decode($filter->action_value, true);
+            if($filter->subtype=='date'){
+                if($custom_value&&isset($custom_value['is_greater'])){
+                    $appends['f_'.$field_name.'_from'] = $custom_value['is_greater'];
+                }
+                if($custom_value&&isset($custom_value['is_less'])){
+                    $appends['f_'.$field_name.'_to'] = $custom_value['is_less'];
+                }
+            } else if($filter->subtype=='string'){
+                if($custom_value){
+                    $appends['f_'.$field_name] = key($custom_value);
+                    $appends['f_'.$field_name.'_action'] = $custom_value[$appends['f_'.$field_name]];
+                }
+            } else if($custom_value){
+                $appends['f_'.$field_name] = array_keys($custom_value);
+            }
+        } else if($filter->subtype=='date'){
+            if($field_from = request()->input('f_'.$field_name.'_from')){ 
+                $custom_value[$field_from][] = 'is_greater';
+            }
+            $appends['f_'.$field_name.'_from'] = $field_from;
+            if($field_to = request()->input('f_'.$field_name.'_to')){ 
+                $custom_value[$field_to][] = 'is_less';
+            }
+            $appends['f_'.$field_name.'_to'] = $field_to;
+        } else if($filter->subtype=='string') {
+            if($field_string = request()->input('f_'.$field_name)){ 
+                $custom_value[$field_string] = request()->input('f_'.$field_name.'_action');
+                $appends['f_'.$field_name] = $field_string;
+            }
+        } else if(request()->input('f_'.$field_name)){
+            foreach(request()->input('f_'.$field_name) as $select_key => $select_value){
+                $custom_value[$select_value] = 'is';
+            }
+            $appends['f_'.$field_name] = array_keys($custom_value);
+        }
+        $field = $node->fields()->where('name', $field_name)->first();
+        if($filter->type=='parent_field'){
+            $array['filters'][$field_name]['label'] = strtoupper($node->name).': '.$field->label;
+        } else {
+            $array['filters'][$field_name]['label'] = $field->label;
+        }
+        $array['filters'][$field_name]['options'] = $field->options;
+        return ['array'=>$array, 'appends'=>$appends, 'custom_value'=>$custom_value, 'field'=>$field];
+    }
+
+    public static function filter_items_get($items, $node, $model, $filter, $field, $field_name, $custom_value) {
+        $custom_value_count = count($custom_value);
+        if($filter->type=='field'){
+            $date_model = $model;
+            if($custom_value_count>0){  
+                $items = \AdminList::filter_custom_array($items, $custom_value, $field, $field_name);
+            }
+        } else if($filter->type=='parent_field') {
+            $parent_model = $node->model;
+            $date_model = $parent_model;
+            if($custom_value_count>0){
+                $parent_array = $parent_model::whereNotNull('id');
+                $parent_array = \AdminList::filter_custom_array($parent_array, $custom_value, $field, $field_name);
+                $parent_array = $parent_array->lists($parent_field_join)->toArray();
+            }
+            $items = $items->whereIn('id', $parent_array);
+        }
+        return ['items'=>$items, 'date_model'=>$date_model];
+    }
+
+    public static function filter_date_field($array, $date_model, $filter, $field_name) {
+        if($filter->subtype=='date'){
+            if($first_day_field = $date_model::whereNotNull($field_name)->orderBy($field_name,'ASC')->first()){
+                $array['filters'][$field_name]['first_day'] = $first_day_field->$field_name;
+            } else {
+                $array['filters'][$field_name]['first_day'] = NULL;
+            }
+            if($last_day_field = $date_model::orderBy($field_name,'DESC')->first()){
+                $array['filters'][$field_name]['last_day'] = $last_day_field->$field_name;
+            } else {
+                $array['filters'][$field_name]['last_day'] = NULL;
+            }
+            $array['filters'][$field_name]['label_from'] = $array['filters'][$field_name]['label'].' ('.trans('master::fields.from').')';
+            $array['filters'][$field_name]['label_to'] = $array['filters'][$field_name]['label'].' ('.trans('master::fields.to').')';
+        }
+        return $array;
+    }
+
+    public static function filter_custom_array($items, $custom_value, $field, $field_name) {
+        $items = $items->where(function ($query) use($custom_value, $field, $field_name) {
+            $count = 0;
+            foreach($custom_value as $custom_val => $custom_action){
+                if($count>0){
+                    $main_action = 'orWhere';
+                } else {
+                    $main_action = 'where';
+                }
+                if($custom_action=='is'){
+                    $action = '=';
+                } else if($custom_action=='is_not'){
+                    $action = '!=';
+                } else if($custom_action=='is_greater'){
+                    $action = '>=';
+                } else if($custom_action=='is_less'){
+                    $action = '<=';
+                } else if($custom_action=='where_in'){
+                    $action = '=';
+                    $main_action .= 'In';
+                    $custom_val = explode(',', $custom_val);
+                } else {
+                    $action = 'none';
+                }
+                if($action!='none'){
+                    if($field->type=='checkbox'){
+                        $custom_val = '%'.$custom_val.'%';
+                        $action = 'LIKE';
+                    }
+                    if($field->type=='field'){
+                        $main_action .= 'Has';
+                        $query = $query->$main_action($field_name, function ($subquery) use($field, $custom_val) {
+                            $subquery->where($field->value.'_id', $custom_val);
+                        });
+                    } else if($custom_action=='where_in') {
+                        $query = $query->$main_action($field->name, $custom_val);
+                    } else {
+                        $query = $query->$main_action($field->name, $action, $custom_val);
+                    }
+                    if($field->type!='date'){
+                        $count++;
+                    }
+                }
+            }
+        });
+        return $items;
     }
 
     public static function graph_node($array, $node, $model, $items, $graphs) {

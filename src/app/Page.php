@@ -9,8 +9,8 @@ class Page extends Model {
     protected $table = 'pages';
     public $timestamps = true;
 
-    public $translatedAttributes = ['name'];
-    protected $fillable = [ 'name'];
+    public $translatedAttributes = ['slug','name'];
+    protected $fillable = ['slug','name'];
     protected $dates = ['deleted_at'];
 
     use \Dimsav\Translatable\Translatable;

@@ -22,7 +22,11 @@ class Notification extends Model {
 	);
 
     public function node() {
-        return $this->belongsTo('Solunes\Master\App\node');
+        return $this->belongsTo('Solunes\Master\App\Node');
+    }
+
+    public function user() {
+        return $this->belongsTo('App\User');
     }
 
 }

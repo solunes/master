@@ -39,13 +39,6 @@ class CreatedNode {
                 $saved = true;
             } 
         }
-        if($node->location=='package'){
-            $lang_folder = 'master::model.';
-        } else {
-            $lang_folder = 'model.';
-        }
-        $node->singular = trans_choice($lang_folder.$node->name, 1);
-        $node->plural = trans_choice($lang_folder.$node->name, 0);
         if($saved===true){
             $node->save();
         }

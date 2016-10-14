@@ -1,4 +1,4 @@
-@extends('layouts/master')
+@extends('master::layouts/admin')
 
 @section('content')
   <div class="main-content main-content-5">

@@ -44,22 +44,28 @@ class AssetController extends Controller {
 
     public function postUpload(Request $request) {
       $error = false;
-      $filesize = 5;
-      $image_array = ['jpg','jpeg','png','gif'];
-      $file_array = array_merge($image_array, ['doc','docx','xls','xlsx','pdf','txt']);
 	  if($request->hasFile('file')&&$request->has('type')&&$request->has('folder')) {
 	  	$type = $request->input('type');
 	  	$folder = $request->input('folder');
 	  	$file = $request->file('file');
+	  	if($type=='image'){
+      		$filesize = \FuncNode::check_var('image_size');
+        	$file_array = explode(',', \FuncNode::check_var('image_extension'));
+      		$error_size = 'La imagen debe tener un tamaño menor a '.$filesize.' MB.';
+      		$error_ext = 'Debe ingresar una imagen valida.';
+	  	} else {
+        	$filesize = \FuncNode::check_var('file_size');
+        	$file_array = explode(',', \FuncNode::check_var('file_extension'));
+      		$error_size = 'El archivo debe tener un tamaño menor a '.$filesize.' MB.';
+      		$error_ext = 'Debe ingresar un archivo en un formato valido.';
+	  	}
 	  	$file_size = $file->getClientSize();
 	  	$file_name = (string) $file->getClientOriginalName();
 	  	$file_ext = (string) $file->getClientOriginalExtension();
 	  	if($file_size>$filesize*1000000){
-	  		$error = $file_name.': El archivo debe tener un tamaño menor a '.$filesize.' MB.';
-	  	} else if($type=='image'&&!in_array($file_ext, $image_array)){
-	  		$error = $file_name.': Debe ingresar una imagen valida.';
-	  	} else if($type=='file'&&!in_array($file_ext, $file_array)){
-	  		$error = $file_name.': Debe ingresar un archivo en un formato valido.';
+	  		$error = $file_name.': '.$error_size;
+	  	} else if(!in_array($file_ext, $file_array)){
+	  		$error = $file_name.': '.$error_ext;
 	  	}
 	  } else {
 	  	if(!$request->hasFile('file')){

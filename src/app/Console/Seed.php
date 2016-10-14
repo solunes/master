@@ -26,20 +26,26 @@ class Seed extends Command
      * @return mixed
      */
     public function handle(){
-        $time_start = microtime(true); 
-        $this->info('0%: Seed iniciado.');
-        $this->callSilent('empty:storage');
-        $this->info('20%: Storage limpiado correctamente.');
-        $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseTruncateSeeder']);
-        $this->callSilent('db:seed', ['--class'=>'DatabaseTruncateSeeder']);
-        $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseMasterSeeder']);
-        $this->callSilent('db:seed', ['--class'=>'DatabaseMasterSeeder']);
-        $this->info('50%: Base de datos llenada correctamente.');
-        $this->callSilent('generate-nodes');
-        $this->info('70%: Campos de nodos creados correctamente.');
-        $this->callSilent('import-excel');
-        $this->info('95%: Campos de nodos creados correctamente.');
-        $this->info('100%: Seed finalizado.');
-        $this->info('Total execution time in seconds: ' . (microtime(true) - $time_start));
+        if(\App::environment('local')){
+            $time_start = microtime(true); 
+            $this->info('0%: Seed iniciado.');
+            $this->callSilent('empty:storage');
+            $this->info('20%: Storage limpiado correctamente.');
+            $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseTruncateSeeder']);
+            $this->callSilent('db:seed', ['--class'=>'DatabaseTruncateSeeder']);
+            $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseMasterSeeder']);
+            $this->callSilent('db:seed', ['--class'=>'DatabaseMasterSeeder']);
+            $this->info('50%: Base de datos llenada correctamente.');
+            $this->callSilent('generate-nodes');
+            $this->info('70%: Campos de nodos creados correctamente.');
+            $this->info('80%: '.\CustomFunc::before_seed_actions());
+            $this->callSilent('import-excel');
+            $this->info('95%: Campos de nodos creados correctamente.');
+            $this->info('99%: '.\CustomFunc::after_seed_actions());
+            $this->info('100%: Seed finalizado.');
+            $this->info('Total execution time in seconds: ' . (microtime(true) - $time_start));
+        } else {
+            $this->info('Solo se puede realizar esta tarea en modo local.');
+        }
     }
 }

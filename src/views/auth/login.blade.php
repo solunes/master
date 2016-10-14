@@ -1,4 +1,4 @@
-@extends('layouts/master')
+@extends('master::layouts/admin')
 @section('title', 'Log In')
 
 @section('content')
@@ -14,14 +14,14 @@
             @endif
 
             <div class="form-group">
-              {!! Form::label('email', 'eMail', ['class'=>'col-sm-3 control-label']) !!} 
+              {!! Form::label('user', 'eMail/Usuario', ['class'=>'col-sm-3 control-label']) !!} 
               <div class="col-sm-6">
-                {!! Form::email('email', NULL, ['class'=> 'form-control']) !!}
+                {!! Form::text('user', NULL, ['class'=> 'form-control']) !!}
               </div>
-              <div class="col-sm-offset-3 col-sm-6 error">{{ $errors->first('email') }}</div>
+              <div class="col-sm-offset-3 col-sm-6 error">{{ $errors->first('user') }}</div>
             </div>
             <div class="form-group">
-              {!! Form::label('password', 'Password', ['class'=>'col-sm-3 control-label']) !!} 
+              {!! Form::label('password', 'Contraseña', ['class'=>'col-sm-3 control-label']) !!} 
               <div class="col-sm-6">
                 {!! Form::password('password', ['class'=> 'form-control']) !!}
               </div>

@@ -1,9 +1,15 @@
-@extends('layouts/master')
+@extends('master::layouts/admin')
 
 @section('content')
   @if($parent)
     <h3>Seleccionar Campo Predefinido</h3>
     <h4>Elija una opción para "{{ trans('fields.'.$parent) }}":</h4>
+    @if($single_model=='indicator')
+    <?php $indicator_key = 19; ?>
+    <h5><a href="{{ $url.$indicator_key.'&type=custom&custom=estudiante' }}">Crear Indicador Dinámico para Estudiantes</a></h5>
+    <h5><a href="{{ $url.$indicator_key.'&type=custom&custom=docente' }}">Crear Indicador Dinámico para Docente</a></h5>
+    <h5><a href="{{ $url.$indicator_key.'&type=custom&custom=empresa' }}">Crear Indicador Dinámico para Empresa</a></h5>
+    @endif
     <ul class="row">
       @foreach($items as $item_key => $item_name)
         @if($item_key!='0')

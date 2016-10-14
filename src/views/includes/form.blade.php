@@ -4,7 +4,11 @@
       </div>
       @if($field->multiple)
         <div id="field_{{ $field->name }}" class="child">
-          <h3>{{ $field->label }}</h3>
+          <label>{{ $field->label }}
+            @if($field->message)
+              <div class="field-message">{{ $field->message }}</div>
+            @endif
+          </label>
           <div class="table-responsive">
             <table class="table" id="{{ $field->name }}">
               <thead><tr class="title">

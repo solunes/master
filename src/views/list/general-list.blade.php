@@ -1,7 +1,10 @@
-@extends('layouts/master')
+@extends('master::layouts/admin')
 
+@section('css')
+  @include('master::scripts.lightbox-css')
+@endsection
 @section('content')
-  {!! AdminList::make_list_header($module, $node, $id, $parent, $appends, $action_fields) !!}
+  {!! AdminList::make_list_header($module, $node, $id, $parent, $appends, count($items), $action_fields) !!}
   @include('master::helpers.filter')
   @if(count($items)>0)
     <table class="admin-table table table-striped table-bordered dt-responsive">
@@ -32,5 +35,6 @@
   @endif
 @endsection
 @section('script')
+  @include('master::scripts.lightbox-js')
   @include('master::helpers.graph')
 @endsection

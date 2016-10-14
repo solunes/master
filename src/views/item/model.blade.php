@@ -1,7 +1,7 @@
-@extends('layouts/master')
+@extends('master::layouts/admin')
 
 @section('css')
-  <link rel="stylesheet" href="{{ url(elixir("assets/css/froala.css")) }}">
+  <link rel="stylesheet" href="{{ asset('assets/admin/css/froala.css') }}">
   @include('master::scripts.lightbox-css')
 @endsection
 @section('content')
@@ -29,6 +29,8 @@
   @include('master::scripts.child-js')
   @include('master::scripts.conditionals-js')
   @include('master::scripts.upload-js')
+  @include('master::scripts.map-js')
+  @include('master::scripts.map-field-js')
   @include('master::scripts.lightbox-js')
   @include('master::scripts.tooltip-js')
   @include('master::scripts.accordion-js')

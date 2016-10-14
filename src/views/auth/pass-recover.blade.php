@@ -1,4 +1,4 @@
-@extends('layouts/master')
+@extends('master::layouts/admin')
 @section('title', 'Recuperar Contraseña')
 
 @section('content')

@@ -13,7 +13,7 @@ trait UserPermission {
     }
 
     public function isSuperAdmin() {
-        return $this->role_user->contains('name', 'superadmin');
+        return $this->id==1;
     }
 
     public function hasRole($roleName) {

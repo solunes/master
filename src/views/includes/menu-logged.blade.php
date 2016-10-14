@@ -1,22 +1,41 @@
-<p class="dnl-nav-title">{{ trans('master::model.my_dashboard') }}</p>
-<ul class="dnl-nav">
-  <li><a href="{{ url('') }}"><span class="dnl-link-icon"><i class="fa fa-rotate-left"></i></span> Volver a Sitio</a></li>
+<!-- BEGIN SIDEBAR MENU -->
+<!-- DOC: Apply "page-sidebar-menu-light" class right after "page-sidebar-menu" to enable light sidebar menu style(without borders) -->
+<!-- DOC: Apply "page-sidebar-menu-hover-submenu" class right after "page-sidebar-menu" to enable hoverable(hover vs accordion) sub menu mode -->
+<!-- DOC: Apply "page-sidebar-menu-closed" class right after "page-sidebar-menu" to collapse("page-sidebar-closed" class must be applied to the body element) the sidebar sub menu mode -->
+<!-- DOC: Set data-auto-scroll="false" to disable the sidebar from auto scrolling/focusing -->
+<!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
+<!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
+<ul class="page-sidebar-menu  page-header-fixed " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top: 20px">
+  <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
+  <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+  <li class="sidebar-toggler-wrapper hide">
+      <div class="sidebar-toggler">
+        <span></span>
+      </div>
+  </li>
+  <!-- END SIDEBAR TOGGLER BUTTON -->
+  <li class="nav-item start active open">
+      <a href="javascript:;" class="nav-link nav-toggle">
+        <i class="icon-home"></i>
+        <span class="title">{{ trans('master::model.my_dashboard') }}</span>
+        <span class="selected"></span>
+      </a>
+  </li>
+  <li class="heading">
+      <h3 class="uppercase">Menu</h3>
+  </li>
   @foreach($items as $item)
-    <li {!! $item->attributes() !!}>
+    <li class="nav-item">
       {!! Func::menu_link($item, 1) !!}
       @if($item->hasChildren())
-        <ul class="dnl-sub-one collapse" id="{{ $item->id }}Dropdown">
+        <ul class="sub-menu">
           @foreach($item->children() as $child)
-            @if($child->hasChildren())
-            <li class="dropdown-right-onhover">
-            @else
-            <li>
-            @endif
+            <li class="nav-item">
               {!! Func::menu_link($child, 2) !!}
               @if($child->hasChildren())
-                <ul class="dropdown-menu">
+                <ul class="sub-menu">
                   @foreach($child->children() as $child2)
-                    <li>{!! Func::menu_link($child2, 3) !!}</li>
+                    <li class="nav-item">{!! Func::menu_link($child2, 3) !!}</li>
                   @endforeach
                 </ul>
               @endif
@@ -29,13 +48,15 @@
       <li{{\HTML::attributes($item->divider)}}></li>
     @endif
   @endforeach
+  @if(Auth::check())
+    <li class="heading">
+      <h3 class="uppercase">{{ trans('master::model.my_account') }}</h3>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('account') }}">
+      <i class="fa fa-user"></i><span class="title">{{ trans('master::model.profile') }}</span>
+    </a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url('auth/logout') }}">
+      <i class="fa fa-sign-out"></i><span class="title">{{ trans('master::model.logout') }}</span>
+    </a></li>
+  @endif
 </ul>
-@if(Auth::check())
-  <p class="dnl-nav-title">{{ trans('master::model.my_account') }}</p>
-  <ul class="dnl-nav">
-    <li><a href="{{ url('account') }}"><span class="dnl-link-icon"><i class="fa fa-user"></i></span>
-    <span class="dnl-link-text">{{ trans('master::model.profile') }}</span></a></li>
-    <li><a href="{{ url('auth/logout') }}"><span class="dnl-link-icon"><i class="fa fa-sign-out"></i></span>
-    <span class="dnl-link-text">{{ trans('master::model.logout') }}</span></a></li>
-  </ul>
-@endif

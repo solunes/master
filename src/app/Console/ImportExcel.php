@@ -27,24 +27,61 @@ class ImportExcel extends Command
      */
     public function handle(){
         $this->info('0%: Se comenzó a importar el excel.');
-        \Excel::load(public_path('seed/import.xls'), function($reader) {
+        $languages = \Solunes\Master\App\Language::get();
+        \Excel::load(public_path('seed/import.xls'), function($reader) use($languages) {
             foreach($reader->get() as $sheet){
                 $sheet_model = $sheet->getTitle();
                 $node = \Solunes\Master\App\Node::where('name', $sheet_model)->first();
                 $model = $node->model;
-                $sheet->each(function($row) use ($node, $model) {
+                $sheet->each(function($row) use ($languages, $node, $model) {
                     if($row->id){
-                        if(!$item = $model::where('id', $row->id)->first()){
-                            $item = new $model;
-                        }
-                        foreach($node->fields()->whereNotIn('type', ['child','subchild','field'])->get() as $field){
-                            $field_name = $field->name;
-                            $input = $row->$field_name;
-                            if($field->type=='image'||$field->type=='file'){
-                                $action_name = 'upload_'.$field->type;
-                                $input = \Asset::$action_name(public_path('seed/'.$node->name.'/'.$input), $node->name.'-'.$field->name, true);
+                        if($node->dynamic&&$node->parent_id==NULL){
+                            $model = new $model;
+                            $model = $model->fromTable($node->table_name);
+                            if(!$item = $model->where('id', $row->id)->first()){
+                                $item = $model;
                             }
-                            $item = \FuncNode::put_data_field($item, $field, $input);
+                        } else {
+                            if(!$item = $model::where('id', $row->id)->first()){
+                                $item = new $model;
+                            }
+                        }
+                        foreach($languages as $language){
+                            foreach($node->fields()->whereNotIn('type', ['child','subchild','field'])->get() as $field){
+                                $field_name = $field->name;
+                                if($language->id>1){
+                                    $field_name = $field_name.'_'.$language->code;
+                                }
+                                if($language->id==1||$field->translation==1){
+                                    $input = $row->$field_name;
+                                    if($field->type=='select'||$field->type=='radio'){
+                                        if($subanswer = $field->field_options()->whereTranslation('label', $input)->first()){
+                                            $input = $subanswer->name;
+                                        } else {
+                                            $input = NULL;
+                                        }
+                                    } else if($field->type=='checkbox'){
+                                      $subinput = [];
+                                      foreach(explode(' | ', $input) as $subval){
+                                        if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
+                                            $subinput[] = $subanswer->name;
+                                        }
+                                      }
+                                      if(count($subinput)>0){
+                                        $input = json_encode($subinput);
+                                      } else {
+                                        $input = NULL;
+                                      }
+                                    }
+                                    if($input){
+                                        if($field->type=='image'||$field->type=='file'){
+                                            $action_name = 'upload_'.$field->type;
+                                            $input = \Asset::$action_name(public_path('seed/'.$node->name.'/'.$input), $node->name.'-'.$field->name, true);
+                                        }
+                                        $item = \FuncNode::put_data_field($item, $field, $input, $language->code);
+                                    }
+                                }
+                            }
                         }
                         $item->save();
                         foreach($node->fields()->where('type', 'field')->get() as $field){

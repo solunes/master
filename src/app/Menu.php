@@ -55,18 +55,18 @@ class Menu extends Model {
         $this->attributes['level'] = $value;
     }
 
-    public function setOrderAttribute($value){
+    /*public function setOrderAttribute($value){
         if($value==''||$value==NULL){
             $level = $this->attributes['level'];
-            if(\App\Solunes\Master\Menu::where("level", $level)->count()>0){
-                $order = \App\Solunes\Master\Menu::where("level", $level)->orderBy("order", "DESC")->first()->order;
+            if(\Solunes\Master\App\Menu::where("level", $level)->count()>0){
+                $order = \Solunes\Master\App\Menu::where("level", $level)->orderBy("order", "DESC")->first()->order;
             } else {
                 $order = 0;
             }
             $order = $order+1;
             $this->attributes['order'] = $order;
         }
-    }
+    }*/
 
     public function getRealLinkAttribute(){
       if($this->page){

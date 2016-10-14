@@ -17,14 +17,13 @@ class Asset {
     }
 
     public static function get_image_path($folder, $code, $file) {
-		switch (config('filesystems.default')) {
-		  case 's3':
-			return Storage::disk('s3')->getDriver()->getAdapter()->getClient()->getObjectUrl(config('filesystems.disks.s3.bucket'), $folder.'/'.$code.'/'.$file);			
-			break;
-		  default:
-			return asset('storage/'.$folder.'/'.$code.'/'.$file);
-			break;
-		}
+    	$path = $folder.'/'.$code.'/'.$file;
+    	if(config('filesystems.cloud')=='cloudfront'){
+    		$final_path = config('filesystems.disks.cloudfront.url').'/'.$path;
+    	} else {
+    		$final_path = Storage::url($path);
+    	}
+    	return $final_path;
     }
 
     public static function upload_image($file, $folder, $encode = false) {
@@ -66,15 +65,13 @@ class Asset {
     }
 
     public static function get_file($folder, $file) {
-    	$url = $folder.'/'.$file;
-		switch (config('filesystems.default')) {
-		  case 's3':
-			return Storage::disk('s3')->getDriver()->getAdapter()->getClient()->getObjectUrl(config('filesystems.disks.s3.bucket'), $url);
-			break;
-		  default:
-			return asset('storage/'.$folder.'/'.$file);
-			break;
-		}
+    	$path = $folder.'/'.$file;
+    	if(config('filesystems.cloud')=='cloudfront'){
+    		$final_path = config('filesystems.disks.cloudfront.url').'/'.$path;
+    	} else {
+    		$final_path = Storage::url($path);
+    	}
+    	return $final_path;
     }
 
     public static function upload_file($file, $folder, $encode = false) {
@@ -132,13 +129,15 @@ class Asset {
             foreach($file_fields as $field){
                 $file_name = $field->name;
                 $folder = $field->field_extras()->where('type','folder')->first()->value;
-                if($field->multiple){
-                	foreach(json_decode($item->$file_name) as $subfile){
-                		\Asset::delete_file($field->type, $folder, $subfile);
-                	}
-                } else {
-                	\Asset::delete_file($field->type, $folder, $item->$file_name);
-                }
+                if($item->$file_name){
+	                if($field->multiple){
+	                	foreach(json_decode($item->$file_name) as $subfile){
+	                		\Asset::delete_file($field->type, $folder, $subfile);
+	                	}
+	                } else {
+	                	\Asset::delete_file($field->type, $folder, $item->$file_name);
+	                }
+	            }
             }
         }
         return true;
@@ -147,10 +146,12 @@ class Asset {
     public static function delete_file($type, $folder, $file) {
     	if($folder&&$file&&$file!=''&&$file!=NULL){
 			if($type=='image'){
-				if(\Solunes\Master\App\ImageSize::where('folder', $folder)->count()>0){
-					foreach(\App\ImageSize::where('folder', $folder)->orWhere('folder', 'mini')->get() as $size){
-					  	if(\Storage::has($folder.'/'.$size->code.'/'.$file)){
-					  		\Storage::delete($folder.'/'.$size->code.'/'.$file);
+				if($image_folder = \Solunes\Master\App\ImageFolder::where('name', $folder)->first()){
+					$image_sizes = $image_folder->image_sizes->toArray();
+		  			array_push($image_sizes, ['code'=>'mini']);
+					foreach($image_sizes as $size){
+					  	if(\Storage::has($folder.'/'.$size["code"].'/'.$file)){
+					  		\Storage::delete($folder.'/'.$size["code"].'/'.$file);
 					  	}
 					}
 				} 

@@ -10,7 +10,7 @@ class PageTranslation extends Model {
 	
 	protected $table = 'page_translation';
     public $timestamps = false;
-    protected $fillable = ['name', 'link'];
+    protected $fillable = ['slug','name'];
 	
     use Sluggable, SluggableScopeHelpers;
     public function sluggable(){

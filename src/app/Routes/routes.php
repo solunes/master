@@ -15,8 +15,13 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('/', 'AdminController@getIndex');
     Route::get('generate-manual/{role_name?}', 'AdminController@getGenerateManual');
     Route::get('model-list/{model}', 'AdminController@getModelList');
+    Route::get('model/indicator/{action}/{id?}/{lang?}', 'AdminController@getModelIndicator');
     Route::get('model/{model}/{action}/{id?}/{lang?}', 'AdminController@getModel');
     Route::post('model', 'AdminController@postModel');
+    Route::get('modal-filter/{category}/{type}/{category_id}/{node_name}', 'AdminController@getModalFilter');
+    Route::post('modal-filter', 'AdminController@postModalFilter');
+    Route::get('delete-filter/{id}', 'AdminController@getDeleteFilter');
+    Route::get('modal-map/{name}/{value}', 'AdminController@getModalMap');
 });
 Route::group(['prefix'=>'auth'], function(){
     Route::get('login', 'Auth\LoginController@getLogin');
@@ -26,7 +31,7 @@ Route::group(['prefix'=>'auth'], function(){
 Route::group(['prefix'=>'password'], function(){
     Route::get('recover', 'Auth\PasswordController@getRecover');
     Route::post('request', 'Auth\PasswordController@postRequest');
-    Route::get('reset', 'Auth\PasswordController@getReset');
+    Route::get('reset/{token?}', 'Auth\PasswordController@getReset');
     Route::post('update', 'Auth\PasswordController@postUpdate');
 });
 Route::group(['prefix'=>'account'], function(){

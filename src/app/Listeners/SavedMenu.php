@@ -6,7 +6,10 @@ class SavedMenu {
 
     public function handle($menu) {
         if($page = $menu->page){
-            $menu->translateOrNew('es')->name = $page->name;
+        	foreach(\Solunes\Master\App\Language::get() as $language){
+                \App::setLocale($language->code);
+            	$menu->translateOrNew($language->code)->name = $page->name;
+        	}
         }
     }
 

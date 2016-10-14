@@ -36,7 +36,7 @@ class Node extends Model {
     }
 
     public function fields() {
-        return $this->hasMany('Solunes\Master\App\Field', 'parent_id')->where('type', '!=', 'site')->orderBy('order','ASC')->orderBy('id','ASC');
+        return $this->hasMany('Solunes\Master\App\Field', 'parent_id')->orderBy('order', 'ASC')->with('translations');
     }
 
     public function node_requests() {
@@ -47,8 +47,12 @@ class Node extends Model {
         return $this->hasMany('Solunes\Master\App\NodeExtra', 'parent_id')->orderBy('order', 'ASC');
     }
 
-    public function deadline() {
-        return $this->hasOne('App\Deadline');
+    public function filters() {
+        return $this->hasMany('Solunes\Master\App\Filter', 'node_id');
+    }
+
+    public function indicators() {
+        return $this->hasMany('Solunes\Master\App\Indicator', 'node_id');
     }
 
 }

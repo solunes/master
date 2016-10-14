@@ -8,9 +8,9 @@ class MasterServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        /*$this->mergeConfigFrom(
-            __DIR__ . '/config/main.php', 'solunes-master-main'
-        );*/
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/solunes.php', 'solunes'
+        );
     }
 
     public function boot()
@@ -28,9 +28,12 @@ class MasterServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/lang-custom' => base_path('resources/lang')
         ], 'lang');
-        /*$this->publishes([
-            __DIR__ . '/config' => config_path('solunes-master')
-        ], 'config');*/
+        $this->publishes([
+            __DIR__ . '/config' => config_path('solunes')
+        ], 'config');
+        $this->publishes([
+            __DIR__.'/assets' => public_path('assets/admin'),
+        ], 'assets');
         
         /* Registrar ServiceProvider Internos */
         //$this->app->register('\Solunes\Master\App\Providers\AppServiceProvider');

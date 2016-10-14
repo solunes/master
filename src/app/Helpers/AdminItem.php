@@ -8,13 +8,19 @@ class AdminItem {
 
     public static function get_request($single_model, $action, $id, $data, $options = [], $additional_vars = NULL) {
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
-        $model = $node->model;
+        $model = \FuncNode::node_check_model($node);
+
         if (\Gate::denies('node-admin', ['item', $data->module, $node, $action, $id])) {
             return \Login::redirect_dashboard('no_permission');
         }
 
         if($action=='delete'||$action=='restore'){
-            if($item = $model::withTrashed()->where('id', $id)->first()){
+            if($node->soft_delete==1){
+                $item = $model->withTrashed()->where('id', $id)->first();
+            } else {
+                $item = $model->find($id);
+            }
+            if($item){
                 if($node->soft_delete==0&&$action=='delete'){
                     $file_fields = $node->fields()->whereIn('type', ['image','file'])->get();
                     \Asset::delete_saved_files($file_fields, $item);
@@ -22,7 +28,13 @@ class AdminItem {
                       foreach($node->children as $child){
                         $child_name = $child->table_name;
                         $file_fields = $child->fields()->whereIn('type', ['image','file'])->get();
-                        \Asset::delete_saved_files($file_fields, $item->$child_name);
+                        if(is_object($item->$child_name)&&count($item->$child_name)>0){
+                            foreach($item->$child_name as $item_child){
+                                \Asset::delete_saved_files($file_fields, $item_child);
+                            }
+                        } else {
+                            \Asset::delete_saved_files($file_fields, $item->$child_name);
+                        }
                       }
                     }
                 }
@@ -34,15 +46,26 @@ class AdminItem {
         } else {
             $variables = \AdminItem::get_request_variables($data->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
             if($variables['preset_field']===true){
-                $view = 'master::includes.select-parent';
+                if($node->name=='indicator'){
+                    if(\View::exists('includes.select-parent-indicator')){
+                        $view = 'includes.select-parent-indicator';
+                    } else {
+                        $view = 'master::includes.select-parent-indicator';
+                    }
+                }
             } else if($node->customized){
-                $view = 'item.'.$single_model;
+                $custom_location = 'item.';
+                if($node->name=='indicator'){
+                    $custom_location = 'master::'.$custom_location;
+                }
+                $view = $custom_location.$single_model;
             } else {
                 $view = 'master::item.model';
             }
             if(request()->has('download-pdf')){
                 $variables['pdf'] = true;
                 $variables['dt'] = 'view';
+                $variables['header_title'] = \CustomFunc::custom_pdf_header($node, $id);
                 $variables['title'] = 'Formulario de '.$node->singular;
                 $variables['site'] = \Solunes\Master\App\Site::find(1);
                 $pdf = \PDF::loadView($view, $variables);
@@ -70,14 +93,14 @@ class AdminItem {
             }
             if(count($preset_fields)>0){
                 $variables['parent_nodes'] = [];
-                foreach($preset_fields as $subnode){
-                    $subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $subnode->value))->first();
+                foreach($preset_fields as $preset_field){
+                    $subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $preset_field->value))->first();
                     if($node->parent_id==$subnode->id){
                         $iname = 'parent';
                     } else {
-                        $iname = $subnode->table_name;
+                        $iname = $preset_field->value;
                     }
-                    $variables['parent_nodes'][$subnode->id] = ['node'=>$subnode,'iname'=>$iname,'fields'=>$subnode->fields()->whereNotIn('type', ['child','subchild'])->whereNotIn('display_item', ['admin','none'])->get()];
+                    $variables['parent_nodes'][$subnode->id] = ['node'=>$subnode,'singular_name'=>$subnode->singular,'iname'=>$iname,'fields'=>$subnode->fields()->whereNotIn('type', ['child','subchild'])->whereNotIn('display_item', ['admin','none'])->get()];
                 }
             }
             $variables['activities'] = \Solunes\Master\App\Activity::where('node_id', $node->id)->where('item_id', $id)->orderBy('created_at', 'DESC')->get();
@@ -98,7 +121,12 @@ class AdminItem {
                   } else {
                     $separator_sign = '?';
                   }
-                  return ['preset_field'=>true, 'parent'=>$preset_field->trans_name, 'items'=>$preset_field->options, 'url'=>$url.$separator_sign.$preset_field->name.'='];
+                  if($single_model=='indicator'){
+                    $preset_items = \Solunes\Master\App\Node::where('folder','form')->get()->lists('singular', 'id');
+                  } else {
+                    $preset_items = $preset_field->options;
+                  }
+                  return ['preset_field'=>true, 'single_model'=>$single_model, 'parent'=>$preset_field->trans_name, 'items'=>$preset_items, 'url'=>$url.$separator_sign.$preset_field->name.'='];
                 }
               }
             }
@@ -109,7 +137,7 @@ class AdminItem {
         }
         $variables['parent_id'] = $parent_id;
         $variables['i'] = $item;
-        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->whereNotIn('display_item', $hidden_array)->with('translations')->get();
+        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->whereNotIn('display_item', $hidden_array)->with('translations','field_extras','field_options')->get();
         if($node->fields()->whereIn('type', ['image', 'file'])->count()>0){
             $variables['files'] = true;
         } else {
@@ -120,29 +148,41 @@ class AdminItem {
                 $variables['conditional_array'][$conditional->id] = $conditional;
             }
         }
+        foreach($node->fields()->where('type', 'map')->get() as $field){
+            $variables['map_array'][$field->id] = $field;
+        }
         return $variables;
     }
 
     public static function post_request($single_model, $action, $request, $additional_rules = NULL) {
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
-        $model = $node->model;
-        if($action=='send'){
-            $rules = $model::$rules_send;
-            $item = new $model;
-        } else if($action=='edit'){
+        $model = \FuncNode::node_check_model($node);
+        if($action=='edit'){
             $id = $request->input('id');
+            $item = $model->find($id);
+        } else {
+            $item = $model;
+        }
+        if($node->dynamic){
+            $required_fields = $node->fields()->where('required',1)->lists('name')->toArray();
+            if(count($required_fields)){
+                $rules = array_combine($required_fields, array_fill(1, count($required_fields), 'required'));
+            } else {
+                $rules = [];
+            }
+        } else if($action=='send'){
+            $rules = $model::$rules_send;
+        } else if($action=='edit'){
             $rules = $model::$rules_edit;
-            $item = $model::find($id);
         } else if($action=='create'){
             $rules = $model::$rules_create;
-            $item = new $model;
         }
         if($additional_rules){
             $rules = $rules + $additional_rules;
         }
         $correctNames = [];
         foreach($node->fields as $field){
-            $correctNames[$field->name] = '"'.trans('fields.'.$field->name).'"';
+            $correctNames[$field->name] = '"'.$field->label.'"';
         }
         $validator = Validator::make($request->all(), $rules);
         $validator->setAttributeNames($correctNames);
@@ -151,8 +191,10 @@ class AdminItem {
 
     public static function post_request_success($request, $model, $item, $type = 'admin') {
         $node = \Solunes\Master\App\Node::where('name', $model)->first();
-        if (\Gate::denies('node-admin', ['item', $type, $node, $request->input('action'), $request->input('id')])) {
-            return \Login::redirect_dashboard('no_permission');
+        if($type=='admin'){
+            if (\Gate::denies('node-admin', ['item', $type, $node, $request->input('action'), $request->input('id')])) {
+                return \Login::redirect_dashboard('no_permission');
+            }
         }
         if($type=='admin'){
             $display_array = ['none'];
@@ -160,7 +202,8 @@ class AdminItem {
             $display_array = ['item_admin','none'];
         }
         $total_ponderation = 0;
-        foreach($node->fields()->whereNotIn('type', ['child', 'subchild', 'field'])->whereNotIn('display_item', $display_array)->with('field_extras')->get() as $field){
+        $rejected_fields = ['title', 'content', 'child', 'subchild', 'field'];
+        foreach($node->fields()->whereNotIn('type', $rejected_fields)->whereNotIn('display_item', $display_array)->with('field_extras')->get() as $field){
             $field_name = $field->name;
             $input = NULL;
             if($request->has($field_name)) {
@@ -175,10 +218,29 @@ class AdminItem {
             $item->total_ponderation = $total_ponderation;
         }
         $item->save();
+        foreach($node->indicators as $indicator){
+            $node_model = \FuncNode::node_check_model($node);
+            $items = \FuncNode::node_check_model($node);
+            $array = \AdminList::filter_node(['indicator_id'=>$indicator->id], $node, $node_model, $items, 'indicator');
+            $items = $array['items'];
+            if($indicator->type=='count'){
+                $indicator_value = $items->count();
+            } else {
+                $indicator_value = $items->count();
+            }
+            if($today_indicator = $indicator->indicator_values()->where('date', date('Y-m-d'))->first()) {
+            } else {
+                $today_indicator = new \Solunes\Master\App\IndicatorValue;
+                $today_indicator->parent_id = $indicator->id;
+                $today_indicator->date = date('Y-m-d');
+            }
+            $today_indicator->value = $indicator_value;
+            $today_indicator->save();
+        }
         foreach($node->fields()->whereIn('type', ['subchild', 'field'])->get() as $field){
             if($field->type=='subchild'){
                 $sub_node = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $field->value))->first();
-                AdminItem::post_subitems($sub_node->model, $field->name, 'parent_id', $item->id, $sub_node->fields()->whereNotIn('name', ['id', 'parent_id'])->get());
+                AdminItem::post_subitems($sub_node, $field->name, 'parent_id', $item->id, $sub_node->fields()->where('display_item','!=','none')->whereNotIn('name', ['id', 'parent_id'])->get());
             } else {
                 $field_name = $field->name;
                 if($field->multiple){
@@ -193,31 +255,38 @@ class AdminItem {
     }
 
     public static function post_success($action, $redirect) {
-        return redirect($redirect)->with('message_success', trans('admin.'.$action.'_success'));
+        $message = trans('admin.'.$action.'_success');
+        return redirect($redirect)->with('message_success', $message);
     }
 
     public static function post_fail($action, $redirect, $validator) {
-        return redirect($redirect)->with('message_error', trans('admin.'.$action.'_fail'))->withErrors($validator)->withInput();
+        $message = trans('admin.'.$action.'_fail');
+        return redirect($redirect)->with('message_error', $message)->withErrors($validator)->withInput();
     }
 
-    public static function post_subitems($model, $single_model, $parent_name, $parent_id, $fields, $parameters = []) {
+    public static function post_subitems($node, $single_model, $parent_name, $parent_id, $fields, $parameters = []) {
         if(request()->has($single_model.'_id')){
-            $model::where($parent_name, $parent_id)->whereNotIn('id', request()->input($single_model.'_id'))->delete();
+            $model = \FuncNode::node_check_model($node);
+            $model->where($parent_name, $parent_id)->whereNotIn('id', request()->input($single_model.'_id'))->delete();
             foreach( request()->input($single_model.'_id') as $key => $subid ){
+              $model = \FuncNode::node_check_model($node);
               $validated = false;
               $fields_array = [];
               foreach($fields as $field){
-                $fields_array[$field->name] = request()->input($single_model.'_'.$field->name)[$key];
+                $field_input = request()->input($single_model.'_'.$field->name);
+                if(isset($field_input[$key])){
+                  $fields_array[$field->name] = $field_input[$key];
+                }
               }
               if($subid&&$subid!=0){
-                if(Validator::make($fields_array, $model::$rules_edit)->passes()){
-                    $subitem = $model::find($subid);
+                if(Validator::make($fields_array, \FuncNode::node_check_rules($node, 'create'))->passes()){
+                    $subitem = $model->find($subid);
                     $validated = true;
                 }
               } else {
-                if(Validator::make($fields_array, $model::$rules_create)->passes()){
+                if(Validator::make($fields_array, \FuncNode::node_check_rules($node, 'edit'))->passes()){
                   $validated = true;
-                  $subitem = new $model;
+                  $subitem = $model;
                   $subitem->$parent_name = $parent_id;
                 }
               }
@@ -225,7 +294,10 @@ class AdminItem {
                 foreach($fields as $field){
                     $field_name = $field->name;
                     $subinput = NULL;
-                    $subinput = request()->input($single_model.'_'.$field_name)[$key];
+                    $field_input = request()->input($single_model.'_'.$field->name);
+                    if(isset($field_input[$key])){
+                      $subinput = $field_input[$key];
+                    }
                     $subitem = \FuncNode::put_data_field($subitem, $field, $subinput);
                 }
                 $subitem->save();
@@ -285,15 +357,17 @@ class AdminItem {
     }
 
     public static function make_checkbox_value($key, $item = NULL) {
-        if($item==NULL){
-            return false;
-        } else {
+        $return = false;
+        if(is_array($item)) {
+            if(in_array($key, $item)){
+              $return = true;
+            }
+        } else if(is_object($item)){
             if($item->contains($key)){
-              return true;
-            } else {
-              return false;
+                $return = true;
             }
         }
+        return $return;
     }
 
     public static function make_radio_value($key, $item = NULL) {

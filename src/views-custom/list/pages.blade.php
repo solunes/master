@@ -1,7 +1,7 @@
 @extends('layouts/master')
 
 @section('content')
-  {!! Admin::make_list_header($module, $model, $id, $parent, $appends, $action_fields) !!}
+  {!! Admin::make_list_header($module, $model, $id, $parent, $appends, count($items), $action_fields) !!}
   @include('helpers.filter')
   @if(count($items)>0)
     <table class="admin-table table table-striped table-bordered dt-responsive">

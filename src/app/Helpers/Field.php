@@ -27,7 +27,9 @@ class Field {
     public static function form_input($i, $data_type, $field, $extras, $array_parameters = []) {
         $name = $field['name'];
         $type = $field['type'];
-        if($type=='relation'){
+        if($type=='date'){
+            $type = 'string';
+        } else if($type=='relation'){
             $type = 'select';
         } else if($type=='field'&&$field['multiple']==false){
             $type = 'radio';
@@ -36,14 +38,21 @@ class Field {
         }
         $subinput = false;
         $fixed_name = str_replace('[]', '', $name);
-        $required = $field['required'];
+        $required = false;
+        if(isset($field['required'])){
+            $required = $field['required'];
+        }
+
         $parameters = [];
         if($type=='select'||$type=='checkbox'||$type=='radio'){
             $parameters['options'] = $field['options'];
+            if($type=='select'){
+                $parameters['options'] = ['NULL-INPUT'=>' '] + $parameters['options'];
+            }
         }
  
         // CLASS
-        $class = 'form-control ';
+        $class = 'form-control input-lg" ';
         if(array_key_exists('class', $extras)){
             $class .= $extras['class'];
         }
@@ -52,6 +61,9 @@ class Field {
         $field_class = 'flex-item ';
         if(array_key_exists('field_class', $extras)){
             $field_class .= $extras['field_class'];
+        }
+        if($type=='title'){
+            $field_class .= ' title';
         }
         $parameters['field_class'] = $field_class;
 
@@ -85,18 +97,26 @@ class Field {
                 $label .= ' <a href="#" class="help" title="'.trans('tooltips.'.$fixed_name).'"><i class="fa fa-question-circle"></i></a>';
             }
         }
-
+        if(isset($field['filter'])){
+            $label .= ' <a href="'.url('admin/delete-filter/'.$field['filter']).'" onclick="return confirm(\''.trans('admin.delete_confirmation').'\');">( X )</a>';
+        }
+        if(isset($field['message'])&&$field['message']){
+            $label .= '<div class="field-message">'.$field['message'].'</div>';
+        }
+        
         // VALUE
         $value = NULL;
         if($i&&($i->$fixed_name||$i->$fixed_name==0)){
             $value = $i->$fixed_name;
         } else if (request()->has($fixed_name)){
             $value = request()->input($fixed_name);
-        } 
+        } else if(array_key_exists('value', $extras)){
+            $value = $extras['value'];
+        }
         if($type=='password'){
             $value = NULL;
-        } else if($type=='array'&&$value&&is_array($value)){
-            $value = json_encode($value);
+        } else if(($type=='array'||$type=='checkbox')&&$value&&is_string($value)){
+            $value = json_decode($value, true);
         }
 
         // SUBINPUT
@@ -121,7 +141,6 @@ class Field {
         if($type=='file'||$type=='image'){
             $array['class'] = $array['class'].' fileupload';
             $array['data-type'] = $type;
-            $array['data-file'] = $name;
             $array['data-folder'] = $extras['folder'];
             $parameters['folder'] = $extras['folder'];
             $parameters['i'] = $i;
@@ -137,7 +156,7 @@ class Field {
         }
 
         // CAMPOS PREDEFINIDOS
-        if((isset($field['preset'])&&$field['preset']==true)||($extras&&array_key_exists('disabled', $extras))){
+        if((isset($field['preset'])&&$field['preset']==true)||$data_type=='view'||($extras&&array_key_exists('disabled', $extras))){
             $array['disabled'] = true;
         }
 
@@ -145,6 +164,9 @@ class Field {
         if($extras&&isset($extras['placeholder'])){
             $array['placeholder'] = $extras['placeholder'];
         }
+
+        // CUSTOM FIELD CORRECTIONS
+        $array = \CustomFunc::custom_field($array, $parameters, $type);
 
         // RESPONSE
         if($subinput=='multiple') {
@@ -180,16 +202,9 @@ class Field {
     public static function form_input_builder($name, $type, $parameters, $array, $value, $data_type) {
         $response = NULL;
         if($type=='file'||$type=='image'){
-          $response .= Field::generate_image_field($name, $type, $parameters, $array, $value, $data_type);
-        } else if($data_type=='view'){
-            if($type=='select'&&isset($parameters['options'][$value])){
-                $response .= '<div>'.$parameters['options'][$value].'</div>';
-            } else {
-                if($value==NULL||$value==''){
-                    $value = '-';
-                }
-                $response .= '<div>'.$value.'</div>';
-            }
+            $response .= Field::generate_image_field($name, $type, $parameters, $array, $value, $data_type);
+        } else if($type=='map'){
+            $response .= Field::generate_map_field($name, $type, $parameters, $array, $value, $data_type);
         } else if($type=='string'){
             $response = Form::text($name, $value, $array);
         } else if($type=='hidden'){
@@ -213,32 +228,51 @@ class Field {
             $option_array = ['1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4', '5'=>'5'];
         } else {
             $option_array = $parameters['options'];
-            if(isset($option_array[0])){
-                unset($option_array[0]);
-            }
         }
         $response = '<div id="field_'.$name.'" class="col-sm-'.$col.' '.$parameters['field_class'].'">';
-        $response .= '<label for="'.$name.'" class="control-label">'.$label.'</label><div class="row">';
-        if($col==12){
-            $subcol = 4;
-        } else if($col>5) {
-            $subcol = 6;
+        $response .= '<label for="'.$name.'" class="control-label">'.$label.'</label>';
+        if($type=='checkbox'){
+        $response .= '<div class="mt-checkbox-inline">';
         } else {
-            $subcol = 12;
+        $response .= '<div class="mt-radio-inline">';
         }
         foreach($option_array as $key => $option) {
-            $response .= '<div class="col-sm-'.$subcol.' col-xs-12"><div class="checkbox">';
+            $array['class'] = 'field_'.$name.' option_'.$key;
             if($type=='radio'||$type=='score'||$type=='main_score'){
-                $response .= '<label class="checkbox">'.Form::radio($name, $key, AdminItem::make_radio_value($key, $value), $array).' '.$option.'</label>';
+                $response .= '<label class="mt-radio">'.$option.' '.Form::radio($name, $key, AdminItem::make_radio_value($key, $value), $array);
             } else if($type=='checkbox'){
-                $response .= '<label class="checkbox">'.Form::checkbox($name.'[]', $key, AdminItem::make_checkbox_value($key, $value), $array).' '.$option.'</label>';
+                $response .= '<label class="mt-checkbox">'.$option.' '.Form::checkbox($name.'[]', $key, AdminItem::make_checkbox_value($key, $value), $array);
             }
-            $response .= '</div></div>';
+            $response .= '<span></span></label>';
         }
         if(\Session::has('errors')&&\Session::get('errors')->default->first($name)){
             $response .= '<div class="error col-sm-12">'.\Session::get('errors')->default->first($name).'</div>';
         }
         $response .= '</div></div>';
+        return $response;
+    }
+
+    public static function generate_map_field($name, $type, $parameters, $array, $value, $data_type) {
+        if(isset($array['rel'])){
+            if($value==NULL){
+                $map_text = 'Introducir Mapa';
+                $value = '-16.495369;-68.134289';
+            } else {
+                $map_text = 'Editar Mapa ('.$value.')';
+            }
+            if($data_type=='view'){
+                $response = $value;
+            } else {
+                $response = '<a id="link-'.$name.'" class="lightbox" href="'.url('admin/modal-map/'.$name.'/'.$value.'?lightbox[width]=800&lightbox[height]=500').'" rel="'.$array['rel'].'" data-value="'.$value.'">'.$map_text.'</a>';
+            }
+        } else {
+            $response = '<div id="map-'.$name.'" style="height: 500px;"></div>';
+            $response .= '<input id="search-'.$name.'" class="map-search-box" type="text" placeholder="Buscar">';
+            if($value==NULL){
+                $value = '-16.495369;-68.134289';
+            }
+        }
+        $response .= Form::hidden($name, $value, $array);
         return $response;
     }
 
@@ -253,6 +287,12 @@ class Field {
             $response .= trans('admin.image_limitations');
           }
           $response .= '</p></div>';
+          if(isset($array['rel'])){
+            $rel_attribute = ' rel="'.$array['rel'].'"';
+            $array['rel'] = 'uploader_'.$array['rel'];
+          } else {
+            $rel_attribute = NULL;
+          }
           if($folder&&$value){
             $i = $parameters['i'];
             $multiple = false;
@@ -271,8 +311,18 @@ class Field {
             } else {
                 $array_value = [$value];
             }
+            if($multiple){
+                $final_name = $name.'[0]';
+            } else {
+                $final_name = $name;
+            }
             if(is_array($array_value)&&count($array_value)>0){
               foreach($array_value as $key => $value){
+                if($multiple){
+                    $final_name = $name.'['.$key.']';
+                } else {
+                    $final_name = $name;
+                }
                 $response .= '<div class="upload_thumb '.$type.'_thumb">';
                 if($type=='image'){
                   $response .= '<a class="lightbox" href="'.Asset::get_image_path($folder, 'normal', $value).'">'.Asset::get_image($folder, 'mini', $value).'</a>';
@@ -280,11 +330,7 @@ class Field {
                   $response .= '<a href="'.Asset::get_file($folder, $value).'" target="_blank">'.$value.'</a>';
                 }
                 if($data_type!='view'){
-                    if($multiple){
-                        $response .= '<input type="hidden" name="'.$name.'['.$key.']" value="'.$value.'" />';
-                    } else {
-                        $response .= '<input type="hidden" name="'.$name.'" value="'.$value.'" />';
-                    }
+                    $response .= '<input type="hidden" name="'.$final_name.'" value="'.$value.'"'.$rel_attribute.' />';
                     $response .= '<a class="delete_temp" data-folder="'.$folder.'"  data-action="'.$action.'" data-file="'.$value.'" data-type="'.$type.'" href="#">X</a>';
                 }
                 $array['data-count'] = $key+1;

@@ -34,6 +34,7 @@ class Section extends Model {
 
 	public function setPageIdAttribute($value) {
         if(!isset($this->attributes['name'])){
+        	\App::setLocale('es');
             if($page = \Solunes\Master\App\Page::find($value)){
                 $page_name = $page->name;
             } else {

@@ -1,49 +1,33 @@
-@if(isset($filters)&&$filters&&(in_array('dates', $filters)||in_array('point', $filters)))
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(".open_filter_container").click(function(){
+			if($(this).data('status')=='closed'){
+				$(this).data('status', 'open');
+				$(this).html('<i class="fa fa-angle-up"></i> Ocultar Filtro');
+		    	$(".filter_container").show(500);
+			} else {
+				$(this).data('status', 'closed');
+				$(this).html('<i class="fa fa-angle-down"></i> Mostrar Filtro');
+		    	$(".filter_container").hide(500);
+			}
+		});
+	});
+</script>
+@if(isset($filters)&&$filters)
   <script type="text/javascript">
 	$(document).ready(function(){
-	  @if(in_array('dates', $filters))
-	    $('#f_date_from').pickadate({
-	    	format: 'yyyy-mm-dd',
-	    	formatSubmit: 'yyyy-mm-dd',
-	    	selectYears: true,
-			selectMonths: true,
-			min: '{{ $first_day }}',
-			max: '{{ $last_day }}',
-	    });
-	    $('#f_date_to').pickadate({
-	    	format: 'yyyy-mm-dd',
-	    	formatSubmit: 'yyyy-mm-dd',
-	    	selectYears: true,
-			selectMonths: true,
-			min: '{{ $first_day }}',
-			max: '{{ $last_day }}',
-	    });
-	  @endif
-	  @if(in_array('point', $filters))
-      	$(document).on('change', 'select#f_customer', function(){
-	        var value = $(this).val();
-	        if(value=="any"){
-	          var options = [
-              	["any", "Cualquiera"],
-	          ];
-	        }
-	        @foreach($customer_object as $customer)
-		        else if(value=={{ $customer->id }}){
-		          var options = [
-		            ["any", "Cualquiera"],
-		            @foreach($customer->points as $point)
-		              ["{{ $point->id }}", "{!! html_entity_decode($point->name, ENT_NOQUOTES, 'UTF-8') !!}"],
-		            @endforeach
-		          ];
-		        }
-		    @endforeach
-	        var $el = $("select#f_point");
-	        $el.empty(); // remove old options
-	        $.each(options, function(i,obj) {
-	          $el.append($("<option></option>").attr("value", obj[0]).text(obj[1]));
-	        });
-      	});
-	  @endif
+	  @foreach($filters as $field_name => $field)
+	  	@if($field['subtype']=='date')
+		    $('.f_date_{{ $field_name }}').pickadate({
+		    	format: 'yyyy-mm-dd',
+		    	formatSubmit: 'yyyy-mm-dd',
+		    	selectYears: true,
+				selectMonths: true,
+				min: '{{ $field["first_day"] }}',
+				max: '{{ $field["last_day"] }}',
+		    });
+		@endif
+	  @endforeach
 	});
   </script>
 @endif

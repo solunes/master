@@ -25,8 +25,16 @@ class LoginController extends Controller {
 
     public function postLogin(Request $request) {
 	    $validator = Validator::make($request->all(), \App\User::$rules_login);
+	    $logged = false;
 		if ($validator->passes()) {
-			if (Auth::attempt(array('email'=>$request->input('email'), 'password'=>$request->input('password')), true)) {
+			if (Auth::attempt(array('email'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
+				$logged = true;
+			} else if (Auth::attempt(array('username'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
+				$logged = true;
+			} else if (Auth::attempt(array('cellphone'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
+				$logged = true;
+			}
+			if($logged){
 			  if(Auth::user()->status=='banned'){
 			  	Auth::logout();
 			  	return Login::fail($request->session(), $validator, trans('form.login_banned'), 10, 5);

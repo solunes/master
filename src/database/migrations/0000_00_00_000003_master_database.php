@@ -15,7 +15,7 @@ class MasterDatabase extends Migration
         //Site
         Schema::create('languages', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('order')->default(0);
+            $table->integer('order')->nullable()->default(0);
             $table->string('code');
             $table->string('name');
             $table->string('image')->nullable();
@@ -24,7 +24,7 @@ class MasterDatabase extends Migration
         });
         Schema::create('sites', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('order')->default(0);
+            $table->integer('order')->nullable()->default(0);
             $table->string('name');
             $table->string('domain');
             $table->string('root');
@@ -47,7 +47,7 @@ class MasterDatabase extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('site_id')->unsigned()->default(1);
-            $table->integer('order')->default(0);
+            $table->integer('order')->nullable()->default(0);
             $table->enum('type', ['normal', 'customized'])->default('normal');
             $table->string('image')->nullable();
             $table->string('customized_name')->nullable();
@@ -70,7 +70,7 @@ class MasterDatabase extends Migration
             $table->increments('id');
             $table->integer('site_id')->unsigned()->default(1);
             $table->enum('menu_type', ['site', 'admin'])->default('site');
-            $table->integer('order')->default(0);
+            $table->integer('order')->nullable()->default(0);
             $table->integer('level')->default(1);
             $table->enum('type', ['normal', 'external', 'blank'])->default('normal');
             $table->integer('parent_id')->nullable();
@@ -101,6 +101,7 @@ class MasterDatabase extends Migration
             $table->string('folder')->nullable();
             $table->integer('parent_id')->nullable();
             $table->string('permission')->nullable();
+            $table->boolean('dynamic')->default(0);
             $table->boolean('customized')->default(0);
             $table->boolean('translation')->default(0);
             $table->boolean('soft_delete')->default(0);
@@ -119,7 +120,7 @@ class MasterDatabase extends Migration
         Schema::create('node_requests', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->unsigned();
-            $table->integer('order')->default(0);
+            $table->integer('order')->nullable()->default(0);
             $table->enum('action', ['where','whereNot','whereIn','whereNull','whereNotNull','with','has','orderBy','paginate','customRequest']);
             $table->string('col')->nullable();
             $table->enum('value_type', ['value','relation'])->default('value');
@@ -129,16 +130,30 @@ class MasterDatabase extends Migration
         Schema::create('node_extras', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->unsigned();
-            $table->integer('order')->default(0);
+            $table->integer('order')->nullable()->default(0);
             $table->enum('display', ['all','admin','site'])->default('all');
-            $table->enum('type', ['filter','graph','parent_graph','action_field'])->default('filter');
+            $table->enum('type', ['graph','parent_graph','action_field'])->default('action_field');
             $table->string('parameter')->nullable();
             $table->string('value_array')->nullable();
             $table->foreign('parent_id')->references('id')->on('nodes')->onDelete('cascade');
         });
+        Schema::create('filters', function (Blueprint $table) {
+            $table->increments('id');
+            $table->enum('category', ['admin','indicator','site','custom'])->default('admin');
+            $table->integer('order')->nullable()->default(0);
+            $table->enum('display', ['all','user'])->default('all');
+            $table->enum('type', ['field','parent_field','custom'])->default('field');
+            $table->enum('subtype', ['select','date','string','field'])->default('select');
+            $table->integer('node_id')->unsigned();
+            $table->string('parameter')->nullable();
+            $table->text('action_value')->nullable();
+            $table->integer('user_id')->nullable();
+            $table->integer('category_id')->nullable();
+            $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');
+        });
         Schema::create('sections', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('order')->default(0);
+            $table->integer('order')->nullable()->default(0);
             $table->integer('page_id')->unsigned();
             $table->integer('node_id')->unsigned();
             $table->string('name')->nullable();
@@ -150,10 +165,10 @@ class MasterDatabase extends Migration
         Schema::create('fields', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->unsigned();
-            $table->integer('order')->default(0);
+            $table->integer('order')->nullable()->default(0);
             $table->string('name');
             $table->string('trans_name');
-            $table->enum('type', ['string','text','select','password','image','file','radio','checkbox','array','score','hidden','preset','relation','child','subchild','field','title','content'])->default('string');
+            $table->enum('type', ['string','text','select','password','image','file','map','radio','checkbox','date','array','score','hidden','preset','relation','child','subchild','field','title','content'])->default('string');
             $table->enum('display_list', ['show', 'excel', 'none'])->default('show');
             $table->enum('display_item', ['show', 'admin', 'none'])->default('show');
             $table->boolean('multiple')->default(0);
@@ -191,6 +206,59 @@ class MasterDatabase extends Migration
             $table->string('trigger_value');
             $table->foreign('parent_id')->references('id')->on('fields')->onDelete('cascade');
         });
+        Schema::create('field_options', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('parent_id')->unsigned();
+            $table->string('name');
+            $table->boolean('active')->default(1);
+            $table->foreign('parent_id')->references('id')->on('fields')->onDelete('cascade');
+        });
+        Schema::create('field_option_translation', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('field_option_id')->unsigned();
+            $table->string('locale')->index();
+            $table->string('label');
+            $table->unique(['field_option_id','locale']);
+            $table->foreign('field_option_id')->references('id')->on('field_options')->onDelete('cascade');
+        });
+        Schema::create('indicators', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('node_id')->unsigned();
+            $table->integer('user_id')->nullable();
+            $table->string('name');
+            $table->enum('type', ['normal','custom'])->default('normal');
+            $table->enum('data', ['count','formula'])->default('count');
+            $table->text('formula')->nullable();
+            $table->string('custom')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');
+        });
+        Schema::create('indicator_alerts', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('parent_id')->unsigned();
+            $table->integer('user_id')->nullable();
+            $table->integer('goal')->nullable();
+            $table->date('initial_date')->nullable();
+            $table->date('final_date')->nullable();
+            $table->foreign('parent_id')->references('id')->on('indicators')->onDelete('cascade');
+        });
+        Schema::create('indicator_graphs', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('parent_id')->unsigned();
+            $table->integer('user_id')->nullable();
+            $table->enum('graph', ['number','bar','pie','line'])->default('line');
+            $table->enum('color', ['blue','red','green','purple','yellow','gray','black'])->default('blue');
+            $table->integer('goal')->nullable();
+            $table->foreign('parent_id')->references('id')->on('indicators')->onDelete('cascade');
+        });
+        Schema::create('indicator_values', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('parent_id')->unsigned();
+            $table->date('date');
+            $table->string('value');
+            $table->foreign('parent_id')->references('id')->on('indicators')->onDelete('cascade');
+        });
     }
 
     /**
@@ -200,11 +268,18 @@ class MasterDatabase extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('indicator_values');
+        Schema::dropIfExists('indicator_graphs');
+        Schema::dropIfExists('indicator_alerts');
+        Schema::dropIfExists('indicators');
+        Schema::dropIfExists('field_option_translation');
+        Schema::dropIfExists('field_options');
         Schema::dropIfExists('field_conditionals');
         Schema::dropIfExists('field_extras');
         Schema::dropIfExists('field_translation');
         Schema::dropIfExists('fields');
         Schema::dropIfExists('sections');
+        Schema::dropIfExists('filters');
         Schema::dropIfExists('node_extras');
         Schema::dropIfExists('node_requests');
         Schema::dropIfExists('node_translation');

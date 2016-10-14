@@ -16,8 +16,8 @@ class Activity extends Model {
 	/* Creating rules */
 	public static $rules_create = array(
 		'user_id'=>'required',
-		'node'=>'required',
 		'node_id'=>'required|integer',
+		'item_id'=>'required|integer',
 		'action'=>'required',
 		'message'=>'required',
 	);
@@ -25,8 +25,8 @@ class Activity extends Model {
 	/* Updating rules */
 	public static $rules_edit = array(
 		'user_id'=>'required',
-		'node'=>'required',
 		'node_id'=>'required|integer',
+		'item_id'=>'required|integer',
 		'action'=>'required',
 		'message'=>'required',
 	);

@@ -1,11 +1,11 @@
 @if(count($nodes_array)>0)
   @foreach($nodes_array as $node)
     <?php $count++; ?>
-    <h3>{{ $last_count.$count.'. '.trans_choice('model.'.$node->name, 0) }}</h3>
+    <h3>{{ $last_count.$count.'. '.$node->singular }}</h3>
     <p>El nodo 
       @if($node->permission)
         puede ser accedido por 
-        @foreach(\App\Permission::where('name', $node->permission)->first()->permission_role as $key => $role)
+        @foreach(\Solunes\Master\App\Permission::where('name', $node->permission)->first()->permission_role as $key => $role)
           @if($key>0)
             , 
           @else
@@ -28,7 +28,7 @@
           @else
             <?php $key = 1; ?>
           @endif
-          {{ trans_choice('model.'.$child->name, 0) }}
+          {{ $child->singular }}
         @endforeach
         .
       @endif
@@ -36,7 +36,7 @@
     <h4>{{ trans('admin.fields') }}</h4>
     @foreach($node->fields()->where('type', '!=', 'child')->where('display_item', '!=', 'none')->get() as $field)
       <ul>
-        <li><strong>{{ trans('fields.'.$field->trans_name) }}: </strong>
+        <li><strong>{{ $field->label }}: </strong>
           Campo de {{ trans('admin.'.$field->type) }}
           @if($field->required)
            requerido
@@ -83,7 +83,7 @@
       </ul>
     @endforeach
     @if(count($node->children)>0)
-      @include('pdf.manual-node', ['nodes_array'=>$node->children, 'last_count'=>$last_count.$count.'.', 'count'=>0])
+      @include('master::pdf.manual-node', ['nodes_array'=>$node->children, 'last_count'=>$last_count.$count.'.', 'count'=>0])
     @endif
   @endforeach
 @endif

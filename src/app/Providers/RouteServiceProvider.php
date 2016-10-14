@@ -3,7 +3,7 @@
 namespace Solunes\Master\App\Providers;
 
 use Illuminate\Routing\Router;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use App\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -37,7 +37,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(Router $router)
     {
-        //$this->mapWebRoutes($router);
+        $this->mapWebRoutes($router);
     }
 
     /**
@@ -55,6 +55,7 @@ class RouteServiceProvider extends ServiceProvider
             require __DIR__ . '/../Routes/sitemap.php';
             require __DIR__ . '/../Routes/artisan.php';
         });
+        parent::mapWebRoutes($router);
     }
 
 }

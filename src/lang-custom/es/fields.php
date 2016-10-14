@@ -12,6 +12,7 @@ return [
     // GLOBAL FIELDS
     'active' => 'Activo?',
     'address' => 'Dirección',
+    'cellphone' => 'Celular',
     'city' => 'Ciudad',
     'code' => 'Código',
     'content' => 'Contenido',
@@ -29,6 +30,8 @@ return [
     'message' => 'Mensaje',
     'name' => 'Nombre',
     'node' => 'Nodo',
+    'notifications_email' => '¿Notificación por Email?',
+    'notifications_sms' => '¿Notificación por SMS?',
     'observations' => 'Observaciones',
     'order' => 'Ordren',
     'parent' => 'De',
@@ -43,6 +46,7 @@ return [
     'updated_at' => 'Última Edición',
     'url' => 'URL',
     'user' => 'Usuario',
+    'username' => 'Usuario',
 
     // FILTER FIELDS
     'f_date_from' => 'Fecha Desde',

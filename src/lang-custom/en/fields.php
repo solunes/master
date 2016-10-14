@@ -12,6 +12,7 @@ return [
     // GLOBAL FIELDS
     'active' => 'Active?',
     'address' => 'Address',
+    'cellphone' => 'Cellphone',
     'city' => 'City',
     'code' => 'Code',
     'content' => 'Content',
@@ -29,6 +30,8 @@ return [
     'message' => 'Message',
     'name' => 'Name',
     'node' => 'Node',
+    'notifications_email' => 'Notification by Email?',
+    'notifications_sms' => 'Notification by SMS?',
     'observations' => 'Observations',
     'order' => 'Order',
     'parent' => 'From',
@@ -43,6 +46,7 @@ return [
     'updated_at' => 'Last Update',
     'url' => 'URL',
     'user' => 'User',
+    'username' => 'Username',
 
     // FILTER FIELDS
     'f_date_from' => 'Fecha Desde',

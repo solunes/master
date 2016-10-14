@@ -4,7 +4,7 @@ namespace Solunes\Master\App\Helpers;
 
 class FuncNode {
 
-    public static function node_field_creation($table_name, $node, $name, $translation, $count) {
+    public static function node_field_creation($table_name, $node, $name, $translation, $count, $languages) {
         $count++;
         $model = $node->model;
         $type = 'string';
@@ -19,6 +19,7 @@ class FuncNode {
         $col_type = \DB::select(\DB::raw("SHOW FIELDS FROM ".$table_name." where Field  = '".$name."'"))[0]->Type;
         $extras = [];
         $requests = [];
+        $field_options = [];
         if(strpos($name, '_id') !== false) {
             $type = 'relation';
             $trans_name = str_replace('_id', '', $name);
@@ -41,6 +42,9 @@ class FuncNode {
             $multiple = 1;
           }
           array_push($extras, ['type'=>'folder','value'=>$node->name.'-'.$name]);
+        } else if(strpos($name, 'checkbox') !== false){
+            $type = 'checkbox';
+            array_push($extras, ['type'=>'cols','value'=>'12']);
         } else if($col_type=='text'){
             $type = 'text';
             $new_row = true;
@@ -49,22 +53,28 @@ class FuncNode {
             array_push($extras, ['type'=>'rows','value'=>'3']);
         } else if($name=='password'){
             $type = 'password';
+        } else if($name=='map'){
+            $type = 'map';
+            array_push($extras, ['type'=>'cols','value'=>'12']);
         } else if($col_type=='tinyint(1)'||substr_count($col_type, 'enum')>0){
             $type = 'select';
             if(substr_count($col_type, 'enum')>0){
-              $value = substr($col_type, 5, -1);
+              $value_array = substr($col_type, 6, -2);
             } else if($col_type=='tinyint(1)') {
-              $value = "'0','1'";
+              $value_array = "0','1";
             }
-            $required = true;
+            foreach(explode("','",$value_array) as $subvalue){
+              array_push($field_options, ['name'=>$subvalue]);
+            }
         } else if($col_type=='timestamp'||$col_type=='date'||$col_type=='time'){
+            $type = 'date';
             if($node->type=='subchild'){
               array_push($extras, ['type'=>'class','value'=>$col_type.'-control']);
             } else {
               array_push($extras, ['type'=>'class','value'=>$col_type.'picker']);
             }
             if($name=='created_at'){
-              \Solunes\Master\App\NodeExtra::create(['parent_id'=>$node->id, 'display'=>'admin', 'type'=>'filter', 'parameter'=>'dates', 'value_array'=>json_encode(['created_at'])]);
+              \Solunes\Master\App\Filter::create(['node_id'=>$node->id, 'type'=>'field', 'subtype'=>'date', 'parameter'=>'created_at']);
             } else if($name=='deleted_at'){
               $node->soft_delete = 1;
               $node->save();
@@ -87,7 +97,12 @@ class FuncNode {
             $display_list = 'excel';
         }
         if($node->type!='field'){
-            $rules = $model::$rules_create;
+            if($node->dynamic){
+              $model = new $model;
+              $rules = $model->rules($table_name);
+            } else {
+              $rules = $model::$rules_create;
+            }
             if(array_key_exists($name, $rules)&&strpos($rules[$name], 'required') !== false){
                 $required = 1;
             }
@@ -109,6 +124,7 @@ class FuncNode {
         $field->save();
         \FuncNode::node_generate_request($node, $requests);
         \FuncNode::field_generate_extras($field, $extras);
+        \FuncNode::field_generate_options($node, $field, $field_options, $languages);
         return $count;
     }
 
@@ -119,6 +135,42 @@ class FuncNode {
             $subfield->parent_id = $field->id;
             $subfield->type = $extra['type'];
             $subfield->value = $extra['value'];
+            $subfield->save();
+          }
+        }
+    }
+
+    public static function field_generate_custom_options($node_name, $array, $languages) {
+      if($node = \Solunes\Master\App\Node::where('name', $node_name)->with('fields')->first()){
+        if(count($array)>0){
+          foreach($array as $field_name => $options){
+            if($field = $node->fields()->where('name', $field_name)->first()){
+              $field_options = [];
+              foreach(range(1, $options) as $subvalue){
+                array_push($field_options, ['name'=>$field_name.'_'.$subvalue]);
+              }
+              \FuncNode::field_generate_options($node, $field, $field_options, $languages);
+            }
+          }
+        }
+      }
+    }
+
+    public static function field_generate_options($node, $field, $options, $languages) {
+        if(count($options)>0){
+          foreach($options as $option){
+            $subfield = new \Solunes\Master\App\FieldOption;
+            $subfield->parent_id = $field->id;
+            $subfield->name = $option['name'];
+            foreach($languages as $language){
+              \App::setLocale($language->code);
+              if($node->location=='package'){
+                $subfield->translateOrNew($language->code)->label = trans('master::admin.'.$option['name']);
+              } else {
+                $subfield->translateOrNew($language->code)->label = trans('admin.'.$option['name']);
+              }
+            }
+            \App::setLocale('es');
             $subfield->save();
           }
         }
@@ -156,21 +208,61 @@ class FuncNode {
         }
     }
 
-    public static function node_menu_creation($node) {
+    public static function node_check_model($node) {
+        $model = new $node->model;
+        // Si es formulario dinamico, asignar nombre de tabla a modelo.
+        if($node->dynamic&&$node->parent_id==NULL){
+            $model = $model->fromTable($node->table_name);
+        }
+        return $model;
+    }
+
+    public static function node_check_rules($node, $action) {
+        $rules = [];
+        $model = FuncNode::node_check_model($node);
+        if($node->dynamic){
+          $rules = $model->rules($node->table_name);
+        } else {
+          if($action=='create'){
+            $rules = $model::$rules_create;
+          } else if($action=='edit') {
+            $rules = $model::$rules_edit;
+          }
+        }
+        return $rules;
+    }
+
+    public static function node_menu_creation($node, $languages) {
         $menu_array = \Solunes\Master\App\Menu::where('menu_type', 'admin')->where('level', 1)->lists('id');
         if($node->folder){
-            if(!$menu_parent = \Solunes\Master\App\MenuTranslation::whereIn('menu_id', $menu_array)->where('name', trans('admin.'.$node->folder))->first()){
-              $menu_parent = \Solunes\Master\App\Menu::create(['type'=>'blank', 'menu_type'=>'admin', 'permission'=>$node->folder, 'icon'=>'th-list', 'es'=>['name'=>trans('admin.'.$node->folder)]]);
+            if($menu_parent = \Solunes\Master\App\MenuTranslation::whereIn('menu_id', $menu_array)->where('name', trans('admin.'.$node->folder))->first()){
+              $menu_parent = $menu_parent->menu;
+            } else {
+              $menu_parent = \Solunes\Master\App\Menu::create(['type'=>'blank', 'menu_type'=>'admin', 'permission'=>$node->folder, 'icon'=>'th-list']);
+              foreach($languages as $language){
+                \App::setLocale($language->code);
+                $menu_parent->translateOrNew($language->code)->name = trans('admin.'.$node->folder);
+              }
+              \App::setLocale('es');
+              $menu_parent->save();
             }
-            \Solunes\Master\App\Menu::create(['menu_type'=>'admin', 'permission'=>$node->permission, 'parent_id'=>$menu_parent->id, 'level'=>2, 'icon'=>'th-list', 'es'=>['name'=>$node->plural, 'link'=>'admin/model-list/'.$node->name]]);
+            $menu = \Solunes\Master\App\Menu::create(['menu_type'=>'admin', 'permission'=>$node->permission, 'parent_id'=>$menu_parent->id, 'level'=>2, 'icon'=>'th-list']);
+            foreach($languages as $language){
+              \App::setLocale($language->code);
+              $menu->translateOrNew($language->code)->name = $node->plural;
+              $menu->translateOrNew($language->code)->link = 'admin/model-list/'.$node->name;
+            }
+            \App::setLocale('es');
+            $menu->save();
         }
     }
 
     public static function load_nodes_excel($path, $return = '') {
-        \Excel::load($path, function($reader) use($return) {
+        $languages = \Solunes\Master\App\Language::get();
+        \Excel::load($path, function($reader) use($return, $languages) {
           foreach($reader->get() as $sheet){
             $sheet_name = $sheet->getTitle();
-            $sheet->each(function($row) use ($sheet_name, $return) {
+            $sheet->each(function($row) use ($sheet_name, $return, $languages) {
               $node = \Solunes\Master\App\Node::where('name', $row->node)->first();
               if($sheet_name=='create-fields'){
                 if($node){
@@ -183,7 +275,11 @@ class FuncNode {
                   $field->parent_id = $node->id;
                   $field->name = $row->name;
                   $field->trans_name = $row->trans_name;
-                  $field->label = trans($lang_folder.$row->trans_name);
+                  foreach($languages as $language){
+                    \App::setLocale($language->code);
+                    $field->translateOrNew($language->code)->label = trans($lang_folder.$row->trans_name);
+                  }
+                  \App::setLocale('es');
                   $field->type = $row->type;
                   $field->display_list = $row->display_list;
                   $field->display_item = $row->display_item;
@@ -216,16 +312,12 @@ class FuncNode {
                     }
                     $extra->save();
                   } else if($sheet_name=='conditionals'){
-                    if($conditional = $field->field_conditionals()->where('trigger_field', $row->trigger_field)->where('trigger_show', $row->trigger_show)->first()){
-                      $conditional->trigger_value = $row->trigger_value;
-                    } else {
                       $conditional = new \Solunes\Master\App\FieldConditional;
                       $conditional->parent_id = $field->id;
                       $conditional->trigger_field = $row->trigger_field;
                       $conditional->trigger_show = $row->trigger_show;
                       $conditional->trigger_value = $row->trigger_value;
                       $conditional->save();
-                    }
                   }
                 } else {
                   $return .= 'ALERTA: No se encontró el campo '.$row->field.' o nodo '.$row->node.'.\n';
@@ -238,27 +330,34 @@ class FuncNode {
     }
 
     public static function put_data_field($item, $field, $input, $lang_code = 'es') {
-        $field_name = $field->name;
-        if($field->translation){
-            $item->translateOrNew($lang_code)->$field_name = $input;
-        } else {
-            if(is_array($input)){
-                $item->$field_name = json_encode($input);
-                if($field->type=='image'||$field->type=='file') {
-                    \Solunes\Master\App\TempFile::where('type', $field->type)->whereIn('file', $input)->delete();
-                } 
-            } else if(is_string($input)&&$input==''&&$input!=0){
-                $item->$field_name = NULL;
-            } else if($input) {
-                if($field->type=='image'||$field->type=='file') {
-                    \Solunes\Master\App\TempFile::where('type', $field->type)->where('file', $input)->delete();
-                }
-                $item->$field_name = $input;
-            }
+      $field_name = $field->name;
+      if(is_array($input)){
+        $final_input = json_encode($input);
+        if($field->type=='image'||$field->type=='file') {
+          \Solunes\Master\App\TempFile::where('type', $field->type)->whereIn('file', $input)->delete();
+        } 
+      } else {
+        if($input&&($field->type=='image'||$field->type=='file')) {
+          \Solunes\Master\App\TempFile::where('type', $field->type)->where('file', $input)->delete();
         }
-        return $item;
+        $final_input = $input;
+      }
+      if($final_input=='NULL-INPUT'){
+        $final_input = NULL;
+      }
+      $item = \FuncNode::put_in_database($item, $field, $field_name, $final_input, $lang_code);
+      return $item;
     }
 
+    public static function put_in_database($item, $field, $field_name, $final_input, $lang_code = 'es') {
+      if($field->translation==1){
+        $item->translateOrNew($lang_code)->$field_name = $final_input;
+      } else {
+        $item->$field_name = $final_input;
+      }
+      return $item;
+    }
+        
     public static function make_activity($node_id, $item_id, $user_id, $username, $action, $message) {
         $activity = new \Solunes\Master\App\Activity;
         $activity->node_id = $node_id;
@@ -271,12 +370,37 @@ class FuncNode {
         return true;
     }
 
-    public static function make_notitification($user_id, $message) {
+    public static function make_notitification($user_id, $url, $message) {
+      if($user = \App\User::find($user_id)){
+        $email = false;
+        $sms = false;
+        if($user->email&&$user->notifications_email){
+          // ENVIAR EMAIL
+          $email = true;
+        }
+        if($user->cellphone&&$user->notifications_sms){
+          // ENVIAR SMS
+          $sms = true;
+        }
+        if($email&&$sms){
+          $type = 'all';
+        } else if($email){
+          $type = 'email';
+        } else if($sms){
+          $type = 'sms';
+        } else {
+          $type = 'none';
+        }
         $notification = new \Solunes\Master\App\Notification;
+        $notification->type = $type;
         $notification->user_id = $user_id;
+        $notification->url = $url;
         $notification->message = $message;
         $notification->save();
         return true;
+      } else {
+        return false;
+      }
     }
 
     public static function check_var($name) {

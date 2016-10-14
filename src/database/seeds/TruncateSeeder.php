@@ -19,6 +19,9 @@ class TruncateSeeder extends Seeder {
         \Solunes\Master\App\TempFile::truncate();
         \Solunes\Master\App\VariableTranslation::truncate();
         \Solunes\Master\App\Variable::truncate();
+        \Solunes\Master\App\InboxUser::truncate();
+        \Solunes\Master\App\InboxMessage::truncate();
+        \Solunes\Master\App\Inbox::truncate();
         \Solunes\Master\App\Notification::truncate();
         \Solunes\Master\App\Activity::truncate();
         DB::table('permission_role')->truncate();
@@ -28,11 +31,18 @@ class TruncateSeeder extends Seeder {
         \App\User::truncate();
         \Solunes\Master\App\EmailTranslation::truncate();
         \Solunes\Master\App\Email::truncate();
+        \Solunes\Master\App\IndicatorValue::truncate();
+        \Solunes\Master\App\IndicatorGraph::truncate();
+        \Solunes\Master\App\IndicatorAlert::truncate();
+        \Solunes\Master\App\Indicator::truncate();
+        \Solunes\Master\App\FieldOptionTranslation::truncate();
+        \Solunes\Master\App\FieldOption::truncate();
         \Solunes\Master\App\FieldConditional::truncate();
         \Solunes\Master\App\FieldExtra::truncate();
         \Solunes\Master\App\FieldTranslation::truncate();
         \Solunes\Master\App\Field::truncate();
         \Solunes\Master\App\Section::truncate();
+        \Solunes\Master\App\Filter::truncate();
         \Solunes\Master\App\NodeExtra::truncate();
         \Solunes\Master\App\NodeRequest::truncate();
         \Solunes\Master\App\NodeTranslation::truncate();

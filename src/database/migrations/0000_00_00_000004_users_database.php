@@ -17,9 +17,13 @@ class UsersDatabase extends Migration
             $table->increments('id');
             $table->integer('site_id')->unsigned()->default(1);
             $table->string('name');
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
+            $table->integer('cellphone')->nullable();
+            $table->string('username')->nullable();
             $table->string('password', 60);
             $table->enum('status', ['normal','ask_password','banned'])->default('normal');
+            $table->boolean('notifications_email')->default(0);
+            $table->boolean('notifications_sms')->default(0);
             $table->string('last_session')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->timestamp('last_activity')->nullable();

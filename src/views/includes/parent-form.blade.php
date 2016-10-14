@@ -1,7 +1,7 @@
 <div data-accordion-group>
   @foreach($parent_nodes as $subnode)
     <div class="parent_node accordion" data-accordion>
-      <div data-control><h4><i class="fa fa-caret-down"></i> {{ $node->singular }}</h4></div>
+      <div data-control><h4><i class="fa fa-caret-down"></i> {{ $subnode['singular_name'] }}</h4></div>
       <div data-content>
         <div class="accordion-content">
           <div class="row flex">

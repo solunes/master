@@ -1,4 +1,4 @@
-<script src="{{ url(elixir("assets/js/froala.js")) }}"></script>
+<script src="{{ asset('assets/admin/scripts/froala.js') }}"></script>
 <script type="text/javascript"> 
     $(function() {
         $('.textarea').froalaEditor({

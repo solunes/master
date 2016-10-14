@@ -9,7 +9,7 @@
 	    $('.datepicker-max').pickadate({
 	    	format: 'yyyy-mm-dd',
 	    	formatSubmit: 'yyyy-mm-dd',
-	    	selectYears: 10,
+	    	selectYears: 40,
 			selectMonths: true,
 			max: true,
 	    });
