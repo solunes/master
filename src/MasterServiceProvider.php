@@ -32,7 +32,7 @@ class MasterServiceProvider extends ServiceProvider
             __DIR__ . '/config' => config_path('solunes')
         ], 'config');
         $this->publishes([
-            __DIR__.'/assets' => public_path('assets'),
+            __DIR__.'/assets/admin' => public_path('assets/admin'),
         ], 'assets');
         
         /* Registrar ServiceProvider Internos */
