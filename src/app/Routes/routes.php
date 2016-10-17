@@ -21,6 +21,7 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('modal-filter/{category}/{type}/{category_id}/{node_name}', 'AdminController@getModalFilter');
     Route::post('modal-filter', 'AdminController@postModalFilter');
     Route::get('delete-filter/{id}', 'AdminController@getDeleteFilter');
+    Route::get('delete-all-filters/{category}/{category_id}/{node_id?}', 'AdminController@getDeleteAllFilters');
     Route::get('modal-map/{name}/{value}', 'AdminController@getModalMap');
 });
 Route::group(['prefix'=>'auth'], function(){

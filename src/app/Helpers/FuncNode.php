@@ -16,6 +16,7 @@ class FuncNode {
         $required = 0;
         $preset = 0;
         $new_row = false;
+        $permission = NULL;
         $col_type = \DB::select(\DB::raw("SHOW FIELDS FROM ".$table_name." where Field  = '".$name."'"))[0]->Type;
         $extras = [];
         $requests = [];
@@ -97,12 +98,7 @@ class FuncNode {
             $display_list = 'excel';
         }
         if($node->type!='field'){
-            if($node->dynamic){
-              $model = new $model;
-              $rules = $model->rules($table_name);
-            } else {
-              $rules = $model::$rules_create;
-            }
+            $rules = \FuncNode::node_check_rules($node, 'create');
             if(array_key_exists($name, $rules)&&strpos($rules[$name], 'required') !== false){
                 $required = 1;
             }

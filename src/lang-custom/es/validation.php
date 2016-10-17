@@ -61,7 +61,7 @@ return array(
     "required_with"    => "El campo es obligatorio.",
     "required_with_all" => "El campo es obligatorio.",
     "required_without" => "El campo es obligatorio.",
-    "required_without_all" => "El campo es obligatorio.",
+    "required_without_all" => "Debe llenar al menos uno de estos campos.",
     "same"             => "Este campo debe coincidir con :other.",
     "size"             => array(
         "numeric" => "El tamaño de :attribute debe ser :size.",

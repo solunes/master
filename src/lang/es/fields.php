@@ -18,6 +18,7 @@ return [
     'analytics' => 'Google Analytics',
     'category' => 'Categoria',
     'checked' => 'Revisado',
+    'child_table' => 'SubTabla',
     'city' => 'Ciudad',
     'code' => 'Código',
     'col' => 'Columna',

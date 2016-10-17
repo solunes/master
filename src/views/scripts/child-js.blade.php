@@ -37,6 +37,14 @@ $(document).ready(function(){
     $('#'+rel+'>tbody>tr:last input.hidden-control').each(function(){
       $(this).val('0');
     });
+    // Correcciones del contador automático
+    var realcount = $('#'+rel+'>tbody>tr:last td.table-counter').data('count')+1;
+    $('#'+rel+'>tbody>tr:last td.table-counter').attr('data-count', realcount);
+    $('#'+rel+'>tbody>tr:last td.table-counter').html(realcount);
+    // Remover uno al counter_val si el contador si existe
+    /*var counter_val = $('#'+rel+'>tfoot .calculate-count').val();
+    $('#'+rel+'>tfoot .calculate-count').val(parseInt(counter_val)+1);*/
+    // Borrar datos del campo anterior
     $('#'+rel+'>tbody>tr:last .empty-field').each(function(){
       var text = $(this).data('text');
       $(this).html(text);
@@ -61,6 +69,10 @@ $(document).ready(function(){
     e.preventDefault();
     var rel = $(this).attr('rel');
     var count = $('#'+rel+'>tbody>tr').size();
+    // Remover uno al counter_val si el contador si existe
+    /*var counter_val = $('#'+rel+'>tfoot .calculate-count').val();
+    $('#'+rel+'>tfoot .calculate-count').val(parseInt(counter_val)-1);*/
+    // Remover campo completo
     if(count>1){
       $(this).parent().parent().remove();
     }

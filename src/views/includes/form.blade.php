@@ -12,6 +12,7 @@
           <div class="table-responsive">
             <table class="table" id="{{ $field->name }}">
               <thead><tr class="title">
+                <td>Nº</td>
                 @foreach($field->child_fields as $subfield)
                   <td>
                     {{ $subfield->label }}
@@ -32,9 +33,21 @@
                   @include('master::item_child.multiple-model', ['count'=>0, 'si'=>0])
                 @endif
               </tbody>
+              <tfoot>
+                <tr><td colspan="{{ count($field->child_fields)+2 }}">
+                  <a class="agregar_fila" rel="{{ $field->name }}" href="#" data-count="500">+ Añadir otra fila</a>
+                </td></tr>
+                @foreach($node->fields()->where('child_table', $field_name)->get() as $extra_field)
+                  <tr>
+                    <td colspan="{{ count($field->child_fields) }}" class="right">{{ $extra_field->label }} (Se calculará al guardar)</td>
+                    <td colspan="2" class="extra_table_field">
+                      {!! Field::form_input($i, $dt, $extra_field->toArray(), $extra_field->extras) !!}
+                    </td>
+                  </tr>
+                @endforeach
+              </tfoot>
             </table>
           </div>
-          <a class="agregar_fila" rel="{{ $field->name }}" href="#" data-count="500">Añadir otra fila</a>
         </div>
       @else
         <div id="field_{{ $field->name }}">

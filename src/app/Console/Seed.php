@@ -31,8 +31,8 @@ class Seed extends Command
             $this->info('0%: Seed iniciado.');
             $this->callSilent('empty:storage');
             $this->info('20%: Storage limpiado correctamente.');
-            $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseTruncateSeeder']);
             $this->callSilent('db:seed', ['--class'=>'DatabaseTruncateSeeder']);
+            $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseTruncateSeeder']);
             $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseMasterSeeder']);
             $this->callSilent('db:seed', ['--class'=>'DatabaseMasterSeeder']);
             $this->info('50%: Base de datos llenada correctamente.');
