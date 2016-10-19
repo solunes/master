@@ -18,6 +18,7 @@ return [
     'analytics' => 'Google Analytics',
     'category' => 'Category',
     'checked' => 'Checked',
+    'child_table' => 'Child Table',
     'city' => 'City',
     'code' => 'Code',
     'col' => 'Columna',

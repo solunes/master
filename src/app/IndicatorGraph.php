@@ -13,14 +13,14 @@ class IndicatorGraph extends Model {
 	public static $rules_create = array(
 		'graph'=>'required',
 		'color'=>'required',
-		'goal'=>'required',
+		'meta'=>'integer',
 	);
 
 	/* Updating rules */
 	public static $rules_edit = array(
 		'graph'=>'required',
 		'color'=>'required',
-		'goal'=>'required',
+		'meta'=>'integer',
 	);
 
     public function indicator() {

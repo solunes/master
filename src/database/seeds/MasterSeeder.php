@@ -90,7 +90,7 @@ class MasterSeeder extends Seeder {
         \Solunes\Master\App\Variable::create([
             'name' => 'file_extension',
             'type' => 'string',
-            'es' => ['value'=>'doc,docx,xls,xlsx,pdf,txt,jpg,jpeg,png,gif'],
+            'es' => ['value'=>'doc,docx,xls,xlsx,ppt,pptx,pdf,txt,jpg,jpeg,png,gif'],
         ]);
 
     }

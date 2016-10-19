@@ -1,14 +1,22 @@
+@if(request()->has('search'))
+<h3><a href="#" class="open_filter_container" data-status="open"><i class="fa fa-angle-up"></i> Ocultar Filtro</a></h3>
+<div class="filter_container">
+@else
 <h3><a href="#" class="open_filter_container" data-status="closed"><i class="fa fa-angle-down"></i> Mostrar Filtro</a></h3>
 <div class="filter_container" style="display: none;">
+@endif
   <div class="row">
     @if(isset($custom_options))
       <div class="col-sm-3"> 
         {!! Form::select('custom-options', $custom_options, NULL, ['id'=>'custom-options', 'class'=>'form-control']) !!}
       </div>
     @endif
-    <div class="col-sm-3"> 
+    <div class="col-sm-9"> 
       <a class="lightbox" href="{{ url('admin/modal-filter/'.$filter_category.'/'.$filter_type.'/'.$filter_category_id.'/'.$filter_node) }}?lightbox[width]=500&lightbox[height]=400" id="filter-button">
         <button class="btn btn-site" style="margin-top: 0;">{{ trans('master::admin.add_filter') }}</button>
+      </a>
+      <a href="{{ url('admin/delete-all-filters/'.$filter_category.'/'.$filter_category_id.'/'.$filter_node) }}" onclick="return confirm('¿Está seguro que desea eliminar todos los filtros?');">
+        <button class="btn btn-site" style="margin-top: 0;">{{ trans('master::admin.delete_all_filters') }}</button>
       </a>
     </div>
   </div>

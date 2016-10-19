@@ -1,4 +1,5 @@
 <tr>
+  <td class="table-counter" data-count="{{ $count+1 }}">{{ $count+1 }}</td>
   @foreach($field->child_fields as $subfield)
     <td>{!! Field::form_input($si, $dt, $subfield->toArray(), $subfield->extras+['subtype'=>'multiple', 'subinput'=>$field->name, 'subcount'=>$count]) !!}</td>
    @endforeach

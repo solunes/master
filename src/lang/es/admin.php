@@ -44,6 +44,7 @@ return array(
 	"node_created" => "Nodo Creado",
 	"node_edited" => "Nodo Editado",
 	"add_filter" => "Añadir Filtro",
+	"delete_all_filters" => "Eliminar todos los filtros",
 
 	// GLOBAL MESSAGES
 	"never" => "Nunca",
@@ -67,7 +68,7 @@ return array(
 	"put_off_fail" => "No se pudo quitar el item por los siguientes errores.",
 	"put_off_confirmation" => "¿Está seguro que desea quitar este item?",
 	"no_permission" => "No tiene los permisos necesarios para acceder a esta página.",
-	"filter_no_data" => "Los filtros se encuentran ocultos porque no hay datos que filtrar.",
+	"filter_no_data" => "No hay filtros o datos disponibles.",
 
 	// RANKS
 	"superadmin" => "Super Admin",

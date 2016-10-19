@@ -71,7 +71,7 @@ class MasterDatabase extends Migration
             $table->integer('site_id')->unsigned()->default(1);
             $table->enum('menu_type', ['site', 'admin'])->default('site');
             $table->integer('order')->nullable()->default(0);
-            $table->integer('level')->default(1);
+            $table->integer('level')->nullable()->default(1);
             $table->enum('type', ['normal', 'external', 'blank'])->default('normal');
             $table->integer('parent_id')->nullable();
             $table->string('permission')->nullable();
@@ -178,6 +178,8 @@ class MasterDatabase extends Migration
             $table->boolean('preset')->default(0);
             $table->boolean('tooltip')->default(0);
             $table->text('message')->nullable();
+            $table->string('permission')->nullable();
+            $table->string('child_table')->nullable();
             $table->string('value')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -202,7 +204,7 @@ class MasterDatabase extends Migration
             $table->increments('id');
             $table->integer('parent_id')->unsigned();
             $table->string('trigger_field');
-            $table->enum('trigger_show', ['is','is_not','is_greater','is_less'])->default('is');
+            $table->enum('trigger_show', ['is','is_not','is_greater','is_less','where_in'])->default('is');
             $table->string('trigger_value');
             $table->foreign('parent_id')->references('id')->on('fields')->onDelete('cascade');
         });
