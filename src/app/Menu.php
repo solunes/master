@@ -30,6 +30,13 @@ class Menu extends Model {
       'name'=>'required',
     );
 
+    public function scopeMenuQuery($query, $type, $level, $menu_includes = NULL) {
+        if(!$menu_includes){
+            $menu_includes = ['translations', 'page', 'page.translations', 'children', 'children.translations', 'children.page', 'children.page.translations', 'children.children', 'children.children.translations', 'children.children.page', 'children.children.page.translations'];
+        }
+        return $query->where('menu_type', $type)->where('level', $level)->with($menu_includes)->orderBy('order','ASC');
+    }
+
     public function children() {
         return $this->hasMany('Solunes\Master\App\Menu', 'parent_id', 'id')->orderBy('order','ASC');
     }
@@ -42,39 +49,11 @@ class Menu extends Model {
         return $this->belongsTo('Solunes\Master\App\Page');
     }
 
-    public function setLevelAttribute($value){
-        if(!isset($this->attributes['order'])){
-            if(\Solunes\Master\App\Menu::where("level", $value)->count()>0){
-                $order = \Solunes\Master\App\Menu::where("level", $value)->orderBy("order", "DESC")->first()->order;
-            } else {
-                $order = 0;
-            }
-            $order = $order+1;
-            $this->attributes['order'] = $order;
-        }
-        $this->attributes['level'] = $value;
-    }
-
-    /*public function setOrderAttribute($value){
-        if($value==''||$value==NULL){
-            $level = $this->attributes['level'];
-            if(\Solunes\Master\App\Menu::where("level", $level)->count()>0){
-                $order = \Solunes\Master\App\Menu::where("level", $level)->orderBy("order", "DESC")->first()->order;
-            } else {
-                $order = 0;
-            }
-            $order = $order+1;
-            $this->attributes['order'] = $order;
-        }
-    }*/
-
     public function getRealLinkAttribute(){
       if($this->page){
         return url($this->page->translate()->slug);
       } else if(($this->type=='normal'&&$this->type=='external')||$this->translate()->link){
         return $this->translate()->link;
-      } else if($this->menu_type=='admin') {
-        return NULL;
       } else {
         return '#';
       }

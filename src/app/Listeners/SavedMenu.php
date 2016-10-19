@@ -11,6 +11,18 @@ class SavedMenu {
             	$menu->translateOrNew($language->code)->name = $page->name;
         	}
         }
+
+        // Definir Order
+        if(!$menu->order){
+            if($menu_group = \Solunes\Master\App\Menu::where('type', $menu->type)->where("level", $menu->level)->orderBy("order", "DESC")->first()){
+                $order = $menu_group->order;
+            } else {
+                $order = 0;
+            }
+            $order = $order+1;
+            $menu->order = $order;
+        }
+
     }
 
 }

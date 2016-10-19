@@ -44,7 +44,19 @@ class Field extends Model {
     }
 
     public function getExtrasAttribute() {
-        return $this->field_extras->lists('value','type')->toArray();
+        $extras = $this->field_extras->lists('value','type')->toArray();
+        // Corrección a Extra campos en sub tabla
+        if($this->child_table){
+            $extras['cols'] = 12;
+            $extras['disabled'] = 1;
+            if($this->name==$this->child_table.'_count'){
+                $class = 'calculate-count';
+            } else {
+                $class = 'calculate-total';
+            }
+            $extras['class'] = $class;
+        }
+        return $extras;
     }
 
     public function field_conditionals() {
@@ -93,6 +105,15 @@ class Field extends Model {
             $return = NULL;
         }
         return $return;
+    }
+
+    public function scopeCheckPermission($query) {
+        return $query->where(function ($subquery) {
+            $subquery->whereNull('permission');
+            if(auth()->check()){
+                $subquery->orWhereIn('permission', auth()->user()->getPermission()->toArray());
+            }
+        });
     }
 
 }

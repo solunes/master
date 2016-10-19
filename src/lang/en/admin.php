@@ -43,6 +43,7 @@ return array(
 	"node_created" => "Node Created",
 	"node_edited" => "Node Updated",
 	"add_filter" => "Add Filter",
+	"delete_all_filters" => "Delete all filters",
 
 	// GLOBAL MESSAGES
 	"never" => "Never",
@@ -66,7 +67,7 @@ return array(
 	"put_off_fail" => "The item could not be puted off succesfully because of the next errors",
 	"put_off_confirmation" => "Are your sure you want to put off this item?",
 	"no_permission" => "You do not have the right permission to access this page.",
-	"filter_no_data" => "The filters will be kept hidden because there is no data to filter.",
+	"filter_no_data" => "There are no filters or data.",
 
 	// RANKS
 	"superadmin" => "Super Admin",
@@ -138,7 +139,7 @@ return array(
 	"is_not" => "Is not",
 	"is_greater" => "Is greater",
 	"is_less" => "Is less",
-	"where_in" => "Where In Array",
+	"where_in" => "Where in array",
 	"show" => "Show",
 	"hide" => "Hide",
 	"resize" => "Resize",

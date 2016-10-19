@@ -137,7 +137,7 @@ class AdminItem {
         }
         $variables['parent_id'] = $parent_id;
         $variables['i'] = $item;
-        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->whereNotIn('display_item', $hidden_array)->with('translations','field_extras','field_options')->get();
+        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->whereNotIn('display_item', $hidden_array)->whereNull('child_table')->checkPermission()->with('translations','field_extras','field_options')->get();
         if($node->fields()->whereIn('type', ['image', 'file'])->count()>0){
             $variables['files'] = true;
         } else {
@@ -218,10 +218,39 @@ class AdminItem {
             $item->total_ponderation = $total_ponderation;
         }
         $item->save();
+        foreach($node->fields()->whereIn('type', ['subchild', 'field'])->get() as $field){
+            if($field->type=='subchild'){
+                $subfield_name = str_replace('_', '-', $field->value);
+                $sub_node = \Solunes\Master\App\Node::where('name', $subfield_name)->first();
+                $sub_node_table = $sub_node->table_name;
+                AdminItem::post_subitems($sub_node, $field->name, 'parent_id', $item->id, $sub_node->fields()->where('display_item','!=','none')->whereNotIn('name', ['id', 'parent_id'])->get());
+                foreach($node->fields()->where('child_table', $sub_node_table)->get() as $field_extra){
+                    $field_extra_name = $field_extra->name;
+                    if($field_extra_name==$sub_node_table.'_count'){
+                        $subvalue = count($item->$sub_node_table); 
+                    } else {
+                        $field_extra_name_fixed = str_replace('_total','',$field_extra_name);
+                        $subvalue = 0;
+                        foreach($item->$sub_node_table as $sub_item){
+                            $subvalue += $sub_item->$field_extra_name_fixed;
+                        }
+                    }
+                    $item->$field_extra_name = $subvalue;
+                    $item->save();
+                }
+            } else {
+                $field_name = $field->name;
+                if($field->multiple){
+                    $item->$field_name()->sync($request->input($field_name));
+                } else {
+                    $item->$field_name()->sync([$request->input($field_name)]);
+                }
+            }
+        }
         foreach($node->indicators as $indicator){
             $node_model = \FuncNode::node_check_model($node);
             $items = \FuncNode::node_check_model($node);
-            $array = \AdminList::filter_node(['indicator_id'=>$indicator->id], $node, $node_model, $items, 'indicator');
+            $array = \AdminList::filter_node(['filter_category_id'=>$indicator->id], $node, $node_model, $items, 'indicator');
             $items = $array['items'];
             if($indicator->type=='count'){
                 $indicator_value = $items->count();
@@ -236,19 +265,6 @@ class AdminItem {
             }
             $today_indicator->value = $indicator_value;
             $today_indicator->save();
-        }
-        foreach($node->fields()->whereIn('type', ['subchild', 'field'])->get() as $field){
-            if($field->type=='subchild'){
-                $sub_node = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $field->value))->first();
-                AdminItem::post_subitems($sub_node, $field->name, 'parent_id', $item->id, $sub_node->fields()->where('display_item','!=','none')->whereNotIn('name', ['id', 'parent_id'])->get());
-            } else {
-                $field_name = $field->name;
-                if($field->multiple){
-                    $item->$field_name()->sync($request->input($field_name));
-                } else {
-                    $item->$field_name()->sync([$request->input($field_name)]);
-                }
-            }
         }
         \Asset::delete_temp();
         return $item;

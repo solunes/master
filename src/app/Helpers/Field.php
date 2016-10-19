@@ -106,7 +106,7 @@ class Field {
         
         // VALUE
         $value = NULL;
-        if($i&&($i->$fixed_name||$i->$fixed_name==0)){
+        if($i&&($i->$fixed_name||$i->$fixed_name===0)){
             $value = $i->$fixed_name;
         } else if (request()->has($fixed_name)){
             $value = request()->input($fixed_name);

@@ -2,7 +2,7 @@
 	@if(isset($fields)&&count($fields)>0)
   	  {!! Form::open(['url'=>'admin/modal-filter', 'method'=>'POST', 'class'=>'form-horizontal filter']) !!}
         <div class="row">
-		      {!! Field::form_input(0, 'edit', ['name'=>'select_field','type'=>'select','required'=>false, 'options'=>$fields], ['cols'=>10,'label'=>trans('master::fields.select_field')]) !!}
+		      {!! Field::form_input(0, 'edit', ['name'=>'select_field','type'=>'select','required'=>true, 'options'=>$fields], ['cols'=>10,'label'=>trans('master::fields.select_field')]) !!}
           {!! Field::form_input(0, 'edit', ['name'=>'type','type'=>'hidden','required'=>false], ['value'=>$type]) !!}
           {!! Field::form_input(0, 'edit', ['name'=>'category','type'=>'hidden','required'=>false], ['value'=>$category]) !!}
           {!! Field::form_input(0, 'edit', ['name'=>'node_id','type'=>'hidden','required'=>false], ['value'=>$node_id]) !!}

@@ -145,41 +145,62 @@ class AdminController extends Controller {
 	}
 
 	public function postModalFilter(Request $request) {
-		$category = $request->input('category');
-		$type = $request->input('type');
-		if($type=='indicator'){
-			$display = 'all';
-		} else {
-			$display = 'user';
-		}
-		$category_id = $request->input('category_id');
-		$node_id = $request->input('node_id');
-		$node = \Solunes\Master\App\Node::find($node_id);
-		$field = $node->fields()->where('name', $request->input('select_field'))->first();
-		if($field->type=='date'){
-			$subtype = 'date';
-		} else if($field->type=='string'||$field->type=='text'){
-			$subtype = 'string';
-		} else if($field->type=='field'){
-			$subtype = 'field';
-		} else {
-			$subtype = 'select';
-		}
-		$filter = new \Solunes\Master\App\Filter;
-		$filter->category = $category;
-		$filter->category_id = $category_id;
-		$filter->node_id = $node_id;
-		$filter->user_id = auth()->user()->id;
-		$filter->display = $display;
-		$filter->type = $type;
-		$filter->subtype = $subtype;
-		$filter->parameter = $request->input('select_field');
-		$filter->save();
-      	return redirect($this->prev);
+		if($request->has('select_field')&&$request->input('select_field')!='NULL-INPUT'){
+			$category = $request->input('category');
+			$type = $request->input('type');
+			if($type=='indicator'){
+				$display = 'all';
+			} else {
+				$display = 'user';
+			}
+			$category_id = $request->input('category_id');
+			$node_id = $request->input('node_id');
+			$node = \Solunes\Master\App\Node::find($node_id);
+			$field = $node->fields()->where('name', $request->input('select_field'))->first();
+			if($field->type=='date'){
+				$subtype = 'date';
+			} else if($field->type=='string'||$field->type=='text'){
+				$subtype = 'string';
+			} else if($field->type=='field'){
+				$subtype = 'field';
+			} else {
+				$subtype = 'select';
+			}
+			$filter = new \Solunes\Master\App\Filter;
+			$filter->category = $category;
+			$filter->category_id = $category_id;
+			$filter->node_id = $node_id;
+			$filter->user_id = auth()->user()->id;
+			$filter->display = $display;
+			$filter->type = $type;
+			$filter->subtype = $subtype;
+			$filter->parameter = $request->input('select_field');
+			$filter->save();
+			$url = $this->prev;
+			if (strpos($url, '?') !== false) {
+			    $url .= '&search=1';
+			} else {
+			    $url .= '?search=1';
+			}
+	      	return redirect($url);
+	      } else {
+	      	return redirect($this->prev)->with('message_error','Debe seleccionar un campo para filtrar');
+	      }
 	}
 
 	public function getDeleteFilter($id) {
 		\Solunes\Master\App\Filter::where('id', $id)->delete();
+      	return redirect($this->prev);
+	}
+
+	public function getDeleteAllFilters($category, $category_id, $node_id = NULL) {
+		$filters = \Solunes\Master\App\Filter::checkCategory($category)->checkDisplay();
+		if($category_id==0){
+			$node = \Solunes\Master\App\Node::where('name', $node_id)->first();
+			$filters->where('node_id', $node->id)->delete();
+		} else {
+			$filters->where('category_id', $category_id)->delete();
+		}
       	return redirect($this->prev);
 	}
 

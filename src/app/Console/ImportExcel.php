@@ -32,19 +32,11 @@ class ImportExcel extends Command
             foreach($reader->get() as $sheet){
                 $sheet_model = $sheet->getTitle();
                 $node = \Solunes\Master\App\Node::where('name', $sheet_model)->first();
-                $model = $node->model;
-                $sheet->each(function($row) use ($languages, $node, $model) {
+                $sheet->each(function($row) use ($languages, $node) {
                     if($row->id){
-                        if($node->dynamic&&$node->parent_id==NULL){
-                            $model = new $model;
-                            $model = $model->fromTable($node->table_name);
-                            if(!$item = $model->where('id', $row->id)->first()){
-                                $item = $model;
-                            }
-                        } else {
-                            if(!$item = $model::where('id', $row->id)->first()){
-                                $item = new $model;
-                            }
+                        $model = \FuncNode::node_check_model($node);
+                        if(!$item = $model->where('id', $row->id)->first()){
+                            $item = $model;
                         }
                         foreach($languages as $language){
                             foreach($node->fields()->whereNotIn('type', ['child','subchild','field'])->get() as $field){
@@ -76,7 +68,14 @@ class ImportExcel extends Command
                                     if($input){
                                         if($field->type=='image'||$field->type=='file'){
                                             $action_name = 'upload_'.$field->type;
-                                            $input = \Asset::$action_name(public_path('seed/'.$node->name.'/'.$input), $node->name.'-'.$field->name, true);
+                                            if($field->multiple){
+                                                foreach(explode(' | ',$input) as $subinput){
+                                                    $input_array[] = \Asset::$action_name(public_path('seed/'.$node->name.'/'.$subinput), $node->name.'-'.$field->name, true);
+                                                }
+                                                $input = json_encode($input_array);
+                                            } else {
+                                                $input = \Asset::$action_name(public_path('seed/'.$node->name.'/'.$input), $node->name.'-'.$field->name, true);
+                                            }
                                         }
                                         $item = \FuncNode::put_data_field($item, $field, $input, $language->code);
                                     }

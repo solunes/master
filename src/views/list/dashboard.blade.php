@@ -120,24 +120,38 @@
       $('<div id="tooltip" class="chart-tooltip">'+i+"</div>").css({position:"absolute",display:"none",top:t-40,left:e-40,border:"0px solid #ccc",padding:"2px 6px","background-color":"#fff"}).appendTo("body").fadeIn(200);
     };
     @foreach($graph_alerts as $alert)
+      <?php $graph_values = $alert->indicator->indicator_values()->where('date', '>=', $start_date)->where('date', '<=', $end_date)->orderBy('date','DESC')->get();
+        if(count($graph_values)>10){
+          $every = count($graph_values)/10;
+          if($every<1.5){
+            $every = count($graph_values)/4;
+          }
+          $graph_values = $graph_values->every(round($every));
+        }
+        $graph_values = $graph_values->lists('value','date')->reverse();
+        ?>
       var t=[
-        @foreach($alert->indicator->indicator_values()->where('date', '>=', $start_date)->where('date', '<=', $end_date)->orderBy('date','DESC')->get()->reverse() as $value)
-          ["{{ substr($value->date,5) }}", {{ $value->value }}],
+        @foreach($graph_values as $date => $value)
+          ["{{ substr($date,5) }}", {{ $value }}],
         @endforeach
       ];
+      @if($alert->goal)
       var g=[
-        @foreach($alert->indicator->indicator_values()->where('date', '>=', $start_date)->where('date', '<=', $end_date)->orderBy('date','DESC')->get()->reverse() as $value)
-          ["{{ substr($value->date,5) }}", {{ $alert->goal }}],
+        @foreach($graph_values as $date => $value)
+          ["{{ substr($date,5) }}", {{ $alert->goal }}],
         @endforeach
       ];
+      @endif
       var a=($.plot(
         $("#plot_example_{{ $alert->id }}"),
         [
           {data:t,lines:{fill:.6,lineWidth:0},color:["{{ $alert->color }}"]},
+          @if($alert->goal)
           {data:g,lines:{fill:0,lineWidth:2},color:["green"]},
+          @endif
           {data:t,points:{show:!0,fill:!0,radius:5,fillColor:"{{ $alert->color }}",lineWidth:3},color:"#fff",shadowSize:0}
         ],
-        {xaxis:{tickLength:0,tickDecimals:0,mode:"categories",max:10,font:{
+        {xaxis:{tickLength:0,tickDecimals:0,mode:"categories",font:{
             lineHeight:14,style:"normal",variant:"small-caps",color:"{{ $alert->color }}"}
         },
         yaxis:{ticks:5,tickDecimals:0,tickColor:"#eee",font:{lineHeight:14,style:"normal",variant:"small-caps",color:"{{ $alert->color }}"}},

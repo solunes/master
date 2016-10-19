@@ -28526,6 +28526,10 @@ body {
     background: #4c99bf;
     color: #fff; }
 
+/* Extra Field Correction */
+.extra_table_field label {
+  display: none; }
+
 /* Filtro */
 ul.table-list {
   margin-top: 20px;
@@ -28561,10 +28565,10 @@ table.dataTable thead th, table.dataTable thead td {
   padding: 5px 20px;
   margin-top: 20px; }
 
-.mt-radio-inline .mt-radio, .mt-checkbox-inline .mt-checkbox {
+.mt-radio-inline label.mt-radio, .mt-checkbox-inline label.mt-checkbox {
   color: #777; }
 
-.mt-checkbox, .mt-radio {
+label.mt-checkbox, label.mt-radio {
   margin-top: 0;
   line-height: 1.85em; }
 
