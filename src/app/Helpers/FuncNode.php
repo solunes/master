@@ -338,7 +338,7 @@ class FuncNode {
         }
         $final_input = $input;
       }
-      if($final_input=='NULL-INPUT'){
+      if(is_string($final_input)&&$final_input=='NULL-INPUT'){
         $final_input = NULL;
       }
       $item = \FuncNode::put_in_database($item, $field, $field_name, $final_input, $lang_code);
