@@ -57,7 +57,7 @@ class ImportExcel extends Command
                             }
                             $new_item = true;
                         }
-                        if(isset($field_array[$column])){
+                        if($new_item&&isset($field_array[$column])){
                             $field = $field_array[$column];
                             if($column==$field->name){
                                 $language_code = 'es';
@@ -97,7 +97,7 @@ class ImportExcel extends Command
                                 }
                                 $item = \FuncNode::put_data_field($item, $field, $input, $language_code);
                             }
-                        } else if(isset($field_sub_array[$column])) {
+                        } else if($new_item&&isset($field_sub_array[$column])) {
                             $field = $field_sub_array[$column];
                             if($field->multiple){
                                 foreach(explode(';',$input) as $value){
