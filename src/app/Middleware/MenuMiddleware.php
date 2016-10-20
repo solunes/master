@@ -40,24 +40,18 @@ class MenuMiddleware
                 $first_level->prepend('<i class="fa fa-'.$menu_option->icon.'"></i>');
               }
               $first_level->append('</span>');
-              if($menu_option->url==NULL){
-                if(count($menu_option->children)>0) {
-                  $first_level->attribute(['class' => 'nav-link nav-toggle']);
-                } else {
-                  $first_level->attribute(['class' => 'nav-link']);
-                }
-              }
               if(count($menu_option->children)>0){
                 $first_level->append('<span class="arrow"></span>');
+                $first_level->attribute(['class' => 'nav-link nav-toggle']);
                 foreach($menu_option->children as $menu_children){
                   if(!$menu_children->permission||(auth()->check()&&$user_permissions->contains($menu_children->permission))){
                     $second_level = $first_level->add($menu_children->name, $menu_children->real_link);
-                    $second_level->attribute(['class' => 'nav-link']);
                     if($menu_children->icon){
                       $second_level->prepend('<i class="fa fa-'.$menu_children->icon.'"></i>');
                     }
                     if(count($menu_children->children)>0){
                       $second_level->append('<span class="arrow"></span>');
+                      $second_level->attribute(['class' => 'nav-link nav-toggle']);
                       foreach($menu_children->children as $menu_children2){
                         $third_level = $second_level->add($menu_children2->name, $menu_children2->real_link);
                         $third_level->attribute(['class' => 'nav-link']);
@@ -65,9 +59,13 @@ class MenuMiddleware
                           $third_level->prepend('<i class="fa fa-'.$menu_children2->icon.'"></i>');
                         }
                       }
+                    } else {
+                      $second_level->attribute(['class' => 'nav-link']);
                     }
                   }
                 }
+              } else {
+                $first_level->attribute(['class' => 'nav-link']);
               }
             }
           }

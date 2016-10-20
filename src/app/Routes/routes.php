@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['prefix'=>'admin','middleware'=>['admin']], function(){
+Route::group(['prefix'=>'admin'], function(){
     Route::get('/', 'AdminController@getIndex');
     Route::get('generate-manual/{role_name?}', 'AdminController@getGenerateManual');
     Route::get('model-list/{model}', 'AdminController@getModelList');
@@ -24,22 +24,22 @@ Route::group(['prefix'=>'admin','middleware'=>['admin']], function(){
     Route::get('delete-all-filters/{category}/{category_id}/{node_id?}', 'AdminController@getDeleteAllFilters');
     Route::get('modal-map/{name}/{value}', 'AdminController@getModalMap');
 });
-Route::group(['prefix'=>'auth','middleware'=>['admin']], function(){
+Route::group(['prefix'=>'auth'], function(){
     Route::get('login', 'Auth\LoginController@getLogin');
     Route::post('login', 'Auth\LoginController@postLogin');
     Route::get('logout', 'Auth\LoginController@getLogout');
 });
-Route::group(['prefix'=>'password','middleware'=>['admin']], function(){
+Route::group(['prefix'=>'password'], function(){
     Route::get('recover', 'Auth\PasswordController@getRecover');
     Route::post('request', 'Auth\PasswordController@postRequest');
     Route::get('reset/{token?}', 'Auth\PasswordController@getReset');
     Route::post('update', 'Auth\PasswordController@postUpdate');
 });
-Route::group(['prefix'=>'account','middleware'=>['admin']], function(){
+Route::group(['prefix'=>'account'], function(){
     Route::get('/', 'Auth\AccountController@getIndex');
     Route::post('password', 'Auth\AccountController@postPassword');
 });
-Route::group(['prefix'=>'asset','middleware'=>['admin']], function(){
+Route::group(['prefix'=>'asset'], function(){
     Route::post('froala-image-upload', 'AssetController@postFroalaImageUpload');
     Route::post('froala-file-upload', 'AssetController@postFroalaFileUpload');
     Route::post('upload', 'AssetController@postUpload');
