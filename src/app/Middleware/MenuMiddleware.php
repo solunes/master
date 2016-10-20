@@ -25,7 +25,9 @@ class MenuMiddleware
       }
       if($request->segment(1)=='auth'){
         Menu::make('main', function($menu) {
-          $menu->add('Ingresar', 'auth/login');
+          $login = $menu->add('Ingresar', 'auth/login');
+          $login->prepend('<span class="title"><i class="fa fa-user"></i>');
+          $login->append('</span>');
         });
       } else {
         $menu_options = \Solunes\Master\App\Menu::where('site_id', 1)->menuQuery('admin', 1)->get();

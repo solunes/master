@@ -36,8 +36,8 @@ class AdminController extends Controller {
 		} else {
 			$array['end_date'] = date('Y-m-d');
 		}
-		$array['block_alerts'] = \Solunes\Master\App\IndicatorGraph::where('user_id', auth()->user()->id)->where('graph','number')->with('indicator')->get();
-		$array['graph_alerts'] = \Solunes\Master\App\IndicatorGraph::where('user_id', auth()->user()->id)->where('graph','!=','number')->with('indicator')->get();
+		$array['block_alerts'] = \Solunes\Master\App\IndicatorGraph::where('user_id', auth()->user()->id)->where('graph','number')->has('indicator')->with('indicator')->get();
+		$array['graph_alerts'] = \Solunes\Master\App\IndicatorGraph::where('user_id', auth()->user()->id)->where('graph','!=','number')->has('indicator')->with('indicator')->get();
       	return view('master::list.dashboard', $array);
 	}
 
