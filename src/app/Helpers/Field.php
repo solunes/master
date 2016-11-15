@@ -277,6 +277,7 @@ class Field {
                 $value = '-16.495369;-68.134289';
             }
         }
+        $array['id'] = $name;
         $response .= Form::hidden($name, $value, $array);
         return $response;
     }

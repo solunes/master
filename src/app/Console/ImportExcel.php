@@ -100,8 +100,8 @@ class ImportExcel extends Command
                         } else if($new_item&&isset($field_sub_array[$column])) {
                             $field = $field_sub_array[$column];
                             if($field->multiple){
+                                $array_insert = [];
                                 foreach(explode(';',$input) as $value){
-                                    $array_insert = [];
                                     if(!is_numeric($value)){
                                         $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
                                         array_push($array_insert, $sub_model::where('name', $value)->first()->id);

@@ -45,6 +45,7 @@ class AdminItem {
             }
         } else {
             $variables = \AdminItem::get_request_variables($data->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
+            $view = 'master::item.model';
             if($variables['preset_field']===true){
                 if($node->name=='indicator'){
                     if(\View::exists('includes.select-parent-indicator')){
@@ -59,8 +60,6 @@ class AdminItem {
                     $custom_location = 'master::'.$custom_location;
                 }
                 $view = $custom_location.$single_model;
-            } else {
-                $view = 'master::item.model';
             }
             if(request()->has('download-pdf')){
                 $variables['pdf'] = true;
