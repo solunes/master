@@ -194,7 +194,9 @@ class Field {
         if($data_type!='view'&&\Session::has('errors')&&\Session::get('errors')->default->first($name)){
             $response .= '<div class="error">'.\Session::get('errors')->default->first($name).'</div>';
         }
-
+        if($data_type=='editor'){
+            $response .= \Field::generate_editor_fields($name);
+        }
         $response .= '</div>';
         return $response;
     }
@@ -247,6 +249,9 @@ class Field {
         }
         if(\Session::has('errors')&&\Session::get('errors')->default->first($name)){
             $response .= '<div class="error col-sm-12">'.\Session::get('errors')->default->first($name).'</div>';
+        }
+        if($data_type=='editor'){
+            $response .= \Field::generate_editor_fields($name);
         }
         $response .= '</div></div>';
         return $response;
@@ -349,6 +354,14 @@ class Field {
               $response .= Form::file('uploader_'.$name, $array);
           }
           return $response;
+    }
+
+    public static function generate_editor_fields($name) {
+        $return = '<div class="form_fields_actions"> <i class="fa fa-arrow-up"></i> ';
+        $return .= '<a href="'.url('admin/form-field/edit/'.request()->segment('3').'/'.$name).'">Editar Campo</a> | ';
+        $return .= '<a href="'.url('admin/form-field/create/'.request()->segment('3').'/'.$name).'">Agregar Campo</a>';
+        $return .= '</div>';
+        return $return;
     }
 
 }

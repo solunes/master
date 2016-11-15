@@ -30,8 +30,8 @@ class ImportExcel extends Command
         $languages = \Solunes\Master\App\Language::get();
         \Excel::load(public_path('seed/import.xls'), function($reader) use($languages) {
             foreach($reader->get() as $sheet){
-                $sheet_model = $sheet->getTitle();
-                $node = \Solunes\Master\App\Node::where('name', $sheet_model)->first();
+              $sheet_model = $sheet->getTitle();
+              if($node = \Solunes\Master\App\Node::where('name', $sheet_model)->first()){
                 $field_array = [];
                 $field_sub_array = [];
                 $sub_field_insert = [];
@@ -116,6 +116,7 @@ class ImportExcel extends Command
                                 } else {
                                     $array_insert = $input;
                                 }
+                                $array_insert = [$array_insert];
                             }
                             $sub_field_insert[$column] = $array_insert;
                         }
@@ -123,10 +124,11 @@ class ImportExcel extends Command
                     if($new_item){
                         $item->save();
                         foreach($sub_field_insert as $column => $input){
-                            $item->$column()->sync([$input]);
+                            $item->$column()->sync($input);
                         }
                     }
                 });
+              }
             }
         });
         $this->info('100%: Se agregaron los datos del excel.');
