@@ -53,6 +53,8 @@ class AdminItem {
                     } else {
                         $view = 'master::includes.select-parent-indicator';
                     }
+                } else {
+                    $view = 'master::includes.select-parent';
                 }
             } else if($node->customized){
                 $custom_location = 'item.';
