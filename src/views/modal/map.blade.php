@@ -75,7 +75,7 @@
               map.setZoom(13);
               var yeri = place.geometry.location;
               var coordinates = yeri.lat().toFixed(6)+ ";" +yeri.lng().toFixed(6);
-              document.getElementById('{{ $name }}').value = coordinates;
+              document.getElementsByName('{{ $name }}')[0].value = coordinates;
               var link = document.getElementById('link-{{ $name }}');
               var link_text = "{{ url('admin/modal-map/'.$name) }}/"+ coordinates +"?lightbox[width]=800&lightbox[height]=500";
               link.innerHTML = "Editar Mapa ("+ coordinates +")";
