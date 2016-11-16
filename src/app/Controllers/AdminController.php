@@ -145,7 +145,7 @@ class AdminController extends Controller {
 	}
 
 	public function postModalFilter(Request $request) {
-		if($request->has('select_field')&&$request->input('select_field')!='NULL-INPUT'){
+		if($request->has('select_field')&&$request->input('select_field')!==''){
 			$category = $request->input('category');
 			$type = $request->input('type');
 			if($type=='indicator'){

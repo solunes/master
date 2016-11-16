@@ -46,8 +46,8 @@ class Field {
         $parameters = [];
         if($type=='select'||$type=='checkbox'||$type=='radio'){
             $parameters['options'] = $field['options'];
-            if($type=='select'){
-                $parameters['options'] = ['NULL-INPUT'=>' '] + $parameters['options'];
+            if($type=='select'&&$required===false){
+                $parameters['options'] = [''=>' '] + $parameters['options'];
             }
         }
  
