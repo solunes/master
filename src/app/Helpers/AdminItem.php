@@ -393,8 +393,8 @@ class AdminItem {
             if($item->contains($key)){
                 $return = true;
             }
-        } else if($item){
-            if($key==$item){
+        } else if($item||(is_numeric($item)&&$item===0)){
+            if($key===$item){
                 $return = true;
             }
         } 

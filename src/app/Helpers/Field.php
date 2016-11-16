@@ -46,7 +46,7 @@ class Field {
         $parameters = [];
         if($type=='select'||$type=='checkbox'||$type=='radio'){
             $parameters['options'] = $field['options'];
-            if($type=='select'&&$required===false){
+            if($type=='select'&&!$required){
                 $parameters['options'] = [''=>' '] + $parameters['options'];
             }
         }
