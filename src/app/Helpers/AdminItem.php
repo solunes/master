@@ -138,7 +138,7 @@ class AdminItem {
         }
         $variables['parent_id'] = $parent_id;
         $variables['i'] = $item;
-        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->whereNotIn('display_item', $hidden_array)->whereNull('child_table')->checkPermission()->with('translations','field_extras','field_options')->get();
+        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->whereNotIn('display_item', $hidden_array)->whereNull('child_table')->checkPermission()->with('translations','field_extras','field_options_active')->get();
         if($node->fields()->whereIn('type', ['image', 'file'])->count()>0){
             $variables['files'] = true;
         } else {

@@ -218,6 +218,9 @@ class FuncNode {
         $model = FuncNode::node_check_model($node);
         if($node->dynamic){
           $rules = $model->rules($node->table_name);
+          if($rules==NULL){
+            $rules = [];
+          }
         } else {
           if($action=='create'){
             $rules = $model::$rules_create;

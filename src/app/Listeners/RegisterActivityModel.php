@@ -7,7 +7,7 @@ class RegisterActivityModel {
     public function handle($event) {
     	$event_model = '\\'.get_class($event);
     	// Revisar que tenga una sesión y sea un modelo del sitio web.
-	    if($event&&request()->segment(1)!='artisan'&&$node = \Solunes\Master\App\Node::where('type','!=','subchild')->whereNotIn('name', ['user','activity','notification'])->where('model', $event_model)->first()){
+	    if($event&&request()->segment(1)!='artisan'&&$node = \Solunes\Master\App\Node::where('type','!=','subchild')->whereNotIn('name', ['menu','user','activity','notification'])->where('model', $event_model)->first()){
 			try {
 			    $event_string = (string)json_encode($event);
 			    $event_decoded = json_decode($event_string);

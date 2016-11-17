@@ -64,6 +64,10 @@ class Field extends Model {
     }
 
     public function field_options() {
+        return $this->hasMany('Solunes\Master\App\FieldOption', 'parent_id')->with('translations');
+    }
+
+    public function field_options_active() {
         return $this->hasMany('Solunes\Master\App\FieldOption', 'parent_id')->where('active', 1)->with('translations');
     }
 
@@ -78,7 +82,7 @@ class Field extends Model {
     public function getOptionsAttribute() {
         $return = [];
         if($this->type=='select'||$this->type=='radio'||$this->type=='checkbox'){
-            foreach($this->field_options as $item){
+            foreach($this->field_options_active as $item){
                 $return[$item->name] = $item->label;
             }
         } else if($this->type=='relation'||$this->type=='field'){
