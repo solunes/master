@@ -155,6 +155,7 @@ return array(
 	"in_development" => "En Desarrollo",
 	"archived" => "Archivado",
 	"count" => "Contador",
+	"count_total" => "Contar el Total",
 	"formula" => "Formula",
 	"bar" => "Barra",
 	"pie" => "Pie",

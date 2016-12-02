@@ -13,7 +13,7 @@ class TruncateSeeder extends Seeder {
      */
     public function run()
     {
-    	
+        
         \Solunes\Master\App\ImageSize::truncate();
         \Solunes\Master\App\ImageFolder::truncate();
         \Solunes\Master\App\TempFile::truncate();
@@ -32,7 +32,9 @@ class TruncateSeeder extends Seeder {
         \Solunes\Master\App\EmailTranslation::truncate();
         \Solunes\Master\App\Email::truncate();
         \Solunes\Master\App\IndicatorValue::truncate();
+        DB::table('indicator_graph_users')->truncate();  
         \Solunes\Master\App\IndicatorGraph::truncate();
+        DB::table('indicator_alert_users')->truncate();  
         \Solunes\Master\App\IndicatorAlert::truncate();
         \Solunes\Master\App\Indicator::truncate();
         \Solunes\Master\App\FieldOptionTranslation::truncate();

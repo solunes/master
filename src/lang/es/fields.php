@@ -117,6 +117,8 @@ return [
     'qr' => 'Código QR',
     'quantity' => 'Cantidad',
     'remember_token' => 'Token',
+    'result' => 'Resultado',
+    'result_custom' => 'Resultado Personalizado',
     'required' => '¿Requerido?',
     'role' => 'Rol',
     'role_user' => 'Rango del Usuario',

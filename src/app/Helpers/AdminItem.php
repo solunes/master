@@ -241,11 +241,14 @@ class AdminItem {
                 }
             } else {
                 $field_name = $field->name;
-                if($field->multiple){
-                    $item->$field_name()->sync($request->input($field_name));
+                if(!$field->multiple){
+                    $field_array = [$request->input($field_name)];
+                } else if($request->input($field_name)){
+                    $field_array = $request->input($field_name);
                 } else {
-                    $item->$field_name()->sync([$request->input($field_name)]);
+                    $field_array = [];
                 }
+                $item->$field_name()->sync($field_array);
             }
         }
         foreach($node->indicators as $indicator){

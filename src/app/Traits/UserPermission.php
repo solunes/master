@@ -4,6 +4,26 @@ namespace Solunes\Master\App\Traits;
 
 trait UserPermission {
 
+    // Indicators
+    public function indicator_alert_users() {
+        return $this->belongsToMany('Solunes\Master\App\IndicatorAlert','indicator_alert_users');
+    }
+
+    public function indicator_graph_users() {
+        return $this->belongsToMany('Solunes\Master\App\IndicatorGraph','indicator_graph_users');
+    }
+
+    public function hasIndicatorAlert($id) {
+        $array = $this->indicator_alert_users->lists('id')->toArray();
+        return in_array($id, $array);
+    }
+
+    public function hasIndicatorGraph($id) {
+        $array = $this->indicator_graph_users->lists('id')->toArray();
+        return in_array($id, $array);
+    }
+
+    // Permission
     public function role_user() {
         return $this->belongsToMany('Solunes\Master\App\Role','role_user');
     }
@@ -32,7 +52,7 @@ trait UserPermission {
     }
 
     public function getPermission() {
-    	$array = [];
+        $array = [];
         foreach ($this->role_user()->with('permission_role')->get() as $role) {
             $array = $role->permission_role->lists('name');
         }

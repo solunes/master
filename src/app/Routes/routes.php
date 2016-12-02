@@ -18,6 +18,8 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('model/indicator/{action}/{id?}/{lang?}', 'AdminController@getModelIndicator');
     Route::get('model/{model}/{action}/{id?}/{lang?}', 'AdminController@getModel');
     Route::post('model', 'AdminController@postModel');
+    Route::get('indicators', 'AdminController@getIndicators');
+    Route::get('change-indicator-user/{type}/{action}/{id}', 'AdminController@changeIndicatorUser');
     Route::get('modal-filter/{category}/{type}/{category_id}/{node_name}', 'AdminController@getModalFilter');
     Route::post('modal-filter', 'AdminController@postModalFilter');
     Route::get('delete-filter/{id}', 'AdminController@getDeleteFilter');

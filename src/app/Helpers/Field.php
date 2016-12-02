@@ -90,12 +90,8 @@ class Field {
         if($required==true){
             $label .= ' (*)';
         }
-        if(isset($field['tooltip'])&&$field['tooltip']){
-            if($data_type=='view'){
-                //$label .= '<div class="tooltip-mini">'.trans('tooltips.'.$fixed_name).'</div>';
-            } else {
-                $label .= ' <a href="#" class="help" title="'.trans('tooltips.'.$fixed_name).'"><i class="fa fa-question-circle"></i></a>';
-            }
+        if(isset($field['tooltip'])&&$field['tooltip']&&$data_type!='view'){
+            $label .= ' <a href="#" class="help" title="'.$field['tooltip'].'"><i class="fa fa-question-circle"></i></a>';
         }
         if(isset($field['filter'])){
             $label .= ' <a href="'.url('admin/delete-filter/'.$field['filter']).'" onclick="return confirm(\''.trans('admin.delete_confirmation').'\');">( X )</a>';

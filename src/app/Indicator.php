@@ -20,6 +20,8 @@ class Indicator extends Model {
         'name'=>'required',
         'type'=>'required',
         'data'=>'required',
+        'result'=>'required',
+        'color'=>'required',
     );
 
     /* Updating rules */
@@ -29,6 +31,8 @@ class Indicator extends Model {
         'name'=>'required',
         'type'=>'required',
         'data'=>'required',
+        'result'=>'required',
+        'color'=>'required',
     );
 
     public function node() {
@@ -36,11 +40,11 @@ class Indicator extends Model {
     }
 
     public function indicator_alerts() {
-        return $this->hasMany('Solunes\Master\App\IndicatorAlert', 'parent_id')->where('user_id', auth()->user()->id);
+        return $this->hasMany('Solunes\Master\App\IndicatorAlert', 'parent_id');
     }
 
     public function indicator_graphs() {
-        return $this->hasMany('Solunes\Master\App\IndicatorGraph', 'parent_id')->where('user_id', auth()->user()->id);
+        return $this->hasMany('Solunes\Master\App\IndicatorGraph', 'parent_id');
     }
 
     public function indicator_values() {

@@ -12,19 +12,26 @@ class IndicatorGraph extends Model {
 	/* Creating rules */
 	public static $rules_create = array(
 		'graph'=>'required',
-		'color'=>'required',
 		'meta'=>'integer',
 	);
 
 	/* Updating rules */
 	public static $rules_edit = array(
 		'graph'=>'required',
-		'color'=>'required',
 		'meta'=>'integer',
 	);
 
     public function indicator() {
         return $this->belongsTo('Solunes\Master\App\Indicator', 'parent_id');
+    }
+
+    public function indicator_graph_users() {
+        return $this->belongsToMany('App\User','indicator_graph_users');
+    }
+
+    public function setGraphAttribute($value) {
+        $this->attributes['name'] = $this->indicator->name;
+        $this->attributes['graph'] = $value;
     }
 
 }

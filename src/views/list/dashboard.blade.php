@@ -16,23 +16,29 @@
     <!-- END PAGE BAR -->
     <!-- END PAGE HEADER-->
 
-    <h4><a href="{{ url('admin/model/indicator/create') }}">Crear indicador</a></h4>
+    <h4><a href="{{ url('admin/model/indicator/create') }}">Crear indicador</a> | 
+      <a href="{{ url('admin/indicators') }}">Agregar/Ocultar indicador</a></h4>
 
     <!-- BEGIN DASHBOARD STATS 1-->
     <div class="row">
       @foreach($block_alerts as $alert)
-        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-          <a class="dashboard-stat dashboard-stat-v2 {{ $alert->color }}" href="#">
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+          <a class="dashboard-stat dashboard-stat-v2 {{ $alert->indicator->color }}" href="#">
             <div class="visual"><i class="fa fa-comments"></i></div>
             <div class="details">
+              <?php $custom_results = \CustomFunc::get_indicator_result('number', $alert->indicator->result_custom, $alert, $start_date, $end_date); ?>
+              @if($custom_results)
+                {!! $custom_results !!}
+              @else
                 <div class="number">
                   @if($subalert = $alert->indicator->indicator_values()->where('date', '<=', $end_date)->orderBy('date','DESC')->first())
-                    <span data-counter="counterup" data-value="{{ $subalert->value }}">0</span>
+                    <span data-counter="counterup" data-value="{{ $subalert->value }}">{{ $subalert->value }}</span>
                   @else
                     <span data-counter="counterup" data-value="0">0</span>
                   @endif
                 </div>
                 <div class="desc"> {{ $alert->indicator->name }} </div>
+              @endif
             </div>
           </a>
         </div>
@@ -135,6 +141,10 @@
           ["{{ substr($date,5) }}", {{ $value }}],
         @endforeach
       ];
+      <?php $custom_results = \CustomFunc::get_indicator_result('line', $alert->indicator->result_custom, $alert, $start_date, $end_date); ?>
+      @if($custom_results)
+        {!! $custom_results['data'] !!}
+      @endif
       @if($alert->goal)
       var g=[
         @foreach($graph_values as $date => $value)
@@ -145,16 +155,20 @@
       var a=($.plot(
         $("#plot_example_{{ $alert->id }}"),
         [
-          {data:t,lines:{fill:.6,lineWidth:0},color:["{{ $alert->color }}"]},
+          {data:t,lines:{fill:.6,lineWidth:0},color:["{{ $alert->indicator->color }}"]},
+          @if($custom_results)
+            {!! $custom_results['line'] !!}
+            {!! $custom_results['point'] !!}
+          @endif
           @if($alert->goal)
           {data:g,lines:{fill:0,lineWidth:2},color:["green"]},
           @endif
-          {data:t,points:{show:!0,fill:!0,radius:5,fillColor:"{{ $alert->color }}",lineWidth:3},color:"#fff",shadowSize:0}
+          {data:t,points:{show:!0,fill:!0,radius:5,fillColor:"{{ $alert->indicator->color }}",lineWidth:3},color:"#fff",shadowSize:0}
         ],
         {xaxis:{tickLength:0,tickDecimals:0,mode:"categories",font:{
-            lineHeight:14,style:"normal",variant:"small-caps",color:"{{ $alert->color }}"}
+            lineHeight:14,style:"normal",variant:"small-caps",color:"{{ $alert->indicator->color }}"}
         },
-        yaxis:{ticks:5,tickDecimals:0,tickColor:"#eee",font:{lineHeight:14,style:"normal",variant:"small-caps",color:"{{ $alert->color }}"}},
+        yaxis:{ticks:5,tickDecimals:0,tickColor:"#eee",font:{lineHeight:14,style:"normal",variant:"small-caps",color:"{{ $alert->indicator->color }}"}},
         grid:{hoverable:!0,clickable:!0,tickColor:"#eee",borderColor:"#eee",borderWidth:1}}
       ),null);
       $("#plot_example_{{ $alert->id }}").bind("plothover",function(t,i,l){

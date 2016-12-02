@@ -36,8 +36,13 @@ class AdminController extends Controller {
 		} else {
 			$array['end_date'] = date('Y-m-d');
 		}
-		$array['block_alerts'] = \Solunes\Master\App\IndicatorGraph::where('user_id', auth()->user()->id)->where('graph','number')->has('indicator')->with('indicator')->get();
-		$array['graph_alerts'] = \Solunes\Master\App\IndicatorGraph::where('user_id', auth()->user()->id)->where('graph','!=','number')->has('indicator')->with('indicator')->get();
+        $user_id = auth()->user()->id;
+		$array['block_alerts'] = \Solunes\Master\App\IndicatorGraph::whereHas('indicator_graph_users', function ($query) use($user_id) {
+            $query->where('user_id', $user_id);
+        })->where('graph','number')->has('indicator')->with('indicator')->get();
+		$array['graph_alerts'] = \Solunes\Master\App\IndicatorGraph::whereHas('indicator_graph_users', function ($query) use($user_id) {
+            $query->where('user_id', $user_id);
+        })->where('graph','!=','number')->has('indicator')->with('indicator')->get();
       	return view('master::list.dashboard', $array);
 	}
 
@@ -124,6 +129,27 @@ class AdminController extends Controller {
 	  } else {
 		return AdminItem::post_fail($action, $this->prev, $response[0]);
 	  }
+    }
+
+	public function getIndicators() {
+		$array['indicators'] = \Solunes\Master\App\Indicator::get();
+      	return view('master::list.indicators', $array);
+    }
+
+	public function changeIndicatorUser($type, $action, $id) {
+		if($type=='alert'){
+			$indicator = \Solunes\Master\App\IndicatorAlert::find($id)->indicator_alert_users();
+		} else {
+			$indicator = \Solunes\Master\App\IndicatorGraph::find($id)->indicator_graph_users();
+		}
+		if($action=='add'){
+			$indicator->attach(auth()->user()->id);
+			$message = 'El indicador fue agregado correctamente';
+		} else {
+			$indicator->detach(auth()->user()->id);
+			$message = 'El indicador fue retirado correctamente';
+		}
+	    return redirect($this->prev)->with('message_success', $message);
     }
 
 	public function getModalFilter($category, $type, $category_id, $node_name) {

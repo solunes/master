@@ -14,7 +14,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(['layouts.master', 'master::layouts.admin'], function ($view) {
             $array['site'] = \Solunes\Master\App\Site::with('translations')->where('id', 1)->first();
             if(auth()->check()){
-                $array['alerts'] = \Solunes\Master\App\IndicatorAlert::where('user_id', auth()->user()->id)->has('indicator')->with('indicator','indicator.indicator_values')->get();
+                $user_id = auth()->user()->id;
+                $array['alerts'] = \Solunes\Master\App\IndicatorAlert::whereHas('indicator_alert_users', function ($query) use($user_id) {
+                    $query->where('user_id', $user_id);
+                })->with('indicator','indicator.indicator_values')->get();
                 $array['inbox'] = \Solunes\Master\App\Inbox::whereHas('inbox_users', function($q){
                     $q->where('user_id', auth()->user()->id);
                 })->with('other_users','last_message')->orderBy('updated_at','DESC')->limit(10)->get();
