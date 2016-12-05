@@ -66,7 +66,11 @@ class AdminItem {
             if(request()->has('download-pdf')){
                 $variables['pdf'] = true;
                 $variables['dt'] = 'view';
-                $variables['header_title'] = \CustomFunc::custom_pdf_header($node, $id);
+                if(config('solunes.custom_field')){
+                    $variables['header_title'] = \CustomFunc::custom_pdf_header($node, $id);
+                } else {
+                    $variables['header_title'] = 'Formulario';
+                }
                 $variables['title'] = 'Formulario de '.$node->singular;
                 $variables['site'] = \Solunes\Master\App\Site::find(1);
                 $pdf = \PDF::loadView($view, $variables);

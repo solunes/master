@@ -17,18 +17,6 @@ class MasterServiceProvider extends ServiceProvider
     {
         /* Publicar Elementos */
         $this->publishes([
-            __DIR__ . '/database/custom-migrations' => $this->app->databasePath() . '/migrations'
-        ], 'migrations');
-        $this->publishes([
-            __DIR__ . '/database/custom-seeds' => $this->app->databasePath() . '/seeds'
-        ], 'seeds');
-        $this->publishes([
-            __DIR__ . '/views-custom' => base_path('resources/views')
-        ], 'views');
-        $this->publishes([
-            __DIR__ . '/lang-custom' => base_path('resources/lang')
-        ], 'lang');
-        $this->publishes([
             __DIR__ . '/config' => config_path('solunes')
         ], 'config');
         $this->publishes([

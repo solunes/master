@@ -408,7 +408,11 @@ class AdminList {
             $filters = $node->filters()->checkCategory($type)->checkDisplay();
         }
         $filters = $filters->orderBy('order','ASC')->get();
-        $custom_check = \CustomFunc::check_custom_filter($type, $node);
+        if(config('solunes.check_custom_filter')){
+            $custom_check = \CustomFunc::check_custom_filter($type, $node);
+        } else {
+            $custom_check = 'false';
+        }
         if(count($filters)>0){
             $appends = NULL;
             $array['additional_queries'] = [];
@@ -431,13 +435,13 @@ class AdminList {
                         $array['filters'][$field_name]['node_name'] = $node->name;
                     }
                 }
-                if($custom_check!='false'){
+                if(config('solunes.custom_filter')&&$custom_check!='false'){
                     $custom_array = \CustomFunc::custom_filter($custom_check, $array, $items, $appends, $node, $model, $filter, $type, $field_name, $parent_field_join);
                     $array = $custom_array['array'];
                     $appends = $custom_array['appends'];
                     $items = $custom_array['items'];
                 } else {
-                    if($filter->type=='custom'){
+                    if(config('solunes.custom_filter_field')&&$filter->type=='custom'){
                         $custom_array = \CustomFunc::custom_filter_field($array, $items, $appends, $field_name, $custom_data);
                         $array = $custom_array['array'];
                         $appends = $custom_array['appends'];

@@ -162,7 +162,9 @@ class Field {
         }
 
         // CUSTOM FIELD CORRECTIONS
-        $array = \CustomFunc::custom_field($array, $parameters, $type);
+        if(config('solunes.custom_field')){
+            $array = \CustomFunc::custom_field($array, $parameters, $type);
+        }
 
         // RESPONSE
         if($subinput=='multiple') {

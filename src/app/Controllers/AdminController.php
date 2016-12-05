@@ -80,7 +80,9 @@ class AdminController extends Controller {
 		$array['filter_category_id'] = $id;
 		$filled_items = $indicator_model;
 		$array = \AdminList::filter_node($array, $indicator->node, $indicator_model, $filled_items, 'indicator');
-		$array = \CustomFunc::custom_indicator($indicator->node, $indicator, $array);
+		if(config('solunes.custom_indicator')){
+			$array = \CustomFunc::custom_indicator($indicator->node, $indicator, $array);
+		}
 		if(request()->has('search')&&isset($array['filters'])&&is_array($array['filters'])){
 		  foreach($array['filters'] as $field_name => $field){
 		  	$filter = \Solunes\Master\App\Filter::find($field['id']);
@@ -108,7 +110,9 @@ class AdminController extends Controller {
 		  	$filter->action_value = json_encode($action_value);
 		  	$filter->save();
 		  }
-		  \CustomFunc::update_indicator_values($indicator);
+		  if(config('solunes.update_indicator_values')){
+		  	\CustomFunc::update_indicator_values($indicator);
+		  }
 		}
 		$filled_items = $indicator_model;
 		$array = \AdminList::filter_node($array, $indicator->node, $indicator_model, $filled_items, 'indicator');

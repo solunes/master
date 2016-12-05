@@ -26,8 +26,7 @@
           <a class="dashboard-stat dashboard-stat-v2 {{ $alert->indicator->color }}" href="#">
             <div class="visual"><i class="fa fa-comments"></i></div>
             <div class="details">
-              <?php $custom_results = \CustomFunc::get_indicator_result('number', $alert->indicator->result_custom, $alert, $start_date, $end_date); ?>
-              @if($custom_results)
+              @if(config('solunes.get_indicator_result')&&$custom_results = \CustomFunc::get_indicator_result('number', $alert->indicator->result_custom, $alert, $start_date, $end_date))
                 {!! $custom_results !!}
               @else
                 <div class="number">
@@ -141,8 +140,7 @@
           ["{{ substr($date,5) }}", {{ $value }}],
         @endforeach
       ];
-      <?php $custom_results = \CustomFunc::get_indicator_result('line', $alert->indicator->result_custom, $alert, $start_date, $end_date); ?>
-      @if($custom_results)
+      @if(config('solunes.get_indicator_result')&&$custom_results = \CustomFunc::get_indicator_result('line', $alert->indicator->result_custom, $alert, $start_date, $end_date))
         {!! $custom_results['data'] !!}
       @endif
       @if($alert->goal)

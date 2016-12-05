@@ -13,7 +13,7 @@ class TruncateSeeder extends Seeder {
      */
     public function run()
     {
-        
+    	
         \Solunes\Master\App\ImageSize::truncate();
         \Solunes\Master\App\ImageFolder::truncate();
         \Solunes\Master\App\TempFile::truncate();

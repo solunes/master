@@ -38,10 +38,14 @@ class Seed extends Command
             $this->info('50%: Base de datos llenada correctamente.');
             $this->callSilent('generate-nodes');
             $this->info('70%: Campos de nodos creados correctamente.');
-            $this->info('80%: '.\CustomFunc::before_seed_actions());
+            if(config('solunes.before_seed')){
+                $this->info('80%: '.\CustomFunc::before_seed_actions());
+            }
             $this->callSilent('import-excel');
             $this->info('95%: Campos de nodos creados correctamente.');
-            $this->info('99%: '.\CustomFunc::after_seed_actions());
+            if(config('solunes.after_seed')){
+                $this->info('99%: '.\CustomFunc::after_seed_actions());
+            }
             $this->info('100%: Seed finalizado.');
             $this->info('Total execution time in seconds: ' . (microtime(true) - $time_start));
         } else {

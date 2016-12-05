@@ -13,7 +13,7 @@ class Segment {
         }
         $sub_array = \Segment::get_node_items($sub_array, $node, $admin);
         $array['nodes'][$node->pivot->id]['node'] = $node;
-        if($add_custom_array = \CustomFunc::add_node_array($node, $admin)){
+        if(config('solunes.add_node_array')&&$add_custom_array = \CustomFunc::add_node_array($node, $admin)){
             $sub_array['custom'] = $add_custom_array;
         }
         $array['nodes'][$node->pivot->id]['subarray'] = $sub_array;
@@ -51,7 +51,7 @@ class Segment {
                     $req_action = $req->action;
                     $req_col = $req->col;
                     $req_value = $req->value;
-                    if($req_action=='customRequest'){
+                    if(config('solunes.custom_node_request')&&$req_action=='customRequest'){
                         $items = \CustomFunc::custom_node_request($node, $items, $req_col, $req_value);
                     } else if($req->value_type=='relation'){
                         if($req_value=='node_pivot_id'){
