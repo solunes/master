@@ -17,7 +17,7 @@ class MasterServiceProvider extends ServiceProvider
     {
         /* Publicar Elementos */
         $this->publishes([
-            __DIR__ . '/config' => config_path('solunes')
+            __DIR__ . '/config' => config_path()
         ], 'config');
         $this->publishes([
             __DIR__.'/assets/admin' => public_path('assets/admin'),
