@@ -28,11 +28,17 @@ class Deploy extends Command
     public function handle(){
         if(\App::environment('local')){
             $this->info('0%: Deploy iniciado.');
+            if(config('solunes.before_migrate')){
+                $this->info('10%: '.\CustomFunc::before_migrate_actions());
+            }
             $this->callSilent('migrate:reset');
             $this->info('20%: Reset migrate ejecutado correctamente.');
             $this->callSilent('migrate', ['--path'=>'/'.config('solunes.vendor_path').'/src/database/migrations']);
             $this->callSilent('migrate', ['--path'=>'/database/migrations']);
             $this->info('60%: Migrate ejecutado correctamente.');
+            if(config('solunes.after_migrate')){
+                $this->info('70%: '.\CustomFunc::after_migrate_actions());
+            }
             $this->callSilent('seed');
             $this->info('75%: Database seed ejecutado correctamente con nodos.');
             $this->info('100%: Deploy finalizado.');

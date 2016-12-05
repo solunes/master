@@ -6,6 +6,8 @@ return [
 
 	// CUSTOM FUNC
 	'get_page_array' => false,
+    'before_migrate' => false,
+    'after_migrate' => false,
 	'before_seed' => false,
 	'after_seed' => false,
 	'get_sitemap_array' => false,
