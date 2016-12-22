@@ -32,9 +32,9 @@ class MasterServiceProvider extends ServiceProvider
         $loader->alias('AdminItem', '\Solunes\Master\App\Helpers\AdminItem');
         $loader->alias('Asset', '\Solunes\Master\App\Helpers\Asset');
         $loader->alias('Field', '\Solunes\Master\App\Helpers\Field');
+        $loader->alias('Dynamic', '\Solunes\Master\App\Helpers\Dynamic');
         $loader->alias('FuncNode', '\Solunes\Master\App\Helpers\FuncNode');
         $loader->alias('Login', '\Solunes\Master\App\Helpers\Login');
-        $loader->alias('Segment', '\Solunes\Master\App\Helpers\Segment');
 
         /* Comandos de Consola */
         $this->commands([
@@ -49,6 +49,6 @@ class MasterServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__.'/lang', 'master');
 
         /* Cargar Vistas */
-	    $this->loadViewsFrom(__DIR__ . '/views', 'master');
+        $this->loadViewsFrom(__DIR__ . '/views', 'master');
     }
 }

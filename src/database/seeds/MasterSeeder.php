@@ -36,6 +36,7 @@ class MasterSeeder extends Seeder {
         $node_field = \Solunes\Master\App\Node::create(['name'=>'field', 'type'=>'child', 'location'=>'package', 'parent_id'=>$node_node->id]);
         $node_field_extras = \Solunes\Master\App\Node::create(['name'=>'field-extra', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_field->id]);
         $node_field_conditional = \Solunes\Master\App\Node::create(['name'=>'field-conditional', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_field->id]);
+        $node_field_option = \Solunes\Master\App\Node::create(['name'=>'field-option', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_field->id]);
         $node_indicator = \Solunes\Master\App\Node::create(['name'=>'indicator', 'folder'=>'system', 'customized'=>1]);
         $node_indicator_alert = \Solunes\Master\App\Node::create(['name'=>'indicator-alert', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_indicator->id]);
         $node_indicator_graph = \Solunes\Master\App\Node::create(['name'=>'indicator-graph', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_indicator->id]);

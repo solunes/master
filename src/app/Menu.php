@@ -10,7 +10,7 @@ class Menu extends Model {
     public $timestamps = true;
 
     public $translatedAttributes = ['name', 'link'];
-    protected $fillable = ['type', 'menu_type', 'permission', 'parent_id', 'level', 'icon', 'name', 'link'];
+    protected $fillable = ['type', 'menu_type', 'permission', 'order', 'parent_id', 'level', 'icon', 'name', 'link'];
     protected $appends = ['real-link', 'final-link'];
     protected $dates = ['deleted_at'];
 

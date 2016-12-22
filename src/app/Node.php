@@ -39,10 +39,6 @@ class Node extends Model {
         return $this->hasMany('Solunes\Master\App\Field', 'parent_id')->orderBy('order', 'ASC')->with('translations');
     }
 
-    public function node_requests() {
-        return $this->hasMany('Solunes\Master\App\NodeRequest', 'parent_id')->orderBy('order', 'ASC');
-    }
-
     public function node_extras() {
         return $this->hasMany('Solunes\Master\App\NodeExtra', 'parent_id')->orderBy('order', 'ASC');
     }

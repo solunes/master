@@ -30,7 +30,9 @@ class EventServiceProvider extends ServiceProvider
         
         $events->listen('LoginEvent', 'Solunes\Master\App\Listeners\UserLoggedIn');
         $events->listen('eloquent.created: Solunes\Master\App\Node', '\Solunes\Master\App\Listeners\CreatedNode');
-        $events->listen('eloquent.creating: Solunes\Master\App\Menu', '\Solunes\Master\App\Listeners\SavedMenu');
+        $events->listen('eloquent.deleted: Solunes\Master\App\Node', '\Solunes\Master\App\Listeners\DeletedNode');
+        $events->listen('eloquent.restored: Solunes\Master\App\Node', '\Solunes\Master\App\Listeners\RestoredNode');
+        $events->listen('eloquent.created: Solunes\Master\App\Menu', '\Solunes\Master\App\Listeners\CreatingMenu');
         $events->listen('eloquent.created: Solunes\Master\App\Indicator', '\Solunes\Master\App\Listeners\CreatedIndicator');
         $events->listen('eloquent.saved: *', '\Solunes\Master\App\Listeners\RegisterActivityModel');
     }

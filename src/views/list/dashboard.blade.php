@@ -125,7 +125,7 @@
       $('<div id="tooltip" class="chart-tooltip">'+i+"</div>").css({position:"absolute",display:"none",top:t-40,left:e-40,border:"0px solid #ccc",padding:"2px 6px","background-color":"#fff"}).appendTo("body").fadeIn(200);
     };
     @foreach($graph_alerts as $alert)
-      <?php $graph_values = $alert->indicator->indicator_values()->where('date', '>=', $start_date)->where('date', '<=', $end_date)->orderBy('date','DESC')->get();
+      <?php $graph_values = $alert->indicator->indicator_values()->where('type', 'normal')->where('date', '>=', $start_date)->where('date', '<=', $end_date)->orderBy('date','DESC')->get();
         if(count($graph_values)>10){
           $every = count($graph_values)/10;
           if($every<1.5){

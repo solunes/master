@@ -117,16 +117,6 @@ class MasterDatabase extends Migration
             $table->unique(['node_id','locale']);
             $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');
         });
-        Schema::create('node_requests', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('parent_id')->unsigned();
-            $table->integer('order')->nullable()->default(0);
-            $table->enum('action', ['where','whereNot','whereIn','whereNull','whereNotNull','with','has','orderBy','paginate','customRequest']);
-            $table->string('col')->nullable();
-            $table->enum('value_type', ['value','relation'])->default('value');
-            $table->string('value')->nullable();
-            $table->foreign('parent_id')->references('id')->on('nodes')->onDelete('cascade');
-        });
         Schema::create('node_extras', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->unsigned();
@@ -149,17 +139,6 @@ class MasterDatabase extends Migration
             $table->text('action_value')->nullable();
             $table->integer('user_id')->nullable();
             $table->integer('category_id')->nullable();
-            $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');
-        });
-        Schema::create('sections', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('order')->nullable()->default(0);
-            $table->integer('page_id')->unsigned();
-            $table->integer('node_id')->unsigned();
-            $table->string('name')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-            $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
             $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');
         });
         Schema::create('fields', function (Blueprint $table) {
@@ -296,10 +275,10 @@ class MasterDatabase extends Migration
         Schema::dropIfExists('field_extras');
         Schema::dropIfExists('field_translation');
         Schema::dropIfExists('fields');
-        Schema::dropIfExists('sections');
+        Schema::dropIfExists('sections'); // BORRAR
         Schema::dropIfExists('filters');
         Schema::dropIfExists('node_extras');
-        Schema::dropIfExists('node_requests');
+        Schema::dropIfExists('node_requests'); // BORRAR
         Schema::dropIfExists('node_translation');
         Schema::dropIfExists('nodes');
         Schema::dropIfExists('menu_translation');

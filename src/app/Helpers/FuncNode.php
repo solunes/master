@@ -19,7 +19,6 @@ class FuncNode {
         $permission = NULL;
         $col_type = \DB::select(\DB::raw("SHOW FIELDS FROM ".$table_name." where Field  = '".$name."'"))[0]->Type;
         $extras = [];
-        $requests = [];
         $field_options = [];
         if(strpos($name, '_id') !== false) {
             $type = 'relation';
@@ -93,7 +92,6 @@ class FuncNode {
             }
         } else if($name=='section_id') {
             $display_item = 'admin';
-            array_push($requests, ['action'=>'where','col'=>$name,'value_type'=>'relation','value'=>'node_pivot_id']);
         } else if($count>6){
             $display_list = 'excel';
         }
@@ -118,7 +116,6 @@ class FuncNode {
         $field->preset = $preset;
         $field->required = $required;
         $field->save();
-        \FuncNode::node_generate_request($node, $requests);
         \FuncNode::field_generate_extras($field, $extras);
         \FuncNode::field_generate_options($node, $field, $field_options, $languages);
         return $count;
@@ -167,38 +164,6 @@ class FuncNode {
               }
             }
             \App::setLocale('es');
-            $subfield->save();
-          }
-        }
-    }
-
-    public static function node_generate_request($node, $requests) {
-        if(count($requests)>0){
-          foreach($requests as $req){
-            $subfield = new \Solunes\Master\App\NodeRequest;
-            $subfield->parent_id = $node->id;
-            $subfield->action = $req['action'];
-            $subfield->col = $req['col'];
-            if(isset($req['value_type'])){
-                $subfield->value_type = $req['value_type'];
-            }
-            $subfield->value = $req['value'];
-            $subfield->save();
-          }
-        }
-    }
-
-    public static function node_generate_extra($node, $requests) {
-        if(count($requests)>0){
-          foreach($requests as $req){
-            $subfield = new \Solunes\Master\App\NodeRequest;
-            $subfield->parent_id = $node->id;
-            $subfield->action = $req['action'];
-            $subfield->col = $req['col'];
-            if(isset($req['value_type'])){
-                $subfield->value_type = $req['value_type'];
-            }
-            $subfield->value = $req['value'];
             $subfield->save();
           }
         }

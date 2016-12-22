@@ -104,7 +104,7 @@ class Field extends Model {
 
     public function getChildFieldsAttribute() {
         if($this->type=='subchild'){
-            $return = \Solunes\Master\App\Node::where('name', $this->value)->first()->fields()->where('display_item', '!=', 'none')->whereNotIn('name', ['id', 'parent_id'])->orderBy('order','ASC')->orderBy('id','ASC')->get();
+            $return = \Solunes\Master\App\Node::where('name', $this->value)->first()->fields()->displayItem(['excel','show'])->whereNotIn('name', ['id', 'parent_id'])->orderBy('order','ASC')->orderBy('id','ASC')->get();
         } else {
             $return = NULL;
         }
@@ -118,6 +118,55 @@ class Field extends Model {
                 $subquery->orWhereIn('permission', auth()->user()->getPermission()->toArray());
             }
         });
+    }
+
+    public function scopeFillables($query) {
+        return $query->whereNotIn('type', ['title', 'content', 'child', 'subchild', 'field']);
+    }
+
+    public function scopeFiles($query) {
+        return $query->whereIn('type', ['image','file']);
+    }
+
+    public function scopeMaps($query) {
+        return $query->where('type', 'map');
+    }
+
+    public function scopeRequired($query) {
+        return $query->where('required', 1);
+    }
+
+    public function scopePreset($query) {
+        return $query->where('preset', 1);
+    }
+
+    public function scopeMultiple($query) {
+        return $query->where('multiple', 1);
+    }
+
+    public function scopeTranslation($query) {
+        return $query->where('translation', 1);
+    }
+
+    public function scopeFilters($query) {
+        $type_array = ['select','radio','checkbox','date','string','text','field'];
+        return $query->whereIn('type', $type_array);
+    }
+
+    public function scopeDisplayItem($query, $value) {
+        if(is_array($value)){
+            return $query->whereIn('display_item', $value);
+        } else {
+            return $query->where('display_item', $value);
+        }
+    }
+
+    public function scopeDisplayList($query, $value) {
+        if(is_array($value)){
+            return $query->whereIn('display_list', $value);
+        } else {
+            return $query->where('display_list', $value);
+        }
     }
 
 }

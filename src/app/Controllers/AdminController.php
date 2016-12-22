@@ -169,8 +169,7 @@ class AdminController extends Controller {
 		$array['type'] = $type;
 		$array['node_id'] = $node->id;
 		$array['category_id'] = $category_id;
-		$type_array = ['select','radio','checkbox','date','string','text','field'];
-		$array['fields'] = $node->fields()->whereNotIn('name', $rejected_ids)->whereIn('type', $type_array)->get()->lists('label','name')->toArray();
+		$array['fields'] = $node->fields()->whereNotIn('name', $rejected_ids)->filters()->get()->lists('label','name')->toArray();
       	return view('master::modal.filter', $array);
 	}
 

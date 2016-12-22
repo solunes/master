@@ -22,12 +22,12 @@ class AdminItem {
             }
             if($item){
                 if($node->soft_delete==0&&$action=='delete'){
-                    $file_fields = $node->fields()->whereIn('type', ['image','file'])->get();
+                    $file_fields = $node->fields()->files()->get();
                     \Asset::delete_saved_files($file_fields, $item);
                     if(count($node->children)>0){
                       foreach($node->children as $child){
                         $child_name = $child->table_name;
-                        $file_fields = $child->fields()->whereIn('type', ['image','file'])->get();
+                        $file_fields = $child->fields()->files()->get();
                         if(is_object($item->$child_name)&&count($item->$child_name)>0){
                             foreach($item->$child_name as $item_child){
                                 \Asset::delete_saved_files($file_fields, $item_child);
@@ -86,11 +86,11 @@ class AdminItem {
         $variables = ['module'=>$module, 'node'=>$node, 'model'=>$single_model, 'action'=>$action, 'id'=>$id, 'preset_field'=>false, 'dt'=>'form', 'pdf'=>false];
         $parent_id = NULL;
         if($module=='process'){
-            $hidden_array = ['admin','none'];
+            $hidden_array = ['show'];
         } else {
-            $hidden_array = ['none'];
+            $hidden_array = ['admin','show'];
         }
-        $preset_fields = $node->fields()->whereNotIn('display_item', $hidden_array)->where('preset', 1)->where('required', 1)->get();
+        $preset_fields = $node->fields()->displayItem($hidden_array)->preset()->required()->get();
         if($action=='edit'||$action=='view') {
             $item = $model::find($id);
             if($item->parent_id){
@@ -142,7 +142,7 @@ class AdminItem {
         }
         $variables['parent_id'] = $parent_id;
         $variables['i'] = $item;
-        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->whereNotIn('display_item', $hidden_array)->whereNull('child_table')->checkPermission()->with('translations','field_extras','field_options_active')->get();
+        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->displayItem($hidden_array)->whereNull('child_table')->checkPermission()->with('translations','field_extras','field_options_active')->get();
         if($node->fields()->whereIn('type', ['image', 'file'])->count()>0){
             $variables['files'] = true;
         } else {
@@ -153,7 +153,7 @@ class AdminItem {
                 $variables['conditional_array'][$conditional->id] = $conditional;
             }
         }
-        foreach($node->fields()->where('type', 'map')->get() as $field){
+        foreach($node->fields()->maps()->get() as $field){
             $variables['map_array'][$field->id] = $field;
         }
         return $variables;
@@ -169,7 +169,7 @@ class AdminItem {
             $item = $model;
         }
         if($node->dynamic){
-            $required_fields = $node->fields()->where('required',1)->lists('name')->toArray();
+            $required_fields = $node->fields()->required()->lists('name')->toArray();
             if(count($required_fields)){
                 $rules = array_combine($required_fields, array_fill(1, count($required_fields), 'required'));
             } else {
@@ -202,13 +202,12 @@ class AdminItem {
             }
         }
         if($type=='admin'){
-            $display_array = ['none'];
+            $display_array = ['admin','show'];
         } else {
-            $display_array = ['item_admin','none'];
+            $display_array = ['show'];
         }
         $total_ponderation = 0;
-        $rejected_fields = ['title', 'content', 'child', 'subchild', 'field'];
-        foreach($node->fields()->whereNotIn('type', $rejected_fields)->whereNotIn('display_item', $display_array)->with('field_extras')->get() as $field){
+        foreach($node->fields()->fillables()->displayItem($display_array)->with('field_extras')->get() as $field){
             $field_name = $field->name;
             $input = NULL;
             if($request->has($field_name)) {
@@ -228,7 +227,7 @@ class AdminItem {
                 $subfield_name = str_replace('_', '-', $field->value);
                 $sub_node = \Solunes\Master\App\Node::where('name', $subfield_name)->first();
                 $sub_node_table = $sub_node->table_name;
-                AdminItem::post_subitems($sub_node, $field->name, 'parent_id', $item->id, $sub_node->fields()->where('display_item','!=','none')->whereNotIn('name', ['id', 'parent_id'])->get());
+                AdminItem::post_subitems($sub_node, $field->name, 'parent_id', $item->id, $sub_node->fields()->displayItem(['admin','show'])->whereNotIn('name', ['id', 'parent_id'])->get());
                 foreach($node->fields()->where('child_table', $sub_node_table)->get() as $field_extra){
                     $field_extra_name = $field_extra->name;
                     if($field_extra_name==$sub_node_table.'_count'){

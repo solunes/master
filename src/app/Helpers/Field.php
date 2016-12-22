@@ -102,7 +102,7 @@ class Field {
         
         // VALUE
         $value = NULL;
-        if($i&&($i->$fixed_name||$i->$fixed_name===0)){
+        if($i&&($i->$fixed_name||intval($i->$fixed_name)===0)){
             $value = $i->$fixed_name;
         } else if (request()->has($fixed_name)){
             $value = request()->input($fixed_name);
@@ -166,6 +166,22 @@ class Field {
             $array = \CustomFunc::custom_field($array, $parameters, $type);
         }
 
+        // CHECK IF EDITOR AND IS HIDDEN
+        $parameters['hidden_message'] = NULL;
+        if($data_type=='editor'&&isset($field['display_item'])){
+            $display_label = NULL;
+            if($field['display_item']=='admin'){
+                $display_label = 'SOLO PARA ADMIN';
+            } else if($field['display_item']=='none') {
+                $display_label = 'CAMPO OCULTO';
+            }
+            if($display_label){
+                $parameters['hidden_message'] = $display_label;
+                $label .= ' | '.$display_label;
+            }
+            //$label .= ' | '.$field['order'];
+        }
+
         // RESPONSE
         if($subinput=='multiple') {
             $response = Field::form_input_builder($name, $type, $parameters, $array, $value, $data_type);
@@ -193,7 +209,7 @@ class Field {
             $response .= '<div class="error">'.\Session::get('errors')->default->first($name).'</div>';
         }
         if($data_type=='editor'){
-            $response .= \Field::generate_editor_fields($name);
+            $response .= \Field::generate_editor_fields($name, $parameters['hidden_message']);
         }
         $response .= '</div>';
         return $response;
@@ -249,7 +265,7 @@ class Field {
             $response .= '<div class="error col-sm-12">'.\Session::get('errors')->default->first($name).'</div>';
         }
         if($data_type=='editor'){
-            $response .= \Field::generate_editor_fields($name);
+            $response .= \Field::generate_editor_fields($name, $parameters['hidden_message']);
         }
         $response .= '</div></div>';
         return $response;
@@ -354,10 +370,15 @@ class Field {
           return $response;
     }
 
-    public static function generate_editor_fields($name) {
+    public static function generate_editor_fields($name, $hidden = false) {
         $return = '<div class="form_fields_actions"> <i class="fa fa-arrow-up"></i> ';
+        if($hidden){
+            $return .= $hidden.' | ';
+        }
         $return .= '<a href="'.url('admin/form-field/edit/'.request()->segment('3').'/'.$name).'">Editar Campo</a> | ';
-        $return .= '<a href="'.url('admin/form-field/create/'.request()->segment('3').'/'.$name).'">Agregar Campo</a>';
+        $return .= '<a href="'.url('admin/form-field/create/'.request()->segment('3').'/'.$name).'">Agregar Campo</a> | ';
+        $return .= '<a href="'.url('admin/form-field-order/'.request()->segment('3').'/'.$name.'/up').'">Subir</a> | ';
+        $return .= '<a href="'.url('admin/form-field-order/'.request()->segment('3').'/'.$name.'/down').'">Bajar</a>';
         $return .= '</div>';
         return $return;
     }

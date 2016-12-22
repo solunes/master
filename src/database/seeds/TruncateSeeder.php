@@ -46,7 +46,6 @@ class TruncateSeeder extends Seeder {
         \Solunes\Master\App\Section::truncate();
         \Solunes\Master\App\Filter::truncate();
         \Solunes\Master\App\NodeExtra::truncate();
-        \Solunes\Master\App\NodeRequest::truncate();
         \Solunes\Master\App\NodeTranslation::truncate();
         \Solunes\Master\App\Node::truncate();
         \Solunes\Master\App\MenuTranslation::truncate();

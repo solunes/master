@@ -37,8 +37,4 @@ class Page extends Model {
         return $this->hasMany('Solunes\Master\App\Page', 'parent_id', 'id')->orderBy('order','ASC');
     }
 
-    public function nodes() {
-        return $this->belongsToMany('Solunes\Master\App\Node', 'sections')->withPivot('id', 'order');
-    }
-
 }

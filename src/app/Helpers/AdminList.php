@@ -45,8 +45,8 @@ class AdminList {
             } else {
                 $display_fields = ['show'];
             }
-            $array['fields'] = $node->fields()->whereIn('display_list', $display_fields)->where('type', '!=', 'field')->with('translations')->get();
-            $relation_fields = $node->fields()->whereIn('display_list', $display_fields)->where('type','relation')->get();
+            $array['fields'] = $node->fields()->displayList($display_fields)->where('type', '!=', 'field')->with('translations')->get();
+            $relation_fields = $node->fields()->displayList($display_fields)->where('type','relation')->get();
             if(count($relation_fields)>0){
                 foreach($relation_fields as $relation){
                     $sub_node = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $relation->value))->first();
@@ -454,7 +454,7 @@ class AdminList {
                         $custom_value = $custom_array['custom_value'];
                         $field = $custom_array['field'];
                         // Obtener items segun tipo
-                        $custom_array = \AdminList::filter_items_get($items, $node, $model, $filter, $field, $field_name, $custom_value);
+                        $custom_array = \AdminList::filter_items_get($items, $node, $model, $filter, $field, $field_name, $custom_value, $parent_field_join);
                         $items = $custom_array['items'];
                         $date_model = $custom_array['date_model'];
                         // Corregir campos de fecha
@@ -533,7 +533,7 @@ class AdminList {
         return ['array'=>$array, 'appends'=>$appends, 'custom_value'=>$custom_value, 'field'=>$field];
     }
 
-    public static function filter_items_get($items, $node, $model, $filter, $field, $field_name, $custom_value) {
+    public static function filter_items_get($items, $node, $model, $filter, $field, $field_name, $custom_value, $parent_field_join = 'parent_id') {
         $custom_value_count = count($custom_value);
         if($filter->type=='field'){
             $date_model = $model;
@@ -679,7 +679,7 @@ class AdminList {
         array_map('unlink', glob($dir.'/*'));
         $file = \Excel::create($array['node']->plural.'_'.date('Y-m-d'), function($excel) use($array) {
             $excel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $excel->sheet($array['node']->plural, function($sheet) use($array) {
+            $excel->sheet(substr($array['node']->plural, 0, 30), function($sheet) use($array) {
                 $col_array = [];
                 foreach($array['fields'] as $field){
                     array_push($col_array, $field->label);
