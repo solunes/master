@@ -30,7 +30,6 @@ class MasterSeeder extends Seeder {
 
         // Nodos
         $node_node = \Solunes\Master\App\Node::create(['name'=>'node', 'folder'=>'system']);
-        $node_node_requests = \Solunes\Master\App\Node::create(['name'=>'node-request', 'location'=>'package', 'type'=>'subchild', 'parent_id'=>$node_node->id]);
         $node_node_extras = \Solunes\Master\App\Node::create(['name'=>'node-extra', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_node->id]);
         $node_filter = \Solunes\Master\App\Node::create(['name'=>'filter', 'folder'=>'system']);
         $node_field = \Solunes\Master\App\Node::create(['name'=>'field', 'type'=>'child', 'location'=>'package', 'parent_id'=>$node_node->id]);
@@ -44,7 +43,6 @@ class MasterSeeder extends Seeder {
         $node_site = \Solunes\Master\App\Node::create(['name'=>'site', 'folder'=>'global']);
         $node_page = \Solunes\Master\App\Node::create(['name'=>'page', 'folder'=>'global']);
         $node_menu = \Solunes\Master\App\Node::create(['name'=>'menu', 'folder'=>'global']);
-        $node_section = \Solunes\Master\App\Node::create(['name'=>'section', 'folder'=>'global']);
         $node_permission = \Solunes\Master\App\Node::create(['name'=>'permission', 'folder'=>'system']);
         $node_role = \Solunes\Master\App\Node::create(['name'=>'role', 'folder'=>'system']);
         $node_permission_role = \Solunes\Master\App\Node::create(['name'=>'permission-role', 'table_name'=>'permission_role', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\Permission', 'parent_id'=>$node_role->id]);
