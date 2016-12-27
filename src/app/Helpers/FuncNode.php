@@ -409,4 +409,27 @@ class FuncNode {
       }
     }
 
+    public static function get_items_array($node, $node_val = NULL) {
+        $node_name = $node->name;
+        if($node->folder=='form'){
+            $model = $node->model;
+            if(request()->has($node->table_name)){
+                $action = 'edit';
+                $id = request()->input($node->table_name);
+            } else {
+                $action = 'create';
+                $id = NULL;
+            }
+            $subarray = \AdminItem::get_request_variables('process', $node, $model, $node->name, $action, $id, []);
+        } else {
+            $items = \FuncNode::node_check_model($node);
+            if(!is_numeric($node_val)){
+                $items = $items->where('code', $node_val);
+            }
+            $items = $items->get();
+            $subarray = ['items'=>$items, 'node'=>$node];
+        }
+        return $subarray;
+    }
+
 }
