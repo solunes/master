@@ -25,6 +25,16 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('delete-filter/{id}', 'AdminController@getDeleteFilter');
     Route::get('delete-all-filters/{category}/{category_id}/{node_id?}', 'AdminController@getDeleteAllFilters');
     Route::get('modal-map/{name}/{value}', 'AdminController@getModalMap');
+    // Formularios Dinámicos
+    Route::get('form-list', 'DynamicFormController@getFormList');
+    Route::get('form-fields/{id}', 'DynamicFormController@getFormFields');
+    Route::get('form/{action}/{id?}', 'DynamicFormController@getForm');
+    Route::post('form', 'DynamicFormController@postForm');
+    Route::get('form-field/{action}/{parent_id}/{id?}', 'DynamicFormController@getFormFields@getFormField');
+    Route::post('form-field', 'DynamicFormController@postFormField');
+    Route::get('form-field-order/{parent_id}/{name}/{action}', 'DynamicFormController@getFormFieldOrder');
+    Route::get('export-forms', 'DynamicFormController@getExportForms');
+    Route::get('import-forms', 'DynamicFormController@getImportForms');
 });
 Route::group(['prefix'=>'auth'], function(){
     Route::get('login', 'Auth\LoginController@getLogin');

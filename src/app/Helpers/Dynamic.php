@@ -211,4 +211,103 @@ class Dynamic {
       return $field_size;
     }
 
+    public static function import_dynamic_excel() {
+      // Importar formularios dinámicos
+      foreach(\Solunes\Master\App\Node::where('dynamic', 1)->orderBy('id','DESC')->get() as $node){
+          \Schema::dropIfExists($node->table_name);  
+      }
+      // Crear formularios dinamicos de excel
+      \Excel::load(public_path('seed/dynamic-forms.xlsx'), function($reader) {
+          $options_array = [];
+          $conditionals_array = [];
+          $extras_array = [];
+          $edits_array = [];
+          $languages = \Solunes\Master\App\Language::get();
+          foreach($reader->get() as $key => $sheet){
+            $sheet_model = $sheet->getTitle();
+            if($sheet_model=='nodes'){
+              foreach($sheet as $row){
+                  // Crear nodo y tabla inicial
+                  $node = \Dynamic::generate_node($row->name, $row->table_name);
+                  if($row->parent){
+                      $parent_id = \Solunes\Master\App\Node::where('name', $row->parent)->first()->id;
+                  } else {
+                      $parent_id = NULL;
+                  }
+                  $node_array = ['type'=>$row->type, 'model'=>$row->model, 'parent_id'=>$parent_id, 'dynamic'=>1, 'folder'=>$row->folder, 'permission'=>$row->permission, 'singular'=>$row->singular_es, 'plural'=>$row->plural_es];
+                  $node = \Dynamic::edit_node($node, $node_array, 'es');
+                  \Dynamic::generate_node_table($node->table_name, ['id'=>'increments']);
+                  // Crear node extra
+                  $node_extra = \Dynamic::generate_node_extra($node, 'action_field', ['edit','delete']);
+              }
+            } else if($sheet_model=='options'||$sheet_model=='extras'||$sheet_model=='edits'||$sheet_model=='conditionals'){
+              foreach($sheet as $row){
+                $row_name = $row->form;
+                //$row_name = $row->form.'_'.$row->field;
+                $row_subname = $row->field;
+                //$row_subname = $row_name.'_'.$row->name;
+
+                if($sheet_model=='options'){
+                  $options_array[$row_name][$row_subname][] = ['name'=>$row->name, 'label'=>$row->label_es, 'active'=>$row->active];
+                } else if($sheet_model=='extras'){
+                  $extras_array[$row_name][$row_subname][$row->type] = $row->value;
+                } else if($sheet_model=='edits'){  
+                  $edits_array[$row_name][$row_subname][$row->column] = $row->value;
+                } else if($sheet_model=='conditionals'){  
+                  $conditionals_array[$row_name][$row_subname][] = ['trigger_field'=>$row->trigger_field, 'trigger_show'=>$row->trigger_show, 'trigger_value'=>$row->trigger_value];
+                }
+              }
+            } else {
+              $node = \Dynamic::generate_node($sheet_model);
+              $field_array = [];
+              $last_field = NULL;
+              foreach($sheet as $subkey => $row){
+                  $row_name = $row->name;
+                  $field = \Dynamic::generate_field($node, $row_name, $row->type);
+                  $field_array = ['order'=>$subkey, 'label'=>$row->label_es, 'type'=>$row->type, 'trans_name'=>$row_name];
+                  if($row->type=='title'||$row->type=='content'||$subkey>5){
+                      $field_array['display_list'] = 'excel';
+                  }
+                  if($row->name=='id'||$row->name=='filled_form_id'){
+                      $field_array['display_list'] = 'excel';
+                      $field_array['display_item'] = 'none';
+                      if($row->name=='filled_form_id'){
+                          $field_array['value'] = 'filled_form';
+                          $field_array['trans_name'] = 'filled_form';
+                          $field_array['display_list'] = 'show';
+                      }
+                  }
+                  $field = \Dynamic::edit_field($field, $field_array, 'es');
+                  \Dynamic::generate_field_table($node, $field->type, $field->name, $last_field);
+                  if(!in_array($row->type, ['title','content','subchild','field'])){
+                      $last_field = $field;
+                  }
+                  //if($row->cols!=3){
+                  \Dynamic::generate_field_extra($field, 'cols', $row->cols);
+                  //}
+                  if(isset($extras_array[$sheet_model][$row_name])){
+                      foreach($extras_array[$sheet_model][$row_name] as $extra_key => $extra_val){
+                          \Dynamic::generate_field_extra($field, $extra_key, $extra_val);
+                      }
+                  }
+
+                  if(isset($conditionals_array[$sheet_model][$row_name])){
+                      foreach($conditionals_array[$sheet_model][$row_name] as $cond){
+                          \Dynamic::generate_field_conditional($field, $cond['trigger_field'], $cond['trigger_show'], $cond['trigger_value']);
+                      }
+                  }
+
+                  if(isset($edits_array[$sheet_model][$row_name])){
+                      \Dynamic::edit_field($field, $edits_array[$sheet_model][$row_name], 'es');
+                  }
+
+                  if($row->type=='select'||$row->type=='checkbox'||$row->type=='radio'){
+                    \Dynamic::generate_field_options($options_array[$sheet_model][$row_name], $field, 'es');
+                  }
+              }
+            }
+          }
+      });
+    }
+
 }
