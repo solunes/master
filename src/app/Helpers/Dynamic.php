@@ -217,7 +217,7 @@ class Dynamic {
           \Schema::dropIfExists($node->table_name);  
       }
       // Crear formularios dinamicos de excel
-      \Excel::load(public_path('seed/dynamic-forms.xlsx'), function($reader) {
+      \Excel::load(public_path('seed/dynamic-forms.xlsx'), function($reader) use($attach_form_name) {
           $options_array = [];
           $conditionals_array = [];
           $extras_array = [];
