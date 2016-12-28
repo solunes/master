@@ -93,7 +93,7 @@ class Dynamic {
       return $field;
     }
 
-    public static function generate_field_table($node, $field_type, $field_name, $last_field) {
+    public static function generate_field_table($node, $field_type, $field_name, $last_field, $second_attribute = NULL) {
       if(!in_array($field_type, ['title','content','subchild','field'])&&!\Schema::hasColumn($node->table_name, $field_name)){
         $column_type = 'string';
         if($field_type=='text'||$field_type=='checkbox'||$field_type=='map'||$field_type=='file'||$field_type=='image'){
@@ -107,13 +107,22 @@ class Dynamic {
         } else if($field_type=='relation'){
           $column_type = 'integer';
         }
-        \Schema::table($node->table_name, function ($table) use($column_type, $field_name, $last_field){
+        \Schema::table($node->table_name, function ($table) use($column_type, $field_name, $last_field, $second_attribute){
           if($field_name=='id'){
             $table->increments();
           } else if($last_field) {
-            $table->$column_type($field_name)->nullable()->after($last_field->name);
+            if($second_attribute){
+              $table->$column_type($field_name, $second_attribute)->nullable()->after($last_field->name);
+            } else {
+              $table->$column_type($field_name)->nullable()->after($last_field->name);
+            }
           } else {
-            $table->$column_type($field_name)->nullable();
+            if($second_attribute){
+              $table->$column_type($field_name, $second_attribute)->nullable();
+            } else {
+              $table->$column_type($field_name)->nullable();
+            }
+            
           }
         });
         return true;
@@ -211,13 +220,9 @@ class Dynamic {
       return $field_size;
     }
 
-    public static function import_dynamic_excel($attach_form_name = false) {
-      // Importar formularios dinámicos
-      foreach(\Solunes\Master\App\Node::where('dynamic', 1)->orderBy('id','DESC')->get() as $node){
-          \Schema::dropIfExists($node->table_name);  
-      }
+    public static function import_dynamic_excel($drop_tables = false) {
       // Crear formularios dinamicos de excel
-      \Excel::load(public_path('seed/dynamic-forms.xlsx'), function($reader) use($attach_form_name) {
+      \Excel::load(public_path('seed/dynamic-forms.xlsx'), function($reader) use ($drop_tables) {
           $options_array = [];
           $conditionals_array = [];
           $extras_array = [];
@@ -228,6 +233,9 @@ class Dynamic {
             if($sheet_model=='nodes'){
               foreach($sheet as $row){
                   // Crear nodo y tabla inicial
+                  if($drop_tables===true){
+                    \Schema::dropIfExists($row->table_name);  
+                  }
                   $node = \Dynamic::generate_node($row->name, $row->table_name);
                   if($row->parent){
                       $parent_id = \Solunes\Master\App\Node::where('name', $row->parent)->first()->id;
@@ -242,13 +250,8 @@ class Dynamic {
               }
             } else if($sheet_model=='options'||$sheet_model=='extras'||$sheet_model=='edits'||$sheet_model=='conditionals'){
               foreach($sheet as $row){
-                if($attach_form_name===true){
-                  $row_name = $row->form.'_'.$row->field;
-                  $row_subname = $row_name.'_'.$row->name;
-                } else {
-                  $row_name = $row->form;
-                  $row_subname = $row->field;
-                }
+                $row_name = $row->form;
+                $row_subname = $row->field;
 
                 if($sheet_model=='options'){
                   $options_array[$row_name][$row_subname][] = ['name'=>$row->name, 'label'=>$row->label_es, 'active'=>$row->active];
@@ -281,7 +284,11 @@ class Dynamic {
                       }
                   }
                   $field = \Dynamic::edit_field($field, $field_array, 'es');
-                  \Dynamic::generate_field_table($node, $field->type, $field->name, $last_field);
+                  if(count($sheet)>50&&$field->type=='string'){
+                    \Dynamic::generate_field_table($node, $field->type, $field->name, $last_field, 64);
+                  } else {
+                    \Dynamic::generate_field_table($node, $field->type, $field->name, $last_field);
+                  }
                   if(!in_array($row->type, ['title','content','subchild','field'])){
                       $last_field = $field;
                   }
