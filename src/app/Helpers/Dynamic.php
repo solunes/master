@@ -211,7 +211,7 @@ class Dynamic {
       return $field_size;
     }
 
-    public static function import_dynamic_excel() {
+    public static function import_dynamic_excel($attach_form_name = false) {
       // Importar formularios dinámicos
       foreach(\Solunes\Master\App\Node::where('dynamic', 1)->orderBy('id','DESC')->get() as $node){
           \Schema::dropIfExists($node->table_name);  
@@ -242,10 +242,13 @@ class Dynamic {
               }
             } else if($sheet_model=='options'||$sheet_model=='extras'||$sheet_model=='edits'||$sheet_model=='conditionals'){
               foreach($sheet as $row){
-                $row_name = $row->form;
-                //$row_name = $row->form.'_'.$row->field;
-                $row_subname = $row->field;
-                //$row_subname = $row_name.'_'.$row->name;
+                if($attach_form_name===true){
+                  $row_name = $row->form.'_'.$row->field;
+                  $row_subname = $row_name.'_'.$row->name;
+                } else {
+                  $row_name = $row->form;
+                  $row_subname = $row->field;
+                }
 
                 if($sheet_model=='options'){
                   $options_array[$row_name][$row_subname][] = ['name'=>$row->name, 'label'=>$row->label_es, 'active'=>$row->active];
@@ -282,9 +285,9 @@ class Dynamic {
                   if(!in_array($row->type, ['title','content','subchild','field'])){
                       $last_field = $field;
                   }
-                  //if($row->cols!=3){
-                  \Dynamic::generate_field_extra($field, 'cols', $row->cols);
-                  //}
+                  if($row->cols!=6){
+                    \Dynamic::generate_field_extra($field, 'cols', $row->cols);
+                  }
                   if(isset($extras_array[$sheet_model][$row_name])){
                       foreach($extras_array[$sheet_model][$row_name] as $extra_key => $extra_val){
                           \Dynamic::generate_field_extra($field, $extra_key, $extra_val);
