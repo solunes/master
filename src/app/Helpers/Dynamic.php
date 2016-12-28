@@ -220,9 +220,9 @@ class Dynamic {
       return $field_size;
     }
 
-    public static function import_dynamic_excel($drop_tables = false) {
+    public static function import_dynamic_excel($change_array = ['id'=>['display_item'=>'none']], $drop_tables = false) {
       // Crear formularios dinamicos de excel
-      \Excel::load(public_path('seed/dynamic-forms.xlsx'), function($reader) use ($drop_tables) {
+      \Excel::load(public_path('seed/dynamic-forms.xlsx'), function($reader) use ($change_array, $drop_tables) {
           $options_array = [];
           $conditionals_array = [];
           $extras_array = [];
@@ -268,20 +268,17 @@ class Dynamic {
               $field_array = [];
               $last_field = NULL;
               foreach($sheet as $subkey => $row){
+                if($row->name){
                   $row_name = $row->name;
                   $field = \Dynamic::generate_field($node, $row_name, $row->type);
                   $field_array = ['order'=>$subkey, 'label'=>$row->label_es, 'type'=>$row->type, 'trans_name'=>$row_name];
                   if($row->type=='title'||$row->type=='content'||$subkey>5){
                       $field_array['display_list'] = 'excel';
                   }
-                  if($row->name=='id'||$row->name=='filled_form_id'){
-                      $field_array['display_list'] = 'excel';
-                      $field_array['display_item'] = 'none';
-                      if($row->name=='filled_form_id'){
-                          $field_array['value'] = 'filled_form';
-                          $field_array['trans_name'] = 'filled_form';
-                          $field_array['display_list'] = 'show';
-                      }
+                  if(isset($change_array[$row->name])){
+                    foreach($change_array[$row->name] as $change_key => $change_val){
+                      $field_array[$change_key] = $change_val;
+                    }
                   }
                   $field = \Dynamic::edit_field($field, $field_array, 'es');
                   if(count($sheet)>50&&$field->type=='string'){
@@ -311,9 +308,10 @@ class Dynamic {
                       \Dynamic::edit_field($field, $edits_array[$sheet_model][$row_name], 'es');
                   }
 
-                  if($row->type=='select'||$row->type=='checkbox'||$row->type=='radio'){
+                  if(($row->type=='select'||$row->type=='checkbox'||$row->type=='radio')&&isset($options_array[$sheet_model])){
                     \Dynamic::generate_field_options($options_array[$sheet_model][$row_name], $field, 'es');
                   }
+                }
               }
             }
           }
