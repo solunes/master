@@ -9,7 +9,7 @@ return [
     |
     */
 
-    'abbreviation' => 'Abreviación',
+    'abreviation' => 'Abreviación',
     'action' => 'Acción',
     'action_value' => 'Valor de la Acción',
     'active' => '¿Activo?',
@@ -47,8 +47,9 @@ return [
     'f_date_from' => 'Desde',
     'f_date_to' => 'Hasta',
     'field' => 'Campos',
-    'field_extras' => 'Extras de Campos',
     'field_conditionals' => 'Condicionales de Campos',
+    'field_extras' => 'Extras de Campos',
+    'field_options' => 'Opciones de Campo',
     'fields' => 'Campos',
     'file' => 'Archivo',
     'files' => 'Archivos',
@@ -72,7 +73,9 @@ return [
     'image_sizes' => 'Tamaños de Imagen',
     'inbox_messages' => 'Mensajes de Conversación',
     'inbox_users' => 'Usuarios de Conversación',
+    'indicator_alert' => 'Alerta de Indicador',
     'indicator_alerts' => 'Alertas de Indicadores',
+    'indicator_graph' => 'Gráfico de Indicador',
     'indicator_graphs' => 'Gráficos de Indicadores',
     'indicator_values' => 'Valores de Indicadores',
     'initial_date' => 'Fecha Inicial',
