@@ -10,12 +10,14 @@
     <table class="admin-table table table-striped table-bordered dt-responsive">
       <thead>
         <tr class="title">
+          <td>Nº</td>
           {!! AdminList::make_fields($langs, $fields, $action_fields) !!}
         </tr>
       </thead>
       <tbody>
-        @foreach ($items as $item)
+        @foreach ($items as $key => $item)
           <tr>
+            <td>{{ $key+1 }}</td>
             {!! AdminList::make_fields_values_rows($langs, $module, $model, $item, $fields, $appends, $action_fields) !!}
           </tr>
         @endforeach

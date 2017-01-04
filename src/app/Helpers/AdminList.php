@@ -678,8 +678,10 @@ class AdminList {
         $dir = public_path('excel');
         array_map('unlink', glob($dir.'/*'));
         $file = \Excel::create($array['node']->plural.'_'.date('Y-m-d'), function($excel) use($array) {
+            $sheet_title = str_replace(' ', '-', $array['node']->plural);
+            $sheet_title = substr(preg_replace('/[^A-Za-z0-9\-]/', '', $sheet_title), 0, 30);
             $excel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $excel->sheet(substr($array['node']->plural, 0, 30), function($sheet) use($array) {
+            $excel->sheet($sheet_title, function($sheet) use($array) {
                 $col_array = [];
                 foreach($array['fields'] as $field){
                     array_push($col_array, $field->label);

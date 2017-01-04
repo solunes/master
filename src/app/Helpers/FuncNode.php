@@ -88,11 +88,9 @@ class FuncNode {
             $display_list = 'excel';
             $display_item = 'none';
             if($name=='password'){
-                $display_item = 'admin';
+              $display_item = 'admin';
             }
-        } else if($name=='section_id') {
-            $display_item = 'admin';
-        } else if($count>6){
+        } else if($count>5){
             $display_list = 'excel';
         }
         if($node->type!='field'){
