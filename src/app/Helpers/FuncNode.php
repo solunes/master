@@ -407,7 +407,7 @@ class FuncNode {
       }
     }
 
-    public static function get_items_array($node, $node_val = NULL) {
+    public static function get_items_array($node, $node_val = 0) {
         $node_name = $node->name;
         if($node->folder=='form'){
             $model = $node->model;

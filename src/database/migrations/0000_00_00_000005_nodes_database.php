@@ -116,7 +116,7 @@ class NodesDatabase extends Migration
             $table->increments('id');
             $table->integer('parent_id')->unsigned()->default(1);
             $table->string('code');
-            $table->enum('type', ['resize','fit'])->default('resize');
+            $table->enum('type', ['original','resize','fit'])->default('original');
             $table->integer('width')->nullable();
             $table->integer('height')->nullable();
             $table->foreign('parent_id')->references('id')->on('image_sizes')->onDelete('cascade');

@@ -45,14 +45,18 @@ class Asset {
 		    } else {
 		    	$encoded_file = $file;
 		    }
-		    try {
-				$img = \Image::make($encoded_file)->$type($size['width'], $size['height'], function ($constraint) {
-					$constraint->aspectRatio();
-	    			//$constraint->upsize();
-				})->encode($size_extension)->save($new_filename);
-			} catch (\Intervention\Image\Exception\NotReadableException $e) {
-				return false;
-			}
+		    if($type=='original'){
+				$img = \Image::make($encoded_file)->encode($size_extension)->save($new_filename);
+		    } else {
+			    try {
+					$img = \Image::make($encoded_file)->$type($size['width'], $size['height'], function ($constraint) {
+						$constraint->aspectRatio();
+		    			//$constraint->upsize();
+					})->encode($size_extension)->save($new_filename);
+				} catch (\Intervention\Image\Exception\NotReadableException $e) {
+					return false;
+				}
+		    }
 			$handle = fopen($new_filename, 'r+');
     		Storage::put($folder.'/'.$size['code'].'/'.$filename.'.'.$size_extension, $handle);
     		fclose($handle);
