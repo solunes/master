@@ -89,7 +89,7 @@ class Field extends Model {
             if($subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $this->value))->first()){
                 $submodel = \FuncNode::node_check_model($subnode);
                 if(config('solunes.get_options_relation')){
-                    $return = \CustomFunc::get_options_relation($submodel, $this->parent->name, $this->name, $this->value);
+                    $submodel = \CustomFunc::get_options_relation($submodel, $this, $subnode);
                 }
                 $return = $return+$submodel->get()->lists('name', 'id')->toArray();
             }
