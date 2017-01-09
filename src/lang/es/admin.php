@@ -174,5 +174,6 @@ return array(
 	"black" => "Negro",
 	"email" => "Email",
 	"sms" => "SMS",
+	"original" => "Original",
 
 );

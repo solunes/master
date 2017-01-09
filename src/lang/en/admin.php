@@ -154,6 +154,7 @@ return array(
 	"in_development" => "In Development",
 	"archived" => "Archived",
 	"count" => "Count",
+	"count_total" => "Total Count",
 	"formula" => "Formula",
 	"bar" => "Bar",
 	"pie" => "Pie",
@@ -172,5 +173,6 @@ return array(
 	"black" => "Black",
 	"email" => "Email",
 	"sms" => "SMS",
-	
+	"original" => "Original",
+
 );
