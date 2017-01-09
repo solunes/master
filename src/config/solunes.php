@@ -17,6 +17,7 @@ return [
 	'check_permission' => false,
 	'custom_indicator' => false,
 	'custom_field' => false,
+	'get_options_relation' => false,
 	'check_custom_filter' => false,
 	'custom_filter' => false,
 	'custom_filter_field' => false,

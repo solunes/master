@@ -88,15 +88,10 @@ class Field extends Model {
         } else if($this->type=='relation'||$this->type=='field'){
             if($subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $this->value))->first()){
                 $submodel = \FuncNode::node_check_model($subnode);
-                if($this->type=='relation'){
-                    if($this->value=='section'){
-                        $return = $return+$submodel->where('node_id', $this->parent_id)->get()->lists('name', 'id')->toArray();
-                    } else {
-                        $return = $return+$submodel->get()->lists('name', 'id')->toArray();
-                    }
-                } else {
-                    $return = $return+$submodel->lists('name', 'id')->toArray();
+                if(config('solunes.get_options_relation')){
+                    $return = \CustomFunc::get_options_relation($submodel, $this->parent->name, $this->name, $this->value);
                 }
+                $return = $return+$submodel->get()->lists('name', 'id')->toArray();
             }
         }
         return $return;
