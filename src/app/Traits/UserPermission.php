@@ -52,7 +52,7 @@ trait UserPermission {
     }
 
     public function getPermission() {
-    	$array = [];
+        $array = [];
         foreach ($this->role_user()->with('permission_role')->get() as $role) {
             $array = $role->permission_role->lists('name');
         }

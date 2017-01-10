@@ -110,7 +110,11 @@ class Field extends Model {
         return $query->where(function ($subquery) {
             $subquery->whereNull('permission');
             if(auth()->check()){
-                $subquery->orWhereIn('permission', auth()->user()->getPermission()->toArray());
+                $permissions = auth()->user()->getPermission();
+                if(!empty($permissions)){
+                    $permissions = $permissions->toArray();
+                    $subquery->orWhereIn('permission', $permissions);
+                }
             }
         });
     }
