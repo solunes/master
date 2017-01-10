@@ -11022,6 +11022,8 @@ Dashboard Stats
       line-height: 110px; }
   .dashboard-stat .details {
     position: absolute;
+    left: 15px;
+    padding-left: 15px;
     right: 15px;
     padding-right: 15px; }
     .dashboard-stat .details .number {
