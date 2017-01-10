@@ -91,7 +91,7 @@ class Field extends Model {
                 if(config('solunes.get_options_relation')){
                     $submodel = \CustomFunc::get_options_relation($submodel, $this, $subnode, request()->segment(5));
                 }
-                $return = $return+$submodel->get()->lists('name', 'id')->sortBy('name')->toArray();
+                $return = $return+$submodel->get()->sortBy('name')->lists('name', 'id')->toArray();
             }
         }
         return $return;
