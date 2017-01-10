@@ -148,7 +148,7 @@ class Field extends Model {
     }
 
     public function scopeFilters($query) {
-        $type_array = ['select','radio','checkbox','date','string','text','field'];
+        $type_array = ['select','relation','radio','checkbox','date','string','text','field'];
         return $query->whereIn('type', $type_array);
     }
 
