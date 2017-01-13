@@ -7,26 +7,29 @@ use Illuminate\Routing\UrlGenerator;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use AdminItem;
 
 class DynamicFormController extends Controller {
 
-	protected $request;
-	protected $url;
+    protected $request;
+    protected $url;
 
-	public function __construct(UrlGenerator $url) {
-	  $this->middleware('auth');
-	  $this->middleware('permission:dashboard')->only('getIndex');
-	  $this->prev = $url->previous();
-	  $this->module = 'admin';
-	}
-
+    public function __construct(UrlGenerator $url) {
+      $this->middleware('auth');
+      $this->middleware('permission:dashboard')->only('getIndex');
+      $this->prev = $url->previous();
+      $this->module = 'admin';
+    }
 
     public function getFormList() {
         $node = \Solunes\Master\App\Node::where('name', 'node')->first();
         $array = ['module'=>'node', 'model'=>'node', 'langs'=>NULL, 'appends'=>NULL, 'action_fields'=>['create','edit']];
         $array['items'] = \Solunes\Master\App\Node::where('dynamic', 1)->whereNull('parent_id')->withTrashed()->get();
         $array['fields'] = $node->fields()->displayList('show')->get();
-        return view('list.dynamic-form', $array);
+        if(view::exists('list.dynamic-form')){
+            return view('list.dynamic-form', $array);
+        }
+        return view('master::list.dynamic-form', $array);
     }
 
     public function getFormFields($id) {
@@ -37,14 +40,17 @@ class DynamicFormController extends Controller {
             $array['map_array'][$field->id] = $field;
         }
         if(count($array['fields'])==0){
-        	if($node->permission=='form'){
-        		$node_field = 'id';
-        	} else {
-        		$node_field = 'filled_form_id';
-        	}
+            if($node->permission=='form'){
+                $node_field = 'id';
+            } else {
+                $node_field = 'filled_form_id';
+            }
             return redirect('admin/form-field/create/'.$id.'/'.$node_field);
         }
-        return view('item.form-fields', $array);
+        if(view::exists('item.form-fields')){
+            return view('item.form-fields', $array);
+        }
+        return view('master::item.form-fields', $array);
     }
 
     public function getForm($action, $id = NULL) {
@@ -55,20 +61,23 @@ class DynamicFormController extends Controller {
         }
         $array['fields'] = $node->fields()->whereIn('name', ['name','permission','singular','plural'])->with('translations','field_extras','field_options_active')->get();
         if($action=='create'){
-        	$menus = \Solunes\Master\App\Menu::where('level', '!=', 3)->whereIn('permission', ['estudiante','docente','empresa','orientacion','retroalimentacion'])->where('type', 'blank')->with('parent')->get();
-        	foreach($menus as $menu){
-        		if($menu->level==2){
-        			$menu_name = $menu->parent->name.' | '.$menu->name;
-        		} else {
-        			$menu_name = $menu->name;
-        		}
-        		$array['options_menu'][$menu->id] = $menu_name;
-        	}
+            $menus = \Solunes\Master\App\Menu::where('level', '!=', 3)->whereIn('permission', ['estudiante','docente','empresa','orientacion','retroalimentacion'])->where('type', 'blank')->with('parent')->get();
+            foreach($menus as $menu){
+                if($menu->level==2){
+                    $menu_name = $menu->parent->name.' | '.$menu->name;
+                } else {
+                    $menu_name = $menu->name;
+                }
+                $array['options_menu'][$menu->id] = $menu_name;
+            }
             $array['menu_name'] = NULL;
         } else {
             $array['menu_name'] = \Solunes\Master\App\Menu::whereTranslation('link', 'admin/model-list/'.$array['i']->name)->first()->name;
         }
-        return view('item.form', $array);
+        if(view::exists('item.form')){
+            return view('item.form', $array);
+        }
+        return view('master::item.form', $array);
     }
 
     public function postForm(Request $request) {
@@ -78,12 +87,12 @@ class DynamicFormController extends Controller {
             'plural'=>'required',
         ];
         if($action=='create'){
-        	$rules = $rules + [
-	            'name'=>'required|alpha_dash',
-	            'permission'=>'required',
-	            'menu_parent'=>'required',
-	            'menu_name'=>'required',
-        	];
+            $rules = $rules + [
+                'name'=>'required|alpha_dash',
+                'permission'=>'required',
+                'menu_parent'=>'required',
+                'menu_name'=>'required',
+            ];
         }
 
         $validator = \Validator::make($request->all(), $rules);
@@ -100,7 +109,7 @@ class DynamicFormController extends Controller {
                 $node_array['dynamic'] = 1;
                 $initial_array = ['id'=>'increments'];
                 if($request->input('permission')!='form'){
-                	$initial_array = $initial_array + ['filled_form_id'=>'integer'];
+                    $initial_array = $initial_array + ['filled_form_id'=>'integer'];
                 }
                 $initial_array = $initial_array + ['timestamps'=>'timestamps'];
                 \Dynamic::generate_node_table($node->table_name, $initial_array);
@@ -128,11 +137,11 @@ class DynamicFormController extends Controller {
                 $node->fields()->where('name', 'filled_form_id')->update(['display_item'=>'none']);
                 // Agregar action buttons a nodo
                 if($node->permission=='form'){
-                	$page = \Solunes\Master\App\Page::where('customized_name', 'anonimo')->first();
-		            $section = new \Solunes\Master\App\Section;
-		            $section->page_id = $page->id;
-		            $section->node_id = $node->id;
-		            $section->save();
+                    $page = \Solunes\Master\App\Page::where('customized_name', 'anonimo')->first();
+                    $section = new \Solunes\Master\App\Section;
+                    $section->page_id = $page->id;
+                    $section->node_id = $node->id;
+                    $section->save();
                     $value_array = ["create","create_anonym","view"];
                 } else {
                     $value_array = ["edit","delete"];
@@ -177,7 +186,10 @@ class DynamicFormController extends Controller {
         }
         $array['trigger_fields'] = $trigger_fields;
         $array['trigger_actions'] = ['is'=>'Es igual a', 'is_not'=>'Es distinto a', 'is_greater'=>'Es mayor a', 'is_less'=>'Es menor a', 'in_array'=>'Está dentro del array'];
-        return view('item.form-field', $array);
+        if(view::exists('item.form-field')){
+            return view('item.form-field', $array);
+        }
+        return view('master::item.form-field', $array);
     }
 
     public function postFormField(Request $request) {
@@ -256,7 +268,7 @@ class DynamicFormController extends Controller {
             $options_array = [];
             foreach($request->input('options_id') as $option_key => $option){
               if($request->input('options_label')[$option_key]){
-            	$options_array[$option_key] = ['name'=>$request->input('options_name')[$option_key], 'label'=>$request->input('options_label')[$option_key], 'active'=>$request->input('options_active')[$option_key]];
+                $options_array[$option_key] = ['name'=>$request->input('options_name')[$option_key], 'label'=>$request->input('options_label')[$option_key], 'active'=>$request->input('options_active')[$option_key]];
               }
             }
             \Dynamic::generate_field_options($options_array, $field, 'es');
@@ -287,19 +299,19 @@ class DynamicFormController extends Controller {
         $field = \Solunes\Master\App\Field::where('parent_id', $parent_id)->where('name', $name)->first();
         $field_order = $field->order;
         if($action=='up'&&$field_order>2){
-        	$field_order -= $field->decrement('order');
+            $field_order -= $field->decrement('order');
         } else if($action=='down') {
-        	$field_order += $field->increment('order');
+            $field_order += $field->increment('order');
         } else {
-        	$field_order = 0;
+            $field_order = 0;
         }
         if($field_order>0){
-        	$other_fields = \Solunes\Master\App\Field::where('parent_id', $parent_id)->where('name', '!=', $name)->where('order', $field_order);
-        	if($action=='up'){
-        		$other_fields = $other_fields->increment('order');
-        	} else {
-        		$other_fields = $other_fields->decrement('order');
-        	}
+            $other_fields = \Solunes\Master\App\Field::where('parent_id', $parent_id)->where('name', '!=', $name)->where('order', $field_order);
+            if($action=='up'){
+                $other_fields = $other_fields->increment('order');
+            } else {
+                $other_fields = $other_fields->decrement('order');
+            }
         }
         return back();
     }
@@ -327,9 +339,9 @@ class DynamicFormController extends Controller {
                 array_push($col_array, 'label_es');
                 $export_array[$node->name]['columns'] = $col_array;
                 if($node->parent_id){
-                	$parent = $node->parent->name;
+                    $parent = $node->parent->name;
                 } else {
-                	$parent = NULL;
+                    $parent = NULL;
                 }
                 array_push($nodes_array, [$node->name, $node->table_name, $node->type, $node->model, $parent, $node->folder, $node->permission, $node->singular, $node->plural]);
                 foreach($node->fields as $item){
@@ -346,17 +358,17 @@ class DynamicFormController extends Controller {
                     array_push($edits_array, [$node->name, $item->name, 'display_item', $item->display_item]);
                   }
                   foreach(['new_row', 'multiple'] as $subfield){
-	                if($item->$subfield!=0){
-	                    array_push($edits_array, [$node->name, $item->name, $subfield, $item->$subfield]);
-	                }
-	              }
+                    if($item->$subfield!=0){
+                        array_push($edits_array, [$node->name, $item->name, $subfield, $item->$subfield]);
+                    }
+                  }
                   if($item->trans_name!=$item->name){
                     array_push($edits_array, [$node->name, $item->name, 'trans_name', $item->trans_name]);
                   }
                   foreach(['tooltip', 'message', 'permission', 'child_table','value'] as $subfield){
-	                if($item->$subfield){
-	                    array_push($edits_array, [$node->name, $item->name, $subfield, $item->$subfield]);
-	                }
+                    if($item->$subfield){
+                        array_push($edits_array, [$node->name, $item->name, $subfield, $item->$subfield]);
+                    }
                   }
                   // EXTRAS
                   $cols = 6;

@@ -30,7 +30,7 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('form-fields/{id}', 'DynamicFormController@getFormFields');
     Route::get('form/{action}/{id?}', 'DynamicFormController@getForm');
     Route::post('form', 'DynamicFormController@postForm');
-    Route::get('form-field/{action}/{parent_id}/{id?}', 'DynamicFormController@getFormFields@getFormField');
+    Route::get('form-field/{action}/{parent_id}/{id?}', 'DynamicFormController@getFormField');
     Route::post('form-field', 'DynamicFormController@postFormField');
     Route::get('form-field-order/{parent_id}/{name}/{action}', 'DynamicFormController@getFormFieldOrder');
     Route::get('export-forms', 'DynamicFormController@getExportForms');
