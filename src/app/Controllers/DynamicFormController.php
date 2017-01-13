@@ -8,6 +8,7 @@ use Illuminate\Routing\UrlGenerator;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use AdminItem;
+use View;
 
 class DynamicFormController extends Controller {
 
@@ -26,7 +27,7 @@ class DynamicFormController extends Controller {
         $array = ['module'=>'node', 'model'=>'node', 'langs'=>NULL, 'appends'=>NULL, 'action_fields'=>['create','edit']];
         $array['items'] = \Solunes\Master\App\Node::where('dynamic', 1)->whereNull('parent_id')->withTrashed()->get();
         $array['fields'] = $node->fields()->displayList('show')->get();
-        if(view::exists('list.dynamic-form')){
+        if(View::exists('list.dynamic-form')){
             return view('list.dynamic-form', $array);
         }
         return view('master::list.dynamic-form', $array);
@@ -47,7 +48,7 @@ class DynamicFormController extends Controller {
             }
             return redirect('admin/form-field/create/'.$id.'/'.$node_field);
         }
-        if(view::exists('item.form-fields')){
+        if(View::exists('item.form-fields')){
             return view('item.form-fields', $array);
         }
         return view('master::item.form-fields', $array);
@@ -74,7 +75,7 @@ class DynamicFormController extends Controller {
         } else {
             $array['menu_name'] = \Solunes\Master\App\Menu::whereTranslation('link', 'admin/model-list/'.$array['i']->name)->first()->name;
         }
-        if(view::exists('item.form')){
+        if(View::exists('item.form')){
             return view('item.form', $array);
         }
         return view('master::item.form', $array);
@@ -186,7 +187,7 @@ class DynamicFormController extends Controller {
         }
         $array['trigger_fields'] = $trigger_fields;
         $array['trigger_actions'] = ['is'=>'Es igual a', 'is_not'=>'Es distinto a', 'is_greater'=>'Es mayor a', 'is_less'=>'Es menor a', 'in_array'=>'Está dentro del array'];
-        if(view::exists('item.form-field')){
+        if(View::exists('item.form-field')){
             return view('item.form-field', $array);
         }
         return view('master::item.form-field', $array);
