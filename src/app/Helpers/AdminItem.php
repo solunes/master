@@ -39,9 +39,9 @@ class AdminItem {
                     }
                 }
                 $item->$action();
-                return redirect($data->prev)->with('message_success', trans('admin.'.$action.'_success'));
+                return redirect($data->prev)->with('message_success', trans('master::admin.'.$action.'_success'));
             } else {
-                return redirect($data->prev)->with('message_fail', trans('admin.'.$action.'_fail'));
+                return redirect($data->prev)->with('message_fail', trans('master::admin.'.$action.'_fail'));
             }
         } else {
             $variables = \AdminItem::get_request_variables($data->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
@@ -278,12 +278,12 @@ class AdminItem {
     }
 
     public static function post_success($action, $redirect) {
-        $message = trans('admin.'.$action.'_success');
+        $message = trans('master::admin.'.$action.'_success');
         return redirect($redirect)->with('message_success', $message);
     }
 
     public static function post_fail($action, $redirect, $validator) {
-        $message = trans('admin.'.$action.'_fail');
+        $message = trans('master::admin.'.$action.'_fail');
         return redirect($redirect)->with('message_error', $message)->withErrors($validator)->withInput();
     }
 
@@ -340,7 +340,7 @@ class AdminItem {
     }
 
     public static function make_item_header($i, $module, $node, $action, $parent_id = false) {
-        $title = trans('admin.'.$action).' '.$node->singular;
+        $title = trans('master::admin.'.$action).' '.$node->singular;
         if($parent_id==NULL){
             $back_url = url($module.'/model-list/'.$node->name);
             $separator_sign = '?';
@@ -360,13 +360,13 @@ class AdminItem {
             $url .= '?download-pdf=true';
         }
         if($action!='create'){
-            $download = ' | <a href="'.url($url).'" target="_blank"><i class="fa fa-file-pdf-o"></i> '.trans('admin.generate').' PDF</a>';
+            $download = ' | <a href="'.url($url).'" target="_blank"><i class="fa fa-file-pdf-o"></i> '.trans('master::admin.generate').' PDF</a>';
         } else {
             $download = NULL;
         }
         $result = '<h3>'.$title.' | '.$back.$download.'</h3>';
         if($action=='edit'&&$i&&$i->created_at){
-            $result .= '<p>'.trans('admin.created_at').': '.$i->created_at->format('Y-m-d').'</p>';
+            $result .= '<p>'.trans('master::admin.created_at').': '.$i->created_at->format('Y-m-d').'</p>';
         }
         return $result;
     }   

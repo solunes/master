@@ -7,7 +7,7 @@
 @section('content')
   <h3>
     <a href="{{ url('admin/form-list') }}">Admin de Formularios</a>
-     | <a href="{{ url('admin/form-fields/'.$id) }}">Editar Campos</a> | {{ trans('admin.'.$action) }} Formulario
+     | <a href="{{ url('admin/form-fields/'.$id) }}">Editar Campos</a> | {{ trans('master::admin.'.$action) }} Formulario
    </h3>
   {!! Form::open(['name'=>$action.'_field', 'id'=>$action.'_table', 'role'=>'form', 'url'=>'admin/form', 'class'=>'form-horizontal prevent-double-submit', 'autocomplete'=>'off']) !!}
   <div class="row flex">

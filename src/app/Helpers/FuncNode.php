@@ -155,11 +155,8 @@ class FuncNode {
             $subfield->name = $option['name'];
             foreach($languages as $language){
               \App::setLocale($language->code);
-              if($node->location=='package'){
-                $subfield->translateOrNew($language->code)->label = trans('master::admin.'.$option['name']);
-              } else {
-                $subfield->translateOrNew($language->code)->label = trans('admin.'.$option['name']);
-              }
+              $translation = trans('master::admin.'.$option['name']);
+              $subfield->translateOrNew($language->code)->label = $translation;
             }
             \App::setLocale('es');
             $subfield->save();
@@ -197,13 +194,13 @@ class FuncNode {
     public static function node_menu_creation($node, $languages) {
         $menu_array = \Solunes\Master\App\Menu::where('menu_type', 'admin')->where('level', 1)->lists('id');
         if($node->folder){
-            if($menu_parent = \Solunes\Master\App\MenuTranslation::whereIn('menu_id', $menu_array)->where('name', trans('admin.'.$node->folder))->first()){
+            if($menu_parent = \Solunes\Master\App\MenuTranslation::whereIn('menu_id', $menu_array)->where('name', trans('master::admin.'.$node->folder))->first()){
               $menu_parent = $menu_parent->menu;
             } else {
               $menu_parent = \Solunes\Master\App\Menu::create(['type'=>'blank', 'menu_type'=>'admin', 'permission'=>$node->folder, 'icon'=>'th-list']);
               foreach($languages as $language){
                 \App::setLocale($language->code);
-                $menu_parent->translateOrNew($language->code)->name = trans('admin.'.$node->folder);
+                $menu_parent->translateOrNew($language->code)->name = trans('master::admin.'.$node->folder);
               }
               \App::setLocale('es');
               $menu_parent->save();
@@ -228,18 +225,13 @@ class FuncNode {
               $node = \Solunes\Master\App\Node::where('name', $row->node)->first();
               if($sheet_name=='create-fields'){
                 if($node){
-                  if($node->location=='package'){
-                      $lang_folder = 'master::fields.';
-                  } else {
-                      $lang_folder = 'fields.';
-                  }
                   $field = new \Solunes\Master\App\Field;
                   $field->parent_id = $node->id;
                   $field->name = $row->name;
                   $field->trans_name = $row->trans_name;
                   foreach($languages as $language){
                     \App::setLocale($language->code);
-                    $field->translateOrNew($language->code)->label = trans($lang_folder.$row->trans_name);
+                    $field->translateOrNew($language->code)->label = trans('master::fields.'.$row->trans_name);
                   }
                   \App::setLocale('es');
                   $field->type = $row->type;

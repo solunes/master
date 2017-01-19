@@ -24,7 +24,7 @@
       </tbody>
     </table>
   @else
-    <p>{{ trans('admin.no_items') }}</p>
+    <p>{{ trans('master::admin.no_items') }}</p>
   @endif
   @if(isset($graphs)&&$graphs&&count($graphs)>0)
     <div class="row">

@@ -33,11 +33,11 @@
         .
       @endif
     </p>
-    <h4>{{ trans('admin.fields') }}</h4>
+    <h4>{{ trans('master::admin.fields') }}</h4>
     @foreach($node->fields()->where('type', '!=', 'child')->where('display_item', '!=', 'none')->get() as $field)
       <ul>
         <li><strong>{{ $field->label }}: </strong>
-          Campo de {{ trans('admin.'.$field->type) }}
+          Campo de {{ trans('master::admin.'.$field->type) }}
           @if($field->required)
            requerido
           @else
@@ -73,7 +73,7 @@
           @if(count($field->field_conditionals)>0)
             <br>Condicionantes:
             @foreach($field->field_conditionals as $conditional)
-              <br>- Se mostrará si es que "{{ trans('fields.'.$conditional->trigger_field) }}" {{ strtolower(trans('admin.'.$conditional->trigger_show)).' '.trans('admin.'.$conditional->trigger_value) }}.
+              <br>- Se mostrará si es que "{{ trans('master::fields.'.$conditional->trigger_field) }}" {{ strtolower(trans('master::admin.'.$conditional->trigger_show)).' '.trans('master::admin.'.$conditional->trigger_value) }}.
             @endforeach 
           @endif
           @if($field->tooltip)

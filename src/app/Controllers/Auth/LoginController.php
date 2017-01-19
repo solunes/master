@@ -37,27 +37,27 @@ class LoginController extends Controller {
 			if($logged){
 			  if(Auth::user()->status=='banned'){
 			  	Auth::logout();
-			  	return Login::fail($request->session(), $validator, trans('form.login_banned'), 10, 5);
+			  	return Login::fail($request->session(), $validator, trans('master::form.login_banned'), 10, 5);
 			  } else if(Auth::user()->status=='ask_password'){
-			  	return Login::success($request->session(), 'account', trans('form.login_success_password'), true);
+			  	return Login::success($request->session(), 'account', trans('master::form.login_success_password'), true);
 			  } else {
 			  	if(\Auth::user()->can('dashboard')){
 			  		$redirect = 'admin';
 			  	} else {
 			  		$redirect = '';
 			  	}
-			  	return Login::success($request->session(), $redirect, trans('form.login_success'));
+			  	return Login::success($request->session(), $redirect, trans('master::form.login_success'));
 			  }
 			} else {
-			  	return Login::fail($request->session(), $validator, trans('form.login_fail'), 10, 5);
+			  	return Login::fail($request->session(), $validator, trans('master::form.login_fail'), 10, 5);
 			}
 		} else {
-			return Login::fail($request->session(), $validator, trans('form.error_form'), 10, 5);
+			return Login::fail($request->session(), $validator, trans('master::form.error_form'), 10, 5);
 		}
     }
 
 	public function getLogout(Request $request) {
-		return Login::logout($request->session(), 'auth/login', trans('form.logout_success'));
+		return Login::logout($request->session(), 'auth/login', trans('master::form.logout_success'));
 	}
 
 }

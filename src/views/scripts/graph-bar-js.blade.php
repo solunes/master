@@ -5,7 +5,7 @@
           type: 'column'
       },
       title: {
-        text: 'Reporte en Barra: {{ trans("fields.".$column) }}'
+        text: 'Reporte en Barra: {{ trans("master::fields.".$column) }}'
       },
       xAxis: {
           type: 'category',
@@ -33,7 +33,7 @@
           name: 'Cantidad',
           data: [
             @foreach($graph_items as $item)
-              [<?php echo '"'.trans('admin.'.$item->$column).' ('.$item->total.')"'; ?>,  {{ $item->total }}],
+              [<?php echo '"'.trans('master::admin.'.$item->$column).' ('.$item->total.')"'; ?>,  {{ $item->total }}],
             @endforeach
           ],
           dataLabels: {

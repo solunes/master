@@ -13,7 +13,7 @@ class CheckPermission {
 
     public function handle($request, Closure $next, $permission){
     	if (\Gate::denies($permission)) {
-            return redirect('')->with('message_error', trans('admin.no_permission'));
+            return redirect('')->with('message_error', trans('master::admin.no_permission'));
         }
 
         return $next($request);

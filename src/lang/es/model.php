@@ -48,6 +48,15 @@ return [
     'activity' => 'Actividad|Actividades',
     'inbox' => 'Bandeja de Entrada|Bandeja de Entrada',
     'notification' => 'Notificación|Notificaciones',
+    'notification-message' => 'Mensaje de Notificación|Mensajes de Notificación',
+
+    // SECTIONS
+    'social-network' => 'Red Social|Redes Sociales',
+    'title' => 'Título|Títulos',
+    'content' => 'Contenido|Contenidos',
+    'banner' => 'Banner|Banners',
+    'contact' => 'Contacto|Contactos',
+    'form-contact' => 'Formulario de Contacto|Formularios de Contacto',
 
     // MENU
     'my_dashboard' => 'Mi Panel',

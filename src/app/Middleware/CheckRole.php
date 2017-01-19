@@ -13,7 +13,7 @@ class CheckRole {
 
     public function handle($request, Closure $next, $role){
         if (! $request->user()->hasRole($role)) {
-            return redirect('')->with('message_error', trans('admin.no_permission'));
+            return redirect('')->with('message_error', trans('master::admin.no_permission'));
         }
 
         return $next($request);

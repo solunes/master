@@ -54,6 +54,7 @@ class MasterSeeder extends Seeder {
         $node_email = \Solunes\Master\App\Node::create(['name'=>'email', 'folder'=>'global']);
         $node_activity = \Solunes\Master\App\Node::create(['name'=>'activity', 'table_name'=>'activities', 'folder'=>'system']);
         $node_notification = \Solunes\Master\App\Node::create(['name'=>'notification', 'folder'=>'system']);
+        $node_notification_message = \Solunes\Master\App\Node::create(['name'=>'notification-message', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_notification->id]);
         $node_inbox = \Solunes\Master\App\Node::create(['name'=>'inbox', 'table_name'=>'inbox', 'folder'=>'system']);
         $node_inbox_users = \Solunes\Master\App\Node::create(['name'=>'inbox-user', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_inbox->id]);
         $node_inbox_messages = \Solunes\Master\App\Node::create(['name'=>'inbox-message', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_inbox->id]);

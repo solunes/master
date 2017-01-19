@@ -39,11 +39,7 @@ class RegisterActivityModel {
 		    	$action = 'node_edited';
 		    }
 		    $message = '';
-		    if($node->location=='package'){
-		    	$lang_folder = 'master::fields.';
-		    } else {
-		    	$lang_folder = 'fields.';
-		    }
+		    $lang_folder = 'master::fields.';
 		    if(count($event_decoded)>0){
 			    foreach($event_decoded as $key => $i){
 			    	if(is_string($i)&&is_string($key)&&strpos($key, '_id') === false&&$key!='id'&&$key!='created_at'&&$key!='updated_at'){

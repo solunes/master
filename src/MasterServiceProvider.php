@@ -20,9 +20,12 @@ class MasterServiceProvider extends ServiceProvider
             __DIR__ . '/config' => config_path()
         ], 'config');
         $this->publishes([
+            __DIR__.'/lang-custom' => resource_path('lang/vendor/master'),
+        ], 'lang');
+        $this->publishes([
             __DIR__.'/assets/admin' => public_path('assets/admin'),
         ], 'assets');
-        
+
         /* Registrar ServiceProvider Internos */
         //$this->app->register('\Solunes\Master\App\Providers\AppServiceProvider');
 

@@ -99,7 +99,7 @@ class AdminList {
                             $response .= '<td class="edit">'.$language->name.'</td>';
                         }
                     } else {
-                        $response .= '<td class="edit">'.trans('admin.view').'</td>';
+                        $response .= '<td class="edit">'.trans('master::admin.view').'</td>';
                     }
                 }
                 if(in_array('edit', $action_fields)){
@@ -108,14 +108,14 @@ class AdminList {
                             $response .= '<td class="edit">'.$language->name.'</td>';
                         }
                     } else {
-                        $response .= '<td class="edit">'.trans('admin.edit').'</td>';
+                        $response .= '<td class="edit">'.trans('master::admin.edit').'</td>';
                     }
                 }
                 if(in_array('delete', $action_fields)){
                     if(request()->has('view-trash')&&request()->input('view-trash')=='true'){
-                        $response .= '<td class="restore">'.trans('admin.restore').'</td>';
+                        $response .= '<td class="restore">'.trans('master::admin.restore').'</td>';
                     } else {
-                        $response .= '<td class="delete">'.trans('admin.delete').'</td>';
+                        $response .= '<td class="delete">'.trans('master::admin.delete').'</td>';
                     }
                 }
             }
@@ -157,7 +157,7 @@ class AdminList {
                 if($appends){
                     $url .= '&'.$appends;
                 }
-                $value = 'Nº: '.count($item_val).' (<a href="'.$url.'">'.trans('admin.view').'</a>)';
+                $value = 'Nº: '.count($item_val).' (<a href="'.$url.'">'.trans('master::admin.view').'</a>)';
             } else if($field_type=='subchild') {
                 $value = 'Nº: '.count($item_val);
             } else if(($field_type=='image'||$field_type=='file')&&$item_val) {
@@ -274,7 +274,7 @@ class AdminList {
         if($appends){
             $url .= $string_separator.$appends;
         }
-        $action = trans('admin.create');
+        $action = trans('master::admin.create');
         return ' | <a class="admin_link" href="'.$url.'"><i class="fa fa-plus"></i> '.$action.'</a>';   
     }
 
@@ -287,7 +287,7 @@ class AdminList {
         if($appends!=NULL){
             $url .= '?'.$appends;
         }
-        return '<a href="'.$url.'">'.trans('admin.edit').'</a>';
+        return '<a href="'.$url.'">'.trans('master::admin.edit').'</a>';
     }
 
     public static function make_view($module, $model, $appends, $item, $lang_code = NULL) {
@@ -299,7 +299,7 @@ class AdminList {
         if($appends!=NULL){
             $url .= '?'.$appends;
         }
-        return '<a href="'.$url.'">'.trans('admin.view').'</a>';
+        return '<a href="'.$url.'">'.trans('master::admin.view').'</a>';
     }
 
     public static function make_delete($module, $model, $item, $restore = false) {
@@ -308,14 +308,9 @@ class AdminList {
             $delete_confirmation = NULL;
         } else {
             $action = 'delete';
-            $delete_confirmation = ' onclick="return confirm(\''.trans('admin.delete_confirmation').'\');"';
+            $delete_confirmation = ' onclick="return confirm(\''.trans('master::admin.delete_confirmation').'\');"';
         }
-        return '<a href="'.url($module.'/model/'.$model.'/'.$action.'/'.$item->id).'"'.$delete_confirmation.'>'.trans('admin.'.$action).'</a>';
-    }
-
-    public static function make_put_off($module, $model, $item) {
-        $url = url($module.'/model/'.$model.'/put-off/'.$item->id);
-        return '<a href="'.$url.'" onclick="return confirm(\''.trans('admin.put_off_confirmation').'\');"><div class="delete"><i class="fa fa-times"></i> '.trans('admin.put_off').' '.trans('admin.'.$model).'</div></a>';
+        return '<a href="'.url($module.'/model/'.$model.'/'.$action.'/'.$item->id).'"'.$delete_confirmation.'>'.trans('master::admin.'.$action).'</a>';
     }
 
     public static function make_panel_title($lang = false) {
@@ -392,11 +387,11 @@ class AdminList {
                 $final_archive_url = $url.$archive_url;
                 $archive_title = 'view_trash';
             }
-            $archive = ' | <a href="'.url($final_archive_url).'"><i class="fa fa-trash"></i> '.trans('admin.'.$archive_title).'</a>';
+            $archive = ' | <a href="'.url($final_archive_url).'"><i class="fa fa-trash"></i> '.trans('master::admin.'.$archive_title).'</a>';
         } else {
             $archive = '';
         }
-        $download = ' | <a href="'.url($url.$download_url).'"><i class="fa fa-download"></i> '.trans('admin.download').'</a>';
+        $download = ' | <a href="'.url($url.$download_url).'"><i class="fa fa-download"></i> '.trans('master::admin.download').'</a>';
         $result = '<h3>'.$title.$back.$create.$archive.$download.'</h3>';
         return $result;
     }

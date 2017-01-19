@@ -5,7 +5,7 @@
   @include('master::scripts.lightbox-css')
 @endsection
 @section('content')
-  <h3><a href="{{ url('admin/form-fields/'.$field->parent_id.'#field_'.$field->name) }}">Atrás</a> | {{ trans('admin.'.$action) }} Campo</h3>
+  <h3><a href="{{ url('admin/form-fields/'.$field->parent_id.'#field_'.$field->name) }}">Atrás</a> | {{ trans('master::admin.'.$action) }} Campo</h3>
   {!! Form::open(['name'=>$action.'_field', 'id'=>$action.'_field', 'role'=>'form', 'url'=>'admin/form-field', 'class'=>'form-horizontal prevent-double-submit', 'autocomplete'=>'off']) !!}
   <div class="row flex">
     {!! Field::form_input($i, $dt, ['name'=>'type', 'required'=>true, 'type'=>'select', 'options'=>$types_array], ['label'=>'Tipo de Campo', 'cols'=>6]+$type_class) !!}

@@ -43,6 +43,15 @@ return [
     'activity' => 'Activity|Activities',
     'inbox' => 'Inbox|Inbox',
     'notification' => 'Notification|Notifications',
+    'notification-message' => 'Mensaje de Notificación|Mensajes de Notificación',
+
+    // SECTIONS
+    'social-network' => 'Red Social|Redes Sociales',
+    'title' => 'Título|Títulos',
+    'content' => 'Contenido|Contenidos',
+    'banner' => 'Banner|Banners',
+    'contact' => 'Contacto|Contactos',
+    'form-contact' => 'Formulario de Contacto|Formularios de Contacto',
 
     // MENU
     'my_dashboard' => 'My Dashboard',

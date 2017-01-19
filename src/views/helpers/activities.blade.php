@@ -5,7 +5,7 @@
   	  <div class="accordion" data-accordion>
         <div data-control>
       	  <h4><i class="fa fa-caret-down"></i> 
-      	  	{{ trans('admin.'.$activity->action).' '.trans('admin.by').' '.$activity->username }}
+      	  	{{ trans('master::admin.'.$activity->action).' '.trans('master::admin.by').' '.$activity->username }}
             {{ ' ('.$activity->created_at->format('Y-m-d H:i').')' }}
       	  </h4>
         </div>

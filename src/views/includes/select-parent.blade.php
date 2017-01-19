@@ -3,7 +3,7 @@
 @section('content')
   @if($parent)
     <h3>Seleccionar Campo Predefinido</h3>
-    <h4>Elija una opción para "{{ trans('fields.'.$parent) }}":</h4>
+    <h4>Elija una opción para "{{ trans('master::fields.'.$parent) }}":</h4>
     @if($single_model=='indicator')
     <?php $indicator_key = 19; ?>
     <h5><a href="{{ $url.$indicator_key.'&type=custom&custom=estudiante' }}">Crear Indicador Dinámico para Estudiantes</a></h5>

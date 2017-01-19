@@ -12,13 +12,14 @@ class Notification extends Model {
 	/* Creating rules */
 	public static $rules_create = array(
 		'user_id'=>'required',
-		'message'=>'required',
+		'name'=>'required',
 	);
 
 	/* Updating rules */
 	public static $rules_edit = array(
+		'id'=>'required',
 		'user_id'=>'required',
-		'message'=>'required',
+		'name'=>'required',
 	);
 
     public function node() {

@@ -65,12 +65,12 @@
     <body>
         <div class="container">
             <div class="top">
-                <div class="top_title">{{ trans('admin.sorry') }}</div>
+                <div class="top_title">{{ trans('master::admin.sorry') }}</div>
             </div>
             <div class="content">
-                <div class="title">{{ trans('admin.404') }}</div>
-                <p>{{ trans('admin.404_description') }}.</p>
-                <a href="{{ url('') }}"><div class="button">{{ trans('admin.404_button') }}</div></a>
+                <div class="title">{{ trans('master::admin.404') }}</div>
+                <p>{{ trans('master::admin.404_description') }}.</p>
+                <a href="{{ url('') }}"><div class="button">{{ trans('master::admin.404_button') }}</div></a>
             </div>
         </div>
     </body>

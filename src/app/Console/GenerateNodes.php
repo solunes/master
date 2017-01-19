@@ -41,15 +41,10 @@ class GenerateNodes extends Command
         \App::setLocale('es');
         $menu_dashboard->save();
         foreach($nodes as $node){
-          if($node->location=='package'){
-            $lang_folder = 'master::model.';
-          } else {
-            $lang_folder = 'model.';
-          }
           foreach($languages as $language){
             \App::setLocale($language->code);
-            $node->translateOrNew($language->code)->singular = trans_choice($lang_folder.$node->name, 1);
-            $node->translateOrNew($language->code)->plural = trans_choice($lang_folder.$node->name, 0);
+            $node->translateOrNew($language->code)->singular = trans_choice('master::model.'.$node->name, 1);
+            $node->translateOrNew($language->code)->plural = trans_choice('master::model.'.$node->name, 0);
           }
           \App::setLocale('es');
           $node->save();
@@ -114,14 +109,9 @@ class GenerateNodes extends Command
           foreach($node->fields as $field) {
             $saved = false;
             if(!$field->label){
-                if($node->location=='package'){
-                    $lang_folder = 'master::fields.';
-                } else {
-                    $lang_folder = 'fields.';
-                }
                 foreach($languages as $language){
                   \App::setLocale($language->code);
-                  $field->translateOrNew($language->code)->label = trans($lang_folder.$field->trans_name);
+                  $field->translateOrNew($language->code)->label = trans('master::fields.'.$field->trans_name);
                 }
                 \App::setLocale('es');
                 $saved = true;

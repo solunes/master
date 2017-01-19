@@ -2,7 +2,7 @@
   $(function () {
       $('#list-graph-<?php echo $graph_name; ?>').highcharts({
           title: {
-            text: 'Reporte en Barra: {{ trans("fields.".$column) }}',
+            text: 'Reporte en Barra: {{ trans("master::fields.".$column) }}',
               x: -20 //center
           },
           xAxis: {
@@ -26,7 +26,7 @@
           },
           series: [
             @foreach($graph_items as $item)
-              {name: <?php echo '"'.trans('admin.'.$item->$column).' ('.$item->total.')."'; ?>, data: {{ $graph_subitems[$item->$column] }}},
+              {name: <?php echo '"'.trans('master::admin.'.$item->$column).' ('.$item->total.')."'; ?>, data: {{ $graph_subitems[$item->$column] }}},
             @endforeach
           ]
       });

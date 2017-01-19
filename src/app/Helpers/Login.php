@@ -100,7 +100,7 @@ class Login {
     }
 
     public static function redirect_dashboard($error) {
-        return redirect('admin')->with('message_error', trans('admin.'.$error));
+        return redirect('admin')->with('message_error', trans('master::admin.'.$error));
     }
 
 }

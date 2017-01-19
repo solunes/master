@@ -16,9 +16,9 @@ class Field {
         }
         if($action=='edit'){
             $response .= Form::hidden('id', $i->id);
-            $response .= Form::submit(trans('admin.save'), array('class'=>'btn btn-site'));
+            $response .= Form::submit(trans('master::admin.save'), array('class'=>'btn btn-site'));
         } else {
-            $response .= Form::submit(trans('admin.'.$action), array('class'=>'btn btn-site'));
+            $response .= Form::submit(trans('master::admin.'.$action), array('class'=>'btn btn-site'));
         }
         $response .= '</div>';
         return $response;
@@ -85,7 +85,7 @@ class Field {
         } else if(isset($field['final_label'])) {
             $label = $field['final_label'];
         } else {
-            $label = trans('fields.'.str_replace('_id','',$fixed_name));
+            $label = trans('master::fields.'.str_replace('_id','',$fixed_name));
         }
         if($required==true){
             $label .= ' (*)';
@@ -94,7 +94,7 @@ class Field {
             $label .= ' <a href="#" class="help" title="'.$field['tooltip'].'"><i class="fa fa-question-circle"></i></a>';
         }
         if(isset($field['filter'])){
-            $label .= ' <a href="'.url('admin/delete-filter/'.$field['filter']).'" onclick="return confirm(\''.trans('admin.delete_confirmation').'\');">( X )</a>';
+            $label .= ' <a href="'.url('admin/delete-filter/'.$field['filter']).'" onclick="return confirm(\''.trans('master::admin.delete_confirmation').'\');">( X )</a>';
         }
         if(isset($field['message'])&&$field['message']){
             $label .= '<div class="field-message">'.$field['message'].'</div>';
@@ -301,9 +301,9 @@ class Field {
           $response = '<div class="file_container">';
           $response .= '<div class="file_limitations"><p>';
           if($type=='file'){
-            $response .= trans('admin.file_limitations');
+            $response .= trans('master::admin.file_limitations');
           } else if($type=='image') {
-            $response .= trans('admin.image_limitations');
+            $response .= trans('master::admin.image_limitations');
           }
           $response .= '</p></div>';
           if(isset($array['rel'])){

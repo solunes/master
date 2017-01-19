@@ -24,7 +24,7 @@ class AccountController extends Controller {
 
     public function postPassword(Request $request) {
 	  $error_messages = array(
-		'password.confirmed' => trans('form.password_match_error'),
+		'password.confirmed' => trans('master::form.password_match_error'),
   	  );
 	  $validator = Validator::make($request->all(), User::$rules_edit_pass, $error_messages);
 	  if ($validator->passes()) {
@@ -39,9 +39,9 @@ class AccountController extends Controller {
 		} else {
 			$redirect = 'admin';
 		}
-		return redirect($redirect)->with('message_success', trans('form.password_edited'));
+		return redirect($redirect)->with('message_success', trans('master::form.password_edited'));
 	  } else {
-		return redirect($this->prev)->with(array('message_error' => trans('form.error_form')))->withErrors($validator)->withInput();
+		return redirect($this->prev)->with(array('message_error' => trans('master::form.error_form')))->withErrors($validator)->withInput();
 	  }
     }
 	

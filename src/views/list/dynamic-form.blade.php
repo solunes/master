@@ -21,7 +21,7 @@
           <tr>
             <td>{{ $item->id }}</td>
             <td>{{ $item->plural }}</td>
-            <td>{{ trans('admin.'.$item->permission) }}</td>
+            <td>{{ trans('master::admin.'.$item->permission) }}</td>
             <td>{{ $item->fields()->displayItem(['show','admin'])->count() }} | <a href="{{ url('admin/form-fields/'.$item->id) }}">Editar Campos</a></td>
             <td><a target="_blank" href="{{ url('admin/export-form/'.$item->id) }}">PDF</a></td>
             <td class="edit"><a href="{{ url('admin/form/edit/'.$item->id) }}">Editar</a></td>
@@ -35,6 +35,6 @@
       </tbody>
     </table>
   @else
-    <p>{{ trans('admin.no_items') }}</p>
+    <p>{{ trans('master::admin.no_items') }}</p>
   @endif
 @endsection

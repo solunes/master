@@ -43,7 +43,7 @@ class Activity extends Model {
     	if($this->user){
     		return $this->user->name;
     	} else {
-        	return trans('admin.'.$value);
+        	return trans('master::admin.'.$value);
     	}
     }
 

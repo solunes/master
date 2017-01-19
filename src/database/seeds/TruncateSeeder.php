@@ -22,6 +22,7 @@ class TruncateSeeder extends Seeder {
         \Solunes\Master\App\InboxUser::truncate();
         \Solunes\Master\App\InboxMessage::truncate();
         \Solunes\Master\App\Inbox::truncate();
+        \Solunes\Master\App\NotificationMessage::truncate();
         \Solunes\Master\App\Notification::truncate();
         \Solunes\Master\App\Activity::truncate();
         DB::table('permission_role')->truncate();
