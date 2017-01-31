@@ -38,8 +38,8 @@ class MasterDatabase extends Migration
             $table->integer('site_id')->unsigned();
             $table->string('locale')->index();
             $table->string('title');
-            $table->text('description');
-            $table->string('keywords');
+            $table->text('description')->nullable();
+            $table->string('keywords')->nullable();
             $table->unique(['site_id','locale']);
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
         });

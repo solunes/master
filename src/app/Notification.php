@@ -30,4 +30,8 @@ class Notification extends Model {
         return $this->belongsTo('App\User');
     }
 
+    public function notification_messages() {
+        return $this->hasMany('Solunes\Master\App\NotificationMessage', 'parent_id');
+    }
+
 }
