@@ -8,5 +8,5 @@ class FieldTranslation extends Model {
 	
 	protected $table = 'field_translation';
     public $timestamps = false;
-    protected $fillable = ['label'];	
+    protected $fillable = ['label','tooltip','message'];	
 }

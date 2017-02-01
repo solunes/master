@@ -155,8 +155,6 @@ class MasterDatabase extends Migration
             $table->boolean('required')->default(0);
             $table->boolean('new_row')->default(0);
             $table->boolean('preset')->default(0);
-            $table->string('tooltip')->nullable();
-            $table->string('message')->nullable();
             $table->string('permission')->nullable();
             $table->string('child_table')->nullable();
             $table->string('value')->nullable();
@@ -169,6 +167,8 @@ class MasterDatabase extends Migration
             $table->integer('field_id')->unsigned();
             $table->string('locale')->index();
             $table->string('label');
+            $table->text('tooltip')->nullable();
+            $table->text('message')->nullable();
             $table->unique(['field_id','locale']);
             $table->foreign('field_id')->references('id')->on('fields')->onDelete('cascade');
         });

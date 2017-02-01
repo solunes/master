@@ -10,8 +10,8 @@ class Field extends Model {
     public $timestamps = true;
     protected $appends = ['options','extras','final_label'];
 
-    public $translatedAttributes = ['label'];
-    protected $fillable = ['label'];
+    public $translatedAttributes = ['label','tooltip','message'];
+    protected $fillable = ['label','tooltip','message'];
     protected $dates = ['deleted_at'];
 
     use \Dimsav\Translatable\Translatable;
