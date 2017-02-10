@@ -159,7 +159,7 @@ class AdminController extends Controller {
 	public function getModalFilter($category, $type, $category_id, $node_name) {
 		$rejected_ids = [];
 		$node = \Solunes\Master\App\Node::where('name', $node_name)->first();
-		$filters = $node->filters()->checkCategory($category);
+		$filters = $node->filters()->checkCategory($category)->checkDisplay();
 		if($type=='admin'){
         	$rejected_ids = $filters->where('type','field')->lists('parameter')->toArray();
 		} else  {

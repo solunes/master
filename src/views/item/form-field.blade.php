@@ -87,7 +87,7 @@
                 foreach(explode(',', $si->trigger_value) as $subfield){
                   $subarray[] = $sub_field->field_options()->where('name', $subfield)->first()->label;
                 }
-                $new_input = implode(',', $subarray); ?>
+                $new_input = implode('|', $subarray); ?>
                 <td>{!! Field::form_input(NULL, $dt, ['name'=>'trigger_value', 'required'=>true, 'type'=>'string'], ['label'=>'Nombre de Opción', 'cols'=>6, 'subtype'=>'multiple', 'subinput'=>'conditionals', 'subcount'=>$key, 'value'=>$new_input]) !!}</td>
                 <td>
                   <a class="delete_row" rel="conditionals" href="#">X</a>

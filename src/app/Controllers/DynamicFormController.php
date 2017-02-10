@@ -280,7 +280,7 @@ class DynamicFormController extends Controller {
                 foreach(request()->input('conditionals_trigger_value') as $input_key => $input){
                     $sub_field = \Solunes\Master\App\Field::where('name', request()->input('conditionals_trigger_field')[$input_key])->first();
                     $subarray = [];
-                    foreach(explode(',', $input) as $subinput){
+                    foreach(explode('|', $input) as $subinput){
                         if($sub_field_name = $sub_field->field_options()->whereTranslation('label', $subinput)->first()){
                             $subarray[] = $sub_field_name->name;
                         }
