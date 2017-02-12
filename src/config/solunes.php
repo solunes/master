@@ -4,7 +4,7 @@ return [
 	// GLOBAL
 	'vendor_path' => env('SOLUNES_PATH', 'vendor/solunes/master'),
 	'blocked_activities' => [],
-	'image_quality' => 75,
+	'image_quality' => 85,
 
 	// CUSTOM FUNC
 	'get_page_array' => false,

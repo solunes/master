@@ -47,13 +47,13 @@ class Asset {
 		    	$encoded_file = $file;
 		    }
 		    if($type=='original'){
-				$img = \Image::make($encoded_file)->encode($size_extension, $image_quality)->save($new_filename);
+				$img = \Image::make($encoded_file)->encode($size_extension)->save($new_filename, $image_quality);
 		    } else {
 			    try {
 					$img = \Image::make($encoded_file)->$type($size['width'], $size['height'], function ($constraint) {
 						$constraint->aspectRatio();
 		    			//$constraint->upsize();
-					})->encode($size_extension, $image_quality)->save($new_filename);
+					})->encode($size_extension)->save($new_filename, $image_quality);
 				} catch (\Intervention\Image\Exception\NotReadableException $e) {
 					return false;
 				}
