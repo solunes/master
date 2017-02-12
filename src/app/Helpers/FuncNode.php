@@ -166,7 +166,6 @@ class FuncNode {
 
     public static function node_check_model($node) {
         $model = new $node->model;
-        // Si es formulario dinamico, asignar nombre de tabla a modelo.
         if($node->dynamic&&$node->parent_id==NULL){
             $model = $model->fromTable($node->table_name);
         }

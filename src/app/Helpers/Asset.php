@@ -34,6 +34,7 @@ class Asset {
 		  $new_filename = public_path('tmp/'.$filename.'.'.$size_extension);
 		  $image_sizes = $image_folder->image_sizes()->get(['code','type','width','height'])->toArray();
 		  array_push($image_sizes, ['code'=>'mini','type'=>'fit','width'=>150,'height'=>150]);
+		  $image_quality = config('solunes.image_quality');
 		  foreach($image_sizes as $size){
 		    $type = $size['type'];
 		    if($encode===true){
@@ -46,13 +47,13 @@ class Asset {
 		    	$encoded_file = $file;
 		    }
 		    if($type=='original'){
-				$img = \Image::make($encoded_file)->encode($size_extension)->save($new_filename);
+				$img = \Image::make($encoded_file)->encode($size_extension, $image_quality)->save($new_filename);
 		    } else {
 			    try {
 					$img = \Image::make($encoded_file)->$type($size['width'], $size['height'], function ($constraint) {
 						$constraint->aspectRatio();
 		    			//$constraint->upsize();
-					})->encode($size_extension)->save($new_filename);
+					})->encode($size_extension, $image_quality)->save($new_filename);
 				} catch (\Intervention\Image\Exception\NotReadableException $e) {
 					return false;
 				}
