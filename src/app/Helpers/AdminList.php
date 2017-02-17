@@ -81,8 +81,8 @@ class AdminList {
 
         if(request()->has('download-excel')){
             return AdminList::generate_query_excel($array);
-        } else if(config('solunes.list_extra_actions')){
-            return \CustomFunc::list_extra_actions($array);
+        } else if(config('solunes.list_extra_actions')&&$extra_actions = \CustomFunc::list_extra_actions($array)){
+            return $extra_actions;
         } else {
             return view('master::list.general-list', $array);
         }
