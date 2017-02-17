@@ -81,6 +81,8 @@ class AdminList {
 
         if(request()->has('download-excel')){
             return AdminList::generate_query_excel($array);
+        } else if(config('solunes.list_extra_actions')){
+            return \CustomFunc::list_extra_actions($array);
         } else {
             return view('master::list.general-list', $array);
         }
@@ -350,9 +352,6 @@ class AdminList {
             if(in_array('create', $action_fields)){
                 $create = AdminList::make_create($module, $node->name, $appends, $id);
             } 
-            if(in_array('create_anonym', $action_fields)){
-                $create .= ' | <a target="_blank" href="'.url('formulario/'.$node->name).'"><i class="fa fa-plus"></i> Link Anonimo</a>';
-            }
             $back_url = url($module.'/model-list/'.$parent);
             if(request()->has('parameters')){
                 $parameters = json_decode(request()->input('parameters'));
@@ -363,9 +362,6 @@ class AdminList {
             if(in_array('create', $action_fields)){
                 $create = AdminList::make_create($module, $node->name, $appends);
             } 
-            if(in_array('create_anonym', $action_fields)){
-                $create .= ' | <a target="_blank" href="'.url('formulario/'.$node->name).'"><i class="fa fa-plus"></i> Link Anonimo</a>';
-            }
             $back = '';
         }
         $url = request()->fullUrl();
@@ -392,7 +388,12 @@ class AdminList {
             $archive = '';
         }
         $download = ' | <a href="'.url($url.$download_url).'"><i class="fa fa-download"></i> '.trans('master::admin.download').'</a>';
-        $result = '<h3>'.$title.$back.$create.$archive.$download.'</h3>';
+        if(config('solunes.list_header_extra_buttons')){
+            $extras = \CustomFunc::list_header_extra_buttons($url, $node, $action_fields, $id);
+        } else {
+            $extras = NULL;
+        }
+        $result = '<h3>'.$title.$back.$create.$archive.$download.$extras.'</h3>';
         return $result;
     }
 

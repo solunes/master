@@ -12,6 +12,8 @@ return [
     'after_migrate' => false,
 	'before_seed' => false,
 	'after_seed' => false,
+	'list_header_extra_buttons' => false,
+	'list_extra_actions' => false,
 	'get_sitemap_array' => false,
 	'get_indicator_result' => false,
 	'update_indicator_values' => false,
