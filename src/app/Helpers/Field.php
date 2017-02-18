@@ -239,6 +239,7 @@ class Field {
         $array = [];
         if($data_type=='view'){
             $array = ['disabled'=>true];
+            $name = rand(10000000,99999999).'_'.$name;
         }
         if($type=='score'||$type=='main_score'){
             $option_array = ['1'=>'1', '2'=>'2', '3'=>'3', '4'=>'4', '5'=>'5'];
