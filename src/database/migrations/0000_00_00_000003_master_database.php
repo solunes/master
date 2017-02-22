@@ -52,7 +52,7 @@ class MasterDatabase extends Migration
             $table->string('image')->nullable();
             $table->string('customized_name')->nullable();
             $table->string('meta_title')->nullable();
-            $table->string('meta_description')->nullable();
+            $table->text('meta_description')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');

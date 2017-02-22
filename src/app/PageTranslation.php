@@ -16,13 +16,21 @@ class PageTranslation extends Model {
     public function sluggable(){
         return [
             'slug' => [
-                'source' => 'name'
+                'source' => 'slugtitle'
             ]
         ];
     }
 	
     public function page() {
         return $this->belongsTo('Solunes\Master\App\Page', 'page_id', 'id');
+    }
+    
+    public function getSlugtitleAttribute() {
+        $slug = $this->name;
+        if($this->meta_title){
+            $slug .= '-'.$this->meta_title;
+        }
+        return $slug;
     }
 
 }

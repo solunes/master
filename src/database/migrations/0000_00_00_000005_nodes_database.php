@@ -17,6 +17,8 @@ class NodesDatabase extends Migration
             $table->increments('id');
             $table->integer('site_id')->unsigned()->default(1);
             $table->string('name');
+            $table->string('reply_to')->nullable();
+            $table->string('reply_to_name')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
@@ -56,6 +58,7 @@ class NodesDatabase extends Migration
             $table->integer('parent_id')->unsigned();
             $table->enum('type', ['dashboard','email','sms','app'])->default('dashboard');
             $table->text('message')->nullable();
+            $table->boolean('is_sent')->nullable()->default(0);
             $table->foreign('parent_id')->references('id')->on('notifications')->onDelete('cascade');
         });
         Schema::create('inbox', function(Blueprint $table) {

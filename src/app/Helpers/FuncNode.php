@@ -323,33 +323,66 @@ class FuncNode {
         return true;
     }
 
-    public static function make_notitification($user_id, $url, $message) {
-      if($user = \App\User::find($user_id)){
-        $email = false;
-        $sms = false;
+    public static function make_notitification($name, $user_ids, $url, $message, $email_parameters = []) {
+      // Añadir array si es que se manda solo un ID
+      if(!is_array($user_ids)){
+        $user_ids = [$user_ids];
+      }
+      $email_name = 'notifications.'.$name;
+      foreach(\App\User::whereIn('id', $user_ids)->get() as $user){
+        $notifications_array = ['dashboard'];
         if($user->email&&$user->notifications_email){
           // ENVIAR EMAIL
-          $email = true;
+          array_push($notifications_array, 'email');
         }
         if($user->cellphone&&$user->notifications_sms){
           // ENVIAR SMS
-          $sms = true;
-        }
-        if($email&&$sms){
-          $type = 'all';
-        } else if($email){
-          $type = 'email';
-        } else if($sms){
-          $type = 'sms';
-        } else {
-          $type = 'none';
+          array_push($notifications_array, 'sms');
         }
         $notification = new \Solunes\Master\App\Notification;
-        $notification->type = $type;
-        $notification->user_id = $user_id;
+        $notification->name = $name;
+        $notification->user_id = $user->id;
         $notification->url = $url;
-        $notification->message = $message;
         $notification->save();
+        foreach($notifications_array as $type){
+          $final_message = $message;
+          if($type=='dashboard'){
+            // ENVIAR PUSH NOTIFICATION A APP
+            $sent = true;
+          } else if($type=='email'){
+            // ENVIAR EMAIL
+            $vars = [];
+            $vars_if = [];
+            $vars_foreach = [];
+            if(isset($email_parameters['name'])){
+              $email_name = $email_parameters['name'];
+            }
+            if(isset($email_parameters['vars'])){
+              $vars = $email_parameters['vars'];
+            }
+            if(isset($email_parameters['vars_if'])){
+              $vars_if = $email_parameters['vars_if'];
+            }
+            if(isset($email_parameters['vars_foreach'])){
+              $vars_foreach = $email_parameters['vars_foreach'];
+            }
+            $sent = \Func::make_email($email_name, [$user->email], $vars, $vars_if, $vars_foreach);
+          } else if($type=='sms'){
+            // ENVIAR SMS
+            // TODO: INTEGRAR CON AWS SNS PARA HACER UN POST Y REGISTRARLO EN ALGUNA APP DE SMS
+            $sent = false;
+          } else if($type=='app'){
+            // ENVIAR PUSH NOTIFICATION A APP
+            // TODO: INTEGRAR CON ALGUNA HERRAMIENTA PARA HACER PUSHES
+            $sent = false;
+          }
+          $subnotification = new \Solunes\Master\App\NotificationMessage;
+          $subnotification->parent_id = $notification->id;
+          $subnotification->type = $type;
+          $subnotification->is_sent = $sent;
+          $subnotification->message = $message;
+          $subnotification->save();
+        }
         return true;
       } else {
         return false;
@@ -390,7 +423,17 @@ class FuncNode {
           $msg = str_replace(array_keys($vars), array_values($vars), html_entity_decode($msg));
         }
         \Mail::send('master::emails.default', ['msg' => $msg], function ($m) use($email, $to_array, $msg) {
-            $m->to($to_array)->subject($email->title);
+            if($email->reply_to){
+              $reply_to = $email->reply_to;
+            } else {
+              $reply_to = 'info@'.\Solunes\Master\App\Site::find(1)->domain;
+            }
+            if($email->reply_to_name){
+              $reply_to_name = $email->reply_to_name;
+            } else {
+              $reply_to_name = \Solunes\Master\App\Site::find(1)->name;
+            }
+            $m->to($to_array)->replyTo($reply_to, $reply_to_name)->subject($email->title);
         });
         return true;
       } else {
