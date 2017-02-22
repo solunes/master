@@ -383,10 +383,8 @@ class FuncNode {
           $subnotification->message = $message;
           $subnotification->save();
         }
-        return true;
-      } else {
-        return false;
       }
+      return true;
     }
 
     public static function check_var($name) {
