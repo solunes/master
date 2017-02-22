@@ -339,7 +339,7 @@ class FuncNode {
           // ENVIAR SMS
           array_push($notifications_array, 'sms');
         }
-        if(config('solunes.send_notification_app'){
+        if(config('solunes.send_notification_app')){
           // ENVIAR APP PUSH
           array_push($notifications_array, 'app');
         }
