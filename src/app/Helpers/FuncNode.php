@@ -423,6 +423,9 @@ class FuncNode {
         \Mail::send('master::emails.default', ['msg' => $msg], function ($m) use($email, $to_array, $msg) {
             if($email->reply_to){
               $reply_to = $email->reply_to;
+              if($reply_to=='sender'){
+                $reply_to = $to_array[0];
+              }
             } else {
               $find = ['http://','https://','www','/'];
               $replace = [''];
