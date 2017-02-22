@@ -5,6 +5,8 @@ return [
 	'vendor_path' => env('SOLUNES_PATH', 'vendor/solunes/master'),
 	'blocked_activities' => [],
 	'image_quality' => 85,
+	'send_notification_sms' => false,
+	'send_notification_app' => false,
 
 	// CUSTOM FUNC
 	'get_page_array' => false,

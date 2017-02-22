@@ -335,9 +335,13 @@ class FuncNode {
           // ENVIAR EMAIL
           array_push($notifications_array, 'email');
         }
-        if($user->cellphone&&$user->notifications_sms){
+        if(config('solunes.send_notification_sms')&&$user->cellphone&&$user->notifications_sms){
           // ENVIAR SMS
           array_push($notifications_array, 'sms');
+        }
+        if(config('solunes.send_notification_app'){
+          // ENVIAR APP PUSH
+          array_push($notifications_array, 'app');
         }
         $notification = new \Solunes\Master\App\Notification;
         $notification->name = $name;
