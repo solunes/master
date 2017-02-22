@@ -427,14 +427,11 @@ class FuncNode {
         \Mail::send('master::emails.default', ['msg' => $msg], function ($m) use($email, $to_array, $msg) {
             if($email->reply_to){
               $reply_to = $email->reply_to;
-              if($reply_to=='sender'){
-                $reply_to = $to_array[0];
-              }
             } else {
               $find = ['http://','https://','www','/'];
               $replace = [''];
               $domain = str_replace($find, $replace, \Solunes\Master\App\Site::find(1)->domain);
-              $reply_to = 'info@'.$domain;
+              $reply_to = 'no-reply@'.$domain;
             }
             if($email->reply_to_name){
               $reply_to_name = $email->reply_to_name;
