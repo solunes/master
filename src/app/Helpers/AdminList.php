@@ -45,7 +45,7 @@ class AdminList {
             } else {
                 $display_fields = ['show'];
             }
-            $array['fields'] = $node->fields()->displayList($display_fields)->where('type', '!=', 'field')->with('translations')->get();
+            $array['fields'] = $node->fields()->displayList($display_fields)->where('type', '!=', 'field')->with('translations', 'field_options', 'field_extras')->get();
             $relation_fields = $node->fields()->displayList($display_fields)->where('type','relation')->get();
             if(count($relation_fields)>0){
                 foreach($relation_fields as $relation){
@@ -147,7 +147,7 @@ class AdminList {
                     $value = substr($value, 0, 300).'...';
                 }
             } else if(($item_val||$item_val===0)&&($field_type=='select'||$field_type=='radio')) {
-                $value = $field->field_options()->where('name', $item_val)->first()->label;
+                $value = $field->field_options->where('name', $item_val)->first()->label;
             } else if($field_type=='relation') {
                 if($item->$field_trans_name){
                     $value = $item->$field_trans_name->name;
@@ -169,7 +169,7 @@ class AdminList {
                     $array_value = [$item_val];
                 }
                 $value = '';
-                $folder = $field->field_extras()->where('type', 'folder')->first()->value;
+                $folder = $field->field_extras->where('type', 'folder')->first()->value;
                 foreach($array_value as $key => $val){
                     $count++;
                     if($count>1){
