@@ -27,8 +27,12 @@ $(document).ready(function(){
     $('#'+rel+'>tbody>tr:last').clone().insertAfter('#'+rel+'>tbody>tr:last');
     $('#'+rel+'>tbody>tr:last input, #'+rel+'>tbody>tr:last select, #'+rel+'>tbody>tr:last textarea').each(function(){
       var new_rel = $(this).attr('rel');
+      new_rel = new_rel+'['+count+']';
+      if($(this).attr('data-checkbox')){
+        new_rel = new_rel + '[]';
+      }
       $(this).attr({
-        'name': function(_, name) { return new_rel+'['+count+']' },
+        'name': function(_, name) { return new_rel },
       });
     });
     $('#'+rel+'>tbody>tr:last input.text-control, #'+rel+'>tbody>tr:last textarea.text-control').each(function(){

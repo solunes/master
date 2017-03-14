@@ -184,13 +184,17 @@ class Field {
 
         // RESPONSE
         if($subinput=='multiple') {
-            $response = Field::form_input_builder($name, $type, $parameters, $array, $value, $data_type);
+            if($type=='checkbox'||$type=='radio'||$type=='score'){
+                $response = Field::form_checkbox_input($name, $type, $parameters, $array, $label, $col, $i, $value, $data_type);
+            } else {
+                $response = Field::form_input_builder($name, $type, $parameters, $array, $value, $data_type);
+            }
             if(\Session::has('errors')&&\Session::get('errors')->default->first($name)){
                 $response .= '<div class="error">'.\Session::get('errors')->default->first($name).'</div>';
             }
         } else if($type=='checkbox'||$type=='radio'||$type=='score'){
-            $response = Field::form_checkbox_builder($name, $type, $parameters, $label, $col, $i, $value, $data_type);
-        } else  if($type=='hidden') {
+            $response = Field::form_checkbox_builder($name, $type, $parameters, $array, $label, $col, $i, $value, $data_type);
+        } else if($type=='hidden') {
             $response = Field::form_input_builder($name, $type, $parameters, $array, $value, $data_type);
         } else {
             $response = Field::form_field_builder($name, $type, $parameters, $array, $label, $col, $i, $value, $data_type);
@@ -235,8 +239,22 @@ class Field {
         return $response;
     }
 
-    public static function form_checkbox_builder($name, $type, $parameters, $label, $col, $i, $value, $data_type) {
-        $array = [];
+    public static function form_checkbox_builder($name, $type, $parameters, $array, $label, $col, $i, $value, $data_type) {
+        $response = '<div id="field_'.$name.'" class="col-sm-'.$col.' '.$parameters['field_class'].'">';
+        $response .= '<label for="'.$name.'" class="control-label">'.$label.'</label>';
+        $response .= \Field::form_checkbox_input($name, $type, $parameters, $array, $label, $col, $i, $value, $data_type);
+        if(\Session::has('errors')&&\Session::get('errors')->default->first($name)){
+            $response .= '<div class="error col-sm-12">'.\Session::get('errors')->default->first($name).'</div>';
+        }
+        if($data_type=='editor'){
+            $response .= \Field::generate_editor_fields($name, $parameters['hidden_message']);
+        }
+        $response .= '</div>';
+        return $response;
+    }
+
+    public static function form_checkbox_input($name, $type, $parameters, $array, $label, $col, $i, $value, $data_type) {
+        $array['data-checkbox'] = 'true';
         if($data_type=='view'){
             $array = ['disabled'=>true];
             $name = rand(10000000,99999999).'_'.$name;
@@ -246,8 +264,7 @@ class Field {
         } else {
             $option_array = $parameters['options'];
         }
-        $response = '<div id="field_'.$name.'" class="col-sm-'.$col.' '.$parameters['field_class'].'">';
-        $response .= '<label for="'.$name.'" class="control-label">'.$label.'</label>';
+        $response = NULL;
         if($type=='checkbox'){
         $response .= '<div class="mt-checkbox-inline">';
         } else {
@@ -262,13 +279,7 @@ class Field {
             }
             $response .= '<span></span></label>';
         }
-        if(\Session::has('errors')&&\Session::get('errors')->default->first($name)){
-            $response .= '<div class="error col-sm-12">'.\Session::get('errors')->default->first($name).'</div>';
-        }
-        if($data_type=='editor'){
-            $response .= \Field::generate_editor_fields($name, $parameters['hidden_message']);
-        }
-        $response .= '</div></div>';
+        $response .= '</div>';
         return $response;
     }
 
