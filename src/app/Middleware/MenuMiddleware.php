@@ -30,7 +30,7 @@ class MenuMiddleware
           $login->append('</span>');
         });
       } else {
-        $menu_options = \Solunes\Master\App\Menu::where('site_id', 1)->menuQuery('admin', 1)->get();
+        $menu_options = \Solunes\Master\App\Menu::where('site_id', 1)->isActive()->menuQuery('admin', 1)->get();
         Menu::make('main', function($menu) use($request, $menu_options, $user_permissions) {
           foreach($menu_options as $menu_option){
             if(!$menu_option->permission||(auth()->check()&&$user_permissions->contains($menu_option->permission))){

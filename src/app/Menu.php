@@ -37,8 +37,12 @@ class Menu extends Model {
         return $query->where('menu_type', $type)->where('level', $level)->with($menu_includes)->orderBy('order','ASC');
     }
 
+    public function scopeIsActive($query) {
+        return $query->where('active', 1);
+    }
+
     public function children() {
-        return $this->hasMany('Solunes\Master\App\Menu', 'parent_id', 'id')->orderBy('order','ASC');
+        return $this->hasMany('Solunes\Master\App\Menu', 'parent_id', 'id')->where('active', 1)->orderBy('order','ASC');
     }
 
     public function parent() {

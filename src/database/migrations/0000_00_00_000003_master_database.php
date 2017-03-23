@@ -69,6 +69,7 @@ class MasterDatabase extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('site_id')->unsigned()->default(1);
+            $table->boolean('active')->nullable()->default(1);
             $table->enum('menu_type', ['site', 'admin'])->default('site');
             $table->integer('order')->nullable()->default(0);
             $table->integer('level')->nullable()->default(1);
