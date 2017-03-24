@@ -27,7 +27,10 @@ class MasterServiceProvider extends ServiceProvider
         ], 'assets');
 
         /* Registrar ServiceProvider Internos */
-        //$this->app->register('\Solunes\Master\App\Providers\AppServiceProvider');
+        $this->app->register('\Solunes\Master\App\Providers\AuthServiceProvider');
+        $this->app->register('\Solunes\Master\App\Providers\ComposerServiceProvider');
+        $this->app->register('\Solunes\Master\App\Providers\EventServiceProvider');
+        $this->app->register('\Solunes\Master\App\Providers\RouteServiceProvider');
 
         /* Registrar Alias */
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
