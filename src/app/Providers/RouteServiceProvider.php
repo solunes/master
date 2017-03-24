@@ -3,7 +3,7 @@
 namespace Solunes\Master\App\Providers;
 
 use Illuminate\Routing\Router;
-use App\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -37,7 +37,24 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map(Router $router)
     {
-        $this->mapWebRoutes($router);
+        //$this->mapWebRoutes($router);
+    }
+
+    /**
+     * Define the "admin" routes for the application.
+     *
+     * These routes all receive session state, CSRF protection, etc.
+     *
+     * @param  \Illuminate\Routing\Router  $router
+     * @return void
+     */
+    protected function mapAdminRoutes(Router $router)
+    {
+        $router->group(['namespace' => $this->solunesNamespace, 'middleware' => 'admin'], function ($router) {
+            require __DIR__ . '/../Routes/routes.php';
+            require __DIR__ . '/../Routes/sitemap.php';
+            require __DIR__ . '/../Routes/artisan.php';
+        });
     }
 
     /**
@@ -50,12 +67,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes(Router $router)
     {
-        $router->group(['namespace' => $this->solunesNamespace, 'middleware' => 'admin'], function ($router) {
-            require __DIR__ . '/../Routes/routes.php';
-            require __DIR__ . '/../Routes/sitemap.php';
-            require __DIR__ . '/../Routes/artisan.php';
-        });
-        parent::mapWebRoutes($router);
+        //
     }
 
 }

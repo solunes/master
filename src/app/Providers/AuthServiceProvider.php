@@ -3,14 +3,12 @@
 namespace Solunes\Master\App\Providers;
 
 use Illuminate\Contracts\Auth\Access\Gate as GateContract;
-use App\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
 
     public function boot(GateContract $gate) {
-
-        parent::boot($gate);
 
         $gate->before(function ($user, $ability) {
             if ($user->isSuperAdmin()) {
