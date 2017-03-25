@@ -6,8 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 class MasterServiceProvider extends ServiceProvider
 {
-    public function register()
-    {
+    public function register() {
         /* Registrar ServiceProvider Internos */
         $this->app->register('Collective\Html\HtmlServiceProvider');
         $this->app->register('Bogardo\Mailgun\MailgunServiceProvider');
@@ -59,8 +58,7 @@ class MasterServiceProvider extends ServiceProvider
         );
     }
 
-    public function boot()
-    {
+    public function boot() {
         /* Publicar Elementos */
         $this->publishes([
             __DIR__ . '/config' => config_path()
