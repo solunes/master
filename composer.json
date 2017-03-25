@@ -42,8 +42,5 @@
         "classmap": [
             "tests/GeneralTest.php"
         ]
-    },
-    "require": {
-        "illuminate/support": "~5"
     }
 }
