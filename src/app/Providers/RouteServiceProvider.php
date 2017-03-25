@@ -50,11 +50,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapAdminRoutes(Router $router)
     {
-        $router->group(['namespace' => $this->solunesNamespace, 'middleware' => 'admin'], function ($router) {
-            require __DIR__ . '/../Routes/routes.php';
-            require __DIR__ . '/../Routes/sitemap.php';
-            require __DIR__ . '/../Routes/artisan.php';
-        });
+
     }
 
     /**

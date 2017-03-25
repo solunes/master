@@ -9,11 +9,27 @@
             "email": "info@solunes.com"
         }
     ],
-    "autoload-dev": {
-        "classmap": [
-            "tests/GeneralTest.php"
-        ]
+    "require": {
+        "php": ">=5.5.9",
+        "laravel/framework": "5.2.*",
+        "laravelcollective/html": "5.2.*",
+        "bogardo/mailgun": "4.0.*",
+        "caffeinated/menus": "2.3.*",
+        "cviebrock/eloquent-sluggable": "4.0.*",
+        "dimsav/laravel-translatable": "5.5.*",
+        "vluzrmos/language-detector": "1.0.*",
+        "maatwebsite/excel": "~2.1",
+        "barryvdh/laravel-snappy": "0.3.*",
+        "intervention/image": "2.3.*",
+        "intervention/imagecache": "2.3.*",
+        "html2text/html2text": "4.*",
+        "roumen/sitemap": "2.6.*",
+        "mews/captcha": "2.*"
     },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "barryvdh/laravel-debugbar": "2.*"
+    }
     "autoload": {
         "classmap": [
             "src/database/migrations"
@@ -21,6 +37,11 @@
         "psr-4": {
             "Solunes\\Master\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/GeneralTest.php"
+        ]
     },
     "require": {
         "illuminate/support": "~5"

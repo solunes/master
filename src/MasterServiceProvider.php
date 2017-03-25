@@ -8,6 +8,52 @@ class MasterServiceProvider extends ServiceProvider
 {
     public function register()
     {
+        /* Registrar ServiceProvider Internos */
+        $this->app->register('Collective\Html\HtmlServiceProvider');
+        $this->app->register('Bogardo\Mailgun\MailgunServiceProvider');
+        $this->app->register('Caffeinated\Menus\MenusServiceProvider');
+        $this->app->register('Cviebrock\EloquentSluggable\ServiceProvider');
+        $this->app->register('Dimsav\Translatable\TranslatableServiceProvider');
+        $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
+        $this->app->register('Barryvdh\Snappy\ServiceProvider');
+        $this->app->register('Intervention\Image\ImageServiceProvider');
+        $this->app->register('Roumen\Sitemap\SitemapServiceProvider');
+        $this->app->register('Mews\Captcha\CaptchaServiceProvider');
+        $this->app->register('Barryvdh\Debugbar\ServiceProvider');
+
+        /* Registrar Alias */
+        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+        $loader->alias('HTML', 'Collective\Html\HtmlFacade');
+        $loader->alias('Form', 'Collective\Html\FormFacade');
+        $loader->alias('Master', 'Solunes\Master\MasterFacade');
+        $loader->alias('Mailgun', 'Bogardo\Mailgun\Facades\Mailgun');
+        $loader->alias('Menu', 'Caffeinated\Menus\Facades\Menu');
+        $loader->alias('Excel', 'Maatwebsite\Excel\Facades\Excel');
+        $loader->alias('PDF', 'Barryvdh\Snappy\Facades\SnappyPdf');
+        $loader->alias('PDFImage', 'Barryvdh\Snappy\Facades\SnappyImage');
+        $loader->alias('Image', 'Intervention\Image\Facades\Image');
+        $loader->alias('Captcha', 'Mews\Captcha\Facades\Captcha');
+        $loader->alias('Debugbar', 'Barryvdh\Debugbar\Facade');
+
+        $loader->alias('AdminList', '\Solunes\Master\App\Helpers\AdminList');
+        $loader->alias('AdminItem', '\Solunes\Master\App\Helpers\AdminItem');
+        $loader->alias('Asset', '\Solunes\Master\App\Helpers\Asset');
+        $loader->alias('Field', '\Solunes\Master\App\Helpers\Field');
+        $loader->alias('Dynamic', '\Solunes\Master\App\Helpers\Dynamic');
+        $loader->alias('FuncNode', '\Solunes\Master\App\Helpers\FuncNode');
+        $loader->alias('Login', '\Solunes\Master\App\Helpers\Login');
+
+        /* Comandos de Consola */
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Solunes\Master\App\Console\Deploy::class,
+                \Solunes\Master\App\Console\EmptyStorage::class,
+                \Solunes\Master\App\Console\Seed::class,
+                \Solunes\Master\App\Console\GenerateNodes::class,
+                \Solunes\Master\App\Console\ImportExcel::class,
+            ]);
+        }
+
         $this->mergeConfigFrom(
             __DIR__ . '/config/solunes.php', 'solunes'
         );
@@ -26,31 +72,6 @@ class MasterServiceProvider extends ServiceProvider
             __DIR__.'/assets/admin' => public_path('assets/admin'),
         ], 'assets');
 
-        /* Registrar ServiceProvider Internos */
-        $this->app->register('\Solunes\Master\App\Providers\AuthServiceProvider');
-        $this->app->register('\Solunes\Master\App\Providers\ComposerServiceProvider');
-        $this->app->register('\Solunes\Master\App\Providers\EventServiceProvider');
-        $this->app->register('\Solunes\Master\App\Providers\RouteServiceProvider');
-
-        /* Registrar Alias */
-        $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-        $loader->alias('AdminList', '\Solunes\Master\App\Helpers\AdminList');
-        $loader->alias('AdminItem', '\Solunes\Master\App\Helpers\AdminItem');
-        $loader->alias('Asset', '\Solunes\Master\App\Helpers\Asset');
-        $loader->alias('Field', '\Solunes\Master\App\Helpers\Field');
-        $loader->alias('Dynamic', '\Solunes\Master\App\Helpers\Dynamic');
-        $loader->alias('FuncNode', '\Solunes\Master\App\Helpers\FuncNode');
-        $loader->alias('Login', '\Solunes\Master\App\Helpers\Login');
-
-        /* Comandos de Consola */
-        $this->commands([
-            App\Console\Deploy::class,
-            App\Console\EmptyStorage::class,
-            App\Console\Seed::class,
-            App\Console\GenerateNodes::class,
-            App\Console\ImportExcel::class,
-        ]);
-        
         /* Cargar Traducciones */
         $this->loadTranslationsFrom(__DIR__.'/lang', 'master');
 
