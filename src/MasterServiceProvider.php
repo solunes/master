@@ -4,8 +4,10 @@ namespace Solunes\Master;
 
 use Illuminate\Support\ServiceProvider;
 
-class MasterServiceProvider extends ServiceProvider
-{
+class MasterServiceProvider extends ServiceProvider {
+
+    protected $defer = false;
+
     public function register() {
         /* Registrar ServiceProvider Internos */
         $this->app->register('Collective\Html\HtmlServiceProvider');
