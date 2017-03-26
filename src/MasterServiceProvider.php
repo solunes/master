@@ -65,15 +65,13 @@ class MasterServiceProvider extends ServiceProvider {
         $loader->alias('Login', '\Solunes\Master\App\Helpers\Login');
 
         /* Comandos de Consola */
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                \Solunes\Master\App\Console\Deploy::class,
-                \Solunes\Master\App\Console\EmptyStorage::class,
-                \Solunes\Master\App\Console\Seed::class,
-                \Solunes\Master\App\Console\GenerateNodes::class,
-                \Solunes\Master\App\Console\ImportExcel::class,
-            ]);
-        }
+        $this->commands([
+            \Solunes\Master\App\Console\Deploy::class,
+            \Solunes\Master\App\Console\EmptyStorage::class,
+            \Solunes\Master\App\Console\Seed::class,
+            \Solunes\Master\App\Console\GenerateNodes::class,
+            \Solunes\Master\App\Console\ImportExcel::class,
+        ]);
 
         $this->mergeConfigFrom(
             __DIR__ . '/config/solunes.php', 'solunes'
