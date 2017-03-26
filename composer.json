@@ -34,6 +34,8 @@
     "autoload": {
         "classmap": [
             "src/database/migrations",
+            "src/app/Providers",
+            "src/app/Controllers",
             "src/app/Console"
         ],
         "psr-4": {
@@ -45,5 +47,6 @@
             "tests/GeneralTest.php"
         ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

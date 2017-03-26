@@ -8,6 +8,26 @@ class MasterServiceProvider extends ServiceProvider {
 
     protected $defer = false;
 
+    public function boot() {
+        /* Publicar Elementos */
+        $this->publishes([
+            __DIR__ . '/config' => config_path()
+        ], 'config');
+        $this->publishes([
+            __DIR__.'/lang-custom' => resource_path('lang/vendor/master'),
+        ], 'lang');
+        $this->publishes([
+            __DIR__.'/assets/admin' => public_path('assets/admin'),
+        ], 'assets');
+
+        /* Cargar Traducciones */
+        $this->loadTranslationsFrom(__DIR__.'/lang', 'master');
+
+        /* Cargar Vistas */
+        $this->loadViewsFrom(__DIR__ . '/views', 'master');
+    }
+
+
     public function register() {
         /* Registrar ServiceProvider Internos */
         $this->app->register('Collective\Html\HtmlServiceProvider');
@@ -59,23 +79,5 @@ class MasterServiceProvider extends ServiceProvider {
             __DIR__ . '/config/solunes.php', 'solunes'
         );
     }
-
-    public function boot() {
-        /* Publicar Elementos */
-        $this->publishes([
-            __DIR__ . '/config' => config_path()
-        ], 'config');
-        $this->publishes([
-            __DIR__.'/lang-custom' => resource_path('lang/vendor/master'),
-        ], 'lang');
-        $this->publishes([
-            __DIR__.'/assets/admin' => public_path('assets/admin'),
-        ], 'assets');
-
-        /* Cargar Traducciones */
-        $this->loadTranslationsFrom(__DIR__.'/lang', 'master');
-
-        /* Cargar Vistas */
-        $this->loadViewsFrom(__DIR__ . '/views', 'master');
-    }
+    
 }
