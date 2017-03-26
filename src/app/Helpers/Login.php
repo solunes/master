@@ -43,9 +43,9 @@ class Login {
 
     public static function success($session, $last_session, $user, $redirect, $message, $type = false) {
         $session->forget('login_fail');
-        $user->timestamps = false;
-        $user->last_session = $last_session;
-        $user->save();
+        if(config('solunes.after_login')){
+            \CustomFunc::after_login($user, $last_session, $redirect);
+        }
         if($type==false){
             return redirect()->intended($redirect)->with('message_success', $message);
         } else {

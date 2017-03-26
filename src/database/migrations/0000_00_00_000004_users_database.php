@@ -27,7 +27,6 @@ class UsersDatabase extends Migration
             $table->boolean('notifications_sms')->default(0);
             $table->integer('notifications_last_read')->nullable();
             $table->string('last_session')->nullable();
-            $table->string('new_session')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->timestamp('last_activity')->nullable();
             $table->rememberToken();

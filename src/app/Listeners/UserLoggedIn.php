@@ -9,7 +9,7 @@ class UserLoggedIn {
         $user = $event->user;
         $user->timestamps = false;
         $user->last_login = $now;
-        $user->new_session = session()->getId();
+        $user->last_session = session()->getId();
         $user->save();
     }
 
