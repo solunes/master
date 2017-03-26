@@ -41,8 +41,11 @@ class Login {
         return redirect('auth/login')->with('message_error', $message)->withErrors($validator)->withInput();
     }
 
-    public static function success($session, $redirect, $message, $type = false) {
+    public static function success($session, $last_session, $user, $redirect, $message, $type = false) {
         $session->forget('login_fail');
+        $user->timestamps = false;
+        $user->last_session = $last_session;
+        $user->save();
         if($type==false){
             return redirect()->intended($redirect)->with('message_success', $message);
         } else {

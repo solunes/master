@@ -27,6 +27,7 @@ class LoginController extends Controller {
 	    $validator = Validator::make($request->all(), \App\User::$rules_login);
 	    $logged = false;
 		if ($validator->passes()) {
+			$last_session = session()->getId();
 			if (Auth::attempt(array('email'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
 				$logged = true;
 			} else if (Auth::attempt(array('username'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
@@ -39,14 +40,14 @@ class LoginController extends Controller {
 			  	Auth::logout();
 			  	return Login::fail($request->session(), $validator, trans('master::form.login_banned'), 10, 5);
 			  } else if(Auth::user()->status=='ask_password'){
-			  	return Login::success($request->session(), 'account', trans('master::form.login_success_password'), true);
+			  	return Login::success($request->session(), $last_session, Auth::user(), 'account', trans('master::form.login_success_password'), true);
 			  } else {
 			  	if(\Auth::user()->can('dashboard')){
 			  		$redirect = 'admin';
 			  	} else {
 			  		$redirect = '';
 			  	}
-			  	return Login::success($request->session(), $redirect, trans('master::form.login_success'));
+			  	return Login::success($request->session(), $last_session, Auth::user(), $redirect, trans('master::form.login_success'));
 			  }
 			} else {
 			  	return Login::fail($request->session(), $validator, trans('master::form.login_fail'), 10, 5);
