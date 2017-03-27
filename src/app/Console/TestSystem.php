@@ -29,15 +29,15 @@ class TestSystem extends Command
         if(\App::environment('local')){
             $this->info('Comenzando la prueba.');
             $this->info('Node Translation. Model:');
-            foreach(\Solunes\Master\App\NodeTranslation::where('singular', 'like', '%model.%')->get() as $item){
+            foreach(\Solunes\Master\App\NodeTranslation::where('singular', 'like', '%model.%')->groupBy('singular')->orderBy('singular')->get() as $item){
                 $this->info($item->singular);
             }
             $this->info('Field Translation. Field:');
-            foreach(\Solunes\Master\App\FieldTranslation::where('label', 'like', '%fields.%')->get() as $item){
+            foreach(\Solunes\Master\App\FieldTranslation::where('label', 'like', '%fields.%')->groupBy('label')->orderBy('label')->get() as $item){
                 $this->info($item->label);
             }
             $this->info('Field Option Translation. Admin:');
-            foreach(\Solunes\Master\App\FieldOptionTranslation::where('label', 'like', '%admin.%')->get() as $item){
+            foreach(\Solunes\Master\App\FieldOptionTranslation::where('label', 'like', '%admin.%')->groupBy('label')->orderBy('label')->get() as $item){
                 $this->info($item->label);
             }
             $this->info('Finalizaron las pruebas.');
