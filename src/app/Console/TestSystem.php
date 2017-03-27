@@ -29,16 +29,26 @@ class TestSystem extends Command
         if(\App::environment('local')){
             $this->info('Comenzando la prueba.');
             $this->info('Node Translation. Model:');
-            foreach(\Solunes\Master\App\NodeTranslation::where('singular', 'like', '%model.%')->groupBy('singular')->orderBy('singular')->get() as $item){
-                $this->info($item->singular);
+            $items = \Solunes\Master\App\NodeTranslation::where('singular', 'like', '%model.%')->groupBy('singular')->orderBy('singular')->get();
+            if(count($items)>0){
+                foreach($items as $item){
+                    $this->info($item->singular);
+                }
+                $this->info('Node Translation. Model:');
             }
-            $this->info('Field Translation. Field:');
-            foreach(\Solunes\Master\App\FieldTranslation::where('label', 'like', '%fields.%')->groupBy('label')->orderBy('label')->get() as $item){
-                $this->info($item->label);
+            $items = \Solunes\Master\App\FieldTranslation::where('label', 'like', '%fields.%')->groupBy('label')->orderBy('label')->get();
+            if(count($items)>0){
+                foreach($items as $item){
+                    $this->info($item->label);
+                }
+                $this->info('Field Translation. Field:');
             }
-            $this->info('Field Option Translation. Admin:');
-            foreach(\Solunes\Master\App\FieldOptionTranslation::where('label', 'like', '%admin.%')->groupBy('label')->orderBy('label')->get() as $item){
-                $this->info($item->label);
+            $items = \Solunes\Master\App\FieldOptionTranslation::where('label', 'like', '%admin.%')->groupBy('label')->orderBy('label')->get();
+            if(count($items)>0){
+                foreach($items as $item){
+                    $this->info($item->label);
+                }
+                $this->info('Field Option Translation. Admin:');
             }
             $this->info('Finalizaron las pruebas.');
         } else {
