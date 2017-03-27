@@ -147,7 +147,7 @@ class AdminList {
                     $value = substr($value, 0, 300).'...';
                 }
             } else if(($item_val||$item_val===0)&&($field_type=='select'||$field_type=='radio')) {
-                $value = $field->field_options->where('name', $item_val)->first()->label;
+                $value = $field->field_options()->where('name', $item_val)->first()->label;
             } else if($field_type=='relation') {
                 if($item->$field_trans_name){
                     $value = $item->$field_trans_name->name;

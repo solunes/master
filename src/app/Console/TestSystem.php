@@ -28,27 +28,33 @@ class TestSystem extends Command
     public function handle(){
         if(\App::environment('local')){
             $this->info('Comenzando la prueba.');
-            $this->info('Node Translation. Model:');
             $items = \Solunes\Master\App\NodeTranslation::where('singular', 'like', '%model.%')->groupBy('singular')->orderBy('singular')->get();
             if(count($items)>0){
+                $this->info('Node Translation. Model:');
                 foreach($items as $item){
                     $this->info($item->singular);
                 }
-                $this->info('Node Translation. Model:');
             }
             $items = \Solunes\Master\App\FieldTranslation::where('label', 'like', '%fields.%')->groupBy('label')->orderBy('label')->get();
             if(count($items)>0){
+                $this->info('Field Translation. Field:');
                 foreach($items as $item){
                     $this->info($item->label);
                 }
-                $this->info('Field Translation. Field:');
             }
             $items = \Solunes\Master\App\FieldOptionTranslation::where('label', 'like', '%admin.%')->groupBy('label')->orderBy('label')->get();
             if(count($items)>0){
+                $this->info('Field Option Translation. Admin:');
                 foreach($items as $item){
                     $this->info($item->label);
                 }
-                $this->info('Field Option Translation. Admin:');
+            }
+            $items = \Solunes\Master\App\MenuTranslation::where('name', 'like', '%admin.%')->groupBy('name')->orderBy('name')->get();
+            if(count($items)>0){
+                $this->info('Menu Translation. Admin:');
+                foreach($items as $item){
+                    $this->info(str_replace('master::admin.', '', $item->name));
+                }
             }
             $this->info('Finalizaron las pruebas.');
         } else {
