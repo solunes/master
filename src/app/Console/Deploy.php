@@ -43,7 +43,7 @@ class Deploy extends Command
             $this->info('75%: Database seed ejecutado correctamente con nodos.');
             $this->info('100%: Deploy finalizado.');
         } else {
-            $this->info('Solo se puede realizar esta tarea en modo local.');
+            $this->info('No autorizado.');
         }
     }
 }

@@ -49,7 +49,7 @@ class Seed extends Command
             $this->info('100%: Seed finalizado.');
             $this->info('Total execution time in seconds: ' . (microtime(true) - $time_start));
         } else {
-            $this->info('Solo se puede realizar esta tarea en modo local.');
+            $this->info('No autorizado.');
         }
     }
 }

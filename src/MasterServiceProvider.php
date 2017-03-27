@@ -71,6 +71,7 @@ class MasterServiceProvider extends ServiceProvider {
             \Solunes\Master\App\Console\Seed::class,
             \Solunes\Master\App\Console\GenerateNodes::class,
             \Solunes\Master\App\Console\ImportExcel::class,
+            \Solunes\Master\App\Console\TestSystem::class,
         ]);
 
         $this->mergeConfigFrom(
