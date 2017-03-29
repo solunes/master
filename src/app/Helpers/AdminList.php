@@ -513,10 +513,14 @@ class AdminList {
                 $custom_value[$field_string] = request()->input('f_'.$field_name.'_action');
                 $appends['f_'.$field_name] = $field_string;
             }
-        } else if(request()->input('f_'.$field_name)){
+        } else if(request()->input('f_'.$field_name)&&is_array(request()->input('f_'.$field_name))){
             foreach(request()->input('f_'.$field_name) as $select_key => $select_value){
                 $custom_value[$select_value] = 'is';
             }
+            $appends['f_'.$field_name] = array_keys($custom_value);
+        } else if(request()->input('f_'.$field_name)){
+            $select_value = request()->input('f_'.$field_name);
+            $custom_value[$select_value] = 'is';
             $appends['f_'.$field_name] = array_keys($custom_value);
         }
         $field = $node->fields()->where('name', $field_name)->first();

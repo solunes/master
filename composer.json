@@ -17,7 +17,6 @@
         "caffeinated/menus": "2.3.*",
         "cviebrock/eloquent-sluggable": "4.0.*",
         "dimsav/laravel-translatable": "5.5.*",
-        "vluzrmos/language-detector": "1.0.*",
         "maatwebsite/excel": "~2.1",
         "barryvdh/laravel-snappy": "0.3.*",
         "intervention/image": "2.3.*",

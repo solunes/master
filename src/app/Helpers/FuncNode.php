@@ -463,8 +463,9 @@ class FuncNode {
             if(!is_numeric($node_val)){
                 $items = $items->where('code', $node_val);
             }
-            $items = $items->get();
-            $subarray = ['items'=>$items, 'node'=>$node];
+            $subarray['node'] = $node;
+            $subarray = \AdminList::filter_node($subarray, $node, $node->model, $items, 'site');
+            $subarray['items'] = $subarray['items']->get();
         }
         return $subarray;
     }
