@@ -575,43 +575,45 @@ class AdminList {
         $items = $items->where(function ($query) use($custom_value, $field, $field_name) {
             $count = 0;
             foreach($custom_value as $custom_val => $custom_action){
-                if($count>0){
-                    $main_action = 'orWhere';
-                } else {
-                    $main_action = 'where';
-                }
-                if($custom_action=='is'){
-                    $action = '=';
-                } else if($custom_action=='is_not'){
-                    $action = '!=';
-                } else if($custom_action=='is_greater'){
-                    $action = '>=';
-                } else if($custom_action=='is_less'){
-                    $action = '<=';
-                } else if($custom_action=='where_in'){
-                    $action = '=';
-                    $main_action .= 'In';
-                    $custom_val = explode(',', $custom_val);
-                } else {
-                    $action = 'none';
-                }
-                if($action!='none'){
-                    if($field->type=='checkbox'){
-                        $custom_val = '%'.$custom_val.'%';
-                        $action = 'LIKE';
-                    }
-                    if($field->type=='field'){
-                        $main_action .= 'Has';
-                        $query = $query->$main_action($field_name, function ($subquery) use($field, $custom_val) {
-                            $subquery->where($field->value.'_id', $custom_val);
-                        });
-                    } else if($custom_action=='where_in') {
-                        $query = $query->$main_action($field->name, $custom_val);
+                if($custom_val!='f_all'){
+                    if($count>0){
+                        $main_action = 'orWhere';
                     } else {
-                        $query = $query->$main_action($field->name, $action, $custom_val);
+                        $main_action = 'where';
                     }
-                    if($field->type!='date'){
-                        $count++;
+                    if($custom_action=='is'){
+                        $action = '=';
+                    } else if($custom_action=='is_not'){
+                        $action = '!=';
+                    } else if($custom_action=='is_greater'){
+                        $action = '>=';
+                    } else if($custom_action=='is_less'){
+                        $action = '<=';
+                    } else if($custom_action=='where_in'){
+                        $action = '=';
+                        $main_action .= 'In';
+                        $custom_val = explode(',', $custom_val);
+                    } else {
+                        $action = 'none';
+                    }
+                    if($action!='none'){
+                        if($field->type=='checkbox'){
+                            $custom_val = '%'.$custom_val.'%';
+                            $action = 'LIKE';
+                        }
+                        if($field->type=='field'){
+                            $main_action .= 'Has';
+                            $query = $query->$main_action($field_name, function ($subquery) use($field, $custom_val) {
+                                $subquery->where($field->value.'_id', $custom_val);
+                            });
+                        } else if($custom_action=='where_in') {
+                            $query = $query->$main_action($field->name, $custom_val);
+                        } else {
+                            $query = $query->$main_action($field->name, $action, $custom_val);
+                        }
+                        if($field->type!='date'){
+                            $count++;
+                        }
                     }
                 }
             }
