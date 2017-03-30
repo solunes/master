@@ -15,6 +15,7 @@ return [
 	'before_seed' => false,
 	'after_seed' => false,
 	'after_login' => false,
+	'custom_get_items' => false,
 	'list_header_extra_buttons' => false,
 	'list_extra_actions' => false,
 	'get_sitemap_array' => false,

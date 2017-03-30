@@ -464,6 +464,9 @@ class FuncNode {
                 $items = $items->where('code', $node_val);
             }
             $subarray['node'] = $node;
+            if(config('solunes.custom_get_items')){
+              $subarray = \CustomFunc::custom_get_items($subarray, $items, $node, $node_val);
+            }
             $subarray = \AdminList::filter_node($subarray, $node, $node->model, $items, 'site');
             $subarray['items'] = $subarray['items']->get();
         }
