@@ -123,7 +123,7 @@ class MasterDatabase extends Migration
             $table->integer('parent_id')->unsigned();
             $table->integer('order')->nullable()->default(0);
             $table->enum('display', ['all','admin','site'])->default('all');
-            $table->enum('type', ['graph','parent_graph','action_field'])->default('action_field');
+            $table->enum('type', ['graph','parent_graph','action_field','action_node'])->default('action_field');
             $table->string('parameter')->nullable();
             $table->string('value_array')->nullable();
             $table->foreign('parent_id')->references('id')->on('nodes')->onDelete('cascade');

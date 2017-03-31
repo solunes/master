@@ -49,6 +49,8 @@ return array(
 	// GLOBAL MESSAGES
 	"never" => "Nunca",
 	"sorry" => "Lo sentimos",
+	"file_limitations" => "El archivo debe ser DOCX, DOC, XLS, XLSX, PDF, JPG, PNG, GIF y no debe tener un mayor a 10 MB.",
+	"image_limitations" => "La imagen debe ser JPG, PNG, GIF y no debe tener un mayor a 5 MB.",
 	"404" => "No se encuentra la página",
 	"404_description" => "Esto es incomodo, pero la página que estaba buscando no existe",
 	"404_button" => "Haz click aqui para volver",
@@ -92,7 +94,8 @@ return array(
 	"all" => "Todos",
 	"graph" => "Gráfico",
 	"parent_graph" => "Gráfico de Relación",
-	"action_field" => "Campo de Acción",
+	"action_field" => "Acción de Campo",
+	"action_node" => "Acción de Nodo",
 	"site" => "Sitio",
 	"normal" => "Normal",
 	"system" => "Sistema",

@@ -4,7 +4,7 @@
   @include('master::scripts.lightbox-css')
 @endsection
 @section('content')
-  {!! AdminList::make_list_header($module, $node, $id, $parent, $appends, count($items), $action_fields) !!}
+  {!! AdminList::make_list_header($module, $node, $id, $parent, $appends, count($items), $action_nodes) !!}
   @include('master::helpers.filter')
   @if(count($items)>0)
     <table class="admin-table table table-striped table-bordered dt-responsive">
@@ -18,7 +18,7 @@
         @foreach ($items as $key => $item)
           <tr>
             <td>{{ $key+1 }}</td>
-            {!! AdminList::make_fields_values_rows($langs, $module, $model, $item, $fields, $appends, $action_fields) !!}
+            {!! AdminList::make_fields_values_rows($langs, $module, $model, $item, $fields, $field_options, $appends, $action_fields) !!}
           </tr>
         @endforeach
       </tbody>
