@@ -204,7 +204,7 @@ class AdminList {
                     if($count>1){
                         $value .= ' | ';
                     }
-                    $value .= $field->field_options()->where('name', $val)->first()->label;
+                    $value .= $field_options[$field_name][$val];
                 }
             } else if($field_type=='datetime'||$field->type=='date'||$field->type=='time') {
                 if($item_val){

@@ -49,10 +49,8 @@ class MasterDatabase extends Migration
             $table->integer('site_id')->unsigned()->default(1);
             $table->integer('order')->nullable()->default(0);
             $table->enum('type', ['normal', 'customized'])->default('normal');
-            $table->string('image')->nullable();
+            //$table->string('image')->nullable();
             $table->string('customized_name')->nullable();
-            $table->string('meta_title')->nullable();
-            $table->text('meta_description')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
@@ -61,8 +59,10 @@ class MasterDatabase extends Migration
             $table->increments('id');
             $table->integer('page_id')->unsigned();
             $table->string('locale')->index();
-            $table->string('slug');
             $table->string('name');
+            $table->string('slug');
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
             $table->unique(['page_id','locale']);
             $table->foreign('page_id')->references('id')->on('pages')->onDelete('cascade');
         });
