@@ -248,6 +248,7 @@ class Dynamic {
                   \Dynamic::generate_node_table($node->table_name, ['id'=>'increments']);
                   // Crear node extra
                   $node_extra = \Dynamic::generate_node_extra($node, 'action_field', ['edit','delete']);
+                  $node_extra = \Dynamic::generate_node_extra($node, 'action_node', ['excel']);
               }
             } else if($sheet_model=='options'||$sheet_model=='extras'||$sheet_model=='edits'||$sheet_model=='conditionals'){
               foreach($sheet as $row){

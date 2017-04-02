@@ -69,12 +69,12 @@ class MasterDatabase extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('site_id')->unsigned()->default(1);
+            $table->integer('parent_id')->nullable();
+            $table->integer('level')->nullable()->default(1);
+            $table->integer('order')->nullable()->default(0);
             $table->boolean('active')->nullable()->default(1);
             $table->enum('menu_type', ['site', 'admin'])->default('site');
-            $table->integer('order')->nullable()->default(0);
-            $table->integer('level')->nullable()->default(1);
             $table->enum('type', ['normal', 'external', 'blank'])->default('normal');
-            $table->integer('parent_id')->nullable();
             $table->string('permission')->nullable();
             $table->integer('page_id')->nullable();
             $table->string('icon')->nullable();
@@ -102,6 +102,7 @@ class MasterDatabase extends Migration
             $table->string('folder')->nullable();
             $table->integer('parent_id')->nullable();
             $table->string('permission')->nullable();
+            $table->boolean('multilevel')->default(0);
             $table->boolean('dynamic')->default(0);
             $table->boolean('customized')->default(0);
             $table->boolean('translation')->default(0);
@@ -176,7 +177,7 @@ class MasterDatabase extends Migration
         Schema::create('field_extras', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->unsigned();
-            $table->enum('type', ['class','field_class','options','folder','append','prepend','placeholder','label','cols','rows','disabled','ponderation']);
+            $table->enum('type', ['class','field_class','default_value','options','folder','append','prepend','placeholder','label','cols','rows','disabled','ponderation']);
             $table->string('value');
             $table->foreign('parent_id')->references('id')->on('fields')->onDelete('cascade');
         });

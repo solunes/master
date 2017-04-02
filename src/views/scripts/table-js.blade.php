@@ -1,10 +1,14 @@
 <script type="text/javascript"> 
 $(document).ready(function() {
     $('table.admin-table').dataTable({
+        "aoColumnDefs": [
+          { "sType": "num-html", "aTargets": [ 0 ] }
+        ]
         "pageLength": 25,
         "autoWidth": false,
         "responsive": true,
       	"lengthMenu": [ [25, 50, 100, 250, 500, -1], [25, 50, 100, 250, 500, "Todos"] ],
+        "order": [0, "asc"],
         "language": {
             "info": "Mostrando la página _PAGE_ de _PAGES_",
             "infoEmpty": "No hay datos en la tabla",

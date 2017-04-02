@@ -101,6 +101,7 @@ return [
     'meta_title' => 'Título',
     'meta_description' => 'Descripción',
     'model' => 'Modelo',
+    'multilevel' => 'Múltiples Niveles',
     'multiple' => 'Multiple',
     'name' => 'Nombre',
     'new_row' => 'Nueva Fila',

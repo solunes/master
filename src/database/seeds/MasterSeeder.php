@@ -42,7 +42,7 @@ class MasterSeeder extends Seeder {
         $node_indicator_value = \Solunes\Master\App\Node::create(['name'=>'indicator-value', 'type'=>'child', 'location'=>'package', 'parent_id'=>$node_indicator->id]);
         $node_site = \Solunes\Master\App\Node::create(['name'=>'site', 'folder'=>'global']);
         $node_page = \Solunes\Master\App\Node::create(['name'=>'page', 'folder'=>'global']);
-        $node_menu = \Solunes\Master\App\Node::create(['name'=>'menu', 'folder'=>'global']);
+        $node_menu = \Solunes\Master\App\Node::create(['name'=>'menu', 'folder'=>'global', 'multilevel'=>true]);
         $node_permission = \Solunes\Master\App\Node::create(['name'=>'permission', 'folder'=>'system']);
         $node_role = \Solunes\Master\App\Node::create(['name'=>'role', 'folder'=>'system']);
         $node_permission_role = \Solunes\Master\App\Node::create(['name'=>'permission-role', 'table_name'=>'permission_role', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\Permission', 'parent_id'=>$node_role->id]);

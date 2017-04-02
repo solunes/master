@@ -341,7 +341,7 @@ class AdminItem {
 
     public static function make_item_header($i, $module, $node, $action, $parent_id = false) {
         $title = trans('master::admin.'.$action).' '.$node->singular;
-        if($parent_id==NULL){
+        if($parent_id==NULL||$node->multilevel){
             $back_url = url($module.'/model-list/'.$node->name);
             $separator_sign = '?';
         } else {
@@ -352,7 +352,7 @@ class AdminItem {
             $parameters = json_decode(request()->input('parameters'));
             $back_url .= $separator_sign.http_build_query($parameters);
         }
-        $back = '<a href="'.$back_url.'"><i class="fa fa-arrow-circle-o-left"></i> ATRAS</a>';
+        $back = '<a href="'.$back_url.'"><i class="fa fa-arrow-circle-o-left"></i> '.trans('master::admin.back').'</a>';
         $url = request()->fullUrl();
         if(strpos($url, '?') !== false){
             $url .= '&download-pdf=true';

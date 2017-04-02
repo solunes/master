@@ -19,6 +19,8 @@ class Menu extends Model {
 
     /* Creating rules */
     public static $rules_create = array(
+      'menu_type'=>'required',
+      'active'=>'required',
       'type'=>'required',
       'name'=>'required',
     );
@@ -26,6 +28,8 @@ class Menu extends Model {
     /* Updating rules */
     public static $rules_edit = array(
       'id'=>'required',
+      'menu_type'=>'required',
+      'active'=>'required',
       'type'=>'required',
       'name'=>'required',
     );

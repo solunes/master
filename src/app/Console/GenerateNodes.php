@@ -50,6 +50,14 @@ class GenerateNodes extends Command
           $node->save();
           $table_name = $node->table_name;
           $columns = \Schema::getColumnListing($table_name);
+          if($node->multilevel){
+            $node_extra = new \Solunes\Master\App\NodeExtra;
+            $node_extra->parent_id = $node->id;
+            $node_extra->display = 'all';
+            $node_extra->type = 'action_field';
+            $node_extra->value_array = json_encode(['create-child','edit','delete']);
+            $node_extra->save();
+          }
           if($node->type=='field'){
             $count = 0;
             foreach($columns as $col){

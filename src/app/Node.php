@@ -5,9 +5,9 @@ namespace Solunes\Master\App;
 use Illuminate\Database\Eloquent\Model;
 
 class Node extends Model {
-	
-	protected $table = 'nodes';
-	public $timestamps = true;
+    
+    protected $table = 'nodes';
+    public $timestamps = true;
 
     public $translatedAttributes = ['singular','plural'];
     protected $fillable = ['singular','plural'];
@@ -16,16 +16,16 @@ class Node extends Model {
     use \Dimsav\Translatable\Translatable;
     use \Illuminate\Database\Eloquent\SoftDeletes;
 
-	/* Creating rules */
-	public static $rules_create = array(
-		'name'=>'required',
-	);
+    /* Creating rules */
+    public static $rules_create = array(
+        'name'=>'required',
+    );
 
-	/* Updating rules */
-	public static $rules_edit = array(
-		'id'=>'required',
-		'name'=>'required',
-	);
+    /* Updating rules */
+    public static $rules_edit = array(
+        'id'=>'required',
+        'name'=>'required',
+    );
 
     public function children() {
         return $this->hasMany('Solunes\Master\App\Node', 'parent_id', 'id');
@@ -41,6 +41,18 @@ class Node extends Model {
 
     public function node_extras() {
         return $this->hasMany('Solunes\Master\App\NodeExtra', 'parent_id')->orderBy('order', 'ASC');
+    }
+
+    public function node_action_fields() {
+        return $this->hasMany('Solunes\Master\App\NodeExtra', 'parent_id')->where('type', 'action_field');
+    }
+
+    public function node_action_nodes() {
+        return $this->hasMany('Solunes\Master\App\NodeExtra', 'parent_id')->where('type', 'action_node');
+    }
+
+    public function node_graphs() {
+        return $this->hasMany('Solunes\Master\App\NodeExtra', 'parent_id')->whereIn('type', ['graph','parent_graph']);
     }
 
     public function filters() {

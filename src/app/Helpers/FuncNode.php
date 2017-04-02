@@ -58,6 +58,9 @@ class FuncNode {
             array_push($extras, ['type'=>'cols','value'=>'12']);
         } else if($col_type=='tinyint(1)'||substr_count($col_type, 'enum')>0){
             $type = 'select';
+            if($name=='active'){
+              array_push($extras, ['type'=>'default_value','value'=>'1']);
+            }
             if(substr_count($col_type, 'enum')>0){
               $value_array = substr($col_type, 6, -2);
             } else if($col_type=='tinyint(1)') {

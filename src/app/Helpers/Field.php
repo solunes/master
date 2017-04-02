@@ -108,6 +108,8 @@ class Field {
             $value = request()->input($fixed_name);
         } else if(array_key_exists('value', $extras)){
             $value = $extras['value'];
+        } else if(!$i&&array_key_exists('default_value', $extras)) {
+            $value = $extras['default_value'];
         }
         if($type=='password'){
             $value = NULL;

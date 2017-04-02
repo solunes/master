@@ -8,18 +8,18 @@ class AdminList {
    
     public static function get_list($object, $single_model, $extra = []) {
         $module = $object->module;
-        $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
+        $node = \Solunes\Master\App\Node::where('name', $single_model)->with('node_action_fields','node_action_nodes','node_graphs')->first();
         $model = \FuncNode::node_check_model($node);
         if (\Gate::denies('node-admin', ['list', $module, $node, 'list'])) {
             return \Login::redirect_dashboard('no_permission');
         }
 
-        $array = ['module'=>$module, 'node'=>$node, 'model'=>$single_model, 'i'=>NULL, 'filter_category'=>'admin', 'filter_category_id'=>'0', 'filter_type'=>'field', 'filter_node'=>$node->name, 'dt'=>'form', 'id'=>NULL, 'parent'=>NULL, 'action_nodes'=>['back','create', 'excel'], 'action_fields'=>['edit','delete']];
+        $array = ['module'=>$module, 'node'=>$node, 'model'=>$single_model, 'i'=>NULL, 'filter_category'=>'admin', 'filter_category_id'=>'0', 'filter_type'=>'field', 'filter_node'=>$node->name, 'dt'=>'form', 'id'=>NULL, 'parent'=>NULL, 'action_nodes'=>['back','create','excel'], 'action_fields'=>['edit','delete']];
         
-        if($action_field = $node->node_extras()->where('type','action_field')->first()){
+        if($action_field = $node->node_action_fields->first()){
             $array['action_fields'] = json_decode($action_field->value_array, true);
         }
-        if($action_node = $node->node_extras()->where('type','action_node')->first()){
+        if($action_node = $node->node_action_nodes->first()){
             $array['action_nodes'] = json_decode($action_node->value_array, true);
         }
 
@@ -42,6 +42,9 @@ class AdminList {
             }
             if($node->parent){
                 $array['parent'] = $node->parent->name;
+            }
+            if($node->multilevel){
+                $items = $items->whereNull('parent_id')->with('children','children.children');
             }
             if(request()->has('download-excel')){
                 $display_fields = ['show','excel'];
@@ -72,7 +75,7 @@ class AdminList {
         $array = \AdminList::filter_node($array, $node, $model, $items, 'admin');
         $items = $array['items'];
 
-        $graphs = $node->node_extras()->whereIn('type', ['graph','parent_graph'])->get();
+        $graphs = $node->node_graphs;
         $array = \AdminList::graph_node($array, $node, $model, $items, $graphs);
 
         $items_relations = $node->fields()->where('name','!=','parent_id')->whereIn('type', ['relation','child','subchild'])->get();
@@ -94,6 +97,9 @@ class AdminList {
         } else if(config('solunes.list_extra_actions')&&$extra_actions = \CustomFunc::list_extra_actions($array)){
             return $extra_actions;
         } else {
+            if($node->multilevel){
+                return view('master::list.multilevel-list', $array);
+            }
             return view('master::list.general-list', $array);
         }
     }
@@ -127,6 +133,8 @@ class AdminList {
                     } else {
                         $response .= '<td class="edit">'.trans('master::admin.view').'</td>';
                     }
+                } else if($action_field=='create-child'){
+                    $response .= '<td class="restore">'.trans('master::admin.create-child').'</td>';
                 } else {
                     $response .= \CustomFunc::get_action_field_labels($response, $action_field, $langs);
                 }
@@ -149,75 +157,90 @@ class AdminList {
             $field_type = $field->type;
             $item_val = $item->$field_trans_name;
             $count = 0;
-            if($field_type=='string'){
-                $value = $item_val;
-            } else if($field_type=='text') {
-                $value = strip_tags($item_val);
-                if (strlen($value) > 300) {
-                    $value = substr($value, 0, 300).'...';
-                }
-            } else if(($item_val||$item_val===0)&&($field_type=='select'||$field_type=='radio')) {
-                $value = $field_options[$field_name][$item_val];
-            } else if($field_type=='relation') {
-                if($item->$field_trans_name){
-                    $value = $item->$field_trans_name->name;
-                } else {
-                    $value = NULL;
-                }
-            } else if($field_type=='child') {
-                $url = url('admin/model-list/'.$field->value.'?parent_id='.$item->id);
-                if($appends){
-                    $url .= '&'.$appends;
-                }
-                $value = 'Nº: '.count($item_val).' (<a href="'.$url.'">'.trans('master::admin.view').'</a>)';
-            } else if($field_type=='subchild') {
-                $value = 'Nº: '.count($item_val);
-            } else if(($field_type=='image'||$field_type=='file')&&$item_val) {
-                if($field->multiple){
-                    $array_value = json_decode($item_val, true);
-                } else {
-                    $array_value = [$item_val];
-                }
-                $value = '';
-                $folder = $field->field_extras->where('type', 'folder')->first()->value;
-                foreach($array_value as $key => $val){
-                    $count++;
-                    if($count>1){
-                        $value .= ' | ';
+            $value = '-';
+            switch($field_type){
+                case 'string':
+                    $value = $item_val;
+                break;
+                case 'select':
+                case 'radio':
+                    if($item_val||$item_val===0){
+                        $value = $field_options[$field_name][$item_val];
                     }
-                    if($field_type=='image'){
-                      $file_url = Asset::get_image_path($folder, 'normal', $val);
-                    } else {
-                      $file_url = Asset::get_file($folder, $val);
+                break;
+                case 'relation':
+                    if($item_val){
+                        $value = $item_val->name;
                     }
-                    if($type=='excel'){
-                      $value .= $file_url;
-                    } else {
-                      $value .= '<a href="'.$file_url.'" target="_blank">'.$val.'</a>';
+                break;
+                case 'text':
+                    $value = strip_tags($item_val);
+                    if (strlen($value) > 300) {
+                        $value = substr($value, 0, 300).'...';
                     }
-                }
-            } else if($item_val&&$field_type=='checkbox') {
-                $array_value = json_decode($item_val, true);
-                $value = '';
-                foreach($array_value as $val){
-                    $count++;
-                    if($count>1){
-                        $value .= ' | ';
+                break;
+                case 'child':
+                    $url = url('admin/model-list/'.$field->value.'?parent_id='.$item->id);
+                    if($appends){
+                        $url .= '&'.$appends;
                     }
-                    $value .= $field_options[$field_name][$val];
-                }
-            } else if($field_type=='datetime'||$field->type=='date'||$field->type=='time') {
-                if($item_val){
-                    if($field_type=='datetime'){
-                        $value = $item_val->format('M d, Y H:i');
-                    } else {
-                        $value = $item_val;
+                    $value = 'Nº: '.count($item_val).' (<a href="'.$url.'">'.trans('master::admin.view').'</a>)';
+                break;
+                case 'subchild':
+                    $value = 'Nº: '.count($item_val);
+                break;
+                case 'file':
+                case 'image':
+                    if($item_val){
+                        if($field->multiple){
+                            $array_value = json_decode($item_val, true);
+                        } else {
+                            $array_value = [$item_val];
+                        }
+                        $value = '';
+                        $folder = $field->field_extras->where('type', 'folder')->first()->value;
+                        foreach($array_value as $key => $val){
+                            $count++;
+                            if($count>1){
+                                $value .= ' | ';
+                            }
+                            if($field_type=='image'){
+                              $file_url = Asset::get_image_path($folder, 'normal', $val);
+                            } else {
+                              $file_url = Asset::get_file($folder, $val);
+                            }
+                            if($type=='excel'){
+                              $value .= $file_url;
+                            } else {
+                              $value .= '<a href="'.$file_url.'" target="_blank">'.$val.'</a>';
+                            }
+                        }
                     }
-                } else {
-                    $value = '-';
-                }
-            } else {
-                $value = '-';
+                break;
+                case 'checkbox':
+                    if($item_val){
+                        $array_value = json_decode($item_val, true);
+                        $value = '';
+                        foreach($array_value as $val){
+                            $count++;
+                            if($count>1){
+                                $value .= ' | ';
+                            }
+                            $value .= $field_options[$field_name][$val];
+                        }
+                    }
+                break;
+                case 'datetime':
+                case 'date':
+                case 'time':
+                    if($item_val){
+                        if($field_type=='datetime'){
+                            $value = $item_val->format('M d, Y H:i');
+                        } else {
+                            $value = $item_val;
+                        }
+                    }
+                break;
             }
             if($type=='table'){
                 $response .= '<td>'.$value.'</td>';
@@ -255,6 +278,13 @@ class AdminList {
                     } else {
                         $response .= '<td class="edit">'.AdminList::make_view($module, $model, $appends, $item, 'es').'</td>';
                     }
+                } else if($action_field=='create-child'){
+                    $preurl = url($module.'/model/'.$model.'/create/'.$item->id);
+                    $preurl .= '?level='.($item->level+1).'&parent_id='.$item->id.'&';
+                    if($appends!=NULL){
+                        $preurl .= $appends;
+                    }
+                    $response .= '<td class="restore"><a href="'.$preurl.'">'.trans('master::admin.create-child').'</a></td>';
                 } else {
                     $response .= \CustomFunc::get_action_field_values($response, $module, $model, $item, $action_field, $langs);
                 } 
@@ -263,6 +293,21 @@ class AdminList {
         } else {
             return NULL;
         }
+    }
+
+    public static function make_child_fields_values_rows($parent_key, $langs, $module, $model, $item, $fields, $field_options, $appends, $action_fields) {
+        $response = '';
+        foreach($item->children as $subkey => $child){
+            $new_parent_key = $parent_key.'.'.($subkey+1);
+            $response .= '<tr>';
+            $response .= '<td>'.$new_parent_key.'</td>';
+            $response .= AdminList::make_fields_values_rows($langs, $module, $model, $child, $fields, $field_options, $appends, $action_fields);
+            $response .= '</tr>';
+            if(count($child->children)>0){
+                $response .= AdminList::make_child_fields_values_rows($new_parent_key, $langs, $module, $model, $child, $fields, $field_options, $appends, $action_fields);
+            }
+        }
+        return $response;
     }
 
     public static function make_edit($module, $model, $appends, $item, $lang_code = NULL) {
@@ -305,9 +350,6 @@ class AdminList {
         $url = request()->fullUrl();
         $response = '<h3>'.$title;
         foreach($action_nodes as $key => $action_node){
-            if($key>0){
-                $response .= ' | ';
-            }
             if($action_node=='back'){
                 if($id!=NULL){
                     $back_url = url($module.'/model-list/'.$parent);
@@ -315,7 +357,7 @@ class AdminList {
                         $parameters = json_decode(request()->input('parameters'));
                         $back_url .= '?'.http_build_query($parameters);
                     }
-                    $response .= '<a href="'.$back_url.'"><i class="fa fa-arrow-circle-o-left"></i> '.trans('master::admin.back').'</a>';
+                    $response .= ' | <a href="'.$back_url.'"><i class="fa fa-arrow-circle-o-left"></i> '.trans('master::admin.back').'</a>';
                 }
             } else if($action_node=='create'){
                 if($id==NULL){
@@ -325,19 +367,23 @@ class AdminList {
                     $create_url = url($module.'/model/'.$node->name.'/create?parent_id='.$id);           
                     $string_separator = '&';         
                 }
+                if($node->multilevel){
+                    $create_url .= $string_separator.'&level=1';
+                    $string_separator = '&';
+                }
                 if($appends){
                     $create_url .= $string_separator.$appends;
                 }               
-                $response .= '<a class="admin_link" href="'.$create_url.'"><i class="fa fa-plus"></i> '.trans('master::admin.create').'</a>'; 
+                $response .= ' | <a class="admin_link" href="'.$create_url.'"><i class="fa fa-plus"></i> '.trans('master::admin.create').'</a>'; 
             } else if($action_node=='excel'){
                 if(strpos($url, '?') !== false){
                     $download_url = '&download-excel=true';
                 } else {
                     $download_url = '?download-excel=true';
                 }
-                $response .= '<a href="'.url($url.$download_url).'"><i class="fa fa-download"></i> '.trans('master::admin.download').'</a>';
+                $response .= ' | <a href="'.url($url.$download_url).'"><i class="fa fa-download"></i> '.trans('master::admin.download').'</a>';
             } else {
-                $response .= \CustomFunc::get_action_node($response, $node, $id, $action_node);
+                $response .= ' | '.\CustomFunc::get_action_node($response, $node, $id, $action_node);
             }
         }
         if($node->soft_delete==1){

@@ -20,6 +20,9 @@
             <td>{{ $key+1 }}</td>
             {!! AdminList::make_fields_values_rows($langs, $module, $model, $item, $fields, $field_options, $appends, $action_fields) !!}
           </tr>
+          @if(count($item->children)>0)
+            {!! AdminList::make_child_fields_values_rows(($key+1), $langs, $module, $model, $item, $fields, $field_options, $appends, $action_fields) !!}
+          @endif
         @endforeach
       </tbody>
     </table>
