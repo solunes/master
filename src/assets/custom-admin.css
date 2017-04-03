@@ -587,9 +587,12 @@ body.admin-site.pdf-site {
   background: #fff; }
   body.admin-site.pdf-site .control-label {
     margin-top: 12px; }
+  body.admin-site.pdf-site input.form-control {
+    border: none; }
   body.admin-site.pdf-site select.form-control {
     padding: 0 12px;
-    line-height: 26px; }
+    line-height: 28px;
+    border: none; }
 
 body.admin-site {
   /* Logo */
