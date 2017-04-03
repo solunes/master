@@ -588,13 +588,12 @@ body.admin-site.pdf-site {
   body.admin-site.pdf-site .control-label {
     margin-top: 12px; }
   body.admin-site.pdf-site input.form-control {
-    border: none;
-    background: #fff; }
+    border: none; }
   body.admin-site.pdf-site select.form-control {
     padding: 0 12px;
     line-height: 28px;
-    background: #fff;
-    border: none; }
+    border: none;
+    color: #999; }
 
 body.admin-site {
   /* Logo */
