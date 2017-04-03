@@ -80,12 +80,13 @@
   <script type="text/javascript">
   $(function() {
 
+    //var locale = window.navigator.userLanguage || window.navigator.language;
     var start = moment('{{ $start_date }}');
     var end = moment('{{ $end_date }}');
     var max = moment();
 
     function cb(start, end)  {
-      $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+      $('#reportrange span').html(start.locale('es').format('D [de] MMMM, YYYY') + ' - ' + end.locale('es').format('D [de] MMMM, YYYY'));
       if($('#reportrange').hasClass('loaded')){
         var url = "{{ url('admin') }}?asd=1&start_date="+start.format('YYYY-MM-DD')+"&end_date="+end.format('YYYY-MM-DD');
         $( location ).attr("href", url);

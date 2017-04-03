@@ -49,15 +49,15 @@ return array(
 	"delete_all_filters" => "Eliminar todos los filtros",
 
 	// ERROR MESSAGEs
-	"error_title" => "Lo sentimos",
-	"error_button" => "Haz click aqui para volver",
-	"403_title" => "Acceso Denegado",
+	"error_title" => "¡ups! :(",
+	"error_button" => "&laquo; Volver al inicio",
+	"403_title" => "403 - Acceso denegado",
 	"403_description" => "Disculpe, pero usted no tiene acceso a esta página.",
-	"404_title" => "No se encuentra la página",
-	"404_description" => "Esto es incomodo, pero la página que estaba buscando no existe.",
-	"500_title" => "Hubo un error",
+	"404_title" => "404 - Página no encontrada",
+	"404_description" => "Al parecer, la página que estaba buscando no existe.",
+	"500_title" => "500 - Error de sistema",
 	"500_description" => "Esto es incomodo, pero hubo un error en el servidor. Lo solucionaremos a la brevedad posible.",
-	"503_title" => "Servicio no disponible",
+	"503_title" => "503 - Servicio no Disponible",
 	"503_description" => "Actualmente el servicio no está disponible, intente nuevamente en unos minutos.",
 
 	// GLOBAL MESSAGES

@@ -22,7 +22,7 @@
     @yield('css')
 </head>
 @if(!$pdf)
-  <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+  <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white admin-site">
     <div class="page-wrapper">
         <!-- BEGIN HEADER -->
         <div class="page-header navbar navbar-fixed-top">
@@ -251,7 +251,7 @@
     @yield('script')
   </body>
 @else
-<body class="pdf-body">
+<body class="admin-site pdf-site">
   <div class="content-wrap pdf-wrap">
     @yield('content')
   </div>

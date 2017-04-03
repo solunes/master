@@ -48,15 +48,15 @@ return array(
 	"delete_all_filters" => "Delete all filters",
 
 	// ERROR MESSAGEs
-	"error_title" => "We are sorry",
-	"error_button" => "Click here to go back",
-	"403_title" => "Access denied",
+	"error_title" => "oops! :(",
+	"error_button" => "&laquo; Go back to home",
+	"403_title" => "403 - Access denied",
 	"403_description" => "We are sorry, but you don't have access to this page.",
-	"404_title" => "We can't fiend this page",
-	"404_description" => "This is embarrasing, we could not find this page.",
-	"500_title" => "There was an error",
-	"500_description" => "We found an error on the server. We will fix it as soon as possible.",
-	"503_title" => "Service unavailable",
+	"404_title" => "404 - Page not found",
+	"404_description" => "The page you were looking for, does not exist.",
+	"500_title" => "500 - System error",
+	"500_description" => "This is embarrasing, but we found an error on the server. We will fix it as soon as possible.",
+	"503_title" => "503 - Service unavailable",
 	"503_description" => "Actually, the service is unavailable. Please retry again in some minutes.",
 
 	// GLOBAL MESSAGES
