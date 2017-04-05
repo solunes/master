@@ -20,18 +20,34 @@ class Field extends Model {
     /* Creating rules */
     public static $rules_create = array(
         'parent_id'=>'required',
-        'name'=>'required',
         'order'=>'required',
+        'name'=>'required',
         'trans_name'=>'required',
+        'type'=>'required',
+        'display_list'=>'required',
+        'display_item'=>'required',
+        'multiple'=>'required',
+        'translation'=>'required',
+        'required'=>'required',
+        'new_row'=>'required',
+        'preset'=>'required',
         'label'=>'required',
     );
 
     /* Updating rules */
     public static $rules_edit = array(
         'id'=>'required',
-        'name'=>'required',
         'order'=>'required',
+        'name'=>'required',
         'trans_name'=>'required',
+        'type'=>'required',
+        'display_list'=>'required',
+        'display_item'=>'required',
+        'multiple'=>'required',
+        'translation'=>'required',
+        'required'=>'required',
+        'new_row'=>'required',
+        'preset'=>'required',
         'label'=>'required',
     );
 

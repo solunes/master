@@ -168,6 +168,7 @@ class AdminItem {
         } else {
             $item = $model;
         }
+        $rules = [];
         if($node->dynamic){
             $required_fields = $node->fields()->required()->lists('name')->toArray();
             if(count($required_fields)){
@@ -197,7 +198,7 @@ class AdminItem {
     public static function post_request_success($request, $model, $item, $type = 'admin') {
         $node = \Solunes\Master\App\Node::where('name', $model)->first();
         if($type=='admin'){
-            if (\Gate::denies('node-admin', ['item', $type, $node, $request->input('action'), $request->input('id')])) {
+            if (\Gate::denies('node-admin', ['item', $type, $node, $request->input('action_form'), $request->input('id')])) {
                 return \Login::redirect_dashboard('no_permission');
             }
         }

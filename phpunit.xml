@@ -5,8 +5,8 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false"
+         processIsolation="true"
+         stopOnFailure="true"
          syntaxCheck="false"
 >
     <testsuites>
@@ -14,4 +14,10 @@
             <directory suffix=".php">./tests/</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <env name="APP_ENV" value="local"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_DRIVER" value="sync"/>
+    </php>
 </phpunit>

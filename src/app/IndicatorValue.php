@@ -11,14 +11,17 @@ class IndicatorValue extends Model {
 
 	/* Creating rules */
 	public static $rules_create = array(
-		'trigger_field'=>'required',
-		'trigger_value'=>'required',
+		'date'=>'required',
+		'type'=>'required',
+		'value'=>'required',
 	);
 
 	/* Updating rules */
 	public static $rules_edit = array(
-		'trigger_field'=>'required',
-		'trigger_value'=>'required',
+		'id'=>'required',
+		'date'=>'required',
+		'type'=>'required',
+		'value'=>'required',
 	);
 
     public function parent() {

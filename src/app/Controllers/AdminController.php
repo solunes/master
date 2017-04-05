@@ -123,7 +123,7 @@ class AdminController extends Controller {
 
     public function postModel(Request $request) {
       $model = $request->input('model_node');
-      $action = $request->input('action');
+      $action = $request->input('action_form');
       $lang_code = $request->input('lang_code');
       $response = AdminItem::post_request($model, $action, $request);
       $item = $response[1];

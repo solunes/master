@@ -131,8 +131,8 @@ class MasterDatabase extends Migration
         });
         Schema::create('filters', function (Blueprint $table) {
             $table->increments('id');
-            $table->enum('category', ['admin','indicator','site','custom'])->default('admin');
             $table->integer('order')->nullable()->default(0);
+            $table->enum('category', ['admin','indicator','site','custom'])->default('admin');
             $table->enum('display', ['all','user'])->default('all');
             $table->enum('type', ['field','parent_field','custom'])->default('field');
             $table->enum('subtype', ['select','date','string','field'])->default('select');
@@ -149,7 +149,7 @@ class MasterDatabase extends Migration
             $table->integer('order')->nullable()->default(0);
             $table->string('name');
             $table->string('trans_name');
-            $table->enum('type', ['string','text','select','password','image','file','map','radio','checkbox','date','array','score','hidden','preset','relation','child','subchild','field','title','content'])->default('string');
+            $table->enum('type', ['string','text','select','password','image','file','barcode','map','radio','checkbox','date','array','score','hidden','preset','relation','child','subchild','field','title','content'])->default('string');
             $table->enum('display_list', ['show', 'excel', 'none'])->default('show');
             $table->enum('display_item', ['show', 'admin', 'none'])->default('show');
             $table->boolean('multiple')->default(0);
@@ -251,9 +251,9 @@ class MasterDatabase extends Migration
         Schema::create('indicator_values', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->unsigned();
-            $table->date('date');
-            $table->string('type')->default('normal');
-            $table->string('value');
+            $table->date('date')->nullable();
+            $table->string('type')->default('normal')->nullable();
+            $table->string('value')->nullable();
             $table->foreign('parent_id')->references('id')->on('indicators')->onDelete('cascade');
         });
     }

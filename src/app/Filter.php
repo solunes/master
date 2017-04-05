@@ -12,12 +12,23 @@ class Filter extends Model {
 
 	/* Creating rules */
 	public static $rules_create = array(
-		'parameter'=>'required',
+        'category'=>'required',
+        'display'=>'required',
+        'type'=>'required',
+        'subtype'=>'required',
+        'node_id'=>'required',
+        'parameter'=>'required',
 	);
 
 	/* Updating rules */
 	public static $rules_edit = array(
-		'parameter'=>'required',
+        'id'=>'required',
+        'category'=>'required',
+        'display'=>'required',
+        'type'=>'required',
+        'subtype'=>'required',
+        'node_id'=>'required',
+        'parameter'=>'required',
 	);
 
     public function scopeCheckCategory($query, $category) {

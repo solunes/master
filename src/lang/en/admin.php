@@ -112,6 +112,7 @@ return array(
 	"text" => "Long Text",
 	"image" => "Image",
 	"file" => "File",
+	"barcode" => "Barcode",
 	"radio" => "Radio",
 	"checkbox" => "Checkbox",
 	"array" => "Array",

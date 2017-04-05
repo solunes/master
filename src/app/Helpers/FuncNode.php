@@ -51,6 +51,8 @@ class FuncNode {
             array_push($extras, ['type'=>'class','value'=>'simple-textarea']);
             array_push($extras, ['type'=>'cols','value'=>'12']);
             array_push($extras, ['type'=>'rows','value'=>'3']);
+        } else if($name=='barcode'){
+          $type = 'barcode';
         } else if($name=='password'){
             $type = 'password';
         } else if($name=='map'){

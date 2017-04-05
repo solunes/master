@@ -19,6 +19,7 @@ class TempFile extends Model {
 
 	/* Updating rules */
 	public static $rules_edit = array(
+		'id'=>'required',
 		'type'=>'required',
 		'folder'=>'required',
 		'file'=>'required',

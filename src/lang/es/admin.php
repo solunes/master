@@ -116,6 +116,7 @@ return array(
 	"text" => "Texto Largo",
 	"image" => "Imagen",
 	"file" => "Archivo",
+	"barcode" => "Código de Barras",
 	"radio" => "Radio",
 	"checkbox" => "Checkbox",
 	"array" => "Array",

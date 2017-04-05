@@ -19,12 +19,30 @@ class Node extends Model {
     /* Creating rules */
     public static $rules_create = array(
         'name'=>'required',
+        'location'=>'required',
+        'type'=>'required',
+        'multilevel'=>'required',
+        'dynamic'=>'required',
+        'customized'=>'required',
+        'translation'=>'required',
+        'soft_delete'=>'required',
+        'singular'=>'required',
+        'plural'=>'required',
     );
 
     /* Updating rules */
     public static $rules_edit = array(
         'id'=>'required',
         'name'=>'required',
+        'location'=>'required',
+        'type'=>'required',
+        'multilevel'=>'required',
+        'dynamic'=>'required',
+        'customized'=>'required',
+        'translation'=>'required',
+        'soft_delete'=>'required',
+        'singular'=>'required',
+        'plural'=>'required',
     );
 
     public function children() {

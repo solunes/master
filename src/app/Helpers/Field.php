@@ -8,7 +8,7 @@ class Field {
             
     public static function form_submit($i, $model, $action) {
         $response = '<div>';
-        $response .= Form::hidden('action', $action);
+        $response .= Form::hidden('action_form', $action);
         $response .= Form::hidden('model_node', $model);
         $response .= Form::hidden('lang_code', \App::getLocale());
         if(request()->has('parameters')){
@@ -225,6 +225,8 @@ class Field {
         $response = NULL;
         if($type=='file'||$type=='image'){
             $response .= Field::generate_image_field($name, $type, $parameters, $array, $value, $data_type);
+        } else if($type=='barcode'){
+            $response .= Field::generate_barcode_field($name, $type, $parameters, $array, $value, $data_type);
         } else if($type=='map'){
             $response .= Field::generate_map_field($name, $type, $parameters, $array, $value, $data_type);
         } else if($type=='string'){
@@ -309,6 +311,12 @@ class Field {
         return $response;
     }
 
+    public static function generate_barcode_field($name, $type, $parameters, $array, $value, $data_type) {
+        $response = 'asdasd';
+        $response .= Form::text($name, $value, $array);
+        return $response;
+    }
+
     public static function generate_image_field($name, $type, $parameters, $array, $value, $data_type) {
           $folder = $parameters['folder'];
           $array['data-count'] = 0;
@@ -370,6 +378,8 @@ class Field {
                 $response .= '</div>';
               }
             }
+          } else {
+            $response .= '<input type="hidden" name="'.$name.'" />';
           }
           if($data_type=='view'&&$array['data-count']==0){
             $response .= '<div>-</div>';

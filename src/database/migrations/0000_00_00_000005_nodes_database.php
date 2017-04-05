@@ -37,8 +37,8 @@ class NodesDatabase extends Migration
             $table->integer('node_id')->unsigned();
             $table->integer('item_id')->nullable();
             $table->integer('user_id')->nullable();
-            $table->string('username');
-            $table->string('action');
+            $table->string('username')->nullable();
+            $table->string('action')->nullable();
             $table->text('message')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -128,7 +128,7 @@ class NodesDatabase extends Migration
             $table->enum('type', ['original','resize','fit'])->default('original');
             $table->integer('width')->nullable();
             $table->integer('height')->nullable();
-            $table->foreign('parent_id')->references('id')->on('image_sizes')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('image_folders')->onDelete('cascade');
         });
     }
 
