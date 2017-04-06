@@ -70,7 +70,8 @@ class TestController extends Controller {
                     if(!$item->field_extras()->where('type', 'class')->where('value', 'textarea')->first()){
                 		$strong = $this->checkIfStrong($item->name, ['content','description']);
                 		$response .= $strong['begin'];
-                		$response .= "<br>- ".$item->parent->singular.' ('.$item->parent->name.') - '.$item->label.' ('.$item->name.')';
+                		$response .= "<br>- ".$this->generateLink(url('admin/model/'.$item->parent->name.'/create'), $item->parent->singular);
+                        $response .= ' ('.$item->parent->name.') - '.$item->label.' ('.$item->name.')';
                 		$response .= $strong['end'];
                     }
                 }
@@ -80,8 +81,8 @@ class TestController extends Controller {
             if(count($nodes)>0){
                 $response .= '<br><br><strong>Listado de Nodos.</strong> Revisar si el listado de nodos es correcto:';
                 foreach($nodes as $node){
-                	$response .= "<br>- ".$node->name.' -> Nº (count)';
-                	foreach($node->fields()->displayList('show')->get() as $field){
+                	$response .= "<br>- ".$this->generateLink(url('admin/model-list/'.$node->name), $node->name)." -> Nº (count)";
+                	foreach($node->fields()->displayList('show')->where('type', '!=', 'field')->get() as $field){
                 		$strong = $this->checkIfStrong($field->type, ['text','field']);
                 		$response .= $strong['begin'];
                 		$response .= ' - '.$field->label.' ('.$field->type.')';
@@ -111,5 +112,9 @@ class TestController extends Controller {
 			return ['begin'=>NULL, 'end'=>NULL];
 		}
 	}
+
+    public function generateLink($url, $label){
+        return "<a target='_blank' href='".$url."'>".$label."</a>";
+    }
 
 }
