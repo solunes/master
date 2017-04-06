@@ -32,7 +32,7 @@ class AdminItem {
                             foreach($item->$child_name as $item_child){
                                 \Asset::delete_saved_files($file_fields, $item_child);
                             }
-                        } else {
+                        } else if(!is_object($item->$child_name)&&$item->$child_name) {
                             \Asset::delete_saved_files($file_fields, $item->$child_name);
                         }
                       }
