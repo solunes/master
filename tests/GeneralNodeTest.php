@@ -7,20 +7,38 @@ class GeneralNodeTest extends TestCase {
     
     public function testNodesItem() {
         $user = \App\User::find(1);
+        $hidden_array = ['admin','show'];
         foreach(\Solunes\Master\App\Node::whereNotIn('type', ['subchild', 'field'])->with('fields','fields.field_options')->get() as $node){
             $url = '/admin/model/'.$node->name.'/create';
-            if($node->name=='indicator'){
-                $url .= '?node_id=40&type=normal&data=count';
-            } else if($node->parent_id){
+            $preset_fields = $node->fields()->displayItem($hidden_array)->preset()->required()->get();
+            $count = 0;
+            if($node->parent_id){
                 $model = \FuncNode::node_check_model($node->parent);
                 if($last = $model->first()){
+                    $count = 1;
                     $url .= '?parent_id='.$last->id;
                 }
             }
+            foreach($preset_fields as $preset){
+                $subnode = \Solunes\Master\App\Node::where('name', $preset->value)->first();
+                $model = \FuncNode::node_check_model($subnode);
+                if($preset->name!='parent_id'&&$last = $model->orderBy('id', 'DESC')->first()){
+                    if($count==0) {
+                        $url .= '?';
+                    } else {
+                        $url .= '&';
+                    }
+                    $url .= $preset->name.'='.$last->id;
+                    $count++;
+                }
+            }
+            if($node->name=='indicator'){
+                $url .= '&type=normal&data=count';
+            }
             if($node->name!='field'&&$node->name!='node'){
-                $this->actingAs($user)->visit($url);
-                $hidden_array = ['admin','show'];
+                $input = [];
                 foreach($node->fields()->where('type', '!=', 'child')->displayItem($hidden_array)->whereNull('child_table')->get() as $field){
+                    $value = NULL;
                     if($field->required||($node->name=='user'&&$field->name=='username')){
                         if($field->type=='select'||$field->type=='radio'||$field->type=='checkbox'||$field->type=='relation'||$field->type=='field'){
                             if($field->type=='relation'||$field->type=='field'){
@@ -29,25 +47,28 @@ class GeneralNodeTest extends TestCase {
                                 $value = $field->field_options()->first()->name;
                             }
                             if($field->type=='relation'&&$field->name=='parent_id'){
-
-                            } else if($field->type=='checkbox') {
-                                $this->checkbox($field->name);
-                            } else {
-                                $this->select($value, $field->name);
+                                $value = NULL;
                             }
                         } else {
                             if($field->name=='password'){
-                                $this->type('asdasdasda', $field->name);
+                                $value = 'asdasdasda';
                             } else if($field->type=='file'||$field->type=='image') {
-                                $this->attach(public_path('assets/img/logo.png'), 'uploader_'.$field->name);
-                                $this->type('asd.docx', $field->name);
+                                $value = public_path('assets/img/logo.png');
                             } else {
-                                $this->type(1, $field->name);
+                                $value = 1;
                             }
                         } 
+                        if($value!==NULL){
+                            if($field->type=='checkbox'||($field->type=='field'&&$field->multiple)){
+                                $input[$field->name] = [$value];
+                            } else {
+                                $input[$field->name] = $value;
+                            }
+                        }
                     }
                 }
-                $this->press('Crear')->see('El item fue creado correctamente.');
+                $this->actingAs($user)->visit($url)
+                ->submitForm('Crear', $input)->see('El item fue creado correctamente.');
             }
         }
     }
