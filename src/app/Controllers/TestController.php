@@ -83,12 +83,39 @@ class TestController extends Controller {
                 foreach($nodes as $node){
                 	$response .= "<br>- ".$this->generateLink(url('admin/model-list/'.$node->name), $node->name)." -> Nº (count)";
                 	foreach($node->fields()->displayList('show')->where('type', '!=', 'field')->get() as $field){
-                		$strong = $this->checkIfStrong($field->type, ['text','field']);
+                		$strong = $this->checkIfStrong($field->type, ['text','subchild']);
                 		$response .= $strong['begin'];
                 		$response .= ' - '.$field->label.' ('.$field->type.')';
                 		$response .= $strong['end'];
-
                 	}
+                }
+            }
+
+            $nodes = \Solunes\Master\App\Node::where('location', 'app')->where('dynamic', 0)->get();
+            if(count($nodes)>0){
+                $response .= '<br><br><strong>Revisión general de permisos.</strong> Revisar si los permisos están bien:';
+                foreach($nodes as $node){
+                    $model = \FuncNode::node_check_model($node);
+                    $rules_edit = $model::$rules_edit;
+                    $rules_create = $model::$rules_create;
+                    $fields_array = $node->fields()->where('type', '!=', 'child')->displayItem(['admin', 'show'])->whereNull('child_table')->lists('name')->toArray();
+                    // REVISAR SI HAY REGLAS QUE SOBRAN
+                    $required_fields = $this->checkRules($rules_create, $rules_edit, $fields_array);
+                    if(count($required_fields)>0){
+                        $response .= "<br>- Quitar de modelo (rules): ".$this->generateLink(url('admin/model/'.$node->name.'/create'), $node->name);
+                        foreach($required_fields as $field_name => $field_rule){
+                            $response .= ' - '.$field_name.' ('.$field_rule.')';
+                        }
+                    }
+                    // REVISAR SI HAY REGLAS QUE FALTAN
+                    $fields = $node->fields()->where('type', '!=', 'child')->displayItem(['admin', 'show'])->whereNull('child_table')->get();
+                    $pending_fields = $this->checkPendingRules($fields, ($rules_edit + $rules_create));
+                    if(count($pending_fields)>0){
+                        $response .= "<br>- Agregar regla a (rules): ".$this->generateLink(url('admin/model/'.$node->name.'/create'), $node->name);
+                        foreach($pending_fields as $field){
+                            $response .= ' - '.$field;
+                        }
+                    }
                 }
             }
 
@@ -115,6 +142,40 @@ class TestController extends Controller {
 
     public function generateLink($url, $label){
         return "<a target='_blank' href='".$url."'>".$label."</a>";
+    }
+
+    public function checkRules($rules_create, $rules_edit, $fields_array){
+        $required_fields = [];
+        foreach($rules_create as $rule_key => $rule){
+            if((in_array($rule_key, $fields_array)&&strpos($rule, 'required') !== false)||$rule_key=='id'){
+            } else {
+                $required_fields[$rule_key] = 'create';
+            }
+        }
+        foreach($rules_edit as $rule_key => $rule){
+            if((in_array($rule_key, $fields_array)&&strpos($rule, 'required') !== false)||$rule_key=='id'){
+            } else {
+                if(isset($required_fields[$rule_key])){
+                    $required_fields[$rule_key] = 'create - edit';
+                } else {
+                    $required_fields[$rule_key] = 'edit';
+                }
+            }
+        }
+        return $required_fields;
+    }
+
+    public function checkPendingRules($fields, $rules){
+        $pending_fields = [];
+        foreach($fields as $field){
+            if((array_key_exists($field->name, $rules)&&strpos($rules[$field->name], 'required') !== false)){
+            } else {
+                if(in_array($field->type, ['select','radio','checkbox','relation'])){
+                    $pending_fields[$field->name] = $field->name;
+                }
+            }
+        }
+        return $pending_fields;
     }
 
 }
