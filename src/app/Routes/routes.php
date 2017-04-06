@@ -57,3 +57,6 @@ Route::group(['prefix'=>'asset'], function(){
     Route::post('upload', 'AssetController@postUpload');
     Route::post('delete', 'AssetController@postDelete');
 });
+Route::group(['prefix'=>'test'], function(){
+    Route::get('general-test', 'TestController@getGeneralTest');
+});
