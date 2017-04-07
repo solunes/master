@@ -137,8 +137,10 @@ class DynamicFormController extends Controller {
                 }
                 $node->fields()->where('name', 'filled_form_id')->update(['display_item'=>'none']);
                 // Agregar action buttons a nodo
-                $value_array = ["create","edit","delete"];
-                \Dynamic::generate_node_extra($node, 'action_field', $value_array);
+                $action_fields = ['edit','delete'];
+                \Dynamic::generate_node_extra($node, 'action_field', $action_fields);
+                $action_nodes = ['back','create','excel'];
+                \Dynamic::generate_node_extra($node, 'action_node', $action_nodes);
             } else {
                 $menu = \Solunes\Master\App\Menu::whereTranslation('link', 'admin/model-list/'.$node->name)->first();
                 $menu->translateOrNew('es')->name = request()->input('menu_name');

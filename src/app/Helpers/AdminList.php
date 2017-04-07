@@ -345,7 +345,7 @@ class AdminList {
         return '<a href="'.$url.'">'.trans('master::admin.view').'</a>';
     }
 
-    public static function make_list_header($module, $node, $id, $parent, $appends, $count = 0, $action_nodes = ['back','create', 'excel']) {
+    public static function make_list_header($module, $node, $id, $parent, $appends, $count = 0, $action_nodes = ['back','create','excel']) {
         $title = $node->plural.' ('.$count.')';
         $url = request()->fullUrl();
         $response = '<h3>'.$title;
