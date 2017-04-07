@@ -218,12 +218,12 @@ class AdminController extends Controller {
 	}
 
 	public function getDeleteFilter($id) {
-		\Solunes\Master\App\Filter::where('id', $id)->delete();
+		\Solunes\Master\App\Filter::where('id', $id)->where('display','user')->where('user_id',auth()->user()->id)->delete();
       	return redirect($this->prev);
 	}
 
 	public function getDeleteAllFilters($category, $category_id, $node_id = NULL) {
-		$filters = \Solunes\Master\App\Filter::checkCategory($category)->checkDisplay();
+		$filters = \Solunes\Master\App\Filter::checkCategory($category)->where('display','user')->where('user_id',auth()->user()->id);
 		if($category_id==0){
 			$node = \Solunes\Master\App\Node::where('name', $node_id)->first();
 			$filters->where('node_id', $node->id)->delete();

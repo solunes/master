@@ -436,6 +436,11 @@ class AdminList {
             foreach($filters as $filter){
                 $field_name = $filter->parameter;
                 $array['filters'][$field_name] = ['subtype'=>$filter->subtype, 'id'=>$filter->id];
+                if($filter->display=='user'){
+                    $array['filters'][$field_name]['show_delete'] = true;
+                } else {
+                    $array['filters'][$field_name]['show_delete'] = false;
+                }
                 if($type=='custom'||$type=='indicator'){
                     $node = $filter->node;
                     if($type=='custom'){
