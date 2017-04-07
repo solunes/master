@@ -9,6 +9,11 @@ return [
 	'send_notification_sms' => false,
 	'send_notification_app' => false,
 
+	// LIST
+	'pagination_count' => 500,
+	'table_pagination' => 'false',
+	'table_pagination_count' => 25,
+
 	// CUSTOM FUNC
 	'get_page_array' => false,
     'before_migrate' => false,

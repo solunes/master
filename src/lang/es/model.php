@@ -59,7 +59,7 @@ return [
     // MENU
     'my_dashboard' => 'Mi Panel',
     'my_account' => 'Mi Cuenta',
-    'profile' => 'Perfil',
+    'my_profile' => 'Perfil',
     'logout' => 'Cerrar Sesión',
 
 ];

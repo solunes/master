@@ -53,7 +53,7 @@
       <h3 class="uppercase">{{ trans('master::model.my_account') }}</h3>
     </li>
     <li class="nav-item"><a class="nav-link" href="{{ url('account') }}">
-      <i class="fa fa-user"></i><span class="title">{{ trans('master::model.profile') }}</span>
+      <i class="fa fa-user"></i><span class="title">{{ trans('master::model.my_profile') }}</span>
     </a></li>
     <li class="nav-item"><a class="nav-link" href="{{ url('auth/logout') }}">
       <i class="fa fa-sign-out"></i><span class="title">{{ trans('master::model.logout') }}</span>

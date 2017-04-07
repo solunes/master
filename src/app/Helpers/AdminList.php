@@ -86,7 +86,7 @@ class AdminList {
         }
 
         $array['items_count'] = $items->count();
-        $array['items'] = $items->paginate(500);
+        $array['items'] = $items->paginate(config('solunes.pagination_count'));
         if($node->translation==1){
             $array['langs'] = \Solunes\Master\App\Language::get();
         } else {
