@@ -31,8 +31,7 @@ class TestController extends Controller {
             if(count($items)>0){
             	$response .= '<br><br><strong>Node Translation.</strong> Model:';
                 foreach($items as $item){
-                	$response .= "<br>".$item->singular;
-                	//$response .= "<br>'".str_replace("master::fields.", "",$item->label)."' => 'barcode'";
+                    $response .= $this->getTransResponse($item->singular, ":model.");
                 }
             }
             
@@ -49,8 +48,7 @@ class TestController extends Controller {
                 $response .= '';
                 $this->info('<br><br><strong>Field Option Translation.</strong> Agregar a admin.php:');
                 foreach($items as $item){
-                	$response .= "<br>".$item->label;
-                	//$response .= "<br>'".str_replace("master::fields.", "",$item->label)."' => 'barcode'";
+                    $response .= $this->getTransResponse($item->label, "master::admin.");
                 }
             }
 

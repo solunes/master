@@ -9,7 +9,7 @@ class RegisterActivityModel {
     	// Revisar que tenga una sesión y sea un modelo del sitio web.
     	$blocked_array = ['menu','user','activity','notification'];
     	$blocked_array = $blocked_array + config('solunes.blocked_activities');
-	    if($event&&request()->segment(1)!='artisan'&&request()->segment(1)!='api'&&$node = \Solunes\Master\App\Node::where('type','!=','subchild')->where('model', '!=', '\App\User')->whereNotIn('name', $blocked_array)->where('model', $event_model)->first()){
+	    if($event&&request()->segment(1)!='artisan'&&request()->segment(1)!='api'&&!\App::runningInConsole()&&$node = \Solunes\Master\App\Node::where('type','!=','subchild')->where('model', '!=', '\App\User')->whereNotIn('name', $blocked_array)->where('model', $event_model)->first()){
 			try {
 			    $event_string = (string)json_encode($event);
 			    $event_decoded = json_decode($event_string);
