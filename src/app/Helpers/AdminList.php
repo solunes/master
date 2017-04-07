@@ -85,7 +85,8 @@ class AdminList {
             }
         }
 
-        $array['items'] = $items->get();
+        $array['items_count'] = $items->count();
+        $array['items'] = $items->paginate(500);
         if($node->translation==1){
             $array['langs'] = \Solunes\Master\App\Language::get();
         } else {
@@ -345,8 +346,13 @@ class AdminList {
         return '<a href="'.$url.'">'.trans('master::admin.view').'</a>';
     }
 
-    public static function make_list_header($module, $node, $id, $parent, $appends, $count = 0, $action_nodes = ['back','create','excel']) {
-        $title = $node->plural.' ('.$count.')';
+    public static function make_list_header($module, $node, $id, $parent, $appends, $count = 0, $total_count = 0, $action_nodes = ['back','create','excel']) {
+        $title = $node->plural;
+        if($count == $total_count){
+            $title .= ' ( '.$count.' )';
+        } else {
+            $title .= ' ( '.$count.' / '.$total_count.' )';
+        }
         $url = request()->fullUrl();
         $response = '<h3>'.$title;
         foreach($action_nodes as $key => $action_node){

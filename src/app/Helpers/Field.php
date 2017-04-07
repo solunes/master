@@ -93,8 +93,12 @@ class Field {
         if(isset($field['tooltip'])&&$field['tooltip']&&$data_type!='view'){
             $label .= ' <a href="#" class="help" title="'.$field['tooltip'].'"><i class="fa fa-question-circle"></i></a>';
         }
-        if(isset($field['filter_delete'])&&$field['filter_delete']){
-            $label .= ' <a href="'.url('admin/delete-filter/'.$field['filter']).'" onclick="return confirm(\''.trans('master::admin.delete_confirmation').'\');">( X )</a>';
+        if(isset($field['filter_delete'])&&isset($field['filter'])){
+            if($field['filter_delete']){
+                $label .= ' <a href="'.url('admin/delete-filter/'.$field['filter']).'" onclick="return confirm(\''.trans('master::admin.delete_confirmation').'\');">( X )</a>';
+            } else {
+                $label .= ' (Filtro Global)';
+            }
         }
         if(isset($field['message'])&&$field['message']){
             $label .= '<div class="field-message">'.$field['message'].'</div>';

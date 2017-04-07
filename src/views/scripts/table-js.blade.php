@@ -1,6 +1,7 @@
 <script type="text/javascript"> 
 $(document).ready(function() {
     $('table.admin-table').dataTable({
+        "paging": false,
         "aoColumnDefs": [
           { "sType": "num-html", "aTargets": [ 0 ] }
         ]

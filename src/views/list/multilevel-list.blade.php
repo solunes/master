@@ -4,7 +4,7 @@
   @include('master::scripts.lightbox-css')
 @endsection
 @section('content')
-  {!! AdminList::make_list_header($module, $node, $id, $parent, $appends, count($items), $action_nodes) !!}
+  {!! AdminList::make_list_header($module, $node, $id, $parent, $appends, count($items), $items_count, $action_nodes) !!}
   @include('master::helpers.filter')
   @if(count($items)>0)
     <table class="admin-table table table-striped table-bordered table-hover dt-responsive">
