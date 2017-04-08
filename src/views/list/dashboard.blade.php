@@ -36,7 +36,11 @@
                     <span data-counter="counterup" data-value="0">0</span>
                   @endif
                 </div>
-                <div class="desc"> {{ $alert->indicator->name }} </div>
+                <div class="desc"> {{ $alert->indicator->name }}
+                  @if($alert->goal)
+                    <br>Meta: {{ $alert->goal }}
+                  @endif
+                </div>
               @endif
             </div>
           </a>

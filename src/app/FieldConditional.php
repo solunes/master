@@ -12,12 +12,14 @@ class FieldConditional extends Model {
 	/* Creating rules */
 	public static $rules_create = array(
 		'trigger_field'=>'required',
+		'trigger_show'=>'required',
 		'trigger_value'=>'required',
 	);
 
 	/* Updating rules */
 	public static $rules_edit = array(
 		'trigger_field'=>'required',
+		'trigger_show'=>'required',
 		'trigger_value'=>'required',
 	);
 

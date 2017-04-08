@@ -111,7 +111,11 @@ class AdminController extends Controller {
 		  	$filter->save();
 		  }
 		  if(config('solunes.update_indicator_values')){
-		  	\CustomFunc::update_indicator_values($indicator);
+		  	if(config('solunes.custom_indicator_values')){
+		  		\CustomFunc::update_indicator_values($indicator);
+		  	} else {
+		  		\FuncNode::update_indicator_values($indicator);
+		  	}
 		  }
 		}
 		$filled_items = $indicator_model;
@@ -129,6 +133,14 @@ class AdminController extends Controller {
       $item = $response[1];
 	  if($response[0]->passes()) {
 	  	$item = AdminItem::post_request_success($request, $model, $item, 'admin');
+	  	if($model=='indicator'&&$action=='create'){
+	  		$indicator = \Solunes\Master\App\Indicator::find($item->id);
+		  	if(config('solunes.custom_indicator_values')){
+		  		\CustomFunc::update_indicator_values($indicator);
+		  	} else {
+		  		\FuncNode::update_indicator_values($indicator);
+		  	}
+	  	}
         return AdminItem::post_success($action, $this->module.'/model/'.$model.'/edit/'.$item->id.'/'.$request->input('lang_code'));
 	  } else {
 		return AdminItem::post_fail($action, $this->prev, $response[0]);

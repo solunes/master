@@ -7,7 +7,7 @@
   {!! AdminList::make_list_header($module, $node, $id, $parent, $appends, count($items), $items_count, $action_nodes) !!}
   @include('master::helpers.filter')
   @if(count($items)>0)
-    {!! $items->render() !!}
+    {!! $items->appends(request()->except(array('page')))->render() !!}
     <table class="admin-table table table-striped table-bordered table-hover dt-responsive">
       <thead>
         <tr class="title">
@@ -24,7 +24,7 @@
         @endforeach
       </tbody>
     </table>
-    {!! $items->render() !!}
+    {!! $items->appends(request()->except(array('page')))->render() !!}
   @else
     <p>{{ trans('master::admin.no_items') }}</p>
   @endif

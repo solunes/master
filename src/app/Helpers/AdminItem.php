@@ -127,7 +127,7 @@ class AdminItem {
                     $separator_sign = '?';
                   }
                   if($single_model=='indicator'){
-                    $preset_items = \Solunes\Master\App\Node::where('folder','form')->get()->lists('singular', 'id');
+                    $preset_items = \Solunes\Master\App\Node::get();
                   } else {
                     $preset_items = $preset_field->options;
                   }

@@ -557,20 +557,21 @@ class AdminList {
 
     public static function filter_items_get($items, $node, $model, $filter, $field, $field_name, $custom_value, $parent_field_join = 'parent_id') {
         $custom_value_count = count($custom_value);
+        $date_model = NULL;
         if($filter->type=='field'){
             $date_model = $model;
             if($custom_value_count>0){  
                 $items = \AdminList::filter_custom_array($items, $custom_value, $field, $field_name);
             }
         } else if($filter->type=='parent_field') {
-            $parent_model = $node->model;
-            $date_model = $parent_model;
             if($custom_value_count>0){
+                $parent_model = $node->model;
+                $date_model = $parent_model;
                 $parent_array = $parent_model::whereNotNull('id');
                 $parent_array = \AdminList::filter_custom_array($parent_array, $custom_value, $field, $field_name);
                 $parent_array = $parent_array->lists($parent_field_join)->toArray();
+                $items = $items->whereIn('id', $parent_array);
             }
-            $items = $items->whereIn('id', $parent_array);
         }
         return ['items'=>$items, 'date_model'=>$date_model];
     }

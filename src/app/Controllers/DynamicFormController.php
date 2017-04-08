@@ -62,7 +62,12 @@ class DynamicFormController extends Controller {
         }
         $array['fields'] = $node->fields()->whereIn('name', ['name','permission','singular','plural'])->with('translations','field_extras','field_options_active')->get();
         if($action=='create'){
-            $menus = \Solunes\Master\App\Menu::where('level', '!=', 3)->whereIn('permission', ['estudiante','docente','empresa','orientacion','retroalimentacion'])->where('type', 'blank')->with('parent')->get();
+            $array['options_menu'] = [];
+            if(config('solunes.dyanmic_form_create_menu')){
+                $menus = \CustomFunc::dyanmic_form_create_menu();
+            } else {
+                $menus = \Solunes\Master\App\Menu::where('level', '!=', 3)->where('type', 'blank')->with('parent')->get();
+            }
             foreach($menus as $menu){
                 if($menu->level==2){
                     $menu_name = $menu->parent->name.' | '.$menu->name;
@@ -71,7 +76,6 @@ class DynamicFormController extends Controller {
                 }
                 $array['options_menu'][$menu->id] = $menu_name;
             }
-            $array['menu_name'] = NULL;
         } else {
             $array['menu_name'] = \Solunes\Master\App\Menu::whereTranslation('link', 'admin/model-list/'.$array['i']->name)->first()->name;
         }
