@@ -76,6 +76,7 @@ class DynamicFormController extends Controller {
                 }
                 $array['options_menu'][$menu->id] = $menu_name;
             }
+            $array['menu_name'] = NULL;
         } else {
             $array['menu_name'] = \Solunes\Master\App\Menu::whereTranslation('link', 'admin/model-list/'.$array['i']->name)->first()->name;
         }
