@@ -24,6 +24,7 @@
         "html2text/html2text": "4.*",
         "barryvdh/laravel-debugbar": "2.*",
         "roumen/sitemap": "2.6.*",
+        "codeitnowin/barcode": "2.*",
         "mews/captcha": "2.*"
     },
     "require-dev": {

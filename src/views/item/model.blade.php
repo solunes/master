@@ -35,4 +35,7 @@
   @include('master::scripts.tooltip-js')
   @include('master::scripts.accordion-js')
   @include('master::scripts.leave-form-js')
+  @if($barcode_enabled)
+    @include('master::scripts.barcode-js')
+  @endif
 @endsection

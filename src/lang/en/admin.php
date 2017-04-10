@@ -88,6 +88,8 @@ return array(
 	// GLOBAL TRANS
 	"0" => "No",
 	"1" => "Si",
+	"holding" => "Holding",
+	"printed" => "Printed",
 	"customRequest" => "customRequest",
 	"value" => "Valor",
 	"all" => "All",

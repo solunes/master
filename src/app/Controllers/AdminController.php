@@ -254,4 +254,26 @@ class AdminController extends Controller {
       	return view('master::modal.map', $array);
 	}
 
+    public function checkBarcode($node_id, $barcode) {
+	    if($id = \Asset::check_barcode($node_id, $barcode)){
+	    	$array['id'] = $id;
+	    	$array['check'] = true;
+	    } else {
+	    	$array['id'] = NULL;
+	    	$array['check'] = false;
+	    }
+	    return $array;
+	}
+
+    public function redirectBarcode($node_name, $id) {
+    	return redirect('admin/model/'.$node_name.'/edit/'.$id.'/es')->with('message_success', 'Se encontró un código de barras bajo este item, recomendamos editarlo aquí a menos que cree un nuevo código para el producto.');
+	}
+
+    public function generateBarcodeImage($value) {
+    	$code = \Asset::generate_barcode_image($value);
+    	$html = '<img src="data:image/png;base64,'.$code.'" />';
+        $pdf = \PDF::loadHTML($html)->setPaper('A9')->setOrientation('landscape')->setOption('margin-top', 12)->setOption('margin-left', 3)->setOption('margin-right', 0)->setOption('margin-bottom', 0)->stream('barcode_'.$value.'.pdf');
+    	return $pdf;
+	}
+
 }

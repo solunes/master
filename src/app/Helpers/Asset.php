@@ -171,4 +171,61 @@ class Asset {
     	}
     }
 
+    public static function generate_barcode($node_id, $id = NULL) {
+        $value = '777';
+        $node_id = str_pad($node_id, 3, '0', STR_PAD_LEFT);
+        if($id==NULL){
+        	$id = rand(0, 999999);
+        }
+        $id = str_pad($id, 6, '0', STR_PAD_LEFT);
+        $value .= $node_id.$id;
+        $value_array = str_split($value);
+        $odd = true;
+        $total = 0;
+        foreach($value_array as $val){
+            if($odd === true){
+                $multiplier = 1;
+                $odd = false;
+            } else {
+                $multiplier = 3;
+                $odd = true;
+            }
+            $total += $val * $multiplier;
+        }
+        $total = (10 - $total % 10) % 10;
+        $keys = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+        $value .= $keys[$total];
+        if(\Asset::check_barcode($node_id, $value)!==0){
+        	$value = \Asset::generate_barcode($node_id, $id);
+        }
+        return $value;
+    }
+
+    public static function check_barcode($node_id, $barcode) {
+    	$node = \Solunes\Master\App\Node::find($node_id);
+    	$model = \FuncNode::node_check_model($node);
+    	if($item = $model->where('barcode', $barcode)->first()){
+    		return $item->id;
+    	} else {
+    		return 0;
+    	}
+    }
+
+    public static function generate_barcode_image($value) {
+    	$barcode = new \BarcodeGenerator;
+    	if(is_numeric($value)&&strlen($value)==13){
+    		$value = substr($value, 0, 12);
+    		$type = \BarcodeGenerator::Ean13;
+    	} else {
+    		$type = \BarcodeGenerator::Code11;
+    	}
+    	$barcode->setText($value);
+    	$barcode->setType($type);
+		$barcode->setThickness(30);
+		$barcode->setFontSize(14);
+    	$barcode->setScale(2);
+    	$code = $barcode->generate();
+    	return $code;
+    }
+
 }

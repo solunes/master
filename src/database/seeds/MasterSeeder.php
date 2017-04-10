@@ -28,7 +28,7 @@ class MasterSeeder extends Seeder {
             'analytics' => ''
         ]);
 
-        // Nodos
+        // Master Nodes
         $node_node = \Solunes\Master\App\Node::create(['name'=>'node', 'folder'=>'system']);
         $node_node_extras = \Solunes\Master\App\Node::create(['name'=>'node-extra', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_node->id]);
         $node_filter = \Solunes\Master\App\Node::create(['name'=>'filter', 'folder'=>'system']);
@@ -43,6 +43,8 @@ class MasterSeeder extends Seeder {
         $node_site = \Solunes\Master\App\Node::create(['name'=>'site', 'folder'=>'global']);
         $node_page = \Solunes\Master\App\Node::create(['name'=>'page', 'folder'=>'global']);
         $node_menu = \Solunes\Master\App\Node::create(['name'=>'menu', 'folder'=>'global', 'multilevel'=>true]);
+
+        // Users
         $node_permission = \Solunes\Master\App\Node::create(['name'=>'permission', 'folder'=>'system']);
         $node_role = \Solunes\Master\App\Node::create(['name'=>'role', 'folder'=>'system']);
         $node_permission_role = \Solunes\Master\App\Node::create(['name'=>'permission-role', 'table_name'=>'permission_role', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\Permission', 'parent_id'=>$node_role->id]);
@@ -51,19 +53,25 @@ class MasterSeeder extends Seeder {
         $node_role_user = \Solunes\Master\App\Node::create(['name'=>'role-user', 'table_name'=>'role_user', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\Role', 'parent_id'=>$node_user->id]);
         $node_indicator_alert_user = \Solunes\Master\App\Node::create(['name'=>'indicator-alert-user', 'table_name'=>'indicator_alert_users', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\IndicatorAlert', 'parent_id'=>$node_user->id]);
         $node_indicator_graph_user = \Solunes\Master\App\Node::create(['name'=>'indicator-graph-user', 'table_name'=>'indicator_graph_users', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\IndicatorGraph', 'parent_id'=>$node_user->id]);
+        
+        // Normal Nodes
+        $node_alert = \Solunes\Master\App\Node::create(['name'=>'alert', 'folder'=>'global']);
+        \Solunes\Master\App\Node::create(['name'=>'alert-action', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_alert->id]);
+        \Solunes\Master\App\Node::create(['name'=>'alert-conditional', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_alert->id]);
+        \Solunes\Master\App\Node::create(['name'=>'alert-user', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_alert->id]);
         $node_email = \Solunes\Master\App\Node::create(['name'=>'email', 'folder'=>'global']);
         $node_activity = \Solunes\Master\App\Node::create(['name'=>'activity', 'table_name'=>'activities', 'folder'=>'system']);
         $node_notification = \Solunes\Master\App\Node::create(['name'=>'notification', 'folder'=>'system']);
-        $node_notification_message = \Solunes\Master\App\Node::create(['name'=>'notification-message', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_notification->id]);
+        \Solunes\Master\App\Node::create(['name'=>'notification-message', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_notification->id]);
         $node_inbox = \Solunes\Master\App\Node::create(['name'=>'inbox', 'table_name'=>'inbox', 'folder'=>'system']);
-        $node_inbox_users = \Solunes\Master\App\Node::create(['name'=>'inbox-user', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_inbox->id]);
-        $node_inbox_messages = \Solunes\Master\App\Node::create(['name'=>'inbox-message', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_inbox->id]);
+        \Solunes\Master\App\Node::create(['name'=>'inbox-user', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_inbox->id]);
+        \Solunes\Master\App\Node::create(['name'=>'inbox-message', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_inbox->id]);
         $node_variable = \Solunes\Master\App\Node::create(['name'=>'variable', 'folder'=>'global']);
         $node_image_folder = \Solunes\Master\App\Node::create(['name'=>'image-folder', 'folder'=>'system']);
-        $node_image_size = \Solunes\Master\App\Node::create(['name'=>'image-size', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_image_folder->id]);
+        \Solunes\Master\App\Node::create(['name'=>'image-size', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_image_folder->id]);
         $node_temp_file = \Solunes\Master\App\Node::create(['name'=>'temp-file', 'folder'=>'system']);
 
-        // Usuarios
+        // Creación de Permisos y Rangos
         $admin = \Solunes\Master\App\Role::create(['name'=>'admin', 'display_name'=>'Admin']);
         $member = \Solunes\Master\App\Role::create(['name'=>'member', 'display_name'=>'Miembro']);
         $system_perm = \Solunes\Master\App\Permission::create(['name'=>'system', 'display_name'=>'Sistema']);

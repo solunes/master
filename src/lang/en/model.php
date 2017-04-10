@@ -33,6 +33,11 @@ return [
 
     // GLOBAL
     'activity' => 'Activity|Activities',
+    'alert' => 'Alert|Alerts',
+    'alert-action' => 'Alert Action|Alert Actions',
+    'alert-conditional' => 'Alert Conditional|Alert Conditionals',
+    'alert-user' => 'Alert User|Alert Users',
+    'barcode' => 'Barcode|Barcode',
     'email' => 'Email|Emails',
     'image-folder' => 'Image Folder|Images Folder',
     'image-size' => 'Image Size|Image Sizes',

@@ -147,6 +147,10 @@ class Field extends Model {
         return $query->where('type', 'map');
     }
 
+    public function scopeBarcode($query) {
+        return $query->where('type', 'barcode');
+    }
+
     public function scopeRequired($query) {
         return $query->where('required', 1);
     }

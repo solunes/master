@@ -25,6 +25,10 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('delete-filter/{id}', 'AdminController@getDeleteFilter');
     Route::get('delete-all-filters/{category}/{category_id}/{node_id?}', 'AdminController@getDeleteAllFilters');
     Route::get('modal-map/{name}/{value}', 'AdminController@getModalMap');
+    // Códigos de Barras
+    Route::get('redirect-barcode/{node_name}/{item_id}', 'AdminController@redirectBarcode');
+    Route::get('check-barcode/{node_id}/{barcode}', 'AdminController@checkBarcode');
+    Route::get('generate-barcode-image/{barcode}', 'AdminController@generateBarcodeImage');
     // Formularios Dinámicos
     Route::get('form-list', 'DynamicFormController@getFormList');
     Route::get('form-fields/{id}', 'DynamicFormController@getFormFields');

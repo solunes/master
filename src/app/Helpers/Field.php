@@ -167,6 +167,25 @@ class Field {
             $array['placeholder'] = $extras['placeholder'];
         }
 
+        // CÓDIGO DE BARRAS
+        if($type=='barcode'){
+            $array['node'] = $field['parent_id'];
+            $array['autofocus'] = true;
+            $array['placeholder'] = 'Enfoque el código con el lector o introduzcalo manualmente. Si no tiene código, déjelo en blanco.';
+            if($value){
+                $label .= ' -> <a target="_blank" href="'.url('admin/generate-barcode-image/'.$value).'">Imprimir</a>';
+            } else {
+                $node_id = $field['parent_id'];
+                if($i){
+                    $id = $i->id;
+                } else {
+                    $id = NULL;
+                }
+                $barcode = \Asset::generate_barcode($node_id, $id);
+                $label .= ' -> <a class="create-barcode" href="#" data-barcode="'.$barcode.'">Generar Nuevo Código</a>';
+            }
+        }
+
         // CUSTOM FIELD CORRECTIONS
         if(config('solunes.custom_field')){
             $array = \CustomFunc::custom_field($array, $parameters, $type);
@@ -229,11 +248,9 @@ class Field {
         $response = NULL;
         if($type=='file'||$type=='image'){
             $response .= Field::generate_image_field($name, $type, $parameters, $array, $value, $data_type);
-        } else if($type=='barcode'){
-            $response .= Field::generate_barcode_field($name, $type, $parameters, $array, $value, $data_type);
         } else if($type=='map'){
             $response .= Field::generate_map_field($name, $type, $parameters, $array, $value, $data_type);
-        } else if($type=='string'){
+        } else if($type=='string'||$type=='barcode'){
             $response = Form::text($name, $value, $array);
         } else if($type=='hidden'){
             $response = Form::hidden($name, $value, $array);
@@ -312,12 +329,6 @@ class Field {
             }
         }
         $response .= Form::hidden($name, $value, $array);
-        return $response;
-    }
-
-    public static function generate_barcode_field($name, $type, $parameters, $array, $value, $data_type) {
-        $response = 'asdasd';
-        $response .= Form::text($name, $value, $array);
         return $response;
     }
 

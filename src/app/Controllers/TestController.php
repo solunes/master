@@ -45,8 +45,7 @@ class TestController extends Controller {
             
             $items = \Solunes\Master\App\FieldOptionTranslation::where('label', 'like', '%admin.%')->groupBy('label')->orderBy('label')->get();
             if(count($items)>0){
-                $response .= '';
-                $this->info('<br><br><strong>Field Option Translation.</strong> Agregar a admin.php:');
+                $response .= '<br><br><strong>Field Option Translation.</strong> Agregar a admin.php:';
                 foreach($items as $item){
                     $response .= $this->getTransResponse($item->label, "master::admin.");
                 }
@@ -126,6 +125,10 @@ class TestController extends Controller {
 
 	public function getTransResponse($name, $delete){
 		$new_name = str_replace($delete, "",$name);
+        $new_name_2 = $new_name;
+        if($delete==':model.'){
+            $new_name_2 = 'Muestra|Muestras';
+        }
         $response = "<br>'".$new_name."' => '".$new_name."',";
 	    return $response;
 	}

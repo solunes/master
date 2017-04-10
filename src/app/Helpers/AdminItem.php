@@ -156,6 +156,11 @@ class AdminItem {
         foreach($node->fields()->maps()->get() as $field){
             $variables['map_array'][$field->id] = $field;
         }
+        if($node->fields()->barcode()->count()>0){
+            $variables['barcode_enabled'] = true;
+        } else {
+            $variables['barcode_enabled'] = false;
+        }
         return $variables;
     }
 
@@ -185,6 +190,13 @@ class AdminItem {
         }
         if($additional_rules){
             $rules = $rules + $additional_rules;
+        }
+        if($barcode = $node->fields()->barcode()->first()){
+            if($action=='create'){
+                $rules['barcode'] = 'required|unique:'.$node->table_name.',barcode';
+            } else if($action=='edit'){
+                $rules['barcode'] = 'required|unique:'.$node->table_name.',barcode,'.$id;
+            }
         }
         $correctNames = [];
         foreach($node->fields as $field){

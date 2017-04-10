@@ -14,6 +14,7 @@ return array(
 	"filter" => "Filtrar",
 	"generate" => "Generar",
 	"download" => "Descargar",
+	"download" => "Descargar",
 	"view_trash" => "Abrir Basurero",
 	"stop_trash" => "Cerrar Basurero",
 	"edit" => "Editar",
@@ -91,6 +92,8 @@ return array(
 	// GLOBAL TRANS
 	"0" => "No",
 	"1" => "Si",
+	"holding" => "En Espera",
+	"printed" => "Impreso",
 	"customRequest" => "customRequest",
 	"value" => "Valor",
 	"all" => "Todos",

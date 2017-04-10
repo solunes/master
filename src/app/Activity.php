@@ -24,6 +24,7 @@ class Activity extends Model {
 
 	/* Updating rules */
 	public static $rules_edit = array(
+		'id'=>'required',
 		'user_id'=>'required',
 		'node_id'=>'required|integer',
 		'item_id'=>'required|integer',
