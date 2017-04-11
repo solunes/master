@@ -360,8 +360,10 @@ class Field {
             } else {
                 $action = 'saved';
             }
-            \Log::info($value);
-            if(!$i&&$multiple||is_array($value)){
+            if(!$i&&$multiple||(is_array($value)&&count($value)>0)){
+                if(!$value[0]){
+                    unset($value[0]);
+                }
                 $array_value = $value;
             } else if($multiple){
                 $array_value = json_decode($value, true);
