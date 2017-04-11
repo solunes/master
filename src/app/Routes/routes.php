@@ -14,13 +14,16 @@
 Route::group(['prefix'=>'admin'], function(){
     Route::get('/', 'AdminController@getIndex');
     Route::get('generate-manual/{role_name?}', 'AdminController@getGenerateManual');
+    // Modelos globales
     Route::get('model-list/{model}', 'AdminController@getModelList');
-    Route::get('model/indicator/{action}/{id?}/{lang?}', 'AdminController@getModelIndicator');
     Route::get('model/{model}/{action}/{id?}/{lang?}', 'AdminController@getModel');
     Route::get('child-model/{model}/{action}/{id?}/{lang?}', 'AdminController@getChildModel');
     Route::post('model', 'AdminController@postModel');
+    // Indicadores
+    Route::get('model/indicator/{action}/{id?}/{lang?}', 'AdminController@getModelIndicator');
     Route::get('indicators', 'AdminController@getIndicators');
     Route::get('change-indicator-user/{type}/{action}/{id}', 'AdminController@changeIndicatorUser');
+    // Filters
     Route::get('modal-filter/{category}/{type}/{category_id}/{node_name}', 'AdminController@getModalFilter');
     Route::post('modal-filter', 'AdminController@postModalFilter');
     Route::get('delete-filter/{id}', 'AdminController@getDeleteFilter');
