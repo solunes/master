@@ -1,28 +1,33 @@
 <div class="row flex">
   @foreach($fields as $field)
-    @if($field->type=='child'&&$action=='edit')
+    @if($field->type=='child')
       </div>
       <div id="field_{{ $field->name }}">
-        <h3>{{ $field->label }} | <a href="{{ url('admin/child-model/'.$field->value.'/create?parent_id='.$i->id.'&lightbox[width]=1200&lightbox[height]=700') }}" class="lightbox">Crear item</a></h3>
-        @if($field->message)
-          <label><div class="field-message">{{ $field->message }}</div></label>
+        @if($action=='edit')
+          <h3>{{ $field->label }} | <a href="{{ url('admin/child-model/'.$field->value.'/create?parent_id='.$i->id.'&lightbox[width]=1200&lightbox[height]=700') }}" class="lightbox">Crear item</a></h3>
+          @if($field->message)
+            <label><div class="field-message">{{ $field->message }}</div></label>
+          @endif
+          <table class="admin-table table table-striped table-bordered table-hover dt-responsive dataTable no-footer dtr-inline" id="{{ $field->name }}">
+            <thead><tr class="title">
+              <td>Nº</td>
+              @foreach($field->child_fields as $subfield)
+                <td>{{ $subfield->label }}</td>
+              @endforeach
+              <td>Editar</td>
+              <td>Borrar</td>
+            </tr></thead>
+            <tbody>
+              <?php $field_name = $field->name; ?>
+              @foreach($i->$field_name as $key => $si)
+                @include('master::item_child.multiple-child', ['count'=>$key])
+              @endforeach
+            </tbody>
+          </table>
+        @else
+          <h3>{{ $field->label }}</h3>
+          <p>Podrá llenar este campo una vez cree el formulario principal.</p>
         @endif
-        <table class="admin-table table table-striped table-bordered table-hover dt-responsive dataTable no-footer dtr-inline" id="{{ $field->name }}">
-          <thead><tr class="title">
-            <td>Nº</td>
-            @foreach($field->child_fields as $subfield)
-              <td>{{ $subfield->label }}</td>
-            @endforeach
-            <td>Editar</td>
-            <td>Borrar</td>
-          </tr></thead>
-          <tbody>
-            <?php $field_name = $field->name; ?>
-            @foreach($i->$field_name as $key => $si)
-              @include('master::item_child.multiple-child', ['count'=>$key])
-            @endforeach
-          </tbody>
-        </table>
       </div>
       <div class="row flex">
     @elseif($field->type=='subchild')
