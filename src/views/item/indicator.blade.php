@@ -1,4 +1,4 @@
-@extends('master::layouts/admin')
+@extends($layout ? 'master::layouts/admin' : 'master::layouts/child-admin');
 
 @section('css')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/froala.css') }}">
@@ -6,7 +6,7 @@
 @endsection
 @section('content')
   @if($pdf===false)
-    {!! AdminItem::make_item_header($i, $module, $node, $action, $parent_id) !!}
+    {!! AdminItem::make_item_header($i, $module, $node, $action, $layout, $parent_id) !!}
     @if($action=='edit')
       @include('master::helpers.filter')
       <h3>{{ $node_name }}: {{ count($items) }} filtrados.</h3>

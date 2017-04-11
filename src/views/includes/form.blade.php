@@ -1,14 +1,38 @@
 <div class="row flex">
   @foreach($fields as $field)
-    @if($field->type=='subchild')
+    @if($field->type=='child'&&$action=='edit')
+      </div>
+      <div id="field_{{ $field->name }}">
+        <h3>{{ $field->label }} | <a href="{{ url('admin/child-model/'.$field->value.'/create?parent_id='.$i->id.'&lightbox[width]=1200&lightbox[height]=700') }}" class="lightbox">Crear item</a></h3>
+        @if($field->message)
+          <label><div class="field-message">{{ $field->message }}</div></label>
+        @endif
+        <table class="admin-table table table-striped table-bordered table-hover dt-responsive dataTable no-footer dtr-inline" id="{{ $field->name }}">
+          <thead><tr class="title">
+            <td>Nº</td>
+            @foreach($field->child_fields as $subfield)
+              <td>{{ $subfield->label }}</td>
+            @endforeach
+            <td>Editar</td>
+            <td>Borrar</td>
+          </tr></thead>
+          <tbody>
+            <?php $field_name = $field->name; ?>
+            @foreach($i->$field_name as $key => $si)
+              @include('master::item_child.multiple-child', ['count'=>$key])
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+      <div class="row flex">
+    @elseif($field->type=='subchild')
       </div>
       @if($field->multiple)
         <div id="field_{{ $field->name }}" class="child">
-          <label>{{ $field->label }}
-            @if($field->message)
-              <div class="field-message">{{ $field->message }}</div>
-            @endif
-          </label>
+          <h3>{{ $field->label }}</h3>
+          @if($field->message)
+            <label><div class="field-message">{{ $field->message }}</div></label>
+          @endif
           <div class="table-responsive">
             <table class="table" id="{{ $field->name }}">
               <thead><tr class="title">

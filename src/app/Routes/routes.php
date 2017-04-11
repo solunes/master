@@ -17,6 +17,7 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('model-list/{model}', 'AdminController@getModelList');
     Route::get('model/indicator/{action}/{id?}/{lang?}', 'AdminController@getModelIndicator');
     Route::get('model/{model}/{action}/{id?}/{lang?}', 'AdminController@getModel');
+    Route::get('child-model/{model}/{action}/{id?}/{lang?}', 'AdminController@getChildModel');
     Route::post('model', 'AdminController@postModel');
     Route::get('indicators', 'AdminController@getIndicators');
     Route::get('change-indicator-user/{type}/{action}/{id}', 'AdminController@changeIndicatorUser');

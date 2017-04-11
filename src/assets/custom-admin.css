@@ -587,12 +587,11 @@ body.admin-site.pdf-site {
   background: #fff; }
   body.admin-site.pdf-site .control-label {
     margin-top: 12px; }
-  body.admin-site.pdf-site input.form-control {
+  body.admin-site.pdf-site input.form-control, body.admin-site.pdf-site select.form-control {
     border: none; }
   body.admin-site.pdf-site select.form-control {
-    padding: 0 12px;
-    line-height: 28px;
-    border: none;
+    padding: 6 12px;
+    line-height: 26px;
     color: #999; }
 
 body.admin-site {
@@ -674,7 +673,7 @@ body.admin-site {
       padding: 10px;
       border-top: 1px dashed #999; }
   body.admin-site input.form-control, body.admin-site select.form-control {
-    height: 34px;
+    height: auto;
     padding: 6px 12px; }
   body.admin-site .flex {
     position: relative;
@@ -941,3 +940,8 @@ body.error-site {
         font-size: 18px; }
       body.error-site .container .content .button {
         font-size: 16px; } }
+
+.jquery-lightbox-move .page-wrapper.page-child * {
+  webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }

@@ -1,4 +1,4 @@
-@extends('master::layouts/admin')
+@extends($layout ? 'master::layouts/admin' : 'master::layouts/child-admin');
 
 @section('css')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/froala.css') }}">
@@ -6,7 +6,7 @@
 @endsection
 @section('content')
   @if($pdf===false)
-    {!! AdminItem::make_item_header($i, $module, $node, $action, $parent_id) !!}
+    {!! AdminItem::make_item_header($i, $module, $node, $action, $layout, $parent_id) !!}
   @else
     <h1>{{ $title }}</h1>
   @endif
@@ -18,6 +18,10 @@
     <h4>{{ $node->singular }}</h4>
   @endif
   @include('master::includes.form')
+  @if(!$layout)
+    <input type="hidden" name="child-page" value="1">
+    <input type="hidden" name="child-url" value="{{ request()->fullUrlWithQuery([]) }}">
+  @endif
   @if($dt!='view')
     {!! Field::form_submit($i, $model, $action) !!}
     {!! Form::close() !!}
@@ -37,5 +41,8 @@
   @include('master::scripts.leave-form-js')
   @if($barcode_enabled)
     @include('master::scripts.barcode-js')
+  @endif
+  @if(!$layout)
+    @include('master::scripts.child-ajax-js')
   @endif
 @endsection

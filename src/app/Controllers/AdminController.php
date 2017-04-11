@@ -67,6 +67,11 @@ class AdminController extends Controller {
       return AdminItem::get_request($model, $action, $id, $this, [], $array);
 	}
 
+	public function getChildModel($model, $action, $id = NULL) {
+	  $array = [];
+      return AdminItem::get_request($model, $action, $id, $this, ['child'=>true], $array);
+	}
+
 	public function getModelIndicator($action, $id = NULL) {
 	  $model = 'indicator';
 	  $array = [];
@@ -141,9 +146,19 @@ class AdminController extends Controller {
 		  		\FuncNode::update_indicator_values($indicator);
 		  	}
 	  	}
-        return AdminItem::post_success($action, $this->module.'/model/'.$model.'/edit/'.$item->id.'/'.$request->input('lang_code'));
+	  	if($request->has('child-page')){
+	  		$redirect = $this->module.'/child-model/'.$model.'/edit/'.$item->id.'/'.$request->input('lang_code');
+	  	} else {
+	  		$redirect = $this->module.'/model/'.$model.'/edit/'.$item->id.'/'.$request->input('lang_code');
+	  	}
+        return AdminItem::post_success($action, $redirect);
 	  } else {
-		return AdminItem::post_fail($action, $this->prev, $response[0]);
+	  	if($request->has('child-page')){
+	  		$redirect = $request->input('child-url');
+	  	} else {
+	  		$redirect = $this->prev;
+	  	}
+		return AdminItem::post_fail($action, $redirect, $response[0]);
 	  }
     }
 
@@ -200,7 +215,7 @@ class AdminController extends Controller {
 			$field = $node->fields()->where('name', $request->input('select_field'))->first();
 			if($field->type=='date'){
 				$subtype = 'date';
-			} else if($field->type=='string'||$field->type=='text'){
+			} else if($field->type=='string'||$field->type=='text'||$field->type=='barcode'){
 				$subtype = 'string';
 			} else if($field->type=='field'){
 				$subtype = 'field';

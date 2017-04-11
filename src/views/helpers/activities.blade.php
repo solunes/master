@@ -14,6 +14,7 @@
             {!! $activity->message !!}
           </div>
         </div>
+      </div>
   	@endforeach
   </div>
 @endif

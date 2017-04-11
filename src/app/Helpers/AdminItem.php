@@ -46,6 +46,11 @@ class AdminItem {
         } else {
             $variables = \AdminItem::get_request_variables($data->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
             $view = 'master::item.model';
+            if(isset($options['child'])){
+                $variables['layout'] = false;
+            } else {
+                $variables['layout'] = true;
+            }
             if($variables['preset_field']===true){
                 if($node->name=='indicator'){
                     if(\View::exists('includes.select-parent-indicator')){
@@ -142,7 +147,11 @@ class AdminItem {
         }
         $variables['parent_id'] = $parent_id;
         $variables['i'] = $item;
-        $variables['fields'] = $node->fields()->where('type', '!=', 'child')->displayItem($hidden_array)->whereNull('child_table')->checkPermission()->with('translations','field_extras','field_options_active')->get();
+        $fields = $node->fields()->displayItem($hidden_array);
+        if(isset($options['child'])){
+            $fields = $fields->where('type', '!=', 'child');
+        }
+        $variables['fields'] = $fields->whereNull('child_table')->checkPermission()->with('translations','field_extras','field_options_active')->get();
         if($node->fields()->whereIn('type', ['image', 'file'])->count()>0){
             $variables['files'] = true;
         } else {
@@ -352,20 +361,22 @@ class AdminItem {
         return $result;
     }
 
-    public static function make_item_header($i, $module, $node, $action, $parent_id = false) {
-        $title = trans('master::admin.'.$action).' '.$node->singular;
-        if($parent_id==NULL||$node->multilevel){
-            $back_url = url($module.'/model-list/'.$node->name);
-            $separator_sign = '?';
-        } else {
-            $back_url = url($module.'/model-list/'.$node->name.'?parent_id='.$parent_id);
-            $separator_sign = '&';
+    public static function make_item_header($i, $module, $node, $action, $layout = true, $parent_id = false) {
+        $result = '<h3>'.trans('master::admin.'.$action).' '.$node->singular;
+        if($layout){
+            if($parent_id==NULL||$node->multilevel){
+                $back_url = url($module.'/model-list/'.$node->name);
+                $separator_sign = '?';
+            } else {
+                $back_url = url($module.'/model-list/'.$node->name.'?parent_id='.$parent_id);
+                $separator_sign = '&';
+            }
+            if(request()->has('parameters')){
+                $parameters = json_decode(request()->input('parameters'));
+                $back_url .= $separator_sign.http_build_query($parameters);
+            }
+            $result .= ' | <a href="'.$back_url.'"><i class="fa fa-arrow-circle-o-left"></i> '.trans('master::admin.back').'</a>';
         }
-        if(request()->has('parameters')){
-            $parameters = json_decode(request()->input('parameters'));
-            $back_url .= $separator_sign.http_build_query($parameters);
-        }
-        $back = '<a href="'.$back_url.'"><i class="fa fa-arrow-circle-o-left"></i> '.trans('master::admin.back').'</a>';
         $url = request()->fullUrl();
         if(strpos($url, '?') !== false){
             $url .= '&download-pdf=true';
@@ -377,7 +388,7 @@ class AdminItem {
         } else {
             $download = NULL;
         }
-        $result = '<h3>'.$title.' | '.$back.$download.'</h3>';
+        $result .= $download.'</h3>';
         if($action=='edit'&&$i&&$i->created_at){
             $result .= '<p>'.trans('master::admin.created_at').': '.$i->created_at->format('Y-m-d').'</p>';
         }
