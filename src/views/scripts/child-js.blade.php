@@ -19,7 +19,7 @@ $(document).ready(function(){
   }
   var timeinput = $('.time-control').pickatime(timeconfig);
   var timepicker = timeinput.pickatime('picker');
-  $('.child').on('click', 'a.agregar_fila',function(e){
+  $(document.body).on('click', '.child a.agregar_fila',function(e){
     e.preventDefault();
     var rel = $(this).attr('rel');
     var count = $(this).data('count')+1;

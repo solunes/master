@@ -15,13 +15,15 @@ class FuncNode {
         $multiple = 0;
         $required = 0;
         $preset = 0;
+        $relation = false;
         $new_row = false;
         $permission = NULL;
         $col_type = \DB::select(\DB::raw("SHOW FIELDS FROM ".$table_name." where Field  = '".$name."'"))[0]->Type;
         $extras = [];
         $field_options = [];
         if(strpos($name, '_id') !== false) {
-            $type = 'relation';
+            $type = 'select';
+            $relation = true;
             $trans_name = str_replace('_id', '', $name);
             $value = $trans_name;
             if($name=='parent_id') {
@@ -113,6 +115,7 @@ class FuncNode {
         $field->display_list = $display_list;
         $field->display_item = $display_item;
         $field->translation = $translation;
+        $field->relation = $relation;
         $field->multiple = $multiple;
         $field->new_row = $new_row;
         $field->value = $value;
@@ -241,6 +244,7 @@ class FuncNode {
                   $field->type = $row->type;
                   $field->display_list = $row->display_list;
                   $field->display_item = $row->display_item;
+                  $field->relation = $row->relation;
                   $field->multiple = $row->multiple;
                   $field->translation = $row->translation;
                   $field->required = $row->required;

@@ -59,7 +59,7 @@ class AdminList {
                     $array['field_options'][$field_op->name][$field_option->name] = $field_option->label;
                 }
             }
-            $relation_fields = $node->fields()->displayList($display_fields)->where('type','relation')->get();
+            $relation_fields = $node->fields()->displayList($display_fields)->where('relation', 1)->get();
             if(count($relation_fields)>0){
                 foreach($relation_fields as $relation){
                     $sub_node = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $relation->value))->first();
@@ -78,7 +78,10 @@ class AdminList {
         $graphs = $node->node_graphs;
         $array = \AdminList::graph_node($array, $node, $model, $items, $graphs);
 
-        $items_relations = $node->fields()->where('name','!=','parent_id')->whereIn('type', ['relation','child','subchild'])->get();
+        $items_relations = $node->fields()->where('name','!=','parent_id')->where(function ($query) {
+                $query->whereIn('type', ['child','subchild'])
+                      ->orWhere('relation', 1);
+            })->get();
         if(count($items_relations)>0){
             foreach($items_relations as $item_relation){
                 $items->with($item_relation->trans_name);
@@ -159,89 +162,90 @@ class AdminList {
             $item_val = $item->$field_trans_name;
             $count = 0;
             $value = '-';
-            switch($field_type){
-                case 'string':
-                    $value = $item_val;
-                break;
-                case 'select':
-                case 'radio':
-                    if($item_val||$item_val===0){
-                        $value = $field_options[$field_name][$item_val];
-                    }
-                break;
-                case 'relation':
-                    if($item_val){
-                        $value = $item_val->name;
-                    }
-                break;
-                case 'text':
-                    $value = strip_tags($item_val);
-                    if (strlen($value) > 300) {
-                        $value = substr($value, 0, 300).'...';
-                    }
-                break;
-                case 'child':
-                    $url = url('admin/model-list/'.$field->value.'?parent_id='.$item->id);
-                    if($appends){
-                        $url .= '&'.$appends;
-                    }
-                    $value = 'Nº: '.count($item_val).' (<a href="'.$url.'">'.trans('master::admin.view').'</a>)';
-                break;
-                case 'subchild':
-                    $value = 'Nº: '.count($item_val);
-                break;
-                case 'file':
-                case 'image':
-                    if($item_val){
-                        if($field->multiple){
+            if($field->relation){
+                if($item_val){
+                    $value = $item_val->name;
+                }
+            } else {
+                switch($field_type){
+                    case 'string':
+                        $value = $item_val;
+                    break;
+                    case 'select':
+                    case 'radio':
+                        if($item_val||$item_val===0){
+                            $value = $field_options[$field_name][$item_val];
+                        }
+                    break;
+                    case 'text':
+                        $value = strip_tags($item_val);
+                        if (strlen($value) > 300) {
+                            $value = substr($value, 0, 300).'...';
+                        }
+                    break;
+                    case 'child':
+                        $url = url('admin/model-list/'.$field->value.'?parent_id='.$item->id);
+                        if($appends){
+                            $url .= '&'.$appends;
+                        }
+                        $value = 'Nº: '.count($item_val).' (<a href="'.$url.'">'.trans('master::admin.view').'</a>)';
+                    break;
+                    case 'subchild':
+                        $value = 'Nº: '.count($item_val);
+                    break;
+                    case 'file':
+                    case 'image':
+                        if($item_val){
+                            if($field->multiple){
+                                $array_value = json_decode($item_val, true);
+                            } else {
+                                $array_value = [$item_val];
+                            }
+                            $value = '';
+                            $folder = $field->field_extras->where('type', 'folder')->first()->value;
+                            foreach($array_value as $key => $val){
+                                $count++;
+                                if($count>1){
+                                    $value .= ' | ';
+                                }
+                                if($field_type=='image'){
+                                  $file_url = Asset::get_image_path($folder, 'normal', $val);
+                                } else {
+                                  $file_url = Asset::get_file($folder, $val);
+                                }
+                                if($type=='excel'){
+                                  $value .= $file_url;
+                                } else {
+                                  $value .= '<a href="'.$file_url.'" target="_blank">'.$val.'</a>';
+                                }
+                            }
+                        }
+                    break;
+                    case 'checkbox':
+                        if($item_val){
                             $array_value = json_decode($item_val, true);
-                        } else {
-                            $array_value = [$item_val];
-                        }
-                        $value = '';
-                        $folder = $field->field_extras->where('type', 'folder')->first()->value;
-                        foreach($array_value as $key => $val){
-                            $count++;
-                            if($count>1){
-                                $value .= ' | ';
+                            $value = '';
+                            foreach($array_value as $val){
+                                $count++;
+                                if($count>1){
+                                    $value .= ' | ';
+                                }
+                                $value .= $field_options[$field_name][$val];
                             }
-                            if($field_type=='image'){
-                              $file_url = Asset::get_image_path($folder, 'normal', $val);
+                        }
+                    break;
+                    case 'datetime':
+                    case 'date':
+                    case 'time':
+                        if($item_val){
+                            if($field_type=='datetime'){
+                                $value = $item_val->format('M d, Y H:i');
                             } else {
-                              $file_url = Asset::get_file($folder, $val);
-                            }
-                            if($type=='excel'){
-                              $value .= $file_url;
-                            } else {
-                              $value .= '<a href="'.$file_url.'" target="_blank">'.$val.'</a>';
+                                $value = $item_val;
                             }
                         }
-                    }
-                break;
-                case 'checkbox':
-                    if($item_val){
-                        $array_value = json_decode($item_val, true);
-                        $value = '';
-                        foreach($array_value as $val){
-                            $count++;
-                            if($count>1){
-                                $value .= ' | ';
-                            }
-                            $value .= $field_options[$field_name][$val];
-                        }
-                    }
-                break;
-                case 'datetime':
-                case 'date':
-                case 'time':
-                    if($item_val){
-                        if($field_type=='datetime'){
-                            $value = $item_val->format('M d, Y H:i');
-                        } else {
-                            $value = $item_val;
-                        }
-                    }
-                break;
+                    break;
+                }
             }
             if($type=='table'){
                 $response .= '<td>'.$value.'</td>';

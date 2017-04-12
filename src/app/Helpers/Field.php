@@ -29,8 +29,6 @@ class Field {
         $type = $field['type'];
         if($type=='date'){
             $type = 'string';
-        } else if($type=='relation'){
-            $type = 'select';
         } else if($type=='field'&&$field['multiple']==false){
             $type = 'radio';
         } else if($type=='field'&&$field['multiple']==true){

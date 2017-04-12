@@ -40,15 +40,14 @@ class GeneralNodeTest extends TestCase {
                 foreach($node->fields()->where('type', '!=', 'child')->displayItem($hidden_array)->whereNull('child_table')->get() as $field){
                     $value = NULL;
                     if($field->required||($node->name=='user'&&$field->name=='username')){
-                        if($field->type=='select'||$field->type=='radio'||$field->type=='checkbox'||$field->type=='relation'||$field->type=='field'){
-                            if($field->type=='relation'||$field->type=='field'){
-                                $value = 1;
-                            } else {
-                                $value = $field->field_options()->first()->name;
-                            }
-                            if($field->type=='relation'&&$field->name=='parent_id'){
+                        if($field->relation){
+                            if($field->name=='parent_id'){
                                 $value = NULL;
+                            } else {
+                                $value = 1;
                             }
+                        } else if($field->type=='select'||$field->type=='radio'||$field->type=='checkbox'){
+                            $value = $field->field_options()->first()->name;
                         } else {
                             if($field->name=='password'){
                                 $value = 'asdasdasda';

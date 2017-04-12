@@ -30,19 +30,20 @@
 @endsection
 @section('script')
   @include('master::helpers.froala')
-  @include('master::scripts.child-js')
   @include('master::scripts.conditionals-js')
   @include('master::scripts.upload-js')
   @include('master::scripts.map-js')
   @include('master::scripts.map-field-js')
-  @include('master::scripts.lightbox-js')
   @include('master::scripts.tooltip-js')
   @include('master::scripts.accordion-js')
-  @include('master::scripts.leave-form-js')
   @if($barcode_enabled)
     @include('master::scripts.barcode-js')
   @endif
   @if(!$layout)
     @include('master::scripts.child-ajax-js')
+  @else
+    @include('master::scripts.child-js')
+    @include('master::scripts.leave-form-js')
+    @include('master::scripts.lightbox-js')
   @endif
 @endsection

@@ -94,8 +94,10 @@ class GenerateNodes extends Command
                 if($child->type=='field'){
                     $child_value = str_replace($node->name.'-', '', $child->name);
                     $child_value = str_replace('-'.$node->name, '', $child_value);
+                    $relation = true;
                 } else {
                     $child_value = $child->name;
+                    $relation = false;
                 }
                 if($child->type=='subchild'){
                   $multiple = true;
@@ -106,6 +108,7 @@ class GenerateNodes extends Command
                 $field->trans_name = str_replace($node->name.'-', '', $child->table_name);
                 $field->type = $child->type;
                 $field->order = $count;
+                $field->relation = $relation;
                 $field->multiple = $multiple;
                 $field->value = $child_value;
                 $field->save();

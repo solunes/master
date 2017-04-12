@@ -11,6 +11,7 @@
     {!! Field::form_input($i, $dt, ['name'=>'type', 'required'=>true, 'type'=>'select', 'options'=>$types_array], ['label'=>'Tipo de Campo', 'cols'=>6]+$type_class) !!}
     {!! Field::form_input($i, $dt, ['name'=>'display_item', 'required'=>true, 'type'=>'select', 'options'=>['show'=>'Campo activo y visible para todos', 'admin'=>'Campo visible solo para administradores', 'none'=>'Campo oculto e inactivo para todos']], ['label'=>'¿Es visible en el formulario?', 'cols'=>6]) !!}
     {!! Field::form_input($i, $dt, ['name'=>'display_list', 'required'=>true, 'type'=>'select', 'options'=>['excel'=>'Solo en la descarga de Excel', 'show'=>'Visible en la tabla principal y excel', 'none'=>'No se muestra ni en la tabla ni en el excel']], ['label'=>'¿Es visible en el listado?', 'cols'=>6]) !!}
+    {!! Field::form_input($i, $dt, ['name'=>'relation', 'required'=>true, 'type'=>'select', 'options'=>['0'=>'No', '1'=>'Si']], ['label'=>'¿Tiene Relación directa?', 'cols'=>6]) !!}
     {!! Field::form_input($i, $dt, ['name'=>'label', 'required'=>true, 'type'=>'string'], ['label'=>'Nombre del Campo', 'cols'=>6]) !!}
     {!! Field::form_input($i, $dt, ['name'=>'message', 'type'=>'string', 'message'=>'Este es un ejemplo de como se ve un mensaje adicional.'], ['label'=>'Campo de mensaje adicional', 'cols'=>6]) !!}
   </div>

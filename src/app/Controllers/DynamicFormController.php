@@ -199,6 +199,7 @@ class DynamicFormController extends Controller {
             'label'=>'required',
             'required'=>'required',
             'new_row'=>'required',
+            'relation'=>'required',
             'cols'=>'required',
         ];
         $validator = \Validator::make($request->all(), $rules);
@@ -243,9 +244,10 @@ class DynamicFormController extends Controller {
             $field_array['tooltip'] = $request->input('tooltip');
             $field_array['message'] = $request->input('message');
             $field_array['new_row'] = $request->input('new_row');
+            $field_array['relation'] = $request->input('relation');
             $field = \Dynamic::edit_field($field, $field_array);
             if($action=='create'){
-                \Dynamic::generate_field_table($node, $field_type, $field_name, $last_field);
+                \Dynamic::generate_field_table($node, $field->type, $field->name, $field->relation, $last_field);
                 // Image folder
                 if($field_type=='image'){
                     $field_folder = \Dynamic::generate_field_extra($field, $node->name.'-'.$field_name, 'jpg');
@@ -357,7 +359,7 @@ class DynamicFormController extends Controller {
                   if($item->display_item!='show'){
                     array_push($edits_array, [$node->name, $item->name, 'display_item', $item->display_item]);
                   }
-                  foreach(['new_row', 'multiple'] as $subfield){
+                  foreach(['new_row', 'multiple', 'relation'] as $subfield){
                     if($item->$subfield!=0){
                         array_push($edits_array, [$node->name, $item->name, $subfield, $item->$subfield]);
                     }

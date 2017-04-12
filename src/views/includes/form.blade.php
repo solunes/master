@@ -4,7 +4,7 @@
       </div>
       <div id="field_{{ $field->name }}">
         @if($action=='edit')
-          <h3>{{ $field->label }} | <a href="{{ url('admin/child-model/'.$field->value.'/create?parent_id='.$i->id.'&lightbox[width]=1200&lightbox[height]=700') }}" class="lightbox">Crear item</a></h3>
+          <h3>{{ $field->label }} | <a href="{{ url('admin/child-model/'.$field->value.'/create?parent_id='.$i->id.'&lightbox[width]=1000&lightbox[height]=600') }}" class="lightbox">Crear item</a></h3>
           @if($field->message)
             <label><div class="field-message">{{ $field->message }}</div></label>
           @endif

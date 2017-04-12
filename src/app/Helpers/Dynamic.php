@@ -94,7 +94,7 @@ class Dynamic {
       return $field;
     }
 
-    public static function generate_field_table($node, $field_type, $field_name, $last_field, $second_attribute = NULL) {
+    public static function generate_field_table($node, $field_type, $field_name, $relation, $last_field, $second_attribute = NULL) {
       if(!in_array($field_type, ['title','content','subchild','field'])&&!\Schema::hasColumn($node->table_name, $field_name)){
         $column_type = 'string';
         if($field_type=='text'||$field_type=='checkbox'||$field_type=='map'||$field_type=='file'||$field_type=='image'){
@@ -105,7 +105,8 @@ class Dynamic {
           } else {
             $column_type = 'date';
           }
-        } else if($field_type=='relation'){
+        } 
+        if($relation){
           $column_type = 'integer';
         }
         \Schema::table($node->table_name, function ($table) use($column_type, $field_name, $last_field, $second_attribute){
@@ -284,9 +285,9 @@ class Dynamic {
                   }
                   $field = \Dynamic::edit_field($field, $field_array, 'es');
                   if(count($sheet)>50&&$field->type=='string'){
-                    \Dynamic::generate_field_table($node, $field->type, $field->name, $last_field, 64);
+                    \Dynamic::generate_field_table($node, $field->type, $field->name, $field->relation, $last_field, 64);
                   } else {
-                    \Dynamic::generate_field_table($node, $field->type, $field->name, $last_field);
+                    \Dynamic::generate_field_table($node, $field->type, $field->name, $field->relation, $last_field);
                   }
                   if(!in_array($row->type, ['title','content','subchild','field'])){
                       $last_field = $field;

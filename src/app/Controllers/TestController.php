@@ -171,7 +171,7 @@ class TestController extends Controller {
         foreach($fields as $field){
             if((array_key_exists($field->name, $rules)&&strpos($rules[$field->name], 'required') !== false)){
             } else {
-                if(in_array($field->type, ['select','radio','checkbox','relation'])){
+                if(in_array($field->type, ['select','radio','checkbox'])){
                     $pending_fields[$field->name] = $field->name;
                 }
             }

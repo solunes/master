@@ -136,6 +136,8 @@ return [
     'preset' => 'Prellenado',
     'qr' => 'Código QR',
     'quantity' => 'Cantidad',
+    'relation' => 'Relación',
+    'relation_cond' => 'Condicionante de Relación',
     'remember_token' => 'Token',
     'reply_to' => 'Email de Respuesta',
     'reply_to_name' => 'Nombre de Respuesta',

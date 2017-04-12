@@ -49,7 +49,6 @@ class MasterDatabase extends Migration
             $table->integer('site_id')->unsigned()->default(1);
             $table->integer('order')->nullable()->default(0);
             $table->enum('type', ['normal', 'customized'])->default('normal');
-            //$table->string('image')->nullable();
             $table->string('customized_name')->nullable();
             $table->timestamps();
             $table->softDeletes();
@@ -149,9 +148,10 @@ class MasterDatabase extends Migration
             $table->integer('order')->nullable()->default(0);
             $table->string('name');
             $table->string('trans_name');
-            $table->enum('type', ['string','text','select','password','image','file','barcode','map','radio','checkbox','date','array','score','hidden','preset','relation','child','subchild','field','title','content'])->default('string');
+            $table->enum('type', ['string','text','select','password','image','file','barcode','map','radio','checkbox','date','array','score','hidden','child','subchild','field','title','content'])->default('string');
             $table->enum('display_list', ['show', 'excel', 'none'])->default('show');
             $table->enum('display_item', ['show', 'admin', 'none'])->default('show');
+            $table->boolean('relation')->default(0);
             $table->boolean('multiple')->default(0);
             $table->boolean('translation')->default(0);
             $table->boolean('required')->default(0);
@@ -159,6 +159,7 @@ class MasterDatabase extends Migration
             $table->boolean('preset')->default(0);
             $table->string('permission')->nullable();
             $table->string('child_table')->nullable();
+            $table->string('relation_cond')->nullable();
             $table->string('value')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -26,6 +26,7 @@ class Field extends Model {
         'type'=>'required',
         'display_list'=>'required',
         'display_item'=>'required',
+        'relation'=>'required',
         'multiple'=>'required',
         'translation'=>'required',
         'required'=>'required',
@@ -43,6 +44,7 @@ class Field extends Model {
         'type'=>'required',
         'display_list'=>'required',
         'display_item'=>'required',
+        'relation'=>'required',
         'multiple'=>'required',
         'translation'=>'required',
         'required'=>'required',
@@ -97,17 +99,17 @@ class Field extends Model {
 
     public function getOptionsAttribute() {
         $return = [];
-        if($this->type=='select'||$this->type=='radio'||$this->type=='checkbox'){
-            foreach($this->field_options_active as $item){
-                $return[$item->name] = $item->label;
-            }
-        } else if($this->type=='relation'||$this->type=='field'){
+        if($this->relation){
             if($subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $this->value))->first()){
                 $submodel = \FuncNode::node_check_model($subnode);
-                if(config('solunes.get_options_relation')){
+                if(config('solunes.get_options_relation')&&$this->relation_cond){
                     $submodel = \CustomFunc::get_options_relation($submodel, $this, $subnode, request()->segment(5));
                 }
                 $return = $return+$submodel->get()->sortBy('name')->lists('name', 'id')->toArray();
+            }
+        } else if($this->type=='select'||$this->type=='radio'||$this->type=='checkbox'){
+            foreach($this->field_options_active as $item){
+                $return[$item->name] = $item->label;
             }
         }
         return $return;
