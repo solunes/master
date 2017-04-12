@@ -100,6 +100,11 @@ class FuncNode {
         } else if($count>5){
             $display_list = 'excel';
         }
+        if($node->multilevel&&($name=='parent_id'||$name=='level')){
+          $type = 'string';
+          $relation = false;
+          $preset = true;
+        }
         if($node->type!='field'){
             $rules = \FuncNode::node_check_rules($node, 'create');
             if(array_key_exists($name, $rules)&&strpos($rules[$name], 'required') !== false){

@@ -104,13 +104,15 @@ class AdminItem {
             if(count($preset_fields)>0){
                 $variables['parent_nodes'] = [];
                 foreach($preset_fields as $preset_field){
-                    $subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $preset_field->value))->first();
-                    if($node->parent_id==$subnode->id){
-                        $iname = 'parent';
-                    } else {
-                        $iname = $preset_field->value;
+                    if($preset_field->relation){
+                        $subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $preset_field->value))->first();
+                        if($node->parent_id==$subnode->id){
+                            $iname = 'parent';
+                        } else {
+                            $iname = $preset_field->value;
+                        }
+                        $variables['parent_nodes'][$subnode->id] = ['node'=>$subnode,'singular_name'=>$subnode->singular,'iname'=>$iname,'fields'=>$subnode->fields()->whereNotIn('type', ['child','subchild'])->whereNotIn('display_item', ['admin','none'])->get()];
                     }
-                    $variables['parent_nodes'][$subnode->id] = ['node'=>$subnode,'singular_name'=>$subnode->singular,'iname'=>$iname,'fields'=>$subnode->fields()->whereNotIn('type', ['child','subchild'])->whereNotIn('display_item', ['admin','none'])->get()];
                 }
             }
             $variables['activities'] = \Solunes\Master\App\Activity::where('node_id', $node->id)->where('item_id', $id)->orderBy('created_at', 'DESC')->get();

@@ -30,7 +30,7 @@ class GeneralNodeTest extends TestCase {
                         $new_val = $last->id;
                     }
                 }
-                if($preset->name!='parent_id'&&!$parent){
+                if($preset->name!='parent_id'&&$parent===false){
                     if($count==0) {
                         $url .= '?';
                     } else {
@@ -74,7 +74,7 @@ class GeneralNodeTest extends TestCase {
                         }
                     }
                 }
-                \Log::info($url);
+                //\Log::info('Crear: '.$url);
                 $this->actingAs($user)->visit($url)
                 ->submitForm('Crear', $input)->see('El item fue creado correctamente.');
             }
@@ -87,6 +87,7 @@ class GeneralNodeTest extends TestCase {
             $model = \FuncNode::node_check_model($node);
             if($node->name!='field'&&$node->name!='node'&&$last = $model->orderBy('id', 'DESC')->first()){
                 $url = '/admin/model/'.$node->name.'/edit/'.$last->id.'/es';
+                //\Log::info('Editar: '.$url);
                 $this->actingAs($user)->visit($url);
                 $this->press('Guardar')->see('El item fue actualizado correctamente.');
             }
@@ -100,6 +101,7 @@ class GeneralNodeTest extends TestCase {
             if($node->name!='field'&&$node->name!='node'&&$last = $model->orderBy('id', 'DESC')->first()){
                 $url_0 = '/admin/model-list/'.$node->name;
                 $url = '/admin/model/'.$node->name.'/delete/'.$last->id;
+                //\Log::info('Borrar: '.$url);
                 $this->actingAs($user)->visit($url_0)->see('Descargar');
                 $this->visit($url)->see('El item se eliminó correctamente.');
                 if($node->soft_delete){
