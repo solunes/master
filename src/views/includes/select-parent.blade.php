@@ -1,4 +1,4 @@
-@extends($layout ? 'master::layouts/admin' : 'master::layouts/child-admin');
+@extends($layout ? 'master::layouts/admin' : 'master::layouts/child-admin')
 
 @section('content')
   @if($parent)
