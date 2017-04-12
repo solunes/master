@@ -12,23 +12,31 @@ class GeneralNodeTest extends TestCase {
             $url = '/admin/model/'.$node->name.'/create';
             $preset_fields = $node->fields()->displayItem($hidden_array)->preset()->required()->get();
             $count = 0;
+            $parent = false;
             if($node->parent_id){
                 $model = \FuncNode::node_check_model($node->parent);
                 if($last = $model->first()){
                     $count = 1;
                     $url .= '?parent_id='.$last->id;
+                    $parent = true;
                 }
             }
             foreach($preset_fields as $preset){
-                $subnode = \Solunes\Master\App\Node::where('name', $preset->value)->first();
-                $model = \FuncNode::node_check_model($subnode);
-                if($preset->name!='parent_id'&&$last = $model->orderBy('id', 'DESC')->first()){
+                $new_val = 1;
+                if($preset->relation){
+                    $subnode = \Solunes\Master\App\Node::where('name', $preset->value)->first();
+                    $model = \FuncNode::node_check_model($subnode);
+                    if($last = $model->orderBy('id', 'DESC')->first()){
+                        $new_val = $last->id;
+                    }
+                }
+                if($preset->name!='parent_id'&&!$parent){
                     if($count==0) {
                         $url .= '?';
                     } else {
                         $url .= '&';
                     }
-                    $url .= $preset->name.'='.$last->id;
+                    $url .= $preset->name.'='.$new_val;
                     $count++;
                 }
             }
@@ -66,6 +74,7 @@ class GeneralNodeTest extends TestCase {
                         }
                     }
                 }
+                \Log::info($url);
                 $this->actingAs($user)->visit($url)
                 ->submitForm('Crear', $input)->see('El item fue creado correctamente.');
             }

@@ -100,7 +100,9 @@ class ImportExcel extends Command
                                         $input = \Asset::$action_name(public_path('seed/'.$node->name.'/'.$input), $node->name.'-'.$field->name, true);
                                     }
                                 }
-                                $item = \FuncNode::put_data_field($item, $field, $input, $language_code);
+                                if($input||$input=='0'){
+                                    $item = \FuncNode::put_data_field($item, $field, $input, $language_code);
+                                }
                             }
                         } else if($new_item&&isset($field_sub_array[$column])) {
                             $field = $field_sub_array[$column];
