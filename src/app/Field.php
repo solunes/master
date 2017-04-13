@@ -126,6 +126,23 @@ class Field extends Model {
         return $return;
     }
 
+    public function getChildFieldOptionsAttribute() {
+        if($this->type=='child'){
+            $display_fields = ['show'];
+            $node = \Solunes\Master\App\Node::where('name', $this->value)->first();
+            $field_ops = $node->fields()->displayList($display_fields)->has('field_options')->with('field_options')->get();
+            $return = [];
+            foreach($field_ops as $field_op){
+                foreach($field_op->field_options as $field_option){
+                    $return[$field_op->name][$field_option->name] = $field_option->label;
+                }
+            }
+        } else {
+            $return = NULL;
+        }
+        return $return;
+    }
+
     public function scopeCheckPermission($query) {
         return $query->where(function ($subquery) {
             $subquery->whereNull('permission');
