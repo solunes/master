@@ -75,7 +75,7 @@ class ImportExcel extends Command
                                 } else {
                                     $input = NULL;
                                 }
-                            } else if($field->type=='checkbox'){
+                            } else if(!$field->relation&&$field->type=='checkbox'){
                                 $subinput = [];
                                 foreach(explode(' | ', $input) as $subval){
                                     if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
