@@ -101,8 +101,10 @@ class FuncNode {
             $display_list = 'excel';
         }
         if($node->multilevel&&($name=='parent_id'||$name=='level')){
-          $type = 'string';
-          $relation = false;
+          if($name=='level'){
+            $type = 'string';
+            $relation = false;
+          }
           $preset = true;
         }
         if($node->type!='field'){

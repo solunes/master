@@ -64,31 +64,31 @@ class ImportExcel extends Command
                             } else {
                                 $language_code = str_replace($field->name.'_','',$column);
                             }
-                            if($input||$input=='0'){
-                                if($field->relation&&is_numeric($input)===false){
-                                    $sub_model = \Solunes\Master\App\Node::where('name', $field->value)->first()->model;
-                                    if($get_submodel = $sub_model::where('name', $input)->first()){
-                                        $input = $get_submodel->id;
-                                    }
-                                } else if(!$field->relation&&($field->type=='select'||$field->type=='radio')){
-                                    if($subanswer = $field->field_options()->whereTranslation('label', $input)->first()){
-                                        $input = $subanswer->name;
-                                    } else {
-                                        $input = NULL;
-                                    }
-                                } else if($field->type=='checkbox'){
-                                    $subinput = [];
-                                    foreach(explode(' | ', $input) as $subval){
-                                        if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
-                                            $subinput[] = $subanswer->name;
-                                        }
-                                    }
-                                    if(count($subinput)>0){
-                                        $input = json_encode($subinput);
-                                    } else {
-                                        $input = NULL;
+                            if($field->relation&&!is_numeric($input)){
+                                $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
+                                if($get_submodel = $sub_model::where('name', $value)->first()){
+                                    $input = $get_submodel->id;
+                                }
+                            } else if(!$field->relation&&($field->type=='select'||$field->type=='radio')){
+                                if($subanswer = $field->field_options()->whereTranslation('label', $input)->first()){
+                                    $input = $subanswer->name;
+                                } else {
+                                    $input = NULL;
+                                }
+                            } else if($field->type=='checkbox'){
+                                $subinput = [];
+                                foreach(explode(' | ', $input) as $subval){
+                                    if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
+                                        $subinput[] = $subanswer->name;
                                     }
                                 }
+                                if(count($subinput)>0){
+                                    $input = json_encode($subinput);
+                                } else {
+                                    $input = NULL;
+                                }
+                            }
+                            if($input||$input=='0'){
                                 if($field->type=='image'||$field->type=='file'){
                                     $action_name = 'upload_'.$field->type;
                                     if($field->multiple){
@@ -100,9 +100,7 @@ class ImportExcel extends Command
                                         $input = \Asset::$action_name(public_path('seed/'.$node->name.'/'.$input), $node->name.'-'.$field->name, true);
                                     }
                                 }
-                                if($input||$input=='0'){
-                                    $item = \FuncNode::put_data_field($item, $field, $input, $language_code);
-                                }
+                                $item = \FuncNode::put_data_field($item, $field, $input, $language_code);
                             }
                         } else if($new_item&&isset($field_sub_array[$column])) {
                             $field = $field_sub_array[$column];

@@ -11,7 +11,11 @@ class AdminItem {
         $model = \FuncNode::node_check_model($node);
 
         if (\Gate::denies('node-admin', ['item', $data->module, $node, $action, $id])) {
-            return \Login::redirect_dashboard('no_permission');
+            if($action=='edit'){
+                return redirect($data->module.'/model/'.$node->name.'/view/'.$id)->with(['message_success'=>'No puede editar este item.']);
+            } else {
+                return \Login::redirect_dashboard('no_permission');
+            }
         }
 
         if($action=='delete'||$action=='restore'){
