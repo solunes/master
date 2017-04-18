@@ -35,6 +35,7 @@
             "src/database/migrations",
             "src/app/Providers",
             "src/app/Controllers",
+            "src/app/Traits",
             "src/app/Exceptions",
             "src/app/Console"
         ],
