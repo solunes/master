@@ -14,8 +14,10 @@
               @foreach($field->child_fields as $subfield)
                 <td>{{ $subfield->label }}</td>
               @endforeach
-              <td>Editar</td>
-              <td>Borrar</td>
+              @if($action!='view')
+                <td>Editar</td>
+                <td>Borrar</td>
+              @endif
             </tr></thead>
             <tbody>
               <?php $field_name = $field->name; ?>
@@ -50,11 +52,13 @@
                     @endif
                   </td>
                 @endforeach
-                <td>X</td>
+                @if($action!='view')
+                  <td>X</td>
+                @endif
               </tr></thead>
               <tbody>
                 <?php $field_name = $field->name; ?>
-                @if($action=='edit'&&count($i->$field_name)>0)
+                @if(($action=='edit'||$action=='view')&&count($i->$field_name)>0)
                   @foreach($i->$field_name as $key => $si)
                     @include('master::item_child.multiple-model', ['count'=>$key])
                   @endforeach
@@ -63,9 +67,11 @@
                 @endif
               </tbody>
               <tfoot>
-                <tr><td colspan="{{ count($field->child_fields)+2 }}">
-                  <a class="agregar_fila" rel="{{ $field->name }}" href="#" data-count="500">+ Añadir otra fila</a>
-                </td></tr>
+                @if($action!='view')
+                  <tr><td colspan="{{ count($field->child_fields)+2 }}">
+                    <a class="agregar_fila" rel="{{ $field->name }}" href="#" data-count="500">+ Añadir otra fila</a>
+                  </td></tr>
+                @endif
                 @foreach($node->fields()->where('child_table', $field_name)->get() as $extra_field)
                   <tr>
                     <td colspan="{{ count($field->child_fields) }}" class="right">{{ $extra_field->label }} (Se calculará al guardar)</td>
@@ -83,7 +89,7 @@
           <h3>{{ $field->label }}</h3>
           <div class="single-child row flex">
             <?php $field_name = $field->name; ?>
-            @if($action=='edit'&&$i->$field_name)
+            @if(($action=='edit'||$action=='view')&&$i->$field_name)
               @include('master::item_child.single-model', ['si'=>$i->$field_name])
             @else
               @include('master::item_child.single-model', ['si'=>0])
