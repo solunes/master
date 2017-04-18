@@ -64,7 +64,7 @@ class ImportExcel extends Command
                             } else {
                                 $language_code = str_replace($field->name.'_','',$column);
                             }
-                            if($field->relation&&!is_numeric($input)){
+                            if($field->relation&&$input&&!is_numeric($input)){
                                 $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
                                 if($get_submodel = $sub_model::where('name', $value)->first()){
                                     $input = $get_submodel->id;
