@@ -330,7 +330,7 @@ class DynamicFormController extends Controller {
             $conditionals_array = [];
             $options_array = [];
             $field_node = \Solunes\Master\App\Node::where('name', 'field')->first();
-            $fields = $field_node->fields()->whereIn('name', ['name','type','required'])->get();
+            $fields = $field_node->fields()->whereIn('name', ['name','type','relation','required'])->get();
             foreach($nodes as $node){
                 $export_array[$node->name]['name'] = $node->name;
                 $col_array = [];

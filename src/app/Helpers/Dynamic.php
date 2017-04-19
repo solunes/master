@@ -71,12 +71,13 @@ class Dynamic {
       return $node_extra;
     }
 
-    public static function generate_field($node, $field_name, $field_type, $field_required = 0) {
+    public static function generate_field($node, $field_name, $field_type, $field_relation, $field_required = 0) {
       if(!$field = \Solunes\Master\App\Field::where('parent_id', $node->id)->where('name', $field_name)->first()){
         $field = new \Solunes\Master\App\Field;
         $field->parent_id = $node->id;
         $field->name = $field_name;
         $field->type = $field_type;
+        $field->relation = $field_relation;
         $field->required = $field_required;
       }
       return $field;
@@ -244,8 +245,8 @@ class Dynamic {
                   } else {
                       $parent_id = NULL;
                   }
-                  $node_array = ['type'=>$row->type, 'model'=>$row->model, 'parent_id'=>$parent_id, 'dynamic'=>1, 'folder'=>$row->folder, 'permission'=>$row->permission, 'singular'=>$row->singular_es, 'plural'=>$row->plural_es];
-                  $node = \Dynamic::edit_node($node, $node_array, 'es');
+                  $node_array = ['type'=>$>$parent_id, 'dynamic'=>1, 'folder'=>$row->folder, 'permission'=>$row->permission, 'singular'=>$row->singular_es, 'plural'=>$row->plural_es];
+                  $node = \Dynamic::edit_norow->type, 'model'=>$row->model, 'parent_id'=de($node, $node_array, 'es');
                   \Dynamic::generate_node_table($node->table_name, ['id'=>'increments']);
                   // Crear node extra
                   $node_extra = \Dynamic::generate_node_extra($node, 'action_field', ['edit','delete']);
@@ -273,7 +274,7 @@ class Dynamic {
               foreach($sheet as $subkey => $row){
                 if($row->name){
                   $row_name = $row->name;
-                  $field = \Dynamic::generate_field($node, $row_name, $row->type, $row->required);
+                  $field = \Dynamic::generate_field($node, $row_name, $row->type, $row->relatin, $row->required);
                   $field_array = ['order'=>$subkey, 'label'=>$row->label_es, 'type'=>$row->type, 'trans_name'=>$row_name];
                   if($row->type=='title'||$row->type=='content'||$subkey>5){
                       $field_array['display_list'] = 'excel';
