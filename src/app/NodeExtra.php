@@ -12,11 +12,15 @@ class NodeExtra extends Model {
 
 	/* Creating rules */
 	public static $rules_create = array(
+		'display'=>'required',
+		'type'=>'required',
 		'parameter'=>'required',
 	);
 
 	/* Updating rules */
 	public static $rules_edit = array(
+		'display'=>'required',
+		'type'=>'required',
 		'parameter'=>'required',
 	);
 
