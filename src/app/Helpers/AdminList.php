@@ -663,11 +663,12 @@ class AdminList {
                         $graph_item_name = $graph_item['name'];
                         $graph_model_array = $cloned_model->lists('id')->toArray();
                         $graph_model = $model::leftJoin($relation_table, $relation_table.'.id', '=', $node_table.'.'.$relation_field)->whereIn($node_table.'.id', $graph_model_array)->groupBy($graph_item_name)->select($graph_item_name, \DB::raw('count(*) as total'))->get();
-                        $field = $node->parent->fields()->where('name', $graph_item)->first();
+                        $parent_node = \Solunes\Master\App\Node::where('table_name', $relation_table)->first();
+                        $field = $parent_node->fields()->where('name', $graph_item_name)->first();
                     } else {
                         $graph_item_name = $graph_item;
                         $graph_model = $cloned_model->groupBy($graph_item_name)->select($graph_item_name, \DB::raw('count(*) as total'))->get();
-                        $field = $node->fields()->where('name', $graph_item)->first();
+                        $field = $node->fields()->where('name', $graph_item_name)->first();
                     }
                     $field_names = [];
                     $field_trans_name = $field->trans_name;
