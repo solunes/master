@@ -245,8 +245,8 @@ class Dynamic {
                   } else {
                       $parent_id = NULL;
                   }
-                  $node_array = ['type'=>$>$parent_id, 'dynamic'=>1, 'folder'=>$row->folder, 'permission'=>$row->permission, 'singular'=>$row->singular_es, 'plural'=>$row->plural_es];
-                  $node = \Dynamic::edit_norow->type, 'model'=>$row->model, 'parent_id'=de($node, $node_array, 'es');
+                  $node_array = ['type'=>$row->type, 'model'=>$row->model, 'parent_id'=>$parent_id, 'dynamic'=>1, 'folder'=>$row->folder, 'permission'=>$row->permission, 'singular'=>$row->singular_es, 'plural'=>$row->plural_es];
+                  $node = \Dynamic::edit_node($node, $node_array, 'es');
                   \Dynamic::generate_node_table($node->table_name, ['id'=>'increments']);
                   // Crear node extra
                   $node_extra = \Dynamic::generate_node_extra($node, 'action_field', ['edit','delete']);
@@ -274,7 +274,7 @@ class Dynamic {
               foreach($sheet as $subkey => $row){
                 if($row->name){
                   $row_name = $row->name;
-                  $field = \Dynamic::generate_field($node, $row_name, $row->type, $row->relatin, $row->required);
+                  $field = \Dynamic::generate_field($node, $row_name, $row->type, $row->relation, $row->required);
                   $field_array = ['order'=>$subkey, 'label'=>$row->label_es, 'type'=>$row->type, 'trans_name'=>$row_name];
                   if($row->type=='title'||$row->type=='content'||$subkey>5){
                       $field_array['display_list'] = 'excel';
@@ -312,7 +312,7 @@ class Dynamic {
                       \Dynamic::edit_field($field, $edits_array[$sheet_model][$row_name], 'es');
                   }
 
-                  if(($row->type=='select'||$row->type=='checkbox'||$row->type=='radio')&&isset($options_array[$sheet_model])){
+                  if(!$row->relation&&($row->type=='select'||$row->type=='checkbox'||$row->type=='radio')&&isset($options_array[$sheet_model])){
                     \Dynamic::generate_field_options($options_array[$sheet_model][$row_name], $field, 'es');
                   }
                 }

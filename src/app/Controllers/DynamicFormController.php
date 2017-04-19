@@ -353,13 +353,13 @@ class DynamicFormController extends Controller {
                     array_push($row_array, $item->$field_name);
                   }
                   // EDITS
-                  if($item->display_list!='excel'){
+                  if($item->display_list!='excel'&&$item->name!='id'){
                     array_push($edits_array, [$node->name, $item->name, 'display_list', $item->display_list]);
                   }
-                  if($item->display_item!='show'){
+                  if($item->display_item!='show'&&$item->name!='id'){
                     array_push($edits_array, [$node->name, $item->name, 'display_item', $item->display_item]);
                   }
-                  foreach(['new_row', 'multiple', 'relation'] as $subfield){
+                  foreach(['new_row', 'multiple'] as $subfield){
                     if($item->$subfield!=0){
                         array_push($edits_array, [$node->name, $item->name, $subfield, $item->$subfield]);
                     }
@@ -388,7 +388,7 @@ class DynamicFormController extends Controller {
                   array_push($row_array, $item->label);
                   $export_array[$node->name]['rows'][$item->id] = $row_array;
                   // OPCIONES
-                  if(in_array($item->type, ['select','radio','checkbox'])&&count($item->options)>0){
+                  if(!$item->relation&&in_array($item->type, ['select','radio','checkbox'])&&count($item->options)>0){
                     foreach($item->options as $option_key => $option_val){
                       array_push($options_array, [$node->name, $item->name, $option_key, $option_val]);
                     }
