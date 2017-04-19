@@ -187,7 +187,7 @@ class AdminController extends Controller {
 		$rejected_ids = [];
 		$node = \Solunes\Master\App\Node::where('name', $node_name)->first();
 		$filters = $node->filters()->checkCategory($category)->checkDisplay();
-		if($type=='admin'){
+		if($category=='admin'){
         	$rejected_ids = $filters->where('type','field')->lists('parameter')->toArray();
 		} else  {
         	$rejected_ids = $filters->where('category_id', $category_id)->lists('parameter')->toArray();

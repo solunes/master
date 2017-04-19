@@ -115,7 +115,8 @@ class Field {
         }
         if($type=='password'){
             $value = NULL;
-        } else if(($type=='array'||$type=='checkbox')&&$value&&is_string($value)){
+        } else if($type=='checkbox'&&$value&&is_string($value)){
+            // AGREGAR ARRAY TYPE
             $value = json_decode($value, true);
         }
 

@@ -169,7 +169,6 @@ class AdminList {
             } else {
                 switch($field_type){
                     case 'string':
-                    case 'barcode':
                         $value = $item_val;
                     break;
                     case 'select':
@@ -519,7 +518,7 @@ class AdminList {
                     $appends['f_'.$field_name.'_to'] = $custom_value['is_less'];
                 }
             } else if($filter->subtype=='string'){
-                if($custom_value){
+                if($custom_value||$custom_value=='0'){
                     $appends['f_'.$field_name] = key($custom_value);
                     $appends['f_'.$field_name.'_action'] = $custom_value[$appends['f_'.$field_name]];
                 }
@@ -536,7 +535,8 @@ class AdminList {
             }
             $appends['f_'.$field_name.'_to'] = $field_to;
         } else if($filter->subtype=='string') {
-            if($field_string = request()->input('f_'.$field_name)){ 
+            $field_string = request()->input('f_'.$field_name);
+            if($field_string||$field_string=='0'){ 
                 $custom_value[$field_string] = request()->input('f_'.$field_name.'_action');
                 $appends['f_'.$field_name] = $field_string;
             }
@@ -603,7 +603,7 @@ class AdminList {
         $items = $items->where(function ($query) use($custom_value, $field, $field_name) {
             $count = 0;
             foreach($custom_value as $custom_val => $custom_action){
-                if($custom_val!='f_all'){
+                if($custom_val!='f_all'||$custom_val=='0'){
                     if($count>0){
                         $main_action = 'orWhere';
                     } else {
@@ -663,9 +663,22 @@ class AdminList {
                         $graph_item_name = $graph_item['name'];
                         $graph_model_array = $cloned_model->lists('id')->toArray();
                         $graph_model = $model::leftJoin($relation_table, $relation_table.'.id', '=', $node_table.'.'.$relation_field)->whereIn($node_table.'.id', $graph_model_array)->groupBy($graph_item_name)->select($graph_item_name, \DB::raw('count(*) as total'))->get();
+                        $field = $node->parent->fields()->where('name', $graph_item)->first();
                     } else {
                         $graph_item_name = $graph_item;
                         $graph_model = $cloned_model->groupBy($graph_item_name)->select($graph_item_name, \DB::raw('count(*) as total'))->get();
+                        $field = $node->fields()->where('name', $graph_item)->first();
+                    }
+                    $field_names = [];
+                    $field_trans_name = $field->trans_name;
+                    foreach($graph_model as $graph_i){
+                        if($field->relation&&$graph_i->$field_trans_name){
+                            $field_names[$graph_i->$graph_item_name] = $graph_i->$field_trans_name->name;
+                        } else if(!$field->relation&&$field->type=='select'||$field->type=='radio'||$field->type=='checkbox'){
+                            $field_names[$graph_i->$graph_item_name] = $array['field_options'][$field->name][$graph_i->$graph_item_name];
+                        } else {
+                            $field_names[$graph_i->$graph_item_name] = $graph_i->$graph_item_name;
+                        }
                     }
                     if(count($graph_model)>0){
                         $graph_count++;
@@ -689,7 +702,7 @@ class AdminList {
                             $subitems[$graph_subitem->$graph_item_name] = $count;
                           }
                         }
-                        $array['graphs'][$graph_item_name.'-'.$graph->parameter] = ['name'=>$graph_item_name,'type'=>$graph->parameter,'items'=>$graph_model,'subitems'=>$subitems];
+                        $array['graphs'][$graph_item_name.'-'.$graph->parameter] = ['name'=>$graph_item_name,'label'=>$field->label,'type'=>$graph->parameter,'items'=>$graph_model,'subitems'=>$subitems,'field_names'=>$field_names];
                     }
                 }
             }
