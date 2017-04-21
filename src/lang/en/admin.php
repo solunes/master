@@ -59,6 +59,20 @@ return array(
 	"503_title" => "503 - Service unavailable",
 	"503_description" => "Actually, the service is unavailable. Please retry again in some minutes.",
 
+	// DATES
+	"jan" => "Jan",
+	"feb" => "Feb",
+	"mar" => "Mar",
+	"apr" => "Apr",
+	"may" => "May",
+	"jun" => "Jun",
+	"jul" => "Jul",
+	"aug" => "Aug",
+	"sep" => "Sep",
+	"oct" => "Oct",
+	"nov" => "Nov",
+	"dec" => "Dec",
+
 	// GLOBAL MESSAGES
 	"never" => "Never",
 	"sorry" => "Sorry",

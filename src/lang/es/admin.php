@@ -61,6 +61,20 @@ return array(
 	"503_title" => "503 - Servicio no Disponible",
 	"503_description" => "Actualmente el servicio no está disponible, intente nuevamente en unos minutos.",
 
+	// DATES
+	"jan" => "Ene",
+	"feb" => "Feb",
+	"mar" => "Mar",
+	"apr" => "Abr",
+	"may" => "May",
+	"jun" => "Jun",
+	"jul" => "Jul",
+	"aug" => "Ago",
+	"sep" => "Sep",
+	"oct" => "Oct",
+	"nov" => "Nov",
+	"dec" => "Dic",
+
 	// GLOBAL MESSAGES
 	"never" => "Nunca",
 	"sorry" => "Lo sentimos",

@@ -6,7 +6,20 @@
               x: -20 //center
           },
           xAxis: {
-              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+              categories: [
+                "{{ trans('master::admin.jan') }}",
+                "{{ trans('master::admin.feb') }}",
+                "{{ trans('master::admin.mar') }}",
+                "{{ trans('master::admin.apr') }}",
+                "{{ trans('master::admin.may') }}",
+                "{{ trans('master::admin.jun') }}",
+                "{{ trans('master::admin.jul') }}",
+                "{{ trans('master::admin.aug') }}",
+                "{{ trans('master::admin.sep') }}",
+                "{{ trans('master::admin.oct') }}",
+                "{{ trans('master::admin.nov') }}",
+                "{{ trans('master::admin.dec') }}"
+              ]
           },
           yAxis: {
               title: {
