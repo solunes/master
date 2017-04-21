@@ -377,8 +377,9 @@ class DynamicFormController extends Controller {
                   foreach($item->extras as $extra_key => $extra_val){
                     if($extra_key=='cols'){
                       $cols = $extra_val;
-                    } 
-                    if($extra_key!='cols'){
+                    } else if($extra_key=='class'&&in_array($extra_val, ['timestamppicker','datepicker','timepicker'])){
+
+                    } else {
                       array_push($extras_array, [$node->name, $item->name, $extra_key, $extra_val]);
                     }
                   }
