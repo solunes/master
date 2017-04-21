@@ -8,6 +8,7 @@ return [
 	'error_report' => true,
 	'send_notification_sms' => false,
 	'send_notification_app' => false,
+	'master_admin_id' => 1,
 
 	// LIST
 	'pagination_count' => 500,

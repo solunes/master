@@ -33,7 +33,7 @@ trait UserPermission {
     }
 
     public function isSuperAdmin() {
-        return $this->id==1;
+        return $this->id == config('solunes.master_admin_id');
     }
 
     public function hasRole($roleName) {
