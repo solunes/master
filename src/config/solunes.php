@@ -23,6 +23,8 @@ return [
 	'after_seed' => false,
 	'after_login' => false,
 	'custom_get_items' => false,
+	'admin_menu_extras' => false,
+	'admin_menu_extra_array' => [], // Incluir los IDs de link de los menús para ejecutar
 	'list_extra_actions' => false,
 	'get_sitemap_array' => false,
 	'get_indicator_result' => false,

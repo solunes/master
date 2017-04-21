@@ -40,6 +40,11 @@ class MenuMiddleware
                 $first_level->prepend('<i class="fa fa-'.$menu_option->icon.'"></i>');
               }
               $first_level->append('</span>');
+              if(config('solunes.admin_menu_extras')){
+                if(in_array($menu_option->link, config('solunes.admin_menu_extra_array'))){
+                  \Func::admin_menu_extras($menu_option, $first_level, 1);
+                }
+              }
               if(count($menu_option->children)>0){
                 $first_level->append('<span class="arrow"></span>');
                 $first_level->attribute(['class' => 'nav-link nav-toggle']);
@@ -48,6 +53,11 @@ class MenuMiddleware
                     $second_level = $first_level->add($menu_children->name, $menu_children->real_link);
                     if($menu_children->icon){
                       $second_level->prepend('<i class="fa fa-'.$menu_children->icon.'"></i>');
+                    }
+                    if(config('solunes.admin_menu_extras')){
+                      if(in_array($menu_children->link, config('solunes.admin_menu_extra_array'))){
+                        \Func::admin_menu_extras($menu_children, $second_level, 2);
+                      }
                     }
                     if(count($menu_children->children)>0){
                       $second_level->append('<span class="arrow"></span>');

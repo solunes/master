@@ -47,6 +47,9 @@ class FuncNode {
         } else if(strpos($name, 'checkbox') !== false){
             $type = 'checkbox';
             array_push($extras, ['type'=>'cols','value'=>'12']);
+        } else if($name=='map'){
+            $type = 'map';
+            array_push($extras, ['type'=>'cols','value'=>'12']);
         } else if($col_type=='text'){
             $type = 'text';
             $new_row = true;
@@ -57,9 +60,6 @@ class FuncNode {
           $type = 'barcode';
         } else if($name=='password'){
             $type = 'password';
-        } else if($name=='map'){
-            $type = 'map';
-            array_push($extras, ['type'=>'cols','value'=>'12']);
         } else if($col_type=='tinyint(1)'||substr_count($col_type, 'enum')>0){
             $type = 'select';
             if($name=='active'){
