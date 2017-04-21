@@ -42,7 +42,7 @@ class MenuMiddleware
               $first_level->append('</span>');
               if(config('solunes.admin_menu_extras')){
                 if(in_array($menu_option->link, config('solunes.admin_menu_extra_array'))){
-                  \Func::admin_menu_extras($menu_option, $first_level, 1);
+                  \CustomFunc::admin_menu_extras($menu_option, $first_level, 1);
                 }
               }
               if(count($menu_option->children)>0){
@@ -56,7 +56,7 @@ class MenuMiddleware
                     }
                     if(config('solunes.admin_menu_extras')){
                       if(in_array($menu_children->link, config('solunes.admin_menu_extra_array'))){
-                        \Func::admin_menu_extras($menu_children, $second_level, 2);
+                        \CustomFunc::admin_menu_extras($menu_children, $second_level, 2);
                       }
                     }
                     if(count($menu_children->children)>0){
