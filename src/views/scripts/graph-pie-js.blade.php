@@ -7,7 +7,7 @@
           plotShadow: false
       },
       title: {
-          text: 'Reporte en Pie: ' + <?php echo '"'.$label.'"'; ?>
+        text: '{{ trans("master::admin.graph_label_pie")." ".$label }}'
       },
       tooltip: {
           pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -27,7 +27,7 @@
       },
       series: [{
           type: 'pie',
-          name: 'Total',
+          name: '{{ trans("master::admin.graph_total") }}',
           data: [
           @foreach($graph_items as $item)
             [<?php echo '"'.$graph_field_names[$item->$column].' ('.$item->total.')"'; ?>,  {{ $item->total }}],

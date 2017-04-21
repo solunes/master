@@ -2,7 +2,7 @@
   $(function () {
       $('#list-graph-<?php echo $graph_name; ?>').highcharts({
           title: {
-            text: 'Reporte en Barra: {{ $label }}',
+            text: '{{ trans("master::admin.graph_label_line")." ".$label }}',
               x: -20 //center
           },
           xAxis: {
@@ -23,7 +23,7 @@
           },
           yAxis: {
               title: {
-                  text: 'Resultados'
+                  text: '{{ trans("master::admin.graph_results") }}'
               },
               plotLines: [{
                   value: 0,

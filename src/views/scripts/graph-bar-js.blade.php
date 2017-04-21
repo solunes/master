@@ -5,7 +5,7 @@
           type: 'column'
       },
       title: {
-        text: 'Reporte en Barra: {{ $label }}'
+        text: '{{ trans("master::admin.graph_label_bar")." ".$label }}'
       },
       xAxis: {
           type: 'category',
@@ -20,7 +20,7 @@
       yAxis: {
           min: 0,
           title: {
-              text: 'Número'
+              text: '{{ trans("master::admin.graph_number") }}'
           }
       },
       legend: {
@@ -30,7 +30,7 @@
           pointFormat: ''
       },
       series: [{
-          name: 'Cantidad',
+          name: '{{ trans("master::admin.graph_quantity") }}',
           data: [
             @foreach($graph_items as $item)
             [<?php echo '"'.$graph_field_names[$item->$column].' ('.$item->total.')"'; ?>,  {{ $item->total }}],

@@ -59,7 +59,14 @@ return array(
 	"503_title" => "503 - Service unavailable",
 	"503_description" => "Actually, the service is unavailable. Please retry again in some minutes.",
 
-	// DATES
+	// NODE GRAPH
+	"graph_label_line" => "Lines Report (Monthly): By",
+	"graph_label_bar" => "Bar Report: By",
+	"graph_label_pie" => "Pie Report: By",
+	"graph_total" => "Total",
+	"graph_results" => "Results",
+	"graph_number" => "Number",
+	"graph_quantity" => "Quantity",
 	"jan" => "Jan",
 	"feb" => "Feb",
 	"mar" => "Mar",

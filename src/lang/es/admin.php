@@ -62,6 +62,13 @@ return array(
 	"503_description" => "Actualmente el servicio no está disponible, intente nuevamente en unos minutos.",
 
 	// DATES
+	"graph_label_line" => "Reporte en Lineas (Mensual): Por",
+	"graph_label_bar" => "Reporte en Barras: Por",
+	"graph_label_pie" => "Reporte en Pie: Por",
+	"graph_total" => "Total",
+	"graph_results" => "Resultados",
+	"graph_number" => "Número",
+	"graph_quantity" => "Cantidad",
 	"jan" => "Ene",
 	"feb" => "Feb",
 	"mar" => "Mar",
