@@ -296,6 +296,13 @@ class Dynamic {
                   if($row->cols!=6){
                     \Dynamic::generate_field_extra($field, 'cols', $row->cols);
                   }
+                  if($row->type=='date'){
+                    \Dynamic::generate_field_extra($field, 'class', 'datepicker');
+                  } else if($row->type=='time'){
+                    \Dynamic::generate_field_extra($field, 'class', 'timepicker');
+                  } else if($row->type=='timestamp'){
+                    \Dynamic::generate_field_extra($field, 'class', 'timestamppicker');
+                  }
                   if(isset($extras_array[$sheet_model][$row_name])){
                       foreach($extras_array[$sheet_model][$row_name] as $extra_key => $extra_val){
                           \Dynamic::generate_field_extra($field, $extra_key, $extra_val);
