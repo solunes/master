@@ -675,12 +675,14 @@ class AdminList {
                     $field_trans_name = $field->trans_name;
                     foreach($graph_model as $graph_i){
                         if($field->relation&&$graph_i->$field_trans_name){
-                            $field_names[$graph_i->$graph_item_name] = $graph_i->$field_trans_name->name;
+                            $field_val = $graph_i->$field_trans_name->name;
                         } else if(!$field->relation&&$field->type=='select'||$field->type=='radio'||$field->type=='checkbox'){
-                            $field_names[$graph_i->$graph_item_name] = $array['field_options'][$field->name][$graph_i->$graph_item_name];
+                            $field_val = $array['field_options'][$field->name][$graph_i->$graph_item_name];
                         } else {
-                            $field_names[$graph_i->$graph_item_name] = $graph_i->$graph_item_name;
+                            $field_val = $graph_i->$graph_item_name;
                         }
+                        $field_val = str_replace('"', '', $field_val);
+                        $field_names[$graph_i->$graph_item_name] = $field_val;
                     }
                     if(count($graph_model)>0){
                         $graph_count++;
