@@ -22,7 +22,7 @@ class RegisterActivityModel {
         		$user->timestamps = false;
 			    $user->last_activity = $now;
 			    $user->save();
-			    $user_id = 1;
+			    $user_id = $user->id;
 		    	$username = 'user';
 		    } else {
 		    	$user_id = NULL;
