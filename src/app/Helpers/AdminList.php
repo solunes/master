@@ -33,41 +33,45 @@ class AdminList {
             $items = $model->whereNotNull('id');
         }
 
-        if($node){
-            if($node->soft_delete==1&&request()->has('view-trash')&&request()->input('view-trash')=='true'){
-                $items->onlyTrashed();
+        if($node->translation==1){
+            $array['langs'] = \Solunes\Master\App\Language::get();
+        } else {
+            $array['langs'] = [];
+        }
+
+        if($node->soft_delete==1&&request()->has('view-trash')&&request()->input('view-trash')=='true'){
+            $items->onlyTrashed();
+        }
+        if($node->translation){
+            $items->with('translations');
+        }
+        if($node->parent){
+            $array['parent'] = $node->parent->name;
+        }
+        if($node->multilevel){
+            $items = $items->whereNull('parent_id')->with('children','children.children');
+        }
+        if(request()->has('download-excel')){
+            $display_fields = ['show','excel'];
+        } else {
+            $display_fields = ['show'];
+        }
+        $array['fields'] = $node->fields()->displayList($display_fields)->where('type', '!=', 'field')->with('translations', 'field_options', 'field_extras')->get();
+        $field_ops = $node->fields()->displayList($display_fields)->has('field_options')->with('field_options')->get();
+        $array['field_options'] = [];
+        foreach($field_ops as $field_op){
+            foreach($field_op->field_options as $field_option){
+                $array['field_options'][$field_op->name][$field_option->name] = $field_option->label;
             }
-            if($node->translation){
-                $items->with('translations');
-            }
-            if($node->parent){
-                $array['parent'] = $node->parent->name;
-            }
-            if($node->multilevel){
-                $items = $items->whereNull('parent_id')->with('children','children.children');
-            }
-            if(request()->has('download-excel')){
-                $display_fields = ['show','excel'];
-            } else {
-                $display_fields = ['show'];
-            }
-            $array['fields'] = $node->fields()->displayList($display_fields)->where('type', '!=', 'field')->with('translations', 'field_options', 'field_extras')->get();
-            $field_ops = $node->fields()->displayList($display_fields)->has('field_options')->with('field_options')->get();
-            $array['field_options'] = [];
-            foreach($field_ops as $field_op){
-                foreach($field_op->field_options as $field_option){
-                    $array['field_options'][$field_op->name][$field_option->name] = $field_option->label;
-                }
-            }
-            $relation_fields = $node->fields()->displayList($display_fields)->where('relation', 1)->get();
-            if(count($relation_fields)>0){
-                foreach($relation_fields as $relation){
-                    $sub_node = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $relation->value))->first();
-                    if($sub_node->translation){
-                        $items = $items->with([$relation->trans_name, $relation->trans_name.'.translations']);
-                    } else {
-                        $items = $items->with($relation->trans_name);
-                    }
+        }
+        $relation_fields = $node->fields()->displayList($display_fields)->where('relation', 1)->get();
+        if(count($relation_fields)>0){
+            foreach($relation_fields as $relation){
+                $sub_node = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $relation->value))->first();
+                if($sub_node->translation){
+                    $items = $items->with([$relation->trans_name, $relation->trans_name.'.translations']);
+                } else {
+                    $items = $items->with($relation->trans_name);
                 }
             }
         }
@@ -75,13 +79,15 @@ class AdminList {
         $array = \AdminList::filter_node($array, $node, $model, $items, 'admin');
         $items = $array['items'];
 
-        $graphs = $node->node_graphs;
-        $array = \AdminList::graph_node($array, $node, $model, $items, $graphs);
+        if(config('solunes.custom_admin_get_list')){
+            $items = \CustomFunc::custom_admin_get_list($module, $node, $items, $array);
+        }
+
+        $array = \AdminList::graph_node($array, $node, $model, $items, $node->node_graphs);
 
         $items_relations = $node->fields()->where('name','!=','parent_id')->where(function ($query) {
-                $query->whereIn('type', ['child','subchild'])
-                      ->orWhere('relation', 1);
-            })->get();
+            $query->whereIn('type', ['child','subchild'])->orWhere('relation', 1);
+        })->get();
         if(count($items_relations)>0){
             foreach($items_relations as $item_relation){
                 $items->with($item_relation->trans_name);
@@ -90,22 +96,8 @@ class AdminList {
 
         $array['items_count'] = $items->count();
         $array['items'] = $items->paginate(config('solunes.pagination_count'));
-        if($node->translation==1){
-            $array['langs'] = \Solunes\Master\App\Language::get();
-        } else {
-            $array['langs'] = [];
-        }
 
-        if(request()->has('download-excel')){
-            return AdminList::generate_query_excel($array);
-        } else if(config('solunes.list_extra_actions')&&$extra_actions = \CustomFunc::list_extra_actions($array)){
-            return $extra_actions;
-        } else {
-            if($node->multilevel){
-                return view('master::list.multilevel-list', $array);
-            }
-            return view('master::list.general-list', $array);
-        }
+        return $array;
     }
 
     public static function make_fields($langs, $fields, $action_fields = ['edit', 'delete']) {

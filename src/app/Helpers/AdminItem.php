@@ -6,91 +6,6 @@ use Validator;
 
 class AdminItem {
 
-    public static function get_request($single_model, $action, $id, $data, $options = [], $additional_vars = NULL) {
-        $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
-        $model = \FuncNode::node_check_model($node);
-
-        if (\Gate::denies('node-admin', ['item', $data->module, $node, $action, $id])) {
-            if($action=='edit'){
-                return redirect($data->module.'/model/'.$node->name.'/view/'.$id)->with(['message_success'=>'No puede editar este item.']);
-            } else {
-                return \Login::redirect_dashboard('no_permission');
-            }
-        }
-
-        if($action=='delete'||$action=='restore'){
-            if($node->soft_delete==1){
-                $item = $model->withTrashed()->where('id', $id)->first();
-            } else {
-                $item = $model->find($id);
-            }
-            if($item){
-                if($node->soft_delete==0&&$action=='delete'){
-                    $file_fields = $node->fields()->files()->get();
-                    \Asset::delete_saved_files($file_fields, $item);
-                    if(count($node->children)>0){
-                      foreach($node->children as $child){
-                        $child_name = $child->table_name;
-                        $file_fields = $child->fields()->files()->get();
-                        if(is_object($item->$child_name)&&count($item->$child_name)>0){
-                            foreach($item->$child_name as $item_child){
-                                \Asset::delete_saved_files($file_fields, $item_child);
-                            }
-                        } else if(!is_object($item->$child_name)&&$item->$child_name) {
-                            \Asset::delete_saved_files($file_fields, $item->$child_name);
-                        }
-                      }
-                    }
-                }
-                $item->$action();
-                return redirect($data->prev)->with('message_success', trans('master::admin.'.$action.'_success'));
-            } else {
-                return redirect($data->prev)->with('message_fail', trans('master::admin.'.$action.'_fail'));
-            }
-        } else {
-            $variables = \AdminItem::get_request_variables($data->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
-            $view = 'master::item.model';
-            if(isset($options['child'])){
-                $variables['layout'] = false;
-            } else {
-                $variables['layout'] = true;
-            }
-            if($variables['preset_field']===true){
-                if($node->name=='indicator'){
-                    if(\View::exists('includes.select-parent-indicator')){
-                        $view = 'includes.select-parent-indicator';
-                    } else {
-                        $view = 'master::includes.select-parent-indicator';
-                    }
-                } else {
-                    $view = 'master::includes.select-parent';
-                }
-            } else if($node->customized){
-                $custom_location = 'item.';
-                if($node->name=='indicator'){
-                    $custom_location = 'master::'.$custom_location;
-                }
-                $view = $custom_location.$single_model;
-            }
-            if(request()->has('download-pdf')){
-                $variables['pdf'] = true;
-                $variables['dt'] = 'view';
-                if(config('solunes.custom_field')){
-                    $variables['header_title'] = \CustomFunc::custom_pdf_header($node, $id);
-                } else {
-                    $variables['header_title'] = 'Formulario';
-                }
-                $variables['title'] = 'Formulario de '.$node->singular;
-                $variables['site'] = \Solunes\Master\App\Site::find(1);
-                $pdf = \PDF::loadView($view, $variables);
-                $header = \View::make('pdf.header', $variables);
-                return $pdf->setPaper('letter')->setOption('header-html', $header->render())->stream($node->singular.'_'.date('Y-m-d').'.pdf');
-            } else {
-                return view($view, $variables);
-            }
-        }
-    }
-
     public static function get_request_variables($module, $node, $model, $single_model, $action, $id, $options, $additional_vars = NULL) {
         $variables = ['module'=>$module, 'node'=>$node, 'model'=>$single_model, 'action'=>$action, 'id'=>$id, 'preset_field'=>false, 'dt'=>'form', 'pdf'=>false];
         $parent_id = NULL;
@@ -100,6 +15,11 @@ class AdminItem {
             $hidden_array = ['admin','show'];
         }
         $preset_fields = $node->fields()->displayItem($hidden_array)->preset()->required()->get();
+        if(isset($options['child'])){
+            $variables['layout'] = false;
+        } else {
+            $variables['layout'] = true;
+        }
         if($action=='edit'||$action=='view') {
             $item = $model::find($id);
             if($item->parent_id){
@@ -142,7 +62,7 @@ class AdminItem {
                   } else {
                     $preset_items = $preset_field->options;
                   }
-                  return ['preset_field'=>true, 'single_model'=>$single_model, 'parent'=>$preset_field->trans_name, 'items'=>$preset_items, 'url'=>$url.$separator_sign.$preset_field->name.'='];
+                  return ['preset_field'=>true, 'single_model'=>$single_model, 'parent'=>$preset_field->trans_name, 'items'=>$preset_items, 'layout'=>$variables['layout'], 'url'=>$url.$separator_sign.$preset_field->name.'='];
                 }
               }
             }
@@ -177,6 +97,83 @@ class AdminItem {
             $variables['barcode_enabled'] = false;
         }
         return $variables;
+    }
+
+    public static function check_item_permission($module, $node, $action, $id) {
+        if (\Gate::denies('node-admin', ['item', $module, $node, $action, $id])) {
+            if($action=='edit'){
+                return redirect($module.'/model/'.$node->name.'/view/'.$id)->with(['message_success'=>'No puede editar este item.']);
+            } else {
+                return \Login::redirect_dashboard('no_permission');
+            }
+        }
+    }
+
+    public static function get_item_view($node, $single_model, $variables) {
+        $view = 'master::item.model';
+        if($variables['preset_field']===true){
+            if(\View::exists('includes.select-parent-'.$node->name)){
+                $view = 'includes.select-parent-'.$node->name;
+            } else {
+                if($single_model=='indicator'){
+                    $view = 'master::includes.select-parent-indicator';
+                } else {
+                    $view = 'master::includes.select-parent';
+                }
+            }
+        } else if($node->customized){
+            $view = 'item.'.$single_model;
+        }
+        if(request()->has('download-pdf')){
+            return \AdminItem::generate_item_pdf($module, $node, $model, $variables);
+        }
+        return view($view, $variables);
+    }
+
+    public static function generate_item_pdf($module, $node, $model, $variables) {
+        $variables['pdf'] = true;
+        $variables['dt'] = 'view';
+        if(config('solunes.custom_field')){
+            $variables['header_title'] = \CustomFunc::custom_pdf_header($node, $id);
+        } else {
+            $variables['header_title'] = 'Formulario';
+        }
+        $variables['title'] = 'Formulario de '.$node->singular;
+        $variables['site'] = \Solunes\Master\App\Site::find(1);
+        $pdf = \PDF::loadView($view, $variables);
+        $header = \View::make('pdf.header', $variables);
+        return $pdf->setPaper('letter')->setOption('header-html', $header->render())->stream($node->singular.'_'.date('Y-m-d').'.pdf');
+    }
+
+    public static function delete_restore_item($module, $node, $model, $single_model, $action, $id, $options, $additional_vars = NULL) {
+        if($node->soft_delete==1){
+            $item = $model->withTrashed()->where('id', $id)->first();
+        } else {
+            $item = $model->find($id);
+        }
+        if($item){
+            if($node->soft_delete==0&&$action=='delete'){
+                $file_fields = $node->fields()->files()->get();
+                \Asset::delete_saved_files($file_fields, $item);
+                if(count($node->children)>0){
+                  foreach($node->children as $child){
+                    $child_name = $child->table_name;
+                    $file_fields = $child->fields()->files()->get();
+                    if(is_object($item->$child_name)&&count($item->$child_name)>0){
+                        foreach($item->$child_name as $item_child){
+                            \Asset::delete_saved_files($file_fields, $item_child);
+                        }
+                    } else if(!is_object($item->$child_name)&&$item->$child_name) {
+                        \Asset::delete_saved_files($file_fields, $item->$child_name);
+                    }
+                  }
+                }
+            }
+            $item->$action();
+            return redirect($data->prev)->with('message_success', trans('master::admin.'.$action.'_success'));
+        } else {
+            return redirect($data->prev)->with('message_fail', trans('master::admin.'.$action.'_fail'));
+        }
     }
 
     public static function post_request($single_model, $action, $request, $additional_rules = NULL) {

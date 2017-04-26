@@ -59,75 +59,120 @@ class AdminController extends Controller {
 	}
 
 	public function getModelList($model) {
-      return AdminList::get_list($this, $model);
+		$array = AdminList::get_list($this, $model);
+        if(request()->has('download-excel')){
+            return AdminList::generate_query_excel($array);
+        } else if(config('solunes.list_extra_actions')&&$extra_actions = \CustomFunc::list_extra_actions($array)){
+            return $extra_actions;
+        } else {
+            if($array['node']->multilevel){
+                return view('master::list.multilevel-list', $array);
+            }
+            return view('master::list.general-list', $array);
+        }
 	}
 
-	public function getModel($model, $action, $id = NULL) {
-	  $array = [];
-      return AdminItem::get_request($model, $action, $id, $this, [], $array);
+	public function getModel($single_model, $action, $id = NULL) {
+        $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
+        $model = \FuncNode::node_check_model($node);
+        $options = [];
+	    $additional_vars = [];
+
+	    \AdminItem::check_item_permission($this->module, $node, $action, $id);
+
+        if($action=='delete'||$action=='restore'){
+            return \AdminItem::delete_restore_item($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
+        }
+        $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
+
+        return \AdminItem::get_item_view($node, $single_model, $variables);
 	}
 
 	public function getChildModel($model, $action, $id = NULL) {
-	  $array = [];
-      return AdminItem::get_request($model, $action, $id, $this, ['child'=>true], $array);
+        $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
+        $model = \FuncNode::node_check_model($node);
+        $options = ['child'=>true];
+	    $additional_vars = [];
+
+	    \AdminItem::check_item_permission($this->module, $node, $action, $id);
+
+        if($action=='delete'||$action=='restore'){
+            return \AdminItem::delete_restore_item($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
+        }
+        $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
+
+        return \AdminItem::get_item_view($node, $single_model, $variables);
 	}
 
 	public function getModelIndicator($action, $id = NULL) {
-	  $model = 'indicator';
-	  $array = [];
-	  if($action=='edit'){
-	  	$indicator = \Solunes\Master\App\Indicator::find($id);
-        $indicator_model = \FuncNode::node_check_model($indicator->node);
-	  	$array['node_name'] = $indicator->node->plural;
-		$array['filter_category'] = 'indicator';
-		$array['filter_node'] = $indicator->node->name;
-		$array['filter_type'] = 'field';
-		$array['filter_category_id'] = $id;
-		$filled_items = $indicator_model;
-		$array = \AdminList::filter_node($array, $indicator->node, $indicator_model, $filled_items, 'indicator');
-		if(config('solunes.custom_indicator')){
-			$array = \CustomFunc::custom_indicator($indicator->node, $indicator, $array);
-		}
-		if(request()->has('search')&&isset($array['filters'])&&is_array($array['filters'])){
-		  foreach($array['filters'] as $field_name => $field){
-		  	$filter = \Solunes\Master\App\Filter::find($field['id']);
-		  	$action_value = [];
-		  	if($field['subtype']=='date'){
-		  		if(request()->has('f_'.$field_name.'_from')){
-		  	      $action_value[request()->input('f_'.$field_name.'_from')] = 'is_greater';
-		  		}
-		  		if(request()->has('f_'.$field_name.'_to')){
-		  	      $action_value[request()->input('f_'.$field_name.'_to')] = 'is_less';
-		  		}
-		  	} else if($field['subtype']=='string'){
-		  		if(request()->has('f_'.$field_name)){
-		  	      $action_value[request()->input('f_'.$field_name)] = request()->input('f_'.$field_name.'_action');
-		  	    }
-		  	} else {
-		  	  if(request()->has('f_'.$field_name)&&is_array(request()->input('f_'.$field_name))){
-		  	    foreach(request()->input('f_'.$field_name) as $subfield_key => $subfield_val){
-		  	      $action_value[$subfield_val] = 'is';
-		  	    }
-		  	  } else if(request()->has('f_'.$field_name)){
-		  	    $action_value[request()->input('f_'.$field_name)] = 'is';
-		  	  }
-		  	}
-		  	$filter->action_value = json_encode($action_value);
-		  	$filter->save();
-		  }
-		  if(config('solunes.update_indicator_values')){
-		  	if(config('solunes.custom_indicator_values')){
-		  		\CustomFunc::update_indicator_values($indicator);
-		  	} else {
-		  		\FuncNode::update_indicator_values($indicator);
-		  	}
-		  }
-		}
-		$filled_items = $indicator_model;
-		$array = \AdminList::filter_node($array, $indicator->node, $indicator_model, $filled_items, 'indicator');
-	  	$array['items'] = $array['items']->get();
-	  }
-      return AdminItem::get_request($model, $action, $id, $this, [], $array);
+	    $single_model = 'indicator';
+        $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
+        $model = \FuncNode::node_check_model($node);
+        $array = [];
+	    if($action=='edit'){
+		  	$indicator = \Solunes\Master\App\Indicator::find($id);
+	        $indicator_model = \FuncNode::node_check_model($indicator->node);
+		  	$array['node_name'] = $indicator->node->plural;
+			$array['filter_category'] = 'indicator';
+			$array['filter_node'] = $indicator->node->name;
+			$array['filter_type'] = 'field';
+			$array['filter_category_id'] = $id;
+			$filled_items = $indicator_model;
+			$array = \AdminList::filter_node($array, $indicator->node, $indicator_model, $filled_items, 'indicator');
+			if(config('solunes.custom_indicator')){
+				$array = \CustomFunc::custom_indicator($indicator->node, $indicator, $array);
+			}
+			if(request()->has('search')&&isset($array['filters'])&&is_array($array['filters'])){
+			  foreach($array['filters'] as $field_name => $field){
+			  	$filter = \Solunes\Master\App\Filter::find($field['id']);
+			  	$action_value = [];
+			  	if($field['subtype']=='date'){
+			  		if(request()->has('f_'.$field_name.'_from')){
+			  	      $action_value[request()->input('f_'.$field_name.'_from')] = 'is_greater';
+			  		}
+			  		if(request()->has('f_'.$field_name.'_to')){
+			  	      $action_value[request()->input('f_'.$field_name.'_to')] = 'is_less';
+			  		}
+			  	} else if($field['subtype']=='string'){
+			  		if(request()->has('f_'.$field_name)){
+			  	      $action_value[request()->input('f_'.$field_name)] = request()->input('f_'.$field_name.'_action');
+			  	    }
+			  	} else {
+			  	  if(request()->has('f_'.$field_name)&&is_array(request()->input('f_'.$field_name))){
+			  	    foreach(request()->input('f_'.$field_name) as $subfield_key => $subfield_val){
+			  	      $action_value[$subfield_val] = 'is';
+			  	    }
+			  	  } else if(request()->has('f_'.$field_name)){
+			  	    $action_value[request()->input('f_'.$field_name)] = 'is';
+			  	  }
+			  	}
+			  	$filter->action_value = json_encode($action_value);
+			  	$filter->save();
+			  }
+			  if(config('solunes.update_indicator_values')){
+			  	if(config('solunes.custom_indicator_values')){
+			  		\CustomFunc::update_indicator_values($indicator);
+			  	} else {
+			  		\FuncNode::update_indicator_values($indicator);
+			  	}
+			  }
+			}
+			$filled_items = $indicator_model;
+			$array = \AdminList::filter_node($array, $indicator->node, $indicator_model, $filled_items, 'indicator');
+		  	$array['items'] = $array['items']->get();
+	    }
+
+        $options = [];
+	    $additional_vars = $array;
+
+	    \AdminItem::check_item_permission($this->module, $node, $action, $id);
+
+        if($action=='delete'||$action=='restore'){
+            return \AdminItem::delete_restore_item($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
+        } 
+        $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
+
+        return \AdminItem::get_item_view($node, $single_model, $variables);
 	}
 
     public function postModel(Request $request) {
