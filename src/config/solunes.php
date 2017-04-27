@@ -9,6 +9,7 @@ return [
 	'send_notification_sms' => false,
 	'send_notification_app' => false,
 	'master_admin_id' => 1,
+	'default_location' => '-16.495369;-68.134289',
 
 	// LIST
 	'pagination_count' => 500,

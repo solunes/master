@@ -1,6 +1,6 @@
 <h3>Seleccionar Ubicación</h3>
 
-<div id="modal-map" style="height: 400px;"></div>
+<div id="modal-map" class="map-box" style="height: 400px;"></div>
 <input id="modal-map-search" class="map-search-box" type="text" placeholder="Buscar">
 
 <script type="text/javascript"> 
@@ -59,7 +59,7 @@
               infowindow.open(map, marker);
 
               var coordinates = yeri.lat().toFixed(6)+ ";" +yeri.lng().toFixed(6);
-              document.getElementById('{{ $name }}').value = coordinates;
+              document.getElementsByName('{{ $name }}')[0].value = coordinates;
               var link = document.getElementById('link-{{ $name }}');
               var link_text = "{{ url('admin/modal-map/'.$name) }}/"+ coordinates +"?lightbox[width]=800&lightbox[height]=500";
               link.innerHTML = "Editar Mapa ("+ coordinates +")";
@@ -94,6 +94,7 @@
           setTimeout(function(){google.maps.event.removeListener(zoomChangeBoundsListener)}, 2000);
 
       }
-
+  $( document ).ready(function() {
     initializeModal();
+  });
 </script>

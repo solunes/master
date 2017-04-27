@@ -311,7 +311,7 @@ class Field {
         if(isset($array['rel'])){
             if($value==NULL){
                 $map_text = 'Introducir Mapa';
-                $value = '-16.495369;-68.134289';
+                $value = config('solunes.default_location');
             } else {
                 $map_text = 'Editar Mapa ('.$value.')';
             }
@@ -321,10 +321,10 @@ class Field {
                 $response = '<a id="link-'.$name.'" class="lightbox" href="'.url('admin/modal-map/'.$name.'/'.$value.'?lightbox[width]=800&lightbox[height]=500').'" rel="'.$array['rel'].'" data-value="'.$value.'">'.$map_text.'</a>';
             }
         } else {
-            $response = '<div id="map-'.$name.'" style="height: 500px;"></div>';
+            $response = '<div id="map-'.$name.'" class="map-box" style="height: 500px;"></div>';
             $response .= '<input id="search-'.$name.'" class="map-search-box" type="text" placeholder="Buscar">';
             if($value==NULL){
-                $value = '-16.495369;-68.134289';
+                $value = config('solunes.default_location');
             }
         }
         $response .= Form::hidden($name, $value, $array);
