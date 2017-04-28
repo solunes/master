@@ -587,7 +587,7 @@
   max-width: 96%;
   max-height: 100%; }
 
-.jquery-lightbox-move div * {
+.jquery-lightbox-move .jquery-lightbox-html div * {
   webkit-box-sizing: border-box !important;
   -moz-box-sizing: border-box !important;
   box-sizing: border-box !important; }
