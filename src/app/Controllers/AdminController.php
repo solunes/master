@@ -88,7 +88,7 @@ class AdminController extends Controller {
         return \AdminItem::get_item_view($node, $single_model, $variables);
 	}
 
-	public function getChildModel($model, $action, $id = NULL) {
+	public function getChildModel($single_model, $action, $id = NULL) {
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
         $model = \FuncNode::node_check_model($node);
         $options = ['child'=>true];
