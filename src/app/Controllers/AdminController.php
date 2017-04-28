@@ -81,7 +81,7 @@ class AdminController extends Controller {
 	    \AdminItem::check_item_permission($this->module, $node, $action, $id);
 
         if($action=='delete'||$action=='restore'){
-            return \AdminItem::delete_restore_item($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
+            return \AdminItem::delete_restore_item($this->module, $this->prev, $node, $model, $single_model, $action, $id, $options, $additional_vars);
         }
         $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
 
@@ -97,7 +97,7 @@ class AdminController extends Controller {
 	    \AdminItem::check_item_permission($this->module, $node, $action, $id);
 
         if($action=='delete'||$action=='restore'){
-            return \AdminItem::delete_restore_item($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
+            return \AdminItem::delete_restore_item($this->module, $this->prev, $node, $model, $single_model, $action, $id, $options, $additional_vars);
         }
         $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
 
@@ -168,7 +168,7 @@ class AdminController extends Controller {
 	    \AdminItem::check_item_permission($this->module, $node, $action, $id);
 
         if($action=='delete'||$action=='restore'){
-            return \AdminItem::delete_restore_item($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
+            return \AdminItem::delete_restore_item($this->module, $this->prev, $node, $model, $single_model, $action, $id, $options, $additional_vars);
         } 
         $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
 
@@ -192,11 +192,11 @@ class AdminController extends Controller {
 		  	}
 	  	}
 	  	if($request->has('child-page')){
-	  		$redirect = $this->module.'/child-model/'.$model.'/edit/'.$item->id.'/'.$request->input('lang_code');
+        	return ['type'=>'success', 'model'=>$model, 'action'=>$action, 'item_id'=>$item->id];
 	  	} else {
 	  		$redirect = $this->module.'/model/'.$model.'/edit/'.$item->id.'/'.$request->input('lang_code');
+        	return AdminItem::post_success($action, $redirect);
 	  	}
-        return AdminItem::post_success($action, $redirect);
 	  } else {
 	  	if($request->has('child-page')){
 	  		$redirect = $request->input('child-url');

@@ -14,9 +14,15 @@
         //dataType: 'json',
         data: $(".page-child form").serialize(),
         success: function(data) {
-          console.log('success' + data);
-          $('.jquery-lightbox-html').html(data);
-          $('.jquery-lightbox-html').animate({ scrollTop: 0 }, 600);
+          console.log('success');
+          if($.isPlainObject(data)){
+            console.log('cerrar ventana y recargar con:' + data);
+            parent.location.reload();
+          } else {
+            console.log('redireccionar lightbox');
+            $('.jquery-lightbox-html').html(data);
+            $('.jquery-lightbox-html').animate({ scrollTop: 0 }, 600);
+          }
         }, error: function(error) {
           console.log('error' + error);
         }

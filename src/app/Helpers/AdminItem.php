@@ -145,7 +145,7 @@ class AdminItem {
         return $pdf->setPaper('letter')->setOption('header-html', $header->render())->stream($node->singular.'_'.date('Y-m-d').'.pdf');
     }
 
-    public static function delete_restore_item($module, $node, $model, $single_model, $action, $id, $options, $additional_vars = NULL) {
+    public static function delete_restore_item($module, $prev, $node, $model, $single_model, $action, $id, $options, $additional_vars = NULL) {
         if($node->soft_delete==1){
             $item = $model->withTrashed()->where('id', $id)->first();
         } else {
@@ -170,9 +170,9 @@ class AdminItem {
                 }
             }
             $item->$action();
-            return redirect($data->prev)->with('message_success', trans('master::admin.'.$action.'_success'));
+            return redirect($prev)->with('message_success', trans('master::admin.'.$action.'_success'));
         } else {
-            return redirect($data->prev)->with('message_fail', trans('master::admin.'.$action.'_fail'));
+            return redirect($prev)->with('message_fail', trans('master::admin.'.$action.'_fail'));
         }
     }
 
