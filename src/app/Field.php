@@ -157,7 +157,7 @@ class Field extends Model {
     }
 
     public function scopeFillables($query) {
-        return $query->whereNotIn('type', ['title', 'content', 'child', 'subchild', 'field']);
+        return $query->whereNotIn('type', ['title', 'content', 'custom', 'child', 'subchild', 'field']);
     }
 
     public function scopeFiles($query) {

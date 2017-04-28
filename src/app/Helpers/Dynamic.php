@@ -96,7 +96,7 @@ class Dynamic {
     }
 
     public static function generate_field_table($node, $field_type, $field_name, $relation, $last_field, $second_attribute = NULL) {
-      if(!in_array($field_type, ['title','content','subchild','field'])&&!\Schema::hasColumn($node->table_name, $field_name)){
+      if(!in_array($field_type, ['title','content','custom','subchild','field'])&&!\Schema::hasColumn($node->table_name, $field_name)){
         $column_type = 'string';
         if($field_type=='text'||$field_type=='checkbox'||$field_type=='map'||$field_type=='file'||$field_type=='image'){
           $column_type = 'text';
@@ -276,7 +276,7 @@ class Dynamic {
                   $row_name = $row->name;
                   $field = \Dynamic::generate_field($node, $row_name, $row->type, $row->relation, $row->required);
                   $field_array = ['order'=>$subkey, 'label'=>$row->label_es, 'type'=>$row->type, 'trans_name'=>$row_name];
-                  if($row->type=='title'||$row->type=='content'||$subkey>5){
+                  if($row->type=='title'||$row->type=='content'||$row->type=='custom'||$subkey>5){
                       $field_array['display_list'] = 'excel';
                   }
                   if(isset($change_array[$row->name])){
@@ -290,7 +290,7 @@ class Dynamic {
                   } else {
                     \Dynamic::generate_field_table($node, $field->type, $field->name, $field->relation, $last_field);
                   }
-                  if(!in_array($row->type, ['title','content','subchild','field'])){
+                  if(!in_array($row->type, ['title','content','custom','subchild','field'])){
                       $last_field = $field;
                   }
                   if($row->cols!=6){

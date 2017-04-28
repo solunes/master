@@ -148,7 +148,7 @@ class MasterDatabase extends Migration
             $table->integer('order')->nullable()->default(0);
             $table->string('name');
             $table->string('trans_name');
-            $table->enum('type', ['string','text','select','password','image','file','barcode','map','radio','checkbox','date','array','score','hidden','child','subchild','field','title','content'])->default('string');
+            $table->enum('type', ['string','text','select','password','image','file','barcode','map','radio','checkbox','date','array','score','hidden','child','subchild','field','custom','title','content'])->default('string');
             $table->enum('display_list', ['show', 'excel', 'none'])->default('show');
             $table->enum('display_item', ['show', 'admin', 'none'])->default('show');
             $table->boolean('relation')->default(0);

@@ -220,8 +220,8 @@ class DynamicFormController extends Controller {
                 }
 
                 // Ajustar ultimo campo en caso de que sea titulo o subtitulo
-                if($last_field->type=='title'||$last_field->type=='content'){
-                  $last_field = $node->fields()->where('order', '<=', $last_field->order)->whereNotIn('type', ['title','content'])->orderBy('order', 'DESC')->orderBy('id', 'DESC')->first();
+                if($last_field->type=='title'||$last_field->type=='content'||$last_field->type=='custom'){
+                  $last_field = $node->fields()->where('order', '<=', $last_field->order)->whereNotIn('type', ['title','content','custom'])->orderBy('order', 'DESC')->orderBy('id', 'DESC')->first();
                 }
 
                 // Asignar un nombre al campo y verificar que no exista.
@@ -232,7 +232,7 @@ class DynamicFormController extends Controller {
             } else {
                 $field = \Solunes\Master\App\Field::find(request()->input('field_id'));
             }
-            if($field_type=='title'||$field_type=='subtitle'){
+            if($field_type=='title'||$field_type=='content'||$field_type=='custom'){
                 $field_array['display_list'] = 'none';
                 $field_array['required'] = 0;
             } else {

@@ -88,6 +88,9 @@ class Field {
         if($required==true){
             $label .= ' (*)';
         }
+        if(isset($field['relation'])&&$field['relation']&&in_array($name, config('solunes.relation_fast_create_array'))){
+            $label .= ' (<a href="'.url('admin/child-model/'.$field['value'].'/create/es').'&lightbox[width]=1000&lightbox[height]=600" class="lightbox" data-url="'.url('admin/child-model/'.$field['value'].'/create/es').'">Crear nuevo</a>)';
+        }
         if(isset($field['tooltip'])&&$field['tooltip']&&$data_type!='view'){
             $label .= ' <a href="#" class="help" title="'.$field['tooltip'].'"><i class="fa fa-question-circle"></i></a>';
         }
@@ -207,7 +210,9 @@ class Field {
         }
 
         // RESPONSE
-        if($subinput=='multiple') {
+        if($type=='custom'){
+            $response = \CustomFunc::get_custom_field($name, $parameters, $array, $label, $col, $i, $value, $data_type);
+        } else if($subinput=='multiple') {
             if($type=='checkbox'||$type=='radio'||$type=='score'){
                 $response = Field::form_checkbox_input($name, $type, $parameters, $array, $label, $col, $i, $value, $data_type);
             } else {
