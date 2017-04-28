@@ -583,6 +583,15 @@
 .icon-social-steam:before {
   content: "\e620"; }
 
+.jquery-lightbox-move, .jquery-lightbox.jquery-lightbox-mode-html, .jquery-lightbox-background {
+  max-width: 96%;
+  max-height: 100%; }
+
+.jquery-lightbox-move div * {
+  webkit-box-sizing: border-box !important;
+  -moz-box-sizing: border-box !important;
+  box-sizing: border-box !important; }
+
 body.admin-site.pdf-site {
   background: #fff; }
   body.admin-site.pdf-site .control-label {
