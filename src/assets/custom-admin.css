@@ -588,7 +588,7 @@
   max-height: 100%; }
 
 .jquery-lightbox-background {
-  max-width: 100%;
+  max-width: 99%;
   max-height: 100%; }
 
 .jquery-lightbox-move .jquery-lightbox-html div * {
