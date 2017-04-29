@@ -109,7 +109,7 @@ class AdminItem {
         }
     }
 
-    public static function get_item_view($node, $single_model, $variables) {
+    public static function get_item_view($module, $node, $single_model, $id, $variables) {
         $view = 'master::item.model';
         if($variables['preset_field']===true){
             if(\View::exists('includes.select-parent-'.$node->name)){
@@ -125,12 +125,12 @@ class AdminItem {
             $view = 'item.'.$single_model;
         }
         if(request()->has('download-pdf')){
-            return \AdminItem::generate_item_pdf($module, $node, $model, $variables);
+            return \AdminItem::generate_item_pdf($module, $node, $single_model, $id, $view, $variables);
         }
         return view($view, $variables);
     }
 
-    public static function generate_item_pdf($module, $node, $model, $variables) {
+    public static function generate_item_pdf($module, $node, $model, $id, $view, $variables) {
         $variables['pdf'] = true;
         $variables['dt'] = 'view';
         if(config('solunes.custom_field')){

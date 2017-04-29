@@ -20,7 +20,15 @@ class ComposerServiceProvider extends ServiceProvider
                 $array['inbox'] = \Solunes\Master\App\Inbox::whereHas('inbox_users', function($q){
                     $q->where('user_id', auth()->user()->id);
                 })->with('other_users','last_message')->orderBy('updated_at','DESC')->limit(10)->get();
-                $array['notifications'] = \Solunes\Master\App\Notification::where('user_id', auth()->user()->id)->orderBy('created_at','DESC')->limit(10)->get();
+                $array['notifications_unread'] = \Solunes\Master\App\Notification::me()->type('dashboard')->notSent()->orderBy('created_at','DESC')->count();
+                    $notifications = \Solunes\Master\App\Notification::me()->type('dashboard');
+                if($array['notifications_unread']>0){
+                    $notifications = $notifications->notSent();
+                    $array['notifications_ids'] = $notifications->orderBy('created_at','DESC')->limit(10)->lists('id');
+                } else {
+                    $array['notifications_ids'] = [];
+                }
+                $array['notifications'] = $notifications->orderBy('created_at','DESC')->limit(10)->get();
             }
             if(request()->has('download-pdf')){
                 $array['pdf'] = true;

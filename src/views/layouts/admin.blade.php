@@ -49,27 +49,38 @@
                 <!-- BEGIN NOTIFICATION DROPDOWN -->
                 <!-- DOC: Apply "dropdown-dark" class after below "dropdown-extended" to change the dropdown styte -->
                 <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                  <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                  <a href="javascript:;" class="dropdown-toggle dropdown-notifications" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" data-id="{{ json_encode($notifications_ids) }}">
                     <i class="icon-bell"></i>
-                    @if(count($notifications)>0)
-                        <span class="badge badge-default"> {{ count($notifications) }} </span>
+                    @if($notifications_unread>0)
+                      <span class="badge badge-default"> {{ $notifications_unread }} </span>
                     @endif
                   </a>
                   <ul class="dropdown-menu">
                     <li class="external">
-                      <h3><span class="bold">{{ count($notifications) }} notificaciones</span> </h3>
-                      <a href="{{ url('admin') }}">Ver todas</a>
+                      <h3><span class="bold">
+                        {{ count($notifications) }} {{ trans_choice('master::model.notification', count($notifications)) }}
+                        @if($notifications_unread>0)
+                           {{ trans_choice('master::model.unread', $notifications_unread) }}
+                        @endif
+                      </span> </h3>
+                      <a href="{{ url('admin/my-notifications') }}">Ver todas</a>
                     </li>
                     <li>
                       <ul class="dropdown-menu-list scroller" style="height: 250px;" data-handle-color="#637283">
                         @foreach($notifications as $notification)
-                          <li><a href="{{ $notification->url }}">
-                            <span class="time">{{ $notification->created_at->format('Y-m-d') }}</span>
-                            <span class="details">
-                              {{ $notification->message }}
-                            </span>
-                          </a></li>
+                          <li @if(!$notification->checked_date) class="unread" @endif data-id="{{ $notification->id }}" >
+                            <a @if($notification->url) target="_blank" href="{{ $notification->url }}" @else href="#" @endif >
+                              <span class="time">{{ $notification->created_at->format('Y-m-d') }}</span>
+                              <span class="details">
+                                @if($notification->url) <i class="fa fa-external-link"></i> @endif
+                                {{ $notification->notification_messages->where('type', 'dashboard')->first()->message }}
+                              </span>
+                            </a>
+                          </li>
                         @endforeach
+                        @if($notifications_unread>count($notifications))
+                          <li class="center"><a href="{{ url('admin/my-notifications') }}">Ver {{ $notifications_unread - count($notifications) }} {{ trans_choice('master::model.notification', $notifications_unread - count($notifications)) }} más</a></li>
+                        @endif
                       </ul>
                     </li>
                   </ul>
@@ -248,6 +259,7 @@
     @include('master::scripts.time-js')
     @include('master::scripts/filter-js')
     @include('master::scripts/table-js')
+    @include('master::scripts/notifications-js')
     @yield('script')
   </body>
 @else

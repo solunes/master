@@ -11,21 +11,20 @@ class NotificationMessage extends Model {
 
 	/* Creating rules */
 	public static $rules_create = array(
-		'parent_id'=>'required',
 		'type'=>'required',
 		'message'=>'required',
+		'is_sent'=>'required',
 	);
 
 	/* Updating rules */
 	public static $rules_edit = array(
-		'id'=>'required',
-		'parent_id'=>'required',
 		'type'=>'required',
 		'message'=>'required',
+		'is_sent'=>'required',
 	);
 
     public function parent() {
-        return $this->belongsTo('Solunes\Master\App\Notification');
+        return $this->belongsTo('Solunes\Master\App\Notification', 'parent_id');
     }
 
 }

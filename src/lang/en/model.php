@@ -67,4 +67,7 @@ return [
     'profile' => 'Profile',
     'logout' => 'Logout',
 
+    // OPTIONS
+    'unread' => 'unread|unread',
+
 ];

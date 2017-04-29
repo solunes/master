@@ -605,6 +605,7 @@ body.admin-site.pdf-site {
 
 body.admin-site {
   /* Logo */
+  /* Dashboard */
   /* Dates Plugins*/
   /* PDF Doc */
   /* Froala View */
@@ -621,6 +622,12 @@ body.admin-site {
   /* Admin */ }
   body.admin-site .page-header.navbar .page-logo .logo-default {
     margin: 10px 0 0 0; }
+  body.admin-site .page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu > li.external > h3 {
+    color: #4c99bf; }
+  body.admin-site .dropdown-menu-list li.unread, body.admin-site tr.unread {
+    background: #f3f3f3; }
+    body.admin-site .dropdown-menu-list li.unread i, body.admin-site tr.unread i {
+      color: #4c99bf; }
   body.admin-site .datepicker, body.admin-site .timepicker, body.admin-site .pick-control {
     cursor: pointer; }
   body.admin-site .picker__header select {

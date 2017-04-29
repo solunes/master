@@ -67,4 +67,7 @@ return [
     'my_profile' => 'Perfil',
     'logout' => 'Cerrar Sesión',
 
+    // OPTIONS
+    'unread' => 'no leída|no leídas',
+    
 ];

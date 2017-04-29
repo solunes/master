@@ -46,6 +46,21 @@ class AdminController extends Controller {
       	return view('master::list.dashboard', $array);
 	}
 
+    public function getMyNotifications() {
+    	$array['items'] = \Solunes\Master\App\Notification::me()->type('dashboard')->orderBy('created_at','DESC')->paginate(25);
+      	return view('master::list.notifications', $array);
+	}
+
+    public function postReadNotifications(Request $request) {
+    	$id = $request->input('id');
+    	$items = \Solunes\Master\App\Notification::whereIn('id', $id)->me()->get();
+    	foreach($items as $item){
+	    	$item->checked_date = date('Y-m-d H:i:s');
+	    	$item->save();
+    	}
+    	return ['read'=>true, 'count'=>count($items)];
+	}
+
     public function getGenerateManual($role_name = NULL) {
 	    $permission_array = \Login::get_role_permissions($role_name);
 	    $array = ['role_name'=>$role_name];
@@ -85,7 +100,7 @@ class AdminController extends Controller {
         }
         $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
 
-        return \AdminItem::get_item_view($node, $single_model, $variables);
+        return \AdminItem::get_item_view($this->module, $node, $single_model, $id, $variables);
 	}
 
 	public function getChildModel($single_model, $action, $id = NULL) {
@@ -101,7 +116,7 @@ class AdminController extends Controller {
         }
         $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
 
-        return \AdminItem::get_item_view($node, $single_model, $variables);
+        return \AdminItem::get_item_view($this->module, $node, $single_model, $id, $variables);
 	}
 
 	public function getModelIndicator($action, $id = NULL) {
@@ -172,7 +187,7 @@ class AdminController extends Controller {
         } 
         $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
 
-        return \AdminItem::get_item_view($node, $single_model, $variables);
+        return \AdminItem::get_item_view($this->module, $node, $single_model, $id, $variables);
 	}
 
     public function postModel(Request $request) {
