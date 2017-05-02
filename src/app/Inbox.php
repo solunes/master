@@ -23,8 +23,12 @@ class Inbox extends Model {
         return $this->belongsTo('App\User');
     }
 
+    public function me() {
+        return $this->hasOne('Solunes\Master\App\InboxUser', 'parent_id', 'id')->where('user_id', auth()->user()->id);
+    }
+
     public function other_users() {
-        return $this->hasMany('Solunes\Master\App\InboxUser', 'parent_id', 'id')->where('user_id', '!=', auth()->user()->id)->orderBy('updated_at', 'DESC')->limit(2);
+        return $this->hasMany('Solunes\Master\App\InboxUser', 'parent_id', 'id')->where('user_id', '!=', auth()->user()->id)->orderBy('updated_at', 'DESC');
     }
 
     public function last_message() {
@@ -37,6 +41,18 @@ class Inbox extends Model {
 
     public function inbox_messages() {
         return $this->hasMany('Solunes\Master\App\InboxMessage', 'parent_id', 'id');
+    }
+
+    public function scopeUserInbox($query, $user_id) {
+        return $query->whereHas('inbox_users', function($q) use($user_id) {
+            $q->where('user_id', $user_id);
+        });
+    }
+
+    public function scopeUserUnreadInbox($query, $user_id) {
+        return $query->whereHas('inbox_users', function($q) use($user_id) {
+            $q->where('user_id', $user_id)->where('checked', 0);
+        });
     }
 
 }

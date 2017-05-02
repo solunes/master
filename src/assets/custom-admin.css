@@ -606,6 +606,7 @@ body.admin-site.pdf-site {
 body.admin-site {
   /* Logo */
   /* Dashboard */
+  /* Inbox */
   /* Dates Plugins*/
   /* PDF Doc */
   /* Froala View */
@@ -628,6 +629,101 @@ body.admin-site {
     background: #f3f3f3; }
     body.admin-site .dropdown-menu-list li.unread i, body.admin-site tr.unread i {
       color: #4c99bf; }
+  body.admin-site .inbox-conversations a.btn {
+    margin-bottom: 25px; }
+  body.admin-site .inbox-conversations a {
+    text-decoration: none; }
+  body.admin-site .inbox-conversations .inbox-conversation {
+    background: #f6fbfc;
+    padding: 10px;
+    margin-bottom: 25px;
+    border-left: 2px solid #4c99bf;
+    overflow: hidden;
+    -webkit-box-shadow: 0 1px 7px #c3c3c3;
+    -moz-box-shadow: 0 1px 7px #c3c3c3;
+    box-shadow: 0 1px 7px #c3c3c3; }
+    body.admin-site .inbox-conversations .inbox-conversation img {
+      margin: 0 10px 10px 0;
+      -webkit-border-radius: 50% !important;
+      -moz-border-radius: 50% !important;
+      border-radius: 50% !important;
+      border: 1px solid #cedae1; }
+    body.admin-site .inbox-conversations .inbox-conversation .inbox-conversation-users {
+      font-size: 15px;
+      color: #4c99bf;
+      font-weight: 600;
+      padding-top: 3px;
+      padding-bottom: 3px; }
+    body.admin-site .inbox-conversations .inbox-conversation .inbox-conversation-message {
+      color: #8a8a8a; }
+    body.admin-site .inbox-conversations .inbox-conversation .inbox-conversation-date {
+      font-size: 12px;
+      font-style: italic;
+      color: #4c99bf;
+      float: right; }
+  body.admin-site .inbox-conversations .inbox-conversation.unread {
+    background-color: #efefef; }
+  body.admin-site .inbox-conversations a:hover .inbox-conversation {
+    border-color: #131630; }
+  body.admin-site .inbox-user img {
+    margin: 0 10px 10px 0;
+    -webkit-border-radius: 50% !important;
+    -moz-border-radius: 50% !important;
+    border-radius: 50% !important;
+    border: 1px solid #cedae1; }
+  body.admin-site .inbox-user img.pull-right {
+    margin-left: 10px;
+    margin-right: 0; }
+  body.admin-site .inbox-user div.inbox-user-title {
+    font-size: 15px;
+    color: #4c99bf;
+    font-weight: 600;
+    padding-top: 3px;
+    padding-bottom: 13px; }
+  body.admin-site .inbox-users h3 {
+    margin-bottom: 30px; }
+  body.admin-site .inbox-users .inbox-user {
+    margin-bottom: 10px; }
+  body.admin-site .inbox-messages {
+    border-left: 3px solid #ddd;
+    padding-left: 30px; }
+    body.admin-site .inbox-messages .reply {
+      padding-bottom: 20px; }
+      body.admin-site .inbox-messages .reply textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #4c99bf;
+        background: #f3f3f3;
+        color: #4c99bf; }
+    body.admin-site .inbox-messages .inbox-message {
+      background: #f6fbfc;
+      padding: 10px;
+      margin-bottom: 25px;
+      overflow: hidden;
+      -webkit-box-shadow: 0 1px 7px #c3c3c3;
+      -moz-box-shadow: 0 1px 7px #c3c3c3;
+      box-shadow: 0 1px 7px #c3c3c3; }
+      body.admin-site .inbox-messages .inbox-message .inbox-view-message {
+        font-size: 13px;
+        color: #808080;
+        padding-bottom: 5px; }
+      body.admin-site .inbox-messages .inbox-message .inbox-view-controls {
+        margin-top: 5px; }
+        body.admin-site .inbox-messages .inbox-message .inbox-view-controls .inbox-view-date {
+          color: #131630 !important;
+          margin-right: 12px;
+          font-style: italic;
+          font-size: 12px; }
+    body.admin-site .inbox-messages .inbox-message.left {
+      border-left: 2px solid #4c99bf; }
+    body.admin-site .inbox-messages .inbox-message.right {
+      border-right: 2px solid #4c99bf; }
+  body.admin-site .inbox-message.no-border {
+    border-left: none;
+    padding-left: 0; }
+  body.admin-site .inbox-messages.create-message {
+    border-left: 3px solid #ddd;
+    padding-left: 30px; }
   body.admin-site .datepicker, body.admin-site .timepicker, body.admin-site .pick-control {
     cursor: pointer; }
   body.admin-site .picker__header select {

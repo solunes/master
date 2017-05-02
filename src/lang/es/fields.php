@@ -19,6 +19,7 @@ return [
     'alert_conditionals' => 'Condicionantes de Alerta',
     'alert_users' => 'Usuarios de Alerta',
     'analytics' => 'Google Analytics',
+    'attachments' => 'Archivos Adjuntos',
     'barcode' => 'Código de Barras',
     'category' => 'Categoria',
     'cellphone' => 'Celular',

@@ -16,6 +16,11 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('generate-manual/{role_name?}', 'AdminController@getGenerateManual');
     Route::get('my-notifications', 'AdminController@getMyNotifications');
     Route::post('read-notifications', 'AdminController@postReadNotifications');
+    Route::get('my-inbox', 'AdminController@getMyInbox');
+    Route::get('create-inbox', 'AdminController@getCreateInbox');
+    Route::post('create-inbox', 'AdminController@postCreateInbox');
+    Route::get('inbox/{id}', 'AdminController@getInboxId');
+    Route::post('inbox-reply', 'AdminController@postInboxReply');
     // Indicadores
     Route::get('model/indicator/{action}/{id?}/{lang?}', 'AdminController@getModelIndicator');
     Route::get('indicators', 'AdminController@getIndicators');

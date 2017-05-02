@@ -14,12 +14,14 @@ class ComposerServiceProvider extends ServiceProvider
             $array['site'] = \Solunes\Master\App\Site::with('translations')->where('id', 1)->first();
             if(auth()->check()){
                 $user_id = auth()->user()->id;
+                /* Indicadores */
                 $array['alerts'] = \Solunes\Master\App\IndicatorAlert::whereHas('indicator_alert_users', function ($query) use($user_id) {
                     $query->where('user_id', $user_id);
                 })->with('indicator','indicator.indicator_values')->get();
-                $array['inbox'] = \Solunes\Master\App\Inbox::whereHas('inbox_users', function($q){
-                    $q->where('user_id', auth()->user()->id);
-                })->with('other_users','last_message')->orderBy('updated_at','DESC')->limit(10)->get();
+                /* Inbox */
+                $array['inbox'] = \Solunes\Master\App\Inbox::userInbox($user_id)->with('other_users','last_message')->orderBy('updated_at','DESC')->limit(10)->get();
+                $array['inbox_unread_array'] = \Solunes\Master\App\Inbox::userUnreadInbox($user_id)->lists('id')->toArray();
+                /* Notifications */
                 $array['notifications_unread'] = \Solunes\Master\App\Notification::me()->type('dashboard')->notSent()->orderBy('created_at','DESC')->count();
                     $notifications = \Solunes\Master\App\Notification::me()->type('dashboard');
                 if($array['notifications_unread']>0){

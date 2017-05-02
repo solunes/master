@@ -91,40 +91,42 @@
                 <li class="dropdown dropdown-extended dropdown-inbox" id="header_inbox_bar">
                   <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                     <i class="icon-envelope-open"></i>
-                    @if(count($inbox)>0)
-                        <span class="badge badge-default"> {{ count($inbox) }} </span>
+                    @if(count($inbox_unread_array)>0)
+                        <span class="badge badge-default"> {{ count($inbox_unread_array) }} </span>
                     @endif
                   </a>
                   <ul class="dropdown-menu">
                     <li class="external">
                       <h3>Tienes <span class="bold">{{ count($inbox) }}</span> mensajes</h3>
-                          <a href="{{ url('admin') }}">Ver todos</a>
+                          <a href="{{ url('admin/my-inbox') }}">Ver todos</a>
                         </li>
                         <li>
                           <ul class="dropdown-menu-list scroller" style="height: 275px;" data-handle-color="#637283">
                             @foreach($inbox as $message)
-                              <li><a href="#">
-                                @if(count($message->other_users)==1)
-                                  <span class="photo"><img src="{{ asset('assets/admin/img/no_picture.jpg') }}" class="img-circle" alt=""></span>
-                                @else
-                                  <span class="photo"><img src="{{ asset('assets/admin/img/no_picture.jpg') }}" class="img-circle" alt=""></span>
-                                @endif
-                                <span class="subject">
-                                  <span class="from">
-                                    @foreach($message->other_users as $key => $user)
-                                      @if($key>0)
-                                        , 
+                              <li @if(in_array($message->id, $inbox_unread_array)) class="unread" @endif >
+                                <a href="{{ url('admin/inbox/'.$message->id) }}">
+                                  @if(count($message->other_users)==1)
+                                    <span class="photo"><img src="{{ asset('assets/admin/img/no_picture.jpg') }}" class="img-circle" alt=""></span>
+                                  @else
+                                    <span class="photo"><img src="{{ asset('assets/admin/img/no_picture.jpg') }}" class="img-circle" alt=""></span>
+                                  @endif
+                                  <span class="subject">
+                                    <span class="from">
+                                      @foreach($message->other_users->take(2) as $key => $user)
+                                        @if($key>0)
+                                          , 
+                                        @endif
+                                        {{ $user->user->name }}
+                                      @endforeach
+                                      @if(count($message->other_users)>2)
+                                        ...
                                       @endif
-                                      {{ $user->user->name }}
-                                    @endforeach
-                                    @if(count($message->other_users)>1)
-                                      ...
-                                    @endif
+                                    </span>
+                                    <span class="time">{{ $message->last_message->created_at->format('H:i') }} </span>
                                   </span>
-                                  <span class="time">{{ $message->last_message->created_at->format('H:i') }} </span>
-                                </span>
-                                <span class="message">{{ $message->last_message->message }} </span>
-                            </a></li>
+                                  <span class="message">{{ $message->last_message->message }} </span>
+                                </a>
+                              </li>
                             @endforeach
                           </ul>
                         </li>
@@ -180,7 +182,7 @@
                       <a href="{{ url('account') }}"><i class="icon-user"></i> Mi Perfil</a>
                     </li>
                     <li>
-                      <a href="{{ url('admin') }}">
+                      <a href="{{ url('admin/my-inbox') }}">
                         <i class="icon-envelope-open"></i> Mis Mensajes
                         <span class="badge badge-danger"> {{ count($inbox) }} </span>
                       </a>

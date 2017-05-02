@@ -61,6 +61,82 @@ class AdminController extends Controller {
     	return ['read'=>true, 'count'=>count($items)];
 	}
 
+    public function getMyInbox() {
+        $array['items'] = \Solunes\Master\App\Inbox::userInbox(auth()->user()->id)->with('me','other_users','last_message')->orderBy('updated_at','DESC')->paginate(25);  	
+     	return view('master::list.my-inbox', $array);
+	}
+
+    public function getCreateInbox() {
+    	$node = \Solunes\Master\App\Node::where('name','inbox-message')->first();
+    	$array['attachment_field'] = $node->fields()->where('name','attachments')->first();
+        $array['users'] = \App\User::where('id', '!=', auth()->user()->id)->get();
+     	return view('master::list.create-inbox', $array);
+	}
+
+	public function postCreateInbox(Request $request) {
+		if($request->has('message')&&$request->has('users')&&$request->input('message')!==''){
+			$inbox = new \Solunes\Master\App\Inbox;
+			$inbox->user_id = auth()->user()->id;
+			$inbox->save();
+			$users_array = $request->input('users');
+			array_unshift($users_array, auth()->user()->id);
+			foreach($users_array as $user_id){
+				$user = new \Solunes\Master\App\InboxUser;
+				$user->parent_id = $inbox->id;
+				$user->user_id = $user_id;
+				$user->save();
+			}
+			$message = new \Solunes\Master\App\InboxMessage;
+			$message->parent_id = $inbox->id;
+			$message->user_id = auth()->user()->id;
+			$message->message = $request->input('message');
+			if($request->input('attachments')&&count($request->input('attachments'))>0){
+				$message->attachments = json_encode($request->input('attachments'));
+			}
+			$message->save();
+	      	return redirect('admin/inbox/'.$inbox->id);
+	    } else {
+	      	return redirect($this->prev)->with('message_error','Debe introducir algún texto y participantes para crear la conversación.')->withInput();
+	    }
+	}
+
+    public function getInboxId($id) {
+    	$user_id = auth()->user()->id;
+    	$inbox = \Solunes\Master\App\Inbox::userInbox($user_id)->where('id', $id)->with('me')->first();
+    	$me = $inbox->me;
+    	$me->checked = true;
+    	$me->save();
+    	$node = \Solunes\Master\App\Node::where('name','inbox-message')->first();
+    	$array['attachment_field'] = $node->fields()->where('name','attachments')->first();
+    	$array['user_id'] = $user_id;
+    	$array['last_user_id'] = 0;
+    	$array['inbox'] = $inbox;
+    	$array['users'] = $inbox->inbox_users()->get();
+    	$array['items'] = $inbox->inbox_messages()->orderBy('created_at', 'DESC')->with('user')->paginate(25);
+      	return view('master::list.view-inbox', $array);
+	}
+
+	public function postInboxReply(Request $request) {
+		if(($request->has('message')&&$request->input('message')!=='')||($request->input('attachments')&&count($request->input('attachments'))>0)){
+			if($request->has('parent_id')&&$inbox = \Solunes\Master\App\Inbox::find($request->input('parent_id'))){
+				$message = new \Solunes\Master\App\InboxMessage;
+				$message->parent_id = $inbox->id;
+				$message->user_id = auth()->user()->id;
+				$message->message = $request->input('message');
+				if($request->input('attachments')&&count($request->input('attachments'))>0){
+					$message->attachments = json_encode($request->input('attachments'));
+				}
+				$message->save();
+				$inbox->touch();
+		      	return redirect($this->prev);
+			} else {
+	      		return redirect($this->prev)->with('message_error','Hubo un error al enviar el mensaje.');
+			}
+	    } else {
+	      	return redirect($this->prev)->with('message_error','Debe introducir algún texto o archivo para enviar.');
+	    }
+	}
+
     public function getGenerateManual($role_name = NULL) {
 	    $permission_array = \Login::get_role_permissions($role_name);
 	    $array = ['role_name'=>$role_name];

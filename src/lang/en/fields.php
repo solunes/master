@@ -19,6 +19,7 @@ return [
     'alert_conditionals' => 'Alert Conditionals',
     'alert_users' => 'Alert Users',
     'analytics' => 'Google Analytics',
+    'attachments' => 'Attachments',
     'barcode' => 'Barcode',
     'category' => 'Category',
     'cellphone' => 'Cellphone',

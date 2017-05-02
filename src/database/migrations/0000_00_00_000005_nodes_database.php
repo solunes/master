@@ -115,6 +115,7 @@ class NodesDatabase extends Migration
             $table->integer('parent_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->text('message')->nullable();
+            $table->text('attachments')->nullable();
             $table->timestamps();
             $table->foreign('parent_id')->references('id')->on('inbox')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
