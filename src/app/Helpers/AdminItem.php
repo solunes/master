@@ -247,6 +247,9 @@ class AdminItem {
             $item->total_ponderation = $total_ponderation;
         }
         $item->save();
+        if(config('solunes.item_post_after_item')&&in_array($single_model, config('solunes.item_post_after_item'))){
+            $model->item_post_after_item($model, $item, $type);
+        }
         foreach($node->fields()->whereIn('type', ['subchild', 'field'])->get() as $field){
             if($field->type=='subchild'){
                 $subfield_name = str_replace('_', '-', $field->value);
@@ -278,6 +281,9 @@ class AdminItem {
                 }
                 $item->$field_name()->sync($field_array);
             }
+        }
+        if(config('solunes.item_post_after_subitems')&&in_array($single_model, config('solunes.item_post_after_subitems'))){
+            $model->item_post_after_subitems($model, $item, $type);
         }
         foreach($node->indicators as $indicator){
             $node_model = \FuncNode::node_check_model($node);

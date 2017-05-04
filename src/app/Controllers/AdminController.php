@@ -175,7 +175,9 @@ class AdminController extends Controller {
             return \AdminItem::delete_restore_item($this->module, $this->prev, $node, $model, $single_model, $action, $id, $options, $additional_vars);
         }
         $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
-
+        if(config('solunes.item_get_after_vars')&&in_array($single_model, config('solunes.item_get_after_vars'))){
+        	$variables = $model->item_get_after_vars($this->module, $node, $single_model, $id, $variables);
+        }
         return \AdminItem::get_item_view($this->module, $node, $single_model, $id, $variables);
 	}
 
@@ -191,7 +193,9 @@ class AdminController extends Controller {
             return \AdminItem::delete_restore_item($this->module, $this->prev, $node, $model, $single_model, $action, $id, $options, $additional_vars);
         }
         $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
-
+        if(config('solunes.item_child_after_vars')&&in_array($single_model, config('solunes.item_child_after_vars'))){
+        	$variables = $model->item_child_after_vars($this->module, $node, $single_model, $id, $variables);
+        }
         return \AdminItem::get_item_view($this->module, $node, $single_model, $id, $variables);
 	}
 
@@ -282,6 +286,9 @@ class AdminController extends Controller {
 		  		\FuncNode::update_indicator_values($indicator);
 		  	}
 	  	}
+        if(config('solunes.item_post_redirect_success')&&in_array($single_model, config('solunes.item_post_redirect_success'))){
+        	return $model->item_post_redirect_success($this->module, $node, $single_model, $id, $variables);
+        }
 	  	if($request->has('child-page')){
         	return ['type'=>'success', 'model'=>$model, 'action'=>$action, 'item_id'=>$item->id];
 	  	} else {
@@ -289,6 +296,9 @@ class AdminController extends Controller {
         	return AdminItem::post_success($action, $redirect);
 	  	}
 	  } else {
+        if(config('solunes.item_post_redirect_fail')&&in_array($single_model, config('solunes.item_post_redirect_fail'))){
+        	return $model->item_post_redirect_fail($this->module, $node, $single_model, $id, $variables);
+        }
 	  	if($request->has('child-page')){
 	  		$redirect = $request->input('child-url');
 	  	} else {

@@ -607,6 +607,7 @@ body.admin-site {
   /* Logo */
   /* Dashboard */
   /* Inbox */
+  /* Select2 Plugin */
   /* Dates Plugins*/
   /* PDF Doc */
   /* Froala View */
@@ -724,6 +725,19 @@ body.admin-site {
   body.admin-site .inbox-messages.create-message {
     border-left: 3px solid #ddd;
     padding-left: 30px; }
+  body.admin-site .select2-container .select2-selection--single {
+    height: auto;
+    border: 1px solid #ccc; }
+  body.admin-site .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: initial;
+    padding: 8px;
+    padding-left: 12px;
+    text-align: left;
+    min-height: 32px; }
+  body.admin-site .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 4px; }
+  body.admin-site .select2-container--default .select2-selection--single .select2-selection__clear {
+    display: none; }
   body.admin-site .datepicker, body.admin-site .timepicker, body.admin-site .pick-control {
     cursor: pointer; }
   body.admin-site .picker__header select {

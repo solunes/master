@@ -18,6 +18,12 @@ return [
 	
 	// FORM
 	'relation_fast_create_array' => [],
+	'item_get_after_vars' => [],
+	'item_child_after_vars' => [],
+	'item_post_after_item' => [],
+	'item_post_after_subitems' => [],
+	'item_post_redirect_success' => [],
+	'item_post_redirect_fail' => [],
 
 	// CUSTOM FUNC
 	'get_page_array' => false,

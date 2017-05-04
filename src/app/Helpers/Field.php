@@ -45,7 +45,7 @@ class Field {
         if($type=='select'||$type=='checkbox'||$type=='radio'){
             $parameters['options'] = $field['options'];
             if($type=='select'&&!$required){
-                $parameters['options'] = [''=>' '] + $parameters['options'];
+                $parameters['options'] = [''=>'-'] + $parameters['options'];
             }
         }
  
@@ -53,6 +53,9 @@ class Field {
         $class = 'form-control input-lg" ';
         if(array_key_exists('class', $extras)){
             $class .= $extras['class'];
+        }
+        if($type=='select'){
+            $class .= 'js-select2';
         }
 
         // FIELD CLASS

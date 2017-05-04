@@ -33,6 +33,7 @@
   @include('master::scripts.conditionals-js')
   @include('master::scripts.upload-js')
   @include('master::scripts.map-js')
+  @include('master::scripts.select-js')
   @include('master::scripts.map-field-js')
   @include('master::scripts.tooltip-js')
   @include('master::scripts.accordion-js')
