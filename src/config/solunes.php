@@ -17,13 +17,15 @@ return [
 	'table_pagination_count' => 25,
 	
 	// FORM
-	'relation_fast_create_array' => [],
-	'item_get_after_vars' => [],
+	'relation_fast_create_array' => [], // array de field names: 'name'
+	'item_get_after_vars' => [], // array de nodos: 'node'
 	'item_child_after_vars' => [],
 	'item_post_after_item' => [],
 	'item_post_after_subitems' => [],
 	'item_post_redirect_success' => [],
 	'item_post_redirect_fail' => [],
+	'item_add_css' => [], // array debe contener el array de includes: 'example'=>['file']
+	'item_add_script' => [],
 
 	// CUSTOM FUNC
 	'get_page_array' => false,

@@ -3,6 +3,11 @@
 @section('css')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/froala.css') }}">
   @include('master::scripts.lightbox-css')
+  @if(config('solunes.item_add_css')&&array_key_exists($node->name, config('solunes.item_add_css')))
+    @foreach(config('solunes.item_add_css')[$node->name] as $file)
+      @include('scripts.'.$file.'-css')
+    @endforeach
+  @endif
 @endsection
 @section('content')
   @if($pdf===false)
@@ -46,5 +51,10 @@
     @include('master::scripts.child-js')
     @include('master::scripts.leave-form-js')
     @include('master::scripts.lightbox-js')
+  @endif
+  @if(config('solunes.item_add_script')&&array_key_exists($node->name, config('solunes.item_add_script')))
+    @foreach(config('solunes.item_add_script')[$node->name] as $file)
+      @include('scripts.'.$file.'-js')
+    @endforeach
   @endif
 @endsection
