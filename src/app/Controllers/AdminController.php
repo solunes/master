@@ -276,6 +276,7 @@ class AdminController extends Controller {
       $lang_code = $request->input('lang_code');
       $response = AdminItem::post_request($model, $action, $request);
       $item = $response[1];
+      $node_model = $response[2];
 	  if($response[0]->passes()) {
 	  	$item = AdminItem::post_request_success($request, $model, $item, 'admin');
 	  	if($model=='indicator'&&$action=='create'){
@@ -286,8 +287,10 @@ class AdminController extends Controller {
 		  		\FuncNode::update_indicator_values($indicator);
 		  	}
 	  	}
-        if(config('solunes.item_post_redirect_success')&&in_array($single_model, config('solunes.item_post_redirect_success'))){
-        	return $model->item_post_redirect_success($this->module, $node, $single_model, $id, $variables);
+        if(config('solunes.item_post_redirect_success')&&in_array($model, config('solunes.item_post_redirect_success'))){
+        	if($custom_redirect = $node_model->item_post_redirect_success($this->module, $model, $item->id, $action)){
+        		return $custom_redirect;
+        	}
         }
 	  	if($request->has('child-page')){
         	return ['type'=>'success', 'model'=>$model, 'action'=>$action, 'item_id'=>$item->id];
@@ -296,8 +299,10 @@ class AdminController extends Controller {
         	return AdminItem::post_success($action, $redirect);
 	  	}
 	  } else {
-        if(config('solunes.item_post_redirect_fail')&&in_array($single_model, config('solunes.item_post_redirect_fail'))){
-        	return $model->item_post_redirect_fail($this->module, $node, $single_model, $id, $variables);
+        if(config('solunes.item_post_redirect_fail')&&in_array($model, config('solunes.item_post_redirect_fail'))){
+        	if($custom_redirect = $node_model->item_post_redirect_fail($this->module, $model, $action)){
+        		return $custom_redirect;
+        	}
         }
 	  	if($request->has('child-page')){
 	  		$redirect = $request->input('child-url');

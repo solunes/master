@@ -216,7 +216,7 @@ class AdminItem {
         }
         $validator = Validator::make($request->all(), $rules);
         $validator->setAttributeNames($correctNames);
-        return [$validator, $item];
+        return [$validator, $item, $model];
     }
 
     public static function post_request_success($request, $model, $item, $type = 'admin') {
@@ -272,7 +272,7 @@ class AdminItem {
                 }
             } else {
                 $field_name = $field->name;
-                if(!$field->multiple){
+                if(!$field->multiple&&count($request->input($field_name))>0){
                     $field_array = [$request->input($field_name)];
                 } else if($request->input($field_name)){
                     $field_array = $request->input($field_name);

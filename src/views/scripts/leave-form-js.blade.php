@@ -1,7 +1,7 @@
 <script type="text/javascript"> 
   $(document).ready(function() {
     formmodified=0;
-    $('form *').change(function(){
+    $('form.prevent-double-submit *').change(function(){
         formmodified=1;
     });
     window.onbeforeunload = confirmExit;

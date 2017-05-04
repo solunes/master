@@ -35,23 +35,21 @@
 @endsection
 @section('script')
   @include('master::helpers.froala')
-  @include('master::scripts.conditionals-js')
-  @include('master::scripts.upload-js')
-  @include('master::scripts.map-js')
-  @include('master::scripts.select-js')
-  @include('master::scripts.map-field-js')
-  @include('master::scripts.tooltip-js')
-  @include('master::scripts.accordion-js')
+  <?php $scripts_array = ['conditionals','upload','map','map-field','tooltip','accordion']; ?>
   @if($barcode_enabled)
-    @include('master::scripts.barcode-js')
+    <?php $scripts_array[] = 'barcode'; ?>
   @endif
   @if(!$layout)
-    @include('master::scripts.child-ajax-js')
+    <?php $scripts_array[] = 'child-ajax'; ?>
   @else
-    @include('master::scripts.child-js')
-    @include('master::scripts.leave-form-js')
-    @include('master::scripts.lightbox-js')
+    <?php $scripts_array = array_merge($scripts_array, ['child','leave-form','select','lightbox']); ?>
   @endif
+  @if(config('solunes.item_remove_scripts')&&array_key_exists($node->name, config('solunes.item_remove_scripts')))
+    <?php $scripts_array = array_diff($scripts_array, config('solunes.item_remove_scripts')[$node->name]); ?>
+  @endif
+  @foreach($scripts_array as $script)
+    @include('master::scripts.'.$script.'-js')
+  @endforeach
   @if(config('solunes.item_add_script')&&array_key_exists($node->name, config('solunes.item_add_script')))
     @foreach(config('solunes.item_add_script')[$node->name] as $file)
       @include('scripts.'.$file.'-js')

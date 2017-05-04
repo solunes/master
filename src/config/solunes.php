@@ -25,6 +25,7 @@ return [
 	'item_post_redirect_success' => [],
 	'item_post_redirect_fail' => [],
 	'item_add_css' => [], // array debe contener el array de includes: 'example'=>['file']
+	'item_remove_scripts' => [],
 	'item_add_script' => [],
 
 	// CUSTOM FUNC
