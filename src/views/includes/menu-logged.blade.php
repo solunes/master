@@ -15,7 +15,7 @@
   </li>
   <!-- END SIDEBAR TOGGLER BUTTON -->
   <li class="nav-item start active open">
-      <a href="javascript:;" class="nav-link nav-toggle">
+      <a href="{{ url('admin') }}" class="nav-link nav-toggle">
         <i class="icon-home"></i>
         <span class="title">{{ trans('master::model.my_dashboard') }}</span>
         <span class="selected"></span>

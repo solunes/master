@@ -12,7 +12,9 @@
 */
 
 Route::group(['prefix'=>'admin'], function(){
-    Route::get('/', 'AdminController@getIndex');
+    if(config('solunes.master_dashboard')){
+        Route::get('/', 'AdminController@getIndex');
+    }
     Route::get('generate-manual/{role_name?}', 'AdminController@getGenerateManual');
     Route::get('my-notifications', 'AdminController@getMyNotifications');
     Route::post('read-notifications', 'AdminController@postReadNotifications');
