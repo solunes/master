@@ -106,6 +106,8 @@ class AdminItem {
             } else {
                 return \Login::redirect_dashboard('no_permission');
             }
+        } else {
+            return false;
         }
     }
 

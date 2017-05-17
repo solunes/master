@@ -33,6 +33,7 @@ return [
     'color' => 'Color',
     'conditional' => 'Condicional',
     'content' => 'Contenido',
+    'counter' => 'Contador',
     'country_code' => 'Código de País',
     'created_at' => 'Fecha de Creación',
     'custom' => 'Campo Personalizado',

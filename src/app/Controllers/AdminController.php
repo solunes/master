@@ -169,7 +169,9 @@ class AdminController extends Controller {
         $options = [];
 	    $additional_vars = [];
 
-	    \AdminItem::check_item_permission($this->module, $node, $action, $id);
+	    if($check_item_permission = \AdminItem::check_item_permission($this->module, $node, $action, $id)){
+	    	return $check_item_permission;
+	    }
 
         if($action=='delete'||$action=='restore'){
             return \AdminItem::delete_restore_item($this->module, $this->prev, $node, $model, $single_model, $action, $id, $options, $additional_vars);
@@ -187,7 +189,9 @@ class AdminController extends Controller {
         $options = ['child'=>true];
 	    $additional_vars = [];
 
-	    \AdminItem::check_item_permission($this->module, $node, $action, $id);
+	    if($check_item_permission = \AdminItem::check_item_permission($this->module, $node, $action, $id)){
+	    	return $check_item_permission;
+	    }
 
         if($action=='delete'||$action=='restore'){
             return \AdminItem::delete_restore_item($this->module, $this->prev, $node, $model, $single_model, $action, $id, $options, $additional_vars);
@@ -260,8 +264,10 @@ class AdminController extends Controller {
         $options = [];
 	    $additional_vars = $array;
 
-	    \AdminItem::check_item_permission($this->module, $node, $action, $id);
-
+	    if($check_item_permission = \AdminItem::check_item_permission($this->module, $node, $action, $id)){
+	    	return $check_item_permission;
+	    }
+	    
         if($action=='delete'||$action=='restore'){
             return \AdminItem::delete_restore_item($this->module, $this->prev, $node, $model, $single_model, $action, $id, $options, $additional_vars);
         } 

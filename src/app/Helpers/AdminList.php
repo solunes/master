@@ -51,13 +51,17 @@ class AdminList {
         if($node->multilevel){
             $items = $items->whereNull('parent_id')->with('children','children.children');
         }
+        $node_array = [$node->id];
         if(request()->has('download-excel')){
             $display_fields = ['show','excel'];
+            foreach($node->children as $child){
+                array_push($node_array, $child->id);
+            }
         } else {
             $display_fields = ['show'];
         }
         $array['fields'] = $node->fields()->displayList($display_fields)->where('type', '!=', 'field')->with('translations', 'field_options', 'field_extras')->get();
-        $field_ops = $node->fields()->displayList($display_fields)->has('field_options')->with('field_options')->get();
+        $field_ops = \Solunes\Master\App\Field::whereIn('parent_id', $node_array)->displayList($display_fields)->has('field_options')->with('field_options')->get();
         $array['field_options'] = [];
         foreach($field_ops as $field_op){
             foreach($field_op->field_options as $field_option){
@@ -716,7 +720,9 @@ class AdminList {
     public static function generate_query_excel($array) {
         $dir = public_path('excel');
         array_map('unlink', glob($dir.'/*'));
-        $file = \Excel::create($array['node']->plural.'_'.date('Y-m-d'), function($excel) use($array) {
+        $filename = str_replace(' ', '-', $array['node']->plural.'_'.date('Y-m-d'));
+        $filename = preg_replace('/[^A-Za-z0-9\-]/', '', $filename);
+        $file = \Excel::create($filename, function($excel) use($array) {
             $sheet_title = str_replace(' ', '-', $array['node']->plural);
             $sheet_title = substr(preg_replace('/[^A-Za-z0-9\-]/', '', $sheet_title), 0, 30);
             $excel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
@@ -736,6 +742,34 @@ class AdminList {
                     $fila++;
                 }
             });
+            if(count($array['node']->children)>0){
+              foreach($array['node']->children as $child){
+                $child_table = $child->table_name;
+                $sheet_title = str_replace(' ', '-', $child->singular);
+                $sheet_title = substr(preg_replace('/[^A-Za-z0-9\-]/', '', $sheet_title), 0, 30);
+                $excel->sheet($sheet_title, function($sheet) use($array, $child, $child_table) {
+                    $col_array = [trans('master::fields.parent'), trans('master::fields.counter')];
+                    $child_fields = $child->fields()->where('display_item', 'show')->where('name','!=','parent_id')->get();
+                    foreach($child_fields as $sfield){
+                        array_push($col_array, $sfield->label);
+                    }
+                    $sheet->row(1, $col_array);
+                    $sheet->row(1, function($row) {
+                      $row->setFontWeight('bold');
+                    });
+
+                    $fila = 2;
+                    foreach($array['items'] as $item_key => $item){
+                        if(count($item->$child_table)>0){
+                            foreach($item->$child_table as $subitem_key => $subitem){
+                                $sheet->row($fila, array_merge([$item->name, $subitem_key+1], AdminList::make_fields_values($subitem, $child_fields, $array['field_options'], '','excel')));
+                                $fila++;
+                            }
+                        }
+                    }
+                });
+              }
+            }
         })->store('xlsx', $dir, true);
         return response()->download($file['full']);
     }
