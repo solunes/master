@@ -16,7 +16,7 @@
 			    	];
 			    	var checked = 'false';
 				    var trigger_show = "{{ $item->trigger_show }}";
-					if( $( "#{{ $item->trigger_field }}" ).length ) {
+					if( $( "select#{{ $item->trigger_field }}" ).length ) {
 				    	var val = $("#{{ $item->trigger_field }}").val();
 					    @if($item->trigger_show=='is')
 					    if(val=='{{ $item->trigger_value }}'){

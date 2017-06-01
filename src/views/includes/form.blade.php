@@ -4,20 +4,13 @@
       </div>
       <div id="field_{{ $field->name }}">
         @if($action=='edit')
-          <h3>{{ $field->label }} | <a href="{{ url('admin/child-model/'.$field->value.'/create?parent_id='.$i->id.'&lightbox[width]=1000&lightbox[height]=600') }}" class="lightbox">Crear item</a></h3>
+          {!! \AdminList::child_list_header($module, $field->value, $field->label, $i->id) !!}
           @if($field->message)
             <label><div class="field-message">{{ $field->message }}</div></label>
           @endif
           <table class="admin-table table table-striped table-bordered table-hover dt-responsive dataTable no-footer dtr-inline" id="{{ $field->name }}">
-            <thead><tr class="title">
-              <td>Nº</td>
-              @foreach($field->child_fields as $subfield)
-                <td>{{ $subfield->label }}</td>
-              @endforeach
-              @if($action!='view')
-                <td>Editar</td>
-                <td>Borrar</td>
-              @endif
+            <thead><tr class="title"><td>#</td>
+              {!! \AdminList::make_fields([], $field->child_fields, ['child_field'=>$field->value]) !!}
             </tr></thead>
             <tbody>
               <?php $field_name = $field->name; ?>

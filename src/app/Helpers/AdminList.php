@@ -105,6 +105,16 @@ class AdminList {
     }
 
     public static function make_fields($langs, $fields, $action_fields = ['edit', 'delete']) {
+        if(isset($action_fields['child_field'])){
+            $node_name = $action_fields['child_field'];
+            $node = \Solunes\Master\App\Node::where('name',$node_name)->first();
+            if($node_extra = $node->node_extras()->where('type','action_field')->first()){
+                $subaction_fields = json_decode($node_extra->value_array, true);
+            } else {
+                $subaction_fields = ['edit','delete'];
+            }
+            $action_fields = $subaction_fields;
+        }
         if(count($fields)>0){
             $response = '';
             foreach($fields as $field){
@@ -254,6 +264,25 @@ class AdminList {
     }
 
     public static function make_fields_values_rows($langs, $module, $model, $item, $fields, $field_options, $appends, $action_fields = ['edit', 'delete']) {
+        if(isset($action_fields['child_field'])){
+            $node_name = $action_fields['child_field'];
+            $node = \Solunes\Master\App\Node::where('name',$node_name)->first();
+            if($node_extra = $node->node_extras()->where('type','action_field')->first()){
+                $subaction_fields = json_decode($node_extra->value_array, true);
+            } else {
+                $subaction_fields = ['edit','delete'];
+            }
+            $action_fields = [];
+            foreach($subaction_fields as $sub){
+                if($sub=='edit'){
+                    $action_fields[] = 'edit-child';
+                } else if($sub=='view'){
+                    $action_fields[] = 'view-child';
+                } else {
+                    $action_fields[] = $sub;
+                }
+            }
+        }
         if(count($fields)>0){
             $response = '';
             $response .= \AdminList::make_fields_values($item, $fields, $field_options, $appends, 'table');
@@ -261,10 +290,10 @@ class AdminList {
                 if($action_field=='edit') {
                     if(count($langs)>0){
                         foreach($langs as $language){
-                            $response .= '<td class="edit">'.AdminList::make_edit($module, $model, $appends, $item, $language->code).'</td>';
+                            $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', false, $language->code).'</td>';
                         }
                     } else {
-                        $response .= '<td class="edit">'.AdminList::make_edit($module, $model, $appends, $item, 'es').'</td>';
+                        $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', false, 'es').'</td>';
                     }
                 } else if($action_field=='delete'){
                     if(request()->has('view-trash')&&request()->input('view-trash')=='true'){
@@ -275,10 +304,26 @@ class AdminList {
                 } else if($action_field=='view'){
                     if(count($langs)>0){
                         foreach($langs as $language){
-                            $response .= '<td class="edit">'.AdminList::make_view($module, $model, $appends, $item, $language->code).'</td>';
+                            $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', false, $language->code).'</td>';
                         }
                     } else {
-                        $response .= '<td class="edit">'.AdminList::make_view($module, $model, $appends, $item, 'es').'</td>';
+                        $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', false, 'es').'</td>';
+                    }
+                } else if($action_field=='edit-child'){
+                    if(count($langs)>0){
+                        foreach($langs as $language){
+                            $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', true, $language->code).'</td>';
+                        }
+                    } else {
+                        $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', true, 'es').'</td>';
+                    }
+                } else if($action_field=='view-child'){
+                    if(count($langs)>0){
+                        foreach($langs as $language){
+                            $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', true, $language->code).'</td>';
+                        }
+                    } else {
+                        $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', true, 'es').'</td>';
                     }
                 } else if($action_field=='create-child'){
                     $preurl = url($module.'/model/'.$model.'/create/'.$item->id);
@@ -312,16 +357,27 @@ class AdminList {
         return $response;
     }
 
-    public static function make_edit($module, $model, $appends, $item, $lang_code = NULL) {
-        $preurl = $module.'/model/'.$model.'/edit/'.$item->id;
+    public static function make_open($module, $model, $appends, $item, $type, $child, $lang_code = NULL) {
+        if($child){
+            $page = 'child-model';
+        } else {
+            $page = 'model';
+        }
+        $preurl = $module.'/'.$page.'/'.$model.'/'.$type.'/'.$item->id;
         if($lang_code){
             $preurl .= '/'.$lang_code;
         }
         $url = url($preurl);
-        if($appends!=NULL){
-            $url .= '?'.$appends;
+        if($child){
+            $url .= '?lightbox[width]=1000&lightbox[height]=600';
+            $class = 'class="lightbox"';
+        } else {
+            if($appends!=NULL){
+                $url .= '?'.$appends;
+            }
+            $class = NULL;
         }
-        return '<a href="'.$url.'">'.trans('master::admin.edit').'</a>';
+        return '<a '.$class.' href="'.$url.'">'.trans('master::admin.'.$type).'</a>';
     }
 
     public static function make_delete($module, $model, $item, $restore = false) {
@@ -333,18 +389,6 @@ class AdminList {
             $delete_confirmation = ' onclick="return confirm(\''.trans('master::admin.delete_confirmation').'\');"';
         }
         return '<a href="'.url($module.'/model/'.$model.'/'.$action.'/'.$item->id).'"'.$delete_confirmation.'>'.trans('master::admin.'.$action).'</a>';
-    }
-
-    public static function make_view($module, $model, $appends, $item, $lang_code = NULL) {
-        $preurl = $module.'/model/'.$model.'/view/'.$item->id;
-        if($lang_code){
-            $preurl .= '/'.$lang_code;
-        }
-        $url = url($preurl);
-        if($appends!=NULL){
-            $url .= '?'.$appends;
-        }
-        return '<a href="'.$url.'">'.trans('master::admin.view').'</a>';
     }
 
     public static function make_list_header($module, $node, $id, $parent, $appends, $count = 0, $total_count = 0, $action_nodes = ['back','create','excel']) {
@@ -410,6 +454,35 @@ class AdminList {
                 $response .= ' | ';
             }
             $response .= '<a href="'.url($final_archive_url).'"><i class="fa fa-trash"></i> '.trans('master::admin.'.$archive_title).'</a>';
+        }
+        $response .= '</h3>';
+        return $response;
+    }
+
+    public static function child_list_header($module, $node_name, $title, $parent_id) {
+        $node = \Solunes\Master\App\Node::where('name',$node_name)->first();
+        if($node_extra = $node->node_extras()->where('type','action_node')->first()){
+            $action_nodes = json_decode($node_extra->value_array, true);
+        } else {
+            $action_nodes = ['back','create','excel'];
+        }
+        if(($key = array_search('back', $action_nodes)) !== false) {
+            unset($action_nodes[$key]);
+        }
+        $response = '<h3>'.$title;
+        foreach($action_nodes as $key => $action_node){
+            if($action_node=='create'){
+                $create_url = url($module.'/child-model/'.$node->name.'/create?parent_id='.$parent_id.'&lightbox[width]=1000&lightbox[height]=600');           
+                if($node->multilevel){
+                    $create_url .= '&level=1';
+                }          
+                $response .= ' | <a class="admin_link lightbox" href="'.$create_url.'"><i class="fa fa-plus"></i> '.trans('master::admin.create').'</a>'; 
+            } else if($action_node=='excel'){
+                $download_url = url('admin/model-list/'.$node_name.'?parent_id='.$parent_id.'&download-excel=true');
+                $response .= ' | <a href="'.$download_url.'"><i class="fa fa-download"></i> '.trans('master::admin.download').'</a>';
+            } else {
+                $response .= ' | '.\CustomFunc::get_action_node($response, $node, $parent_id, $action_node);
+            }
         }
         $response .= '</h3>';
         return $response;
@@ -742,10 +815,11 @@ class AdminList {
                     $fila++;
                 }
             });
-            if(count($array['node']->children)>0){
-              foreach($array['node']->children as $child){
+            $children = $array['node']->children()->where('type', '!=', 'field')->get();
+            if(count($children)>0){
+              foreach($children as $child){
                 $child_table = $child->table_name;
-                $sheet_title = str_replace(' ', '-', $child->singular);
+                $sheet_title = str_replace(' ', '-', 'Sub-'.$child->singular);
                 $sheet_title = substr(preg_replace('/[^A-Za-z0-9\-]/', '', $sheet_title), 0, 30);
                 $excel->sheet($sheet_title, function($sheet) use($array, $child, $child_table) {
                     $col_array = [trans('master::fields.parent'), trans('master::fields.counter')];
