@@ -9,6 +9,8 @@ class Notification extends Model {
 	protected $table = 'notifications';
 	public $timestamps = true;
 
+    use \Solunes\Master\App\Traits\LastId;
+
 	/* Creating rules */
 	public static $rules_create = array(
 		'user_id'=>'required',

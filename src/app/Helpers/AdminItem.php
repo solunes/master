@@ -435,7 +435,7 @@ class AdminItem {
                 $return = true;
             }
         } else if($item||(is_numeric($item)&&$item===0)){
-            if($key===$item){
+            if($key==$item||$key===$item){
                 $return = true;
             }
         } 

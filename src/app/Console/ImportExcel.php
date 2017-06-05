@@ -69,13 +69,13 @@ class ImportExcel extends Command
                                 if($get_submodel = $sub_model::where('name', $value)->first()){
                                     $input = $get_submodel->id;
                                 }
-                            } else if(!$field->relation&&($field->type=='select'||$field->type=='radio')){
+                            } else if($input&&!$field->relation&&($field->type=='select'||$field->type=='radio')){
                                 if($subanswer = $field->field_options()->whereTranslation('label', $input)->first()){
                                     $input = $subanswer->name;
-                                } else {
+                                } else if(!$field->field_options()->where('name', $input)->first()) {
                                     $input = NULL;
                                 }
-                            } else if(!$field->relation&&$field->type=='checkbox'){
+                            } else if($input&&!$field->relation&&$field->type=='checkbox'){
                                 $subinput = [];
                                 foreach(explode(' | ', $input) as $subval){
                                     if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
