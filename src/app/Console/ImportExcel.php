@@ -65,17 +65,19 @@ class ImportExcel extends Command
                                 $language_code = str_replace($field->name.'_','',$column);
                             }
                             if($field->relation&&$input&&!is_numeric($input)){
-                                $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
-                                if($get_submodel = $sub_model::where('name', $value)->first()){
-                                    $input = $get_submodel->id;
+                                if($sub_model = \Solunes\Master\App\Node::where('name', $field->value)->first()){
+                                    $sub_model = $sub_model->model;
+                                    if($get_submodel = $sub_model::where('name', $input)->first()){
+                                        $input = $get_submodel->id;
+                                    }
                                 }
-                            } else if($input&&!$field->relation&&($field->type=='select'||$field->type=='radio')){
+                            } else if(!$field->relation&&($field->type=='select'||$field->type=='radio')){
                                 if($subanswer = $field->field_options()->whereTranslation('label', $input)->first()){
                                     $input = $subanswer->name;
-                                } else if(!$field->field_options()->where('name', $input)->first()) {
+                                } else {
                                     $input = NULL;
                                 }
-                            } else if($input&&!$field->relation&&$field->type=='checkbox'){
+                            } else if(!$field->relation&&$field->type=='checkbox'){
                                 $subinput = [];
                                 foreach(explode(' | ', $input) as $subval){
                                     if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
