@@ -165,6 +165,7 @@ return array(
 	"cols" => "Columnas",
 	"rows" => "Filas",
 	"disabled" => "Deshabilitado",
+	"readonly" => "Solo lectura",
 	"ponderation" => "Ponderación",
 	"is" => "Es igual a",
 	"is_not" => "No es igual a",

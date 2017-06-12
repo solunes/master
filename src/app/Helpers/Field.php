@@ -165,6 +165,8 @@ class Field {
         // CAMPOS PREDEFINIDOS
         if((isset($field['preset'])&&$field['preset']==true)||$data_type=='view'||($extras&&array_key_exists('disabled', $extras))){
             $array['disabled'] = true;
+        } else if($extras&&array_key_exists('readonly', $extras)) {
+            $array['readonly'] = true;
         }
 
         // PLACEHOLDER
