@@ -22,7 +22,7 @@
   @yield('css')
 </head>
 @if(!$pdf)
-  <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white admin-site">
+  <body class="page-header-fixed page-sidebar-closed-hide-logo page-sidebar-fixed page-content-white admin-site">
     <div class="page-wrapper">
       <!-- BEGIN HEADER -->
       <div class="page-header navbar navbar-fixed-top">

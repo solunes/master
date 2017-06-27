@@ -1,0 +1,212 @@
+<?php 
+
+namespace Solunes\Master\App\Helpers;
+
+class DataManager {
+
+    public static function importExcelRows($sheet, $languages, $node, $field_array, $field_sub_array, $sub_field_insert) {
+        $count_rows = $sheet->count();
+        $sheet->each(function($row) use ($sheet, $languages, $node, $field_array, $field_sub_array, $sub_field_insert) {
+          $sheet_model = $sheet->getTitle();
+          if($node = \Solunes\Master\App\Node::where('name', $sheet_model)->first()){
+            $field_array = [];
+            $field_sub_array = [];
+            $sub_field_insert = [];
+            foreach($languages as $language){
+                foreach($node->fields()->whereNotIn('type', ['child','subchild','field'])->get() as $field){
+                    if($language->id>1){
+                        $field_array[$field->name.'_'.$language->code] = $field;
+                    } else {
+                        $field_array[$field->name] = $field;
+                    }
+                }
+            }
+            foreach($node->fields()->where('type', 'field')->get() as $field){
+                $field_sub_array[$field->name] = $field;
+            }
+            $new_item = false;
+            foreach($row->all() as $column => $input){
+                if($column=='id'&&$input){
+                    $model = \FuncNode::node_check_model($node);
+                    if(!$item = $model->where('id', $row->id)->first()){
+                        $item = $model;
+                    }
+                    $new_item = true;
+                }
+                if($new_item&&isset($field_array[$column])){
+                    $field = $field_array[$column];
+                    if($column==$field->name){
+                        $language_code = 'es';
+                    } else {
+                        $language_code = str_replace($field->name.'_','',$column);
+                    }
+                    if($field->relation&&$input&&!is_numeric($input)){
+                        if($sub_model = \Solunes\Master\App\Node::where('name', $field->value)->first()){
+                            $sub_model = $sub_model->model;
+                            if($get_submodel = $sub_model::where('name', $input)->first()){
+                                $input = $get_submodel->id;
+                            }
+                        }
+                    } else if(!$field->relation&&($field->type=='select'||$field->type=='radio')){
+                        if($subanswer = $field->field_options()->whereTranslation('label', $input)->first()){
+                            $input = $subanswer->name;
+                        } else {
+                            $input = NULL;
+                        }
+                    } else if(!$field->relation&&$field->type=='checkbox'){
+                        $subinput = [];
+                        foreach(explode(' | ', $input) as $subval){
+                            if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
+                                $subinput[] = $subanswer->name;
+                            }
+                        }
+                        if(count($subinput)>0){
+                            $input = json_encode($subinput);
+                        } else {
+                            $input = NULL;
+                        }
+                    }
+                    if($input||$input=='0'){
+                        if($field->type=='image'||$field->type=='file'){
+                            $action_name = 'upload_'.$field->type;
+                            if($field->multiple){
+                                foreach(explode(' | ',$input) as $subinput){
+                                    if(filter_var($subinput, FILTER_VALIDATE_URL)){
+                                        $file_path = $subinput;
+                                    } else {
+                                        $file_path = public_path('seed/'.$node->name.'/'.$subinput);
+                                    }
+                                    $input_array[] = \Asset::$action_name($image_path, $node->name.'-'.$field->name, true);
+                                }
+                                $input = json_encode($input_array);
+                            } else {
+                                if(filter_var($input, FILTER_VALIDATE_URL)){
+                                    $file_path = $input;
+                                } else {
+                                    $file_path = public_path('seed/'.$node->name.'/'.$input);
+                                }
+                                $input = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true);
+                            }
+                        }
+                        $item = \FuncNode::put_data_field($item, $field, $input, $language_code);
+                    }
+                } else if($new_item&&isset($field_sub_array[$column])) {
+                    $field = $field_sub_array[$column];
+                    if($field->multiple){
+                        $array_insert = [];
+                        foreach(explode(';',$input) as $value){
+                            if($value&&!is_numeric($value)){
+                                $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
+                                array_push($array_insert, $sub_model::where('name', $value)->first()->id);
+                            } else if($value) {
+                                array_push($array_insert, $value);
+                            }
+                        }
+                    } else {
+                        if($input&&!is_numeric($input)){
+                            $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
+                            $array_insert = $sub_model::where('name', $input)->first()->id;
+                        } else {
+                            $array_insert = $input;
+                        }
+                        $array_insert = [$array_insert];
+                    }
+                    $sub_field_insert[$column] = $array_insert;
+                }
+            }
+            if($new_item){
+                $item->save();
+                foreach($sub_field_insert as $column => $input){
+                    $item->$column()->sync($input);
+                }
+            }
+          }
+        });
+        return $count_rows;
+    }
+
+    public static function exportNodeExcel($excel, $alphabet, $node) {
+        $sheet_title = $node->name;
+        $col_array = [];
+        $col_width = [];
+        $fields_array = $node->fields;
+        $field_options_array = [];
+        foreach($node->fields as $key => $field){
+            array_push($col_array, $field->name);
+            if(count($field->field_options)>0){
+                foreach($field->field_options as $option){
+                    $field_options_array[$field->name][$option->name] = $option->label;
+                }
+            }
+            $col_width = \DataManager::generateColWidth($alphabet, $field, $key, $col_width);
+        }
+        $items = \FuncNode::node_check_model($node)->get();
+        return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items);
+    }
+
+    public static function generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $child_items = []) {
+        //$excel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+        $excel->sheet($sheet_title, function($sheet) use($alphabet, $col_array, $col_width, $fields_array, $field_options_array, $items, $child_items) {
+            $sheet->row(1, $col_array);
+            $sheet->row(1, function($row) {
+              $row->setFontWeight('bold');
+            });
+            $sheet->freezeFirstRow();
+
+            $fila = 2;
+            foreach($items as $item_key => $item){
+                if(count($child_items)>0){
+                    foreach($child_items as $subitem_key => $subitem){
+                        $sheet->row($fila, array_merge([$item->name, $subitem_key+1], AdminList::make_fields_values($subitem, $fields_array, $field_options_array, '','excel')));
+                        $fila++;
+                    }
+                } else {
+                    $sheet->row($fila, \AdminList::make_fields_values($item, $fields_array, $field_options_array, '','excel'));
+                    $fila++;
+                }
+            }
+            if(count($col_width)>0){
+                $sheet->setWidth($col_width);
+            }
+        });
+        return $excel;
+    }
+
+    public static function generateInstructionsSheet($excel) {
+        $excel->sheet('instrucciones', function($sheet) {
+            $sheet->row(1, ['#', 'Instrucción o Consejo']);
+            $sheet->row(1, function($row) {
+              $row->setFontWeight('bold');
+            });
+            $sheet->freezeFirstRow();
+
+            $consejos['1'] = 'No borrar ninguna de las páginas de esta muestra.';
+            $consejos['2'] = 'No cambiar el nombre de las hojas de excel.';
+            $consejos['3'] = 'Borrar el contenido actual de la hoja, fijandose el último ID de la muestra y comenzando a introducir las nuevas lineas siguiendo este ID.';
+            $consejos['4'] = 'Respetar el formato de las columnas que tengan formatos especiales. (Ej: Imágenes con URL completo, Múltiples opciones divididas por ";", etc. )';
+            $consejos['5'] = 'Si hay más de una hoja, es porque el elemento tiene subtablas, que también deben ser llenadas en el mismo formato.';
+            $fila = 2;
+            foreach($consejos as $consejo_key => $consejo){
+                $sheet->row($fila, [$consejo_key, $consejo]);
+                $fila++;
+            }
+            $sheet->setWidth(['A'=>10,'B'=>200]);
+        });
+        return $excel;
+    }
+
+    public static function generateColWidth($alphabet, $field, $key, $col_width = []) {
+        if($field->type=='text'){
+            $col_width[$alphabet[$key]] = 100;
+        } else {
+            $col_width[$alphabet[$key]] = 20;
+        }
+        return $col_width;
+    }
+
+    public static function generateAlphabet() {
+        $alphabet = range('A', 'Z');
+        return $alphabet;
+    }
+
+}

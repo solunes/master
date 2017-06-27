@@ -167,10 +167,32 @@ class AdminList {
             $field_type = $field->type;
             $item_val = $item->$field_trans_name;
             $count = 0;
-            $value = '-';
+            if($type=='excel'){
+                $value = NULL;
+            } else {
+                $value = '-';
+            }
             if($field->relation){
-                if($item_val){
-                    $value = $item_val->name;
+                if($field->type=='child'){
+                    $url = url('admin/model-list/'.$field->value.'?parent_id='.$item->id);
+                    if($appends){
+                        $url .= '&'.$appends;
+                    }
+                    $value = 'Nº: '.count($item_val).' (<a href="'.$url.'">'.trans('master::admin.view').'</a>)';
+                } else if($field->type=='subchild'){
+                    $value = 'Nº: '.count($item_val);
+                } else if($field->type=='field'){
+                    $value = NULL;
+                    foreach($item_val as $subkey => $subitem){
+                        if($subkey>0){
+                            $value .= ';';
+                        }
+                        $value .= $subitem->name;
+                    }
+                } else {
+                    if($item_val){
+                        $value = $item_val->name;
+                    }
                 }
             } else {
                 switch($field_type){
@@ -185,20 +207,15 @@ class AdminList {
                         }
                     break;
                     case 'text':
-                        $value = strip_tags($item_val);
-                        if (strlen($value) > 300) {
-                            $value = substr($value, 0, 300).'...';
+                        if($type=='excel'){
+                            $value = $item_val;
+                            $value = str_replace(array("\r", "\n"), '',$value);
+                        } else {
+                            $value = strip_tags($item_val);
+                            if (strlen($value) > 300) {
+                                $value = substr($value, 0, 300).'...';
+                            }
                         }
-                    break;
-                    case 'child':
-                        $url = url('admin/model-list/'.$field->value.'?parent_id='.$item->id);
-                        if($appends){
-                            $url .= '&'.$appends;
-                        }
-                        $value = 'Nº: '.count($item_val).' (<a href="'.$url.'">'.trans('master::admin.view').'</a>)';
-                    break;
-                    case 'subchild':
-                        $value = 'Nº: '.count($item_val);
                     break;
                     case 'file':
                     case 'image':
@@ -221,7 +238,7 @@ class AdminList {
                                   $file_url = Asset::get_file($folder, $val);
                                 }
                                 if($type=='excel'){
-                                  $value .= $file_url;
+                                  $value .= asset($file_url);
                                 } else {
                                   $value .= '<a href="'.$file_url.'" target="_blank">'.$val.'</a>';
                                 }
@@ -796,53 +813,32 @@ class AdminList {
         $filename = str_replace(' ', '-', $array['node']->plural.'_'.date('Y-m-d'));
         $filename = preg_replace('/[^A-Za-z0-9\-]/', '', $filename);
         $file = \Excel::create($filename, function($excel) use($array) {
+            $alphabet = \DataManager::generateAlphabet();
             $sheet_title = str_replace(' ', '-', $array['node']->plural);
             $sheet_title = substr(preg_replace('/[^A-Za-z0-9\-]/', '', $sheet_title), 0, 30);
-            $excel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $excel->sheet($sheet_title, function($sheet) use($array) {
-                $col_array = [];
-                foreach($array['fields'] as $field){
-                    array_push($col_array, $field->label);
-                }
-                $sheet->row(1, $col_array);
-                $sheet->row(1, function($row) {
-                  $row->setFontWeight('bold');
-                });
-
-                $fila = 2;
-                foreach($array['items'] as $item){
-                    $sheet->row($fila, AdminList::make_fields_values($item, $array['fields'], $array['field_options'], '','excel'));
-                    $fila++;
-                }
-            });
+            $col_array = [];
+            $col_width = [];
+            foreach($array['fields'] as $key => $field){
+                array_push($col_array, $field->label);
+                $col_width = \DataManager::generateColWidth($alphabet, $field, $key, $col_width);
+            }
+            \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $array['fields'], $array['field_options'], $array['items']);
             $children = $array['node']->children()->where('type', '!=', 'field')->get();
             if(count($children)>0){
-              foreach($children as $child){
-                $child_table = $child->table_name;
-                $sheet_title = str_replace(' ', '-', 'Sub-'.$child->singular);
-                $sheet_title = substr(preg_replace('/[^A-Za-z0-9\-]/', '', $sheet_title), 0, 30);
-                $excel->sheet($sheet_title, function($sheet) use($array, $child, $child_table) {
+                foreach($children as $child){
+                    $child_table = $child->table_name;
+                    $sheet_title = str_replace(' ', '-', 'Sub-'.$child->singular);
+                    $sheet_title = substr(preg_replace('/[^A-Za-z0-9\-]/', '', $sheet_title), 0, 30);
                     $col_array = [trans('master::fields.parent'), trans('master::fields.counter')];
+                    $col_width = [];
                     $child_fields = $child->fields()->where('display_item', 'show')->where('name','!=','parent_id')->get();
-                    foreach($child_fields as $sfield){
-                        array_push($col_array, $sfield->label);
+                    foreach($child_fields as $key => $field){
+                        array_push($col_array, $field->label);
+                        $col_width = \DataManager::generateColWidth($alphabet, $field, $key, $col_width);
                     }
-                    $sheet->row(1, $col_array);
-                    $sheet->row(1, function($row) {
-                      $row->setFontWeight('bold');
-                    });
-
-                    $fila = 2;
-                    foreach($array['items'] as $item_key => $item){
-                        if(count($item->$child_table)>0){
-                            foreach($item->$child_table as $subitem_key => $subitem){
-                                $sheet->row($fila, array_merge([$item->name, $subitem_key+1], AdminList::make_fields_values($subitem, $child_fields, $array['field_options'], '','excel')));
-                                $fila++;
-                            }
-                        }
-                    }
-                });
-              }
+                    $child_items = $item->$child_table;
+                    \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $child_fields, $array['field_options'], $array['items'], $child_items);
+                }
             }
         })->store('xlsx', $dir, true);
         return response()->download($file['full']);

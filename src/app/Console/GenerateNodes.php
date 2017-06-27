@@ -43,8 +43,8 @@ class GenerateNodes extends Command
         foreach($nodes as $node){
           foreach($languages as $language){
             \App::setLocale($language->code);
-            $node->translateOrNew($language->code)->singular = trans_choice('master::model.'.$node->name, 1);
-            $node->translateOrNew($language->code)->plural = trans_choice('master::model.'.$node->name, 0);
+            $node->translateOrNew($language->code)->singular = trans_choice($node->lang_folder.'::model.'.$node->name, 1);
+            $node->translateOrNew($language->code)->plural = trans_choice($node->lang_folder.'::model.'.$node->name, 0);
           }
           \App::setLocale('es');
           $node->save();
@@ -122,7 +122,7 @@ class GenerateNodes extends Command
             if(!$field->label){
                 foreach($languages as $language){
                   \App::setLocale($language->code);
-                  $field->translateOrNew($language->code)->label = trans('master::fields.'.$field->trans_name);
+                  $field->translateOrNew($language->code)->label = trans($node->lang_folder.'::fields.'.$field->trans_name);
                 }
                 \App::setLocale('es');
                 $saved = true;
@@ -132,8 +132,17 @@ class GenerateNodes extends Command
             }
           }
         }
+        // Crear opciones extra del menú
+        $menu_parent = \Solunes\Master\App\Menu::where('level', 1)->whereTranslation('name','Sistema')->first();
+        \FuncNode::custom_menu_creation('Descargar en Masa', 'admin/export-nodes', $menu_parent, 'cloud-download');
+        $menu_parent = \Solunes\Master\App\Menu::where('level', 1)->whereTranslation('name','Global')->first();
+        \FuncNode::custom_menu_creation('Subir en Masa', 'admin/import-nodes', $menu_parent, 'cloud-upload');
+        // Importar parametros de nodos en Excel
         $this->info('95%: Se importara el excel de nodes para corregir los campos.');
         $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.vendor_path').'/src/nodes.xlsx')));
+        if(config('solunes.store')){
+          $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/store/src/nodes.xlsx')));
+        }
         $this->info(\FuncNode::load_nodes_excel(public_path('seed/nodes.xlsx')));
         $this->info('100%: Se crearon '.$total_count.' campos.');
     }

@@ -170,7 +170,7 @@ class FuncNode {
             $subfield->name = $option['name'];
             foreach($languages as $language){
               \App::setLocale($language->code);
-              $translation = trans('master::admin.'.$option['name']);
+              $translation = trans($node->lang_folder.'::admin.'.$option['name']);
               $subfield->translateOrNew($language->code)->label = $translation;
             }
             \App::setLocale('es');
@@ -208,13 +208,13 @@ class FuncNode {
     public static function node_menu_creation($node, $languages) {
         $menu_array = \Solunes\Master\App\Menu::where('menu_type', 'admin')->where('level', 1)->lists('id');
         if($node->folder){
-            if($menu_parent = \Solunes\Master\App\MenuTranslation::whereIn('menu_id', $menu_array)->where('name', trans('master::admin.'.$node->folder))->first()){
+            if($menu_parent = \Solunes\Master\App\MenuTranslation::whereIn('menu_id', $menu_array)->where('name', trans($node->lang_folder.'::admin.'.$node->folder))->first()){
               $menu_parent = $menu_parent->menu;
             } else {
               $menu_parent = \Solunes\Master\App\Menu::create(['type'=>'blank', 'menu_type'=>'admin', 'permission'=>$node->folder, 'icon'=>'th-list']);
               foreach($languages as $language){
                 \App::setLocale($language->code);
-                $menu_parent->translateOrNew($language->code)->name = trans('master::admin.'.$node->folder);
+                $menu_parent->translateOrNew($language->code)->name = trans($node->lang_folder.'::admin.'.$node->folder);
               }
               \App::setLocale('es');
               $menu_parent->save();
@@ -228,6 +228,20 @@ class FuncNode {
             \App::setLocale('es');
             $menu->save();
         }
+    }
+
+    public static function custom_menu_creation($name, $url, $menu_parent, $icon = 'th-list') {
+      $languages = \Solunes\Master\App\Language::get();
+      $menu_array = ['menu_type'=>'admin', 'permission'=>$menu_parent->permission, 'parent_id'=>$menu_parent->id, 'level'=>$menu_parent->level + 1, 'icon'=>$icon];
+      $menu = \Solunes\Master\App\Menu::create($menu_array);
+      foreach($languages as $language){
+        \App::setLocale($language->code);
+        $menu->translateOrNew($language->code)->name = $name;
+        $menu->translateOrNew($language->code)->link = $url;
+      }
+      \App::setLocale('es');
+      $menu->save();
+      return true;
     }
 
     public static function load_nodes_excel($path, $return = '') {
@@ -245,7 +259,7 @@ class FuncNode {
                   $field->trans_name = $row->trans_name;
                   foreach($languages as $language){
                     \App::setLocale($language->code);
-                    $field->translateOrNew($language->code)->label = trans('master::fields.'.$row->trans_name);
+                    $field->translateOrNew($language->code)->label = trans($node->lang_folder.'::fields.'.$row->trans_name);
                   }
                   \App::setLocale('es');
                   $field->type = $row->type;

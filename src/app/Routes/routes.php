@@ -43,6 +43,11 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('check-barcode/{node_id}/{barcode}', 'AdminController@checkBarcode');
     Route::get('generate-barcode-image/{barcode}', 'AdminController@generateBarcodeImage');
     // Formularios Dinámicos
+    Route::get('import-nodes', 'DynamicFormController@getImportNodes');
+    Route::post('import-nodes', 'DynamicFormController@postImportNodes');
+    Route::get('export-nodes', 'DynamicFormController@getExportNodes');
+    Route::post('export-nodes', 'DynamicFormController@postExportNodes');
+    Route::get('export-node/{node_name?}', 'DynamicFormController@getExportNode');
     Route::get('form-list', 'DynamicFormController@getFormList');
     Route::get('form-fields/{id}', 'DynamicFormController@getFormFields');
     Route::get('form/{action}/{id?}', 'DynamicFormController@getForm');

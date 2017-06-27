@@ -81,4 +81,13 @@ class Node extends Model {
         return $this->hasMany('Solunes\Master\App\Indicator', 'node_id');
     }
 
+    public function getLangFolderAttribute() {
+        if($this->location=='store'){
+          $folder = 'store';
+        } else {
+          $folder = 'master';
+        }
+        return $folder;
+    }
+
 }

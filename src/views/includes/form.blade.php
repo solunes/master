@@ -45,7 +45,7 @@
                     @endif
                   </td>
                 @endforeach
-                @if($action!='view')
+                @if($dt!='view')
                   <td>X</td>
                 @endif
               </tr></thead>
@@ -55,12 +55,16 @@
                   @foreach($i->$field_name as $key => $si)
                     @include('master::item_child.multiple-model', ['count'=>$key])
                   @endforeach
+                @elseif($action=='create'&&$dt=='view'&&$rows = $field->field_extras()->where('type','rows')->first())
+                  @foreach(range(0, ($rows->value - 1)) as $key)
+                    @include('master::item_child.multiple-model', ['count'=>$key, 'si'=>0])
+                  @endforeach
                 @else
                   @include('master::item_child.multiple-model', ['count'=>0, 'si'=>0])
                 @endif
               </tbody>
               <tfoot>
-                @if($action!='view')
+                @if($dt!='view')
                   <tr><td colspan="{{ count($field->child_fields)+2 }}">
                     <a class="agregar_fila" rel="{{ $field->name }}" href="#" data-count="500">+ Añadir otra fila</a>
                   </td></tr>

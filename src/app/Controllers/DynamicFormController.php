@@ -21,6 +21,94 @@ class DynamicFormController extends Controller {
       $this->prev = $url->previous();
       $this->module = 'admin';
     }
+    public function getImportNodes() {
+        $array['items'] = \Solunes\Master\App\Node::where('location', 'app')->whereNull('parent_id')->withTrashed()->get();
+        return view('master::list.import-nodes', $array);
+    }
+
+    public function postImportNodes(Request $request) {
+        if(!$request->hasFile('file')||!$request->file('file')->isValid()){
+            return redirect($this->prev)->with('message_error', 'Por favor seleccione un archivo para importar en XLS o XLSX.');
+        }
+        $name_array = \Solunes\Master\App\Node::where('location', 'app')->whereNull('parent_id')->withTrashed()->lists('name')->toArray();
+        $name_array = array_merge(['image-folder','email'], $name_array);
+        $message = 'Nodos importados: ';
+        $languages = \Solunes\Master\App\Language::get();
+        \Excel::load($request->file('file'), function($reader) use($languages, $name_array, $message) {
+            foreach($reader->get() as $sheet){
+              $sheet_model = $sheet->getTitle();
+              if(in_array($sheet_model, $name_array)&&$node = \Solunes\Master\App\Node::where('name', $sheet_model)->first()){
+                $field_array = [];
+                $field_sub_array = [];
+                $sub_field_insert = [];
+                foreach($languages as $language){
+                    foreach($node->fields()->whereNotIn('type', ['child','subchild','field'])->get() as $field){
+                        if($language->id>1){
+                            $field_array[$field->name.'_'.$language->code] = $field;
+                        } else {
+                            $field_array[$field->name] = $field;
+                        }
+                    }
+                }
+                foreach($node->fields()->where('type', 'field')->get() as $field){
+                    $field_sub_array[$field->name] = $field;
+                }
+                $count_rows = \DataManager::importExcelRows($sheet, $languages, $node, $field_array, $field_sub_array, $sub_field_insert);
+                $message .= $node->name.' ('.$count_rows.' items) | ';
+              } else {
+                $message .= $sheet_model.' (NO IMPORTADO) | ';
+              }
+            }
+        });
+        return redirect($this->prev)->with('message_success', 'Se importó el documento correctamente.');
+    }
+
+    public function getExportNode($node_name) {
+        $dir = public_path('excel');
+        array_map('unlink', glob($dir.'/*'));
+        $alphabet = \DataManager::generateAlphabet();
+        $node = \Solunes\Master\App\Node::where('name', $node_name)->first();
+        $file = \Excel::create($node_name, function($excel) use($node, $alphabet) {
+            \DataManager::generateInstructionsSheet($excel);
+            \DataManager::exportNodeExcel($excel, $alphabet, $node);
+            $children = $node->children()->where('type', '!=', 'field')->get();
+            if(count($children)>0){
+                foreach($children as $child){
+                    \DataManager::exportNodeExcel($excel, $alphabet, $child);
+                }
+            }
+        })->store('xls', $dir, true);
+        return response()->download($file['full']);
+    }
+
+    public function getExportNodes() {
+        $array['items'] = \Solunes\Master\App\Node::where('location', 'app')->whereNull('parent_id')->withTrashed()->get();
+        return view('master::list.export-nodes', $array);
+    }
+
+    public function postExportNodes(Request $request) {
+        $name_array = $request->input('nodes');
+        if(!$name_array||count($name_array)){
+            return redirect($this->prev)->with('message_error', 'Por favor seleccione los nodos que desea descargar.');
+        }
+        $name_array = array_merge(['image-folder','email'], $name_array);
+        $nodes = \Solunes\Master\App\Node::whereIn('name', $name_array)->get();
+        $dir = public_path('excel');
+        array_map('unlink', glob($dir.'/*'));
+        $alphabet = \DataManager::generateAlphabet();
+        $file = \Excel::create('import', function($excel) use($nodes, $alphabet) {
+            foreach($nodes as $node){
+                \DataManager::exportNodeExcel($excel, $alphabet, $node);
+                $children = $node->children()->where('type', '!=', 'field')->get();
+                if(count($children)>0){
+                    foreach($children as $child){
+                        \DataManager::exportNodeExcel($excel, $alphabet, $child);
+                    }
+                }
+            }
+        })->store('xls', $dir, true);
+        return response()->download($file['full']);
+    }
 
     public function getFormList() {
         $node = \Solunes\Master\App\Node::where('name', 'node')->first();

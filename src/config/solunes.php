@@ -2,6 +2,7 @@
 
 return [
 	// GLOBAL
+    'solunes_path' => env('FOLDER_SOLUNES_PATH', 'vendor/solunes'),
 	'vendor_path' => env('SOLUNES_PATH', 'vendor/solunes/master'),
 	'blocked_activities' => [],
 	'image_quality' => 85,
@@ -11,6 +12,9 @@ return [
 	'master_admin_id' => 1,
 	'default_location' => '-16.495369;-68.134289',
 	'master_dashboard' => true,
+    
+    // PLUGINS
+    'store' => false,
 
 	// LIST
 	'pagination_count' => 500,
@@ -28,6 +32,7 @@ return [
 	'item_add_css' => [], // array debe contener el array de includes: 'example'=>['file']
 	'item_remove_scripts' => [],
 	'item_add_script' => [],
+	'item_add_script_store' => [],
 
 	// CUSTOM FUNC
 	'get_page_array' => false,

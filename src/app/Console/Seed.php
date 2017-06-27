@@ -32,8 +32,14 @@ class Seed extends Command
             $this->callSilent('empty:storage');
             $this->info('20%: Storage limpiado correctamente.');
             $this->callSilent('db:seed', ['--class'=>'DatabaseTruncateSeeder']);
+            if(config('solunes.store')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Store\Database\Seeds\DatabaseTruncateSeeder']);
+            }
             $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseTruncateSeeder']);
             $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseMasterSeeder']);
+            if(config('solunes.store')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Store\Database\Seeds\DatabaseMasterSeeder']);
+            }
             $this->callSilent('db:seed', ['--class'=>'DatabaseMasterSeeder']);
             $this->info('50%: Base de datos llenada correctamente.');
             $this->callSilent('generate-nodes');
@@ -43,6 +49,9 @@ class Seed extends Command
             }
             $this->callSilent('import-excel');
             $this->info('95%: Campos de nodos creados correctamente.');
+            if(config('solunes.store')){
+                $this->info('97%: '.\Store::after_seed());
+            }
             if(config('solunes.after_seed')){
                 $this->info('99%: '.\CustomFunc::after_seed_actions());
             }

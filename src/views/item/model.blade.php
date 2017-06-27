@@ -55,4 +55,9 @@
       @include('scripts.'.$file.'-js')
     @endforeach
   @endif
+  @if(config('solunes.item_add_script_store')&&array_key_exists($node->name, config('solunes.item_add_script_store')))
+    @foreach(config('solunes.item_add_script_store')[$node->name] as $file)
+      @include('store::scripts.'.$file.'-js')
+    @endforeach
+  @endif
 @endsection

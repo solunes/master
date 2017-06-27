@@ -134,6 +134,7 @@ return array(
 	"banned" => "Bloqueado",
 	"package" => "Paquete",
 	"app" => "App",
+	"store" => "Tienda",
 	"string" => "Texto",
 	"select" => "Selección",
 	"password" => "Contraseña",

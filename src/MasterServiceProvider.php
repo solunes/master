@@ -64,6 +64,7 @@ class MasterServiceProvider extends ServiceProvider {
         $loader->alias('Dynamic', '\Solunes\Master\App\Helpers\Dynamic');
         $loader->alias('FuncNode', '\Solunes\Master\App\Helpers\FuncNode');
         $loader->alias('Login', '\Solunes\Master\App\Helpers\Login');
+        $loader->alias('DataManager', '\Solunes\Master\App\Helpers\DataManager');
 
         /* Comandos de Consola */
         $this->commands([

@@ -34,6 +34,9 @@ class Deploy extends Command
             $this->callSilent('migrate:reset');
             $this->info('20%: Reset migrate ejecutado correctamente.');
             $this->callSilent('migrate', ['--path'=>'/'.config('solunes.vendor_path').'/src/database/migrations']);
+            if(config('solunes.store')){
+                $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/store/src/database/migrations']);
+            }
             $this->callSilent('migrate', ['--path'=>'/database/migrations']);
             $this->info('60%: Migrate ejecutado correctamente.');
             if(config('solunes.after_migrate')){
