@@ -4,11 +4,14 @@ namespace Solunes\Master\App\Helpers;
 
 class DataManager {
 
-    public static function importExcelRows($sheet, $languages, $node, $field_array, $field_sub_array, $sub_field_insert) {
+    public static function importExcelRows($sheet, $languages) {
         $count_rows = $sheet->count();
-        $sheet->each(function($row) use ($sheet, $languages, $node, $field_array, $field_sub_array, $sub_field_insert) {
-          $sheet_model = $sheet->getTitle();
-          if($node = \Solunes\Master\App\Node::where('name', $sheet_model)->first()){
+        $sheet_model = $sheet->getTitle();
+        $strpos_sheet = strpos($sheet_model, '#');
+        if($strpos_sheet !== false){
+            $sheet_model = substr($sheet_model, 0, $strpos_sheet);
+        }
+        if($node = \Solunes\Master\App\Node::where('name', $sheet_model)->first()){
             $field_array = [];
             $field_sub_array = [];
             $sub_field_insert = [];
@@ -24,104 +27,105 @@ class DataManager {
             foreach($node->fields()->where('type', 'field')->get() as $field){
                 $field_sub_array[$field->name] = $field;
             }
-            $new_item = false;
-            foreach($row->all() as $column => $input){
-                if($column=='id'&&$input){
-                    $model = \FuncNode::node_check_model($node);
-                    if(!$item = $model->where('id', $row->id)->first()){
-                        $item = $model;
-                    }
-                    $new_item = true;
-                }
-                if($new_item&&isset($field_array[$column])){
-                    $field = $field_array[$column];
-                    if($column==$field->name){
-                        $language_code = 'es';
-                    } else {
-                        $language_code = str_replace($field->name.'_','',$column);
-                    }
-                    if($field->relation&&$input&&!is_numeric($input)){
-                        if($sub_model = \Solunes\Master\App\Node::where('name', $field->value)->first()){
-                            $sub_model = $sub_model->model;
-                            if($get_submodel = $sub_model::where('name', $input)->first()){
-                                $input = $get_submodel->id;
-                            }
+            $sheet->each(function($row) use ($node, $field_array, $field_sub_array, $sub_field_insert) {
+                $new_item = false;
+                foreach($row->all() as $column => $input){
+                    if($column=='id'&&$input){
+                        $model = \FuncNode::node_check_model($node);
+                        if(!$item = $model->where('id', $row->id)->first()){
+                            $item = $model;
                         }
-                    } else if(!$field->relation&&($field->type=='select'||$field->type=='radio')){
-                        if($subanswer = $field->field_options()->whereTranslation('label', $input)->first()){
-                            $input = $subanswer->name;
+                        $new_item = true;
+                    }
+                    if($new_item&&isset($field_array[$column])){
+                        $field = $field_array[$column];
+                        if($column==$field->name){
+                            $language_code = 'es';
                         } else {
-                            $input = NULL;
+                            $language_code = str_replace($field->name.'_','',$column);
                         }
-                    } else if(!$field->relation&&$field->type=='checkbox'){
-                        $subinput = [];
-                        foreach(explode(' | ', $input) as $subval){
-                            if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
-                                $subinput[] = $subanswer->name;
-                            }
-                        }
-                        if(count($subinput)>0){
-                            $input = json_encode($subinput);
-                        } else {
-                            $input = NULL;
-                        }
-                    }
-                    if($input||$input=='0'){
-                        if($field->type=='image'||$field->type=='file'){
-                            $action_name = 'upload_'.$field->type;
-                            if($field->multiple){
-                                foreach(explode(' | ',$input) as $subinput){
-                                    if(filter_var($subinput, FILTER_VALIDATE_URL)){
-                                        $file_path = $subinput;
-                                    } else {
-                                        $file_path = public_path('seed/'.$node->name.'/'.$subinput);
-                                    }
-                                    $input_array[] = \Asset::$action_name($image_path, $node->name.'-'.$field->name, true);
+                        if($field->relation&&$input&&!is_numeric($input)){
+                            if($sub_model = \Solunes\Master\App\Node::where('name', $field->value)->first()){
+                                $sub_model = $sub_model->model;
+                                if($get_submodel = $sub_model::where('name', $input)->first()){
+                                    $input = $get_submodel->id;
                                 }
-                                $input = json_encode($input_array);
+                            }
+                        } else if(!$field->relation&&($field->type=='select'||$field->type=='radio')){
+                            if($subanswer = $field->field_options()->whereTranslation('label', $input)->first()){
+                                $input = $subanswer->name;
                             } else {
-                                if(filter_var($input, FILTER_VALIDATE_URL)){
-                                    $file_path = $input;
-                                } else {
-                                    $file_path = public_path('seed/'.$node->name.'/'.$input);
+                                $input = NULL;
+                            }
+                        } else if(!$field->relation&&$field->type=='checkbox'){
+                            $subinput = [];
+                            foreach(explode(' | ', $input) as $subval){
+                                if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
+                                    $subinput[] = $subanswer->name;
                                 }
-                                $input = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true);
+                            }
+                            if(count($subinput)>0){
+                                $input = json_encode($subinput);
+                            } else {
+                                $input = NULL;
                             }
                         }
-                        $item = \FuncNode::put_data_field($item, $field, $input, $language_code);
-                    }
-                } else if($new_item&&isset($field_sub_array[$column])) {
-                    $field = $field_sub_array[$column];
-                    if($field->multiple){
-                        $array_insert = [];
-                        foreach(explode(';',$input) as $value){
-                            if($value&&!is_numeric($value)){
-                                $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
-                                array_push($array_insert, $sub_model::where('name', $value)->first()->id);
-                            } else if($value) {
-                                array_push($array_insert, $value);
+                        if($input||$input=='0'){
+                            if($field->type=='image'||$field->type=='file'){
+                                $action_name = 'upload_'.$field->type;
+                                if($field->multiple){
+                                    foreach(explode(' | ',$input) as $subinput){
+                                        if(filter_var($subinput, FILTER_VALIDATE_URL)){
+                                            $file_path = $subinput;
+                                        } else {
+                                            $file_path = public_path('seed/'.$node->name.'/'.$subinput);
+                                        }
+                                        $input_array[] = \Asset::$action_name($image_path, $node->name.'-'.$field->name, true);
+                                    }
+                                    $input = json_encode($input_array);
+                                } else {
+                                    if(filter_var($input, FILTER_VALIDATE_URL)){
+                                        $file_path = $input;
+                                    } else {
+                                        $file_path = public_path('seed/'.$node->name.'/'.$input);
+                                    }
+                                    $input = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true);
+                                }
                             }
+                            $item = \FuncNode::put_data_field($item, $field, $input, $language_code);
                         }
-                    } else {
-                        if($input&&!is_numeric($input)){
-                            $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
-                            $array_insert = $sub_model::where('name', $input)->first()->id;
+                    } else if($new_item&&isset($field_sub_array[$column])) {
+                        $field = $field_sub_array[$column];
+                        if($field->multiple){
+                            $array_insert = [];
+                            foreach(explode(';',$input) as $value){
+                                if($value&&!is_numeric($value)){
+                                    $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
+                                    array_push($array_insert, $sub_model::where('name', $value)->first()->id);
+                                } else if($value) {
+                                    array_push($array_insert, $value);
+                                }
+                            }
                         } else {
-                            $array_insert = $input;
+                            if($input&&!is_numeric($input)){
+                                $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
+                                $array_insert = $sub_model::where('name', $input)->first()->id;
+                            } else {
+                                $array_insert = $input;
+                            }
+                            $array_insert = [$array_insert];
                         }
-                        $array_insert = [$array_insert];
+                        $sub_field_insert[$column] = $array_insert;
                     }
-                    $sub_field_insert[$column] = $array_insert;
                 }
-            }
-            if($new_item){
-                $item->save();
-                foreach($sub_field_insert as $column => $input){
-                    $item->$column()->sync($input);
+                if($new_item){
+                    $item->save();
+                    foreach($sub_field_insert as $column => $input){
+                        $item->$column()->sync($input);
+                    }
                 }
-            }
-          }
-        });
+            });
+        }
         return $count_rows;
     }
 

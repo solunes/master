@@ -22,7 +22,7 @@ class DynamicFormController extends Controller {
       $this->module = 'admin';
     }
     public function getImportNodes() {
-        $array['items'] = \Solunes\Master\App\Node::where('location', 'app')->whereNull('parent_id')->withTrashed()->get();
+        $array['items'] = \Solunes\Master\App\Node::where('location', '!=','package')->whereNull('parent_id')->withTrashed()->get();
         return view('master::list.import-nodes', $array);
     }
 
@@ -30,34 +30,19 @@ class DynamicFormController extends Controller {
         if(!$request->hasFile('file')||!$request->file('file')->isValid()){
             return redirect($this->prev)->with('message_error', 'Por favor seleccione un archivo para importar en XLS o XLSX.');
         }
-        $name_array = \Solunes\Master\App\Node::where('location', 'app')->whereNull('parent_id')->withTrashed()->lists('name')->toArray();
+        $name_array = \Solunes\Master\App\Node::where('location', '!=','package')->whereNull('parent_id')->withTrashed()->lists('name')->toArray();
         $name_array = array_merge(['image-folder','email'], $name_array);
-        $message = 'Nodos importados: ';
         $languages = \Solunes\Master\App\Language::get();
-        \Excel::load($request->file('file'), function($reader) use($languages, $name_array, $message) {
+        \Excel::load($request->file('file'), function($reader) use($languages, $name_array) {
             foreach($reader->get() as $sheet){
-              $sheet_model = $sheet->getTitle();
-              if(in_array($sheet_model, $name_array)&&$node = \Solunes\Master\App\Node::where('name', $sheet_model)->first()){
-                $field_array = [];
-                $field_sub_array = [];
-                $sub_field_insert = [];
-                foreach($languages as $language){
-                    foreach($node->fields()->whereNotIn('type', ['child','subchild','field'])->get() as $field){
-                        if($language->id>1){
-                            $field_array[$field->name.'_'.$language->code] = $field;
-                        } else {
-                            $field_array[$field->name] = $field;
-                        }
-                    }
+                $sheet_model = $sheet->getTitle();
+                $strpos_sheet = strpos($sheet_model, '#');
+                if($strpos_sheet !== false){
+                    $sheet_model = substr($sheet_model, 0, $strpos_sheet);
                 }
-                foreach($node->fields()->where('type', 'field')->get() as $field){
-                    $field_sub_array[$field->name] = $field;
+                if(in_array($sheet_model, $name_array)){
+                    $count_rows = \DataManager::importExcelRows($sheet, $languages);
                 }
-                $count_rows = \DataManager::importExcelRows($sheet, $languages, $node, $field_array, $field_sub_array, $sub_field_insert);
-                $message .= $node->name.' ('.$count_rows.' items) | ';
-              } else {
-                $message .= $sheet_model.' (NO IMPORTADO) | ';
-              }
             }
         });
         return redirect($this->prev)->with('message_success', 'Se importó el documento correctamente.');
@@ -82,7 +67,7 @@ class DynamicFormController extends Controller {
     }
 
     public function getExportNodes() {
-        $array['items'] = \Solunes\Master\App\Node::where('location', 'app')->whereNull('parent_id')->withTrashed()->get();
+        $array['items'] = \Solunes\Master\App\Node::where('location', '!=','package')->whereNull('parent_id')->withTrashed()->get();
         return view('master::list.export-nodes', $array);
     }
 
