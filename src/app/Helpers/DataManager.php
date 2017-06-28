@@ -131,9 +131,19 @@ class DataManager {
 
     public static function exportNodeExcel($excel, $alphabet, $node) {
         $sheet_title = $node->name;
+        $array = \DataManager::generateExportArray($alphabet, $node);
+        $col_array = $array['col_array'];
+        $col_width = $array['col_width'];
+        $fields_array = $array['fields_array'];
+        $field_options_array = $array['field_options_array'];
+        $items = \FuncNode::node_check_model($node)->get();
+        return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items);
+    }
+
+    public static function generateExportArray($alphabet, $node) {
         $col_array = [];
         $col_width = [];
-        $fields_array = $node->fields;
+        $fields_array = $node->fields()->whereNotIn('type', ['child','subchild'])->get();
         $field_options_array = [];
         foreach($node->fields as $key => $field){
             array_push($col_array, $field->name);
@@ -144,8 +154,7 @@ class DataManager {
             }
             $col_width = \DataManager::generateColWidth($alphabet, $field, $key, $col_width);
         }
-        $items = \FuncNode::node_check_model($node)->get();
-        return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items);
+        return ['col_array'=>$col_array, 'col_width'=>$col_width, 'fields_array'=>$fields_array, 'field_options_array'=>$field_options_array];
     }
 
     public static function generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $child_items = []) {
