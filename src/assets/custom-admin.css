@@ -602,6 +602,12 @@
     padding: 6 12px;
     line-height: 26px;
     color: #999; }
+  .admin-site.pdf-site .table thead {
+    display: table-header-group; }
+  .admin-site.pdf-site .table tfoot {
+    display: table-row-group; }
+  .admin-site.pdf-site .table tr {
+    page-break-inside: avoid; }
 
 .admin-site {
   /* Logo */
