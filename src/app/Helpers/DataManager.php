@@ -145,7 +145,7 @@ class DataManager {
         $col_width = [];
         $fields_array = $node->fields()->whereNotIn('type', ['child','subchild'])->get();
         $field_options_array = [];
-        foreach($node->fields as $key => $field){
+        foreach($fields_array as $key => $field){
             array_push($col_array, $field->name);
             if(count($field->field_options)>0){
                 foreach($field->field_options as $option){

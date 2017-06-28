@@ -471,7 +471,7 @@ class DynamicFormController extends Controller {
                     $parent = NULL;
                 }
                 array_push($nodes_array, [$node->name, $node->table_name, $node->type, $node->model, $parent, $node->folder, $node->permission, $node->singular, $node->plural]);
-                foreach($node->fields as $item){
+                foreach($node->fields()->whereNotIn('type', ['child','subchild'])->get() as $item){
                   $row_array = [];
                   foreach($fields as $field){
                     $field_name = $field->name;
