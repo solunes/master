@@ -209,8 +209,11 @@ class DataManager {
     }
 
     public static function generateAlphabet() {
-        $alphabet = range('A', 'Z');
-        return $alphabet;
+        $letters = [];
+        $letter = 'A';
+        while ($letter !== 'EZ') {
+            $letters[] = $letter++;
+        }
+        return $letters;
     }
-
 }

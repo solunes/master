@@ -73,7 +73,7 @@ class DynamicFormController extends Controller {
 
     public function postExportNodes(Request $request) {
         $name_array = $request->input('nodes');
-        if(!$name_array||count($name_array)){
+        if(!$name_array||count($name_array)==0){
             return redirect($this->prev)->with('message_error', 'Por favor seleccione los nodos que desea descargar.');
         }
         $name_array = array_merge(['image-folder','email'], $name_array);
