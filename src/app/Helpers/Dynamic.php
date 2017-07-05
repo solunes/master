@@ -285,7 +285,7 @@ class Dynamic {
                     }
                   }
                   $field = \Dynamic::edit_field($field, $field_array, 'es');
-                  if(count($sheet)>50&&$field->type=='string'){
+                  if((count($sheet)>50&&$field->type=='string')||$field->type=='radio'){
                     \Dynamic::generate_field_table($node, $field->type, $field->name, $field->relation, $last_field, 64);
                   } else {
                     \Dynamic::generate_field_table($node, $field->type, $field->name, $field->relation, $last_field);
