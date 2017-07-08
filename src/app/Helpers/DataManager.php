@@ -157,9 +157,9 @@ class DataManager {
         return ['col_array'=>$col_array, 'col_width'=>$col_width, 'fields_array'=>$fields_array, 'field_options_array'=>$field_options_array];
     }
 
-    public static function generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $child_items = []) {
+    public static function generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $child_table = NULL) {
         //$excel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $excel->sheet($sheet_title, function($sheet) use($alphabet, $col_array, $col_width, $fields_array, $field_options_array, $items, $child_items) {
+        $excel->sheet($sheet_title, function($sheet) use($alphabet, $col_array, $col_width, $fields_array, $field_options_array, $items, $child_table) {
             $sheet->row(1, $col_array);
             $sheet->row(1, function($row) {
               $row->setFontWeight('bold');
@@ -168,8 +168,8 @@ class DataManager {
 
             $fila = 2;
             foreach($items as $item_key => $item){
-                if(count($child_items)>0){
-                    foreach($child_items as $subitem_key => $subitem){
+                if($child_table){
+                    foreach($item->$child_table as $subitem_key => $subitem){
                         $sheet->row($fila, array_merge([$item->name, $subitem_key+1], AdminList::make_fields_values($subitem, $fields_array, $field_options_array, '','excel')));
                         $fila++;
                     }

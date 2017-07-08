@@ -21,10 +21,12 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         $gate->define('node-admin', function ($user, $type, $module, $node, $action, $id = NULL) {
-            if(config('solunes.check_permission')){
+            $custom_check = 'none';
+            if(config('solunes.store')&&config('store.check_permission')){
+                $custom_check = \CustomStore::check_permission($type, $module, $node, $action, $id);
+            }
+            if($custom_check=='none'&&config('solunes.check_permission')){
                 $custom_check = \CustomFunc::check_permission($type, $module, $node, $action, $id);
-            } else {
-                $custom_check = 'none';
             }
             if($custom_check!='none'){
                 if($custom_check=='true'){

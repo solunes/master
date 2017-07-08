@@ -836,8 +836,7 @@ class AdminList {
                         array_push($col_array, $field->label);
                         $col_width = \DataManager::generateColWidth($alphabet, $field, $key, $col_width);
                     }
-                    $child_items = $item->$child_table;
-                    \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $child_fields, $array['field_options'], $array['items'], $child_items);
+                    \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $child_fields, $array['field_options'], $array['items'], $child_table);
                 }
             }
         })->store('xlsx', $dir, true);

@@ -108,8 +108,10 @@ class DynamicFormController extends Controller {
                 $collection = $collection->sortBy('created_at');
                 $last_node = NULL;
                 $initial_id = 1;
+                $last_node_replace = true;
                 foreach($collection as $key => $item){
-                    if($key==0){
+                    if($last_node_replace){
+                        $last_node_replace = false;
                         $last_node = $item['node'];
                     } 
                     if($item['node'] != $last_node){
@@ -131,8 +133,7 @@ class DynamicFormController extends Controller {
                                 $col_width = $array['col_width'];
                                 $fields_array = $array['fields_array'];
                                 $field_options_array = $array['field_options_array'];
-                                $items = \FuncNode::node_check_model($child)->where('parent_id','>=', $initial_id)->where('parent_id','<', $nodes_ids[$node->name]['last'])->get();
-                                \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items);
+                                \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $child->table_name);
                             }
                         }
                         $nodes_ids[$last_node]['sheet'] += 1;

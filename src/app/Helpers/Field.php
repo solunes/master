@@ -216,7 +216,13 @@ class Field {
 
         // RESPONSE
         if($type=='custom'){
-            $response = \CustomFunc::get_custom_field($name, $parameters, $array, $label, $col, $i, $value, $data_type);
+            $response = NULL;
+            if(config('solunes.store')){
+                $response = \CustomStore::get_custom_field($name, $parameters, $array, $label, $col, $i, $value, $data_type);
+            }
+            if(!$response){
+                $response = \CustomFunc::get_custom_field($name, $parameters, $array, $label, $col, $i, $value, $data_type);
+            }
         } else if($subinput=='multiple') {
             if($type=='checkbox'||$type=='radio'||$type=='score'){
                 $response = Field::form_checkbox_input($name, $type, $parameters, $array, $label, $col, $i, $value, $data_type);

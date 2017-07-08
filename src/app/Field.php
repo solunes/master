@@ -102,6 +102,9 @@ class Field extends Model {
         if($this->relation){
             if($subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $this->value))->first()){
                 $submodel = \FuncNode::node_check_model($subnode);
+                if(config('solunes.store')&&config('store.get_options_relation')&&$this->relation_cond){
+                    $submodel = \CustomStore::get_options_relation($submodel, $this, $subnode, request()->segment(5));
+                }
                 if(config('solunes.get_options_relation')&&$this->relation_cond){
                     $submodel = \CustomFunc::get_options_relation($submodel, $this, $subnode, request()->segment(5));
                 }

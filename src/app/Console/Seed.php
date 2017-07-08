@@ -49,11 +49,11 @@ class Seed extends Command
             }
             $this->callSilent('import-excel');
             $this->info('95%: Campos de nodos creados correctamente.');
-            if(config('solunes.store')){
-                $this->info('97%: '.\Store::after_seed());
+            if(config('solunes.store')&&config('store.after_seed')){
+                $this->info('96%: '.\CustomStore::after_seed_actions());
             }
             if(config('solunes.after_seed')){
-                $this->info('99%: '.\CustomFunc::after_seed_actions());
+                $this->info('98%: '.\CustomFunc::after_seed_actions());
             }
             $this->info('100%: Seed finalizado.');
             $this->info('Total execution time in seconds: ' . (microtime(true) - $time_start));

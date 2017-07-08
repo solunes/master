@@ -47,6 +47,9 @@
   @if(config('solunes.item_remove_scripts')&&array_key_exists($node->name, config('solunes.item_remove_scripts')))
     <?php $scripts_array = array_diff($scripts_array, config('solunes.item_remove_scripts')[$node->name]); ?>
   @endif
+  @if(config('solunes.store')&&config('store.item_remove_scripts')&&array_key_exists($node->name, config('store.item_remove_scripts')))
+    <?php $scripts_array = array_diff($scripts_array, config('store.item_remove_scripts')[$node->name]); ?>
+  @endif
   @foreach($scripts_array as $script)
     @include('master::scripts.'.$script.'-js')
   @endforeach
@@ -55,8 +58,8 @@
       @include('scripts.'.$file.'-js')
     @endforeach
   @endif
-  @if(config('solunes.item_add_script_store')&&array_key_exists($node->name, config('solunes.item_add_script_store')))
-    @foreach(config('solunes.item_add_script_store')[$node->name] as $file)
+  @if(config('solunes.store')&&config('store.item_add_script')&&array_key_exists($node->name, config('store.item_add_script')))
+    @foreach(config('store.item_add_script')[$node->name] as $file)
       @include('store::scripts.'.$file.'-js')
     @endforeach
   @endif

@@ -180,6 +180,9 @@ class AdminController extends Controller {
         if(config('solunes.item_get_after_vars')&&in_array($single_model, config('solunes.item_get_after_vars'))){
         	$variables = $model->item_get_after_vars($this->module, $node, $single_model, $id, $variables);
         }
+        if(config('solunes.store')&&config('store.item_get_after_vars')&&in_array($single_model, config('store.item_get_after_vars'))){
+        	$variables = $model->item_get_after_vars($this->module, $node, $single_model, $id, $variables);
+        }
         return \AdminItem::get_item_view($this->module, $node, $single_model, $id, $variables);
 	}
 
@@ -198,6 +201,9 @@ class AdminController extends Controller {
         }
         $variables = \AdminItem::get_request_variables($this->module, $node, $model, $single_model, $action, $id, $options, $additional_vars);
         if(config('solunes.item_child_after_vars')&&in_array($single_model, config('solunes.item_child_after_vars'))){
+        	$variables = $model->item_child_after_vars($this->module, $node, $single_model, $id, $variables);
+        }
+        if(config('solunes.store')&&config('store.item_child_after_vars')&&in_array($single_model, config('store.item_child_after_vars'))){
         	$variables = $model->item_child_after_vars($this->module, $node, $single_model, $id, $variables);
         }
         return \AdminItem::get_item_view($this->module, $node, $single_model, $id, $variables);
