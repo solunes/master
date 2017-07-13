@@ -43,6 +43,9 @@ class Login {
 
     public static function success($session, $last_session, $user, $redirect, $message, $type = false) {
         $session->forget('login_fail');
+        if(config('solunes.store')){
+            \CustomStore::after_login($user, $last_session, $redirect);
+        }
         if(config('solunes.after_login')){
             \CustomFunc::after_login($user, $last_session, $redirect);
         }
