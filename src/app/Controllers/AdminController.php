@@ -173,6 +173,10 @@ class AdminController extends Controller {
 	    	return $check_item_permission;
 	    }
 
+	    if($action!='create'&&!$model::find($id)){
+	    	return redirect('admin/model-list/'.$single_model)->with('message_error', 'No se encontró el item que intentó buscar.');
+	    }
+
         if($action=='delete'||$action=='restore'){
             return \AdminItem::delete_restore_item($this->module, $this->prev, $node, $model, $single_model, $action, $id, $options, $additional_vars);
         }

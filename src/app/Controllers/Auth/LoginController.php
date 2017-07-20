@@ -42,7 +42,9 @@ class LoginController extends Controller {
 			  } else if(Auth::user()->status=='ask_password'){
 			  	return Login::success($request->session(), $last_session, Auth::user(), 'account', trans('master::form.login_success_password'), true);
 			  } else {
-			  	if(\Auth::user()->can('dashboard')){
+			    if(session()->has('url.intended')){
+			        $redirect = session()->get('url.intended');
+			  	} else if(\Auth::user()->can('dashboard')){
 			  		$redirect = 'admin';
 			  	} else {
 			  		$redirect = '';

@@ -3,8 +3,12 @@
     @if($field->type=='child')
       </div>
       <div id="field_{{ $field->name }}">
-        @if($action=='edit')
-          {!! \AdminList::child_list_header($module, $field->value, $field->label, $i->id) !!}
+        @if($action=='edit'||$action=='view')
+          @if($action=='view')
+            <h3>{{ $field->label }}</h3>
+          @else
+            {!! \AdminList::child_list_header($module, $field->value, $field->label, $i->id) !!}
+          @endif
           @if($field->message)
             <label><div class="field-message">{{ $field->message }}</div></label>
           @endif
