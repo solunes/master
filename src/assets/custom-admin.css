@@ -627,7 +627,8 @@
   /* Data Table */
   /* New Admin */
   /* File Upload */
-  /* Admin */ }
+  /* Admin */
+  /* Store: Sale */ }
   .admin-site .page-header.navbar .page-logo .logo-default {
     margin: 10px 0 0 0; }
   .admin-site .page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu > li.external > h3 {
@@ -1038,6 +1039,30 @@
   .admin-site .field-message {
     font-style: italic;
     color: #999; }
+  .admin-site #create-sale label {
+    font-size: 20px; }
+  .admin-site #create-sale input.form-control, .admin-site #create-sale select.form-control, .admin-site #create-sale .select2-container .select2-selection--single .select2-selection__rendered {
+    font-size: 20px;
+    padding: 10px 20px !important; }
+  .admin-site #create-sale .btn {
+    font-size: 20px;
+    padding: 10px 20px !important;
+    width: 100%; }
+  .admin-site #create-sale .mt-checkbox > span, .admin-site #create-sale .mt-radio > span {
+    top: 9px; }
+  .admin-site #create-sale .total {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4c99bf; }
+  .admin-site #create-sale #products #amount.form-control[readonly], .admin-site #create-sale #paid_amount.form-control[readonly] {
+    background: #4c99bf;
+    color: #fff; }
+  .admin-site #create-sale .icon {
+    text-align: right; }
+    .admin-site #create-sale .icon i {
+      font-size: 60px;
+      line-height: 90px;
+      color: #4c99bf; }
 
 body.error-site {
   font-size: 26px; }
