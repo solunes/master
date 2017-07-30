@@ -267,6 +267,8 @@ class Field {
             $response .= Field::generate_map_field($name, $type, $parameters, $array, $value, $data_type);
         } else if($type=='string'||$type=='barcode'){
             $response = Form::text($name, $value, $array);
+        } else if($type=='integer'){
+            $response = Form::input('number', $name, $value, $array);
         } else if($type=='hidden'){
             $response = Form::hidden($name, $value, $array);
         } else if($type=='select'){
