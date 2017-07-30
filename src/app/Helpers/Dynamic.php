@@ -100,6 +100,8 @@ class Dynamic {
         $column_type = 'string';
         if($field_type=='text'||$field_type=='checkbox'||$field_type=='map'||$field_type=='file'||$field_type=='image'){
           $column_type = 'text';
+        } else if($field_type=='integer'){
+          $column_type = 'integer';
         } else if($field_type=='date'){
           if($field_name=='created_at'||$field_name=='updated_at'||$field_name=='deleted_at'){
             $column_type = 'timestamp';
