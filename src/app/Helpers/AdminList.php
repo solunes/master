@@ -813,7 +813,7 @@ class AdminList {
         $filename = str_replace(' ', '-', $array['node']->plural.'_'.date('Y-m-d'));
         $filename = preg_replace('/[^A-Za-z0-9\-]/', '', $filename);
         $file = \Excel::create($filename, function($excel) use($array) {
-            $alphabet = \DataManager::generateAlphabet();
+            $alphabet = \DataManager::generateAlphabet(count($array['fields']));
             $sheet_title = str_replace(' ', '-', $array['node']->plural);
             $sheet_title = substr(preg_replace('/[^A-Za-z0-9\-]/', '', $sheet_title), 0, 30);
             $col_array = [];

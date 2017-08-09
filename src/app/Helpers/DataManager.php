@@ -217,11 +217,17 @@ class DataManager {
         return $col_width;
     }
 
-    public static function generateAlphabet() {
+    public static function generateAlphabet($count = NULL) {
         $letters = [];
         $letter = 'A';
-        while ($letter !== 'EZ') {
-            $letters[] = $letter++;
+        if($count){
+            foreach(range(1,$count) as $key){
+                $letters[] = $letter++;
+            }
+        } else {
+            while ($letter !== 'FZ') {
+                $letters[] = $letter++;
+            }
         }
         return $letters;
     }
