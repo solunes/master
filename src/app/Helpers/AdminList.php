@@ -10,9 +10,6 @@ class AdminList {
         $module = $object->module;
         $node = \Solunes\Master\App\Node::where('name', $single_model)->with('node_action_fields','node_action_nodes','node_graphs')->first();
         $model = \FuncNode::node_check_model($node);
-        if (\Gate::denies('node-admin', ['list', $module, $node, 'list'])) {
-            return \Login::redirect_dashboard('no_permission');
-        }
 
         $array = ['module'=>$module, 'node'=>$node, 'model'=>$single_model, 'i'=>NULL, 'filter_category'=>'admin', 'filter_category_id'=>'0', 'filter_type'=>'field', 'filter_node'=>$node->name, 'dt'=>'form', 'id'=>NULL, 'parent'=>NULL, 'action_nodes'=>['back','create','excel'], 'action_fields'=>['edit','delete']];
         
@@ -102,6 +99,14 @@ class AdminList {
         $array['items'] = $items->paginate(config('solunes.pagination_count'));
 
         return $array;
+    }
+
+    public static function check_list_permission($module, $node) {
+        if (\Gate::denies('node-admin', ['list', $module, $node, 'list'])) {
+            return \Login::redirect_dashboard('no_permission');
+        } else {
+            return false;
+        }
     }
 
     public static function make_fields($langs, $fields, $action_fields = ['edit', 'delete']) {

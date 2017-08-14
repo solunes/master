@@ -9,13 +9,13 @@
   <div class="content-wrap pdf-wrap">  
     <h1>{{ $title }} | {{ $site->name }}</h1>
     <h2>1. Iniciar Sesión</h2>
-    <p>Para iniciar sesión, se deberá ingresar a <a href="http://www.activatebolivia.org/admin">http://www.activatebolivia.org/admin</a>. Si es que la sesión aún no fue iniciada, tendrá que introducir el correo electrónico / carnet y la contraseña de su cuenta que le fue creada.</p>
+    <p>Para iniciar sesión, se deberá ingresar a <a href="{{ url('admin') }}">{{ url('admin') }}</a>. Si es que la sesión aún no fue iniciada, tendrá que introducir el correo electrónico / carnet y la contraseña de su cuenta que le fue creada.</p>
     <p>Si es que se olvidó su contraseña, podrá recuperarla haciendo click en el botón de Olvide mi Contraseña, donde le enviará a su correo un link donde podrá cambiar su contraseña.</p>
-    <!--<h2>2. Conceptos Generales</h2>
+    <h2>2. Conceptos Generales</h2>
     <p>A continuación se expondrán herramientas generales que podrán ser utilizadas a lo largo de toda la plataforma:</p>
     <ul>
       <li><strong>Filtros en Listas: </strong><br>
-        Algunas de las tablas de la plataforma tienen filtros para poder ayudar en la navegación. Los filtros tienen la siguiente forma y pueden combinarse entre sí. Una vez se seleccionen los filtros, se deberá hacer click en la opción de buscar para que se desplieguen los resultados correspondientes en la tabla de abajo. Los gráfios (en caso de que existan), también responden a los filtros.
+        Algunas de las tablas de la plataforma tienen filtros para poder ayudar en la navegación. Los filtros tienen la siguiente forma y pueden combinarse entre sí. Una vez se seleccionen los filtros, se deberá hacer click en la opción de buscar para que se desplieguen los resultados correspondientes en la tabla de abajo. Los gráfios (en caso de que existan), también responden a los filtros. Puede crear sus propios filtros así como eliminarlos, para armar sus propias combiniaciones.
       </li>
       <li><strong>Manejo de Tablas: </strong><br>
         Las tablas de todo el sistema pueden ser manipuladas de manera dinámica, es decir sobre la marcha. Se puede “Ordenar” por columnas de manera ascendente o descendente (las flechas indican esto), haciendo click en el título de la columna correspondiente. También se puede utilizar el “Buscador”, donde solo es necesario escribir y se irán mostrando los resultados que cumplan con esta búsqueda de manera automática y mientras se escriba. <br>
@@ -30,7 +30,7 @@
       <li><strong>Manejo de Formularios: </strong><br>
         Todos los formularios dentro del sitio web, ya sean al crear o editar serán validados antes de ser enviados y guardados. Si cumple con todos los requisitos, aparecerá un mensaje en verde indicando que los cambios fueron guardados. Si hay un error en la validación, le aparecerá un mensaje en rojo indicando los errores que hay que corregir.
       </li>
-    </ul>-->
+    </ul>
     <h2>2. Secciones Disponibles</h2>
     @include('master::pdf.manual-node', ['nodes_array'=>$nodes, 'last_count'=>'2.', 'count'=>0])
   </div>

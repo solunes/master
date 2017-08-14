@@ -34,7 +34,7 @@
       @endif
     </p>
     <h4>{{ trans('master::admin.fields') }}</h4>
-    @foreach($node->fields()->where('type', '!=', 'child')->where('display_item', '!=', 'none')->get() as $field)
+    @foreach($node->fields()->where('display_item', '!=', 'none')->get() as $field)
       <ul>
         <li><strong>{{ $field->label }}: </strong>
           Campo de {{ trans('master::admin.'.$field->type) }}
@@ -57,12 +57,16 @@
             Puede elegirse entre las siguientes opciones:
             <?php $subcount = 0; ?>
             @foreach($field->options as $key => $val)
-              @if($subcount>0)
-                , 
-              @else
-                <?php $subcount++; ?>
+              @if($key<10)
+                @if($subcount>0)
+                  , 
+                @else
+                  <?php $subcount++; ?>
+                @endif
+                {{ $val }}
+              @elseif($key==10)
+                 , etc. 
               @endif
-              {{ $val }}
             @endforeach
             .
           @elseif($field->type=='image')
@@ -82,8 +86,5 @@
         </li>
       </ul>
     @endforeach
-    @if(count($node->children)>0)
-      @include('master::pdf.manual-node', ['nodes_array'=>$node->children, 'last_count'=>$last_count.$count.'.', 'count'=>0])
-    @endif
   @endforeach
 @endif

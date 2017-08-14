@@ -150,6 +150,11 @@ class AdminController extends Controller {
 	}
 
 	public function getModelList($model) {
+        $node = \Solunes\Master\App\Node::where('name', $model)->first();
+	    if($check_list_permission = \AdminList::check_list_permission($this->module, $node)){
+	    	return $check_list_permission;
+	    }
+
 		$array = AdminList::get_list($this, $model);
         if(request()->has('download-excel')){
             return AdminList::generate_query_excel($array);
