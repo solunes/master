@@ -123,9 +123,10 @@ class AdminItem {
                     $view = 'master::includes.select-parent';
                 }
             }
-        } else if($node->customized){
-            $view = 'item.'.$single_model;
         }
+        /*else if($node->customized){
+            $view = 'item.'.$single_model;
+        }*/
         if(request()->has('download-pdf')){
             return \AdminItem::generate_item_pdf($module, $node, $single_model, $id, $view, $variables);
         }
