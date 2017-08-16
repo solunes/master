@@ -104,10 +104,13 @@ class Field {
                 $label .= ' (Filtro Global)';
             }
         }
+        if($type=='radio'){
+            $label .= ' | <a rel="'.$name.'" class="unselect-radio" href="#">X</a>';
+        }
         if(isset($field['message'])&&$field['message']){
             $label .= '<div class="field-message">'.$field['message'].'</div>';
         }
-        
+
         // VALUE
         $value = NULL;
         if($i&&($i->$fixed_name||intval($i->$fixed_name)===0)){

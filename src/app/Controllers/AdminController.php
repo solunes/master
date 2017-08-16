@@ -236,7 +236,7 @@ class AdminController extends Controller {
 			if(config('solunes.custom_indicator')){
 				$array = \CustomFunc::custom_indicator($indicator->node, $indicator, $array);
 			}
-			if(request()->has('search')&&isset($array['filters'])&&is_array($array['filters'])){
+			if(request()->has('search')&&request()->input('search')==1&&isset($array['filters'])&&is_array($array['filters'])){
 			  foreach($array['filters'] as $field_name => $field){
 			  	$filter = \Solunes\Master\App\Filter::find($field['id']);
 			  	$action_value = [];
@@ -376,7 +376,7 @@ class AdminController extends Controller {
 		if($request->has('select_field')&&$request->input('select_field')!==''){
 			$category = $request->input('category');
 			$type = $request->input('type');
-			if($type=='indicator'){
+			if($category=='indicator'){
 				$display = 'all';
 			} else {
 				$display = 'user';
@@ -406,9 +406,9 @@ class AdminController extends Controller {
 			$filter->save();
 			$url = $this->prev;
 			if (strpos($url, '?') !== false) {
-			    $url .= '&search=1';
+			    $url .= '&search=2';
 			} else {
-			    $url .= '?search=1';
+			    $url .= '?search=2';
 			}
 	      	return redirect($url);
 	      } else {

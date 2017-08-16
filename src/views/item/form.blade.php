@@ -36,5 +36,6 @@
   @include('master::scripts.lightbox-js')
   @include('master::scripts.tooltip-js')
   @include('master::scripts.accordion-js')
+  @include('master::scripts.radio-js')
   @include('master::scripts.leave-form-js')
 @endsection

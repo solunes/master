@@ -603,11 +603,12 @@ class AdminList {
         if($type=='indicator'){
             $custom_value = json_decode($filter->action_value, true);
             if($filter->subtype=='date'){
-                if($custom_value&&isset($custom_value['is_greater'])){
-                    $appends['f_'.$field_name.'_from'] = $custom_value['is_greater'];
+                $custom_value_flip = array_flip($custom_value);
+                if($custom_value&&isset($custom_value_flip['is_greater'])){
+                    $appends['f_'.$field_name.'_from'] = $custom_value_flip['is_greater'];
                 }
-                if($custom_value&&isset($custom_value['is_less'])){
-                    $appends['f_'.$field_name.'_to'] = $custom_value['is_less'];
+                if($custom_value&&isset($custom_value_flip['is_less'])){
+                    $appends['f_'.$field_name.'_to'] = $custom_value_flip['is_less'];
                 }
             } else if($filter->subtype=='string'){
                 if($custom_value||$custom_value=='0'){
@@ -724,7 +725,7 @@ class AdminList {
                         if($field->type=='field'){
                             $main_action .= 'Has';
                             $query = $query->$main_action($field_name, function ($subquery) use($field, $custom_val) {
-                                $subquery->where($field->value.'_id', $custom_val);
+                                $subquery->where(str_replace('-', '_', $field->value).'_id', $custom_val);
                             });
                         } else if($custom_action=='where_in') {
                             $query = $query->$main_action($field->name, $custom_val);

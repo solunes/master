@@ -35,7 +35,7 @@
 @endsection
 @section('script')
   @include('master::helpers.froala')
-  <?php $scripts_array = ['conditionals','upload','map','map-field','tooltip','accordion']; ?>
+  <?php $scripts_array = ['conditionals','upload','map','map-field','tooltip','accordion','radio']; ?>
   @if($barcode_enabled)
     <?php $scripts_array[] = 'barcode'; ?>
   @endif
