@@ -65,6 +65,8 @@ class Field {
         }
         if($type=='title'){
             $field_class .= ' title';
+        } else if($type=='content'){
+            $field_class .= ' content_text';
         }
         $parameters['field_class'] = $field_class;
 
