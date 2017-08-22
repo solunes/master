@@ -39,7 +39,7 @@ class MasterServiceProvider extends ServiceProvider {
         $this->app->register('Barryvdh\Snappy\ServiceProvider');
         $this->app->register('Intervention\Image\ImageServiceProvider');
         $this->app->register('Roumen\Sitemap\SitemapServiceProvider');
-        $this->app->register('Mews\Captcha\CaptchaServiceProvider');
+        $this->app->register('Anhskohbo\NoCaptcha\NoCaptchaServiceProvider');
         $this->app->register('Barryvdh\Debugbar\ServiceProvider');
 
         /* Registrar Alias */
@@ -53,7 +53,6 @@ class MasterServiceProvider extends ServiceProvider {
         $loader->alias('PDF', 'Barryvdh\Snappy\Facades\SnappyPdf');
         $loader->alias('PDFImage', 'Barryvdh\Snappy\Facades\SnappyImage');
         $loader->alias('Image', 'Intervention\Image\Facades\Image');
-        $loader->alias('Captcha', 'Mews\Captcha\Facades\Captcha');
         $loader->alias('BarcodeGenerator', 'CodeItNow\BarcodeBundle\Utils\BarcodeGenerator');
         $loader->alias('Debugbar', 'Barryvdh\Debugbar\Facade');
 
