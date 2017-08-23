@@ -96,7 +96,11 @@ class AdminList {
         }
 
         $array['items_count'] = $items->count();
-        $array['items'] = $items->paginate(config('solunes.pagination_count'));
+        if(request()->has('download-excel')){
+            $array['items'] = $items->get();
+        } else {
+            $array['items'] = $items->paginate(config('solunes.pagination_count'));
+        }
 
         return $array;
     }
