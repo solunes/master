@@ -17,6 +17,8 @@
   @endif
   @if($dt!='view')
     {!! Form::open(AdminItem::make_form($module, $model, $action, $files)) !!}
+  @else
+    <div class="form-horizontal">
   @endif
   @if(($action=='edit'||$action=='view')&&isset($parent_nodes)&&count($parent_nodes)>0)
     @include('master::includes.parent-form')
@@ -31,6 +33,8 @@
     {!! Field::form_submit($i, $model, $action) !!}
     {!! Form::close() !!}
     @include('master::helpers.activities')
+  @else
+    </div>
   @endif
 @endsection
 @section('script')
