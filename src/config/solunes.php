@@ -6,6 +6,7 @@ return [
 	'vendor_path' => env('SOLUNES_PATH', 'vendor/solunes/master'),
 	'blocked_activities' => [],
 	'image_quality' => 85,
+	'varchar_lenght' => 64,
 	'error_report' => true,
 	'send_notification_sms' => false,
 	'send_notification_app' => false,
