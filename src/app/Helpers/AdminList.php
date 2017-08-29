@@ -820,6 +820,11 @@ class AdminList {
     public static function generate_query_excel($array) {
         $dir = public_path('excel');
         array_map('unlink', glob($dir.'/*'));
+        $file = \AdminList::generate_query_excel_file($array, $dir);
+        return response()->download($file);
+    }
+
+    public static function generate_query_excel_file($array, $dir) {
         $filename = str_replace(' ', '-', $array['node']->plural.'_'.date('Y-m-d'));
         $filename = preg_replace('/[^A-Za-z0-9\-]/', '', $filename);
         $file = \Excel::create($filename, function($excel) use($array) {
@@ -850,7 +855,7 @@ class AdminList {
                 }
             }
         })->store('xlsx', $dir, true);
-        return response()->download($file['full']);
+        return $file['full'];
     }
 
 }
