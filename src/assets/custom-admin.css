@@ -602,6 +602,9 @@
     padding: 6 12px;
     line-height: 26px;
     color: #999; }
+  .admin-site.pdf-site .table-responsive {
+    overflow-x: inherit;
+    min-height: none; }
   .admin-site.pdf-site .table thead {
     display: table-header-group; }
   .admin-site.pdf-site .table tfoot {
