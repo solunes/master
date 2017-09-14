@@ -39,14 +39,14 @@
 @endsection
 @section('script')
   @include('master::helpers.froala')
-  <?php $scripts_array = ['conditionals','upload','map','map-field','tooltip','accordion','radio']; ?>
+  <?php $scripts_array = ['conditionals','upload','map-field','tooltip','accordion','radio']; ?>
   @if($barcode_enabled)
     <?php $scripts_array[] = 'barcode'; ?>
   @endif
   @if(!$layout)
     <?php $scripts_array[] = 'child-ajax'; ?>
   @else
-    <?php $scripts_array = array_merge($scripts_array, ['child','leave-form','select','lightbox']); ?>
+    <?php $scripts_array = array_merge($scripts_array, ['map','child','leave-form','select','lightbox']); ?>
   @endif
   @if(config('solunes.item_remove_scripts')&&array_key_exists($node->name, config('solunes.item_remove_scripts')))
     <?php $scripts_array = array_diff($scripts_array, config('solunes.item_remove_scripts')[$node->name]); ?>

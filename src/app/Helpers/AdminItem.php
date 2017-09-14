@@ -400,6 +400,10 @@ class AdminItem {
         } else {
             $download = NULL;
         }
+        if($action=='edit'&&$i&&$i->created_at){
+            $create_url = url($module.'/model/'.$node->name.'/create');
+            $download .= ' | <a href="'.$create_url.'"><i class="fa fa-plus"></i> '.trans('master::admin.create').'</a>';
+        }
         $result .= $download.'</h3>';
         if($action=='edit'&&$i&&$i->created_at){
             $result .= '<p>'.trans('master::admin.created_at').': '.$i->created_at->format('Y-m-d').'</p>';
