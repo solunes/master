@@ -13,7 +13,7 @@
         "illuminate/support": "~5.1",
         "laravel/framework": "5.2.*",
         "laravelcollective/html": "5.2.*",
-        "bogardo/mailgun": "4.0.*",
+        "bogardo/mailgun": "5.0.*",
         "caffeinated/menus": "2.3.*",
         "cviebrock/eloquent-sluggable": "4.0.*",
         "dimsav/laravel-translatable": "5.5.*",
