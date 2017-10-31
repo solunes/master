@@ -54,7 +54,7 @@ class Field {
         if(array_key_exists('class', $extras)){
             $class .= $extras['class'];
         }
-        if($type=='select'){
+        if($type=='select'&&!array_key_exists('subtype', $extras)){
             $class .= 'js-select2';
         }
 
@@ -147,6 +147,11 @@ class Field {
         // FILAS
         if(array_key_exists('rows', $extras)){
             $array['rows'] = $extras['rows'];
+        }
+
+        // AUTOCOMPLETE
+        if(in_array($name, ['username','password'])){
+            $array['autocomplete'] = 'off';
         }
 
         // IMAGENES
