@@ -259,6 +259,7 @@ class AdminItem {
                 $sub_node = \Solunes\Master\App\Node::where('name', $subfield_name)->first();
                 $sub_node_table = $sub_node->table_name;
                 AdminItem::post_subitems($sub_node, $field->name, 'parent_id', $item->id, $sub_node->fields()->displayItem(['admin','show'])->whereNotIn('name', ['id', 'parent_id'])->get());
+                $item->load($sub_node_table);
                 foreach($node->fields()->where('child_table', $sub_node_table)->get() as $field_extra){
                     $field_extra_name = $field_extra->name;
                     if($field_extra_name==$sub_node_table.'_count'){
