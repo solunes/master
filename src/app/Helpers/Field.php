@@ -50,7 +50,7 @@ class Field {
         }
  
         // CLASS
-        $class = 'form-control input-lg" ';
+        $class = 'form-control input-lg ';
         if(array_key_exists('class', $extras)){
             $class .= $extras['class'];
         }
