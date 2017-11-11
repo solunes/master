@@ -80,7 +80,7 @@ class DataManager {
                                         } else {
                                             $file_path = public_path('seed/'.$node->name.'/'.$subinput);
                                         }
-                                        $input_array[] = \Asset::$action_name($image_path, $node->name.'-'.$field->name, true);
+                                        $input_array[] = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true);
                                     }
                                     $input = json_encode($input_array);
                                 } else {
