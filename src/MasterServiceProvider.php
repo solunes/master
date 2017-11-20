@@ -39,6 +39,7 @@ class MasterServiceProvider extends ServiceProvider {
         $this->app->register('Barryvdh\Snappy\ServiceProvider');
         $this->app->register('Intervention\Image\ImageServiceProvider');
         $this->app->register('Roumen\Sitemap\SitemapServiceProvider');
+        $this->app->register('Dedicated\GoogleTranslate\GoogleTranslateProvider');
         $this->app->register('Anhskohbo\NoCaptcha\NoCaptchaServiceProvider');
         $this->app->register('Barryvdh\Debugbar\ServiceProvider');
 
@@ -72,6 +73,7 @@ class MasterServiceProvider extends ServiceProvider {
             \Solunes\Master\App\Console\Seed::class,
             \Solunes\Master\App\Console\GenerateNodes::class,
             \Solunes\Master\App\Console\ImportExcel::class,
+            \Solunes\Master\App\Console\GenerateTranslations::class,
             \Solunes\Master\App\Console\TestSystem::class,
         ]);
 

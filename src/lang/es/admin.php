@@ -152,6 +152,7 @@ return array(
 	"child" => "Child",
 	"subchild" => "Subchild",
 	"field" => "Campo",
+	"integer" => "Número",
 	"content" => "Content",
 	"excel" => "Excel",
 	"none" => "Ninguno",

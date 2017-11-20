@@ -10,6 +10,11 @@ Route::get('artisan/seed', function () {
   return dd(Artisan::output());
 });
 
+Route::get('artisan/generate-translations', function () {
+  Artisan::call('generate-translations');
+  return dd(Artisan::output());
+});
+
 Route::get('artisan/test-system', function () {
   Artisan::call('test-system');
   return dd(Artisan::output());

@@ -168,12 +168,7 @@ class FuncNode {
             $subfield = new \Solunes\Master\App\FieldOption;
             $subfield->parent_id = $field->id;
             $subfield->name = $option['name'];
-            foreach($languages as $language){
-              \App::setLocale($language->code);
-              $translation = trans($node->lang_folder.'::admin.'.$option['name']);
-              $subfield->translateOrNew($language->code)->label = $translation;
-            }
-            \App::setLocale('es');
+            $subfield = \DataManager::translateLocalization($languages, $subfield, 'label', $node->lang_folder.'::admin.'.$option['name']);
             $subfield->save();
           }
         }
@@ -212,11 +207,7 @@ class FuncNode {
               $menu_parent = $menu_parent->menu;
             } else {
               $menu_parent = \Solunes\Master\App\Menu::create(['type'=>'blank', 'menu_type'=>'admin', 'permission'=>$node->folder, 'icon'=>'th-list']);
-              foreach($languages as $language){
-                \App::setLocale($language->code);
-                $menu_parent->translateOrNew($language->code)->name = trans($node->lang_folder.'::admin.'.$node->folder);
-              }
-              \App::setLocale('es');
+              $menu_parent = \DataManager::translateLocalization($languages, $menu_parent, 'name', $node->lang_folder.'::admin.'.$node->folder);
               $menu_parent->save();
             }
             $menu = \Solunes\Master\App\Menu::create(['menu_type'=>'admin', 'permission'=>$node->permission, 'parent_id'=>$menu_parent->id, 'level'=>2, 'icon'=>'th-list']);
@@ -257,11 +248,7 @@ class FuncNode {
                   $field->parent_id = $node->id;
                   $field->name = $row->name;
                   $field->trans_name = $row->trans_name;
-                  foreach($languages as $language){
-                    \App::setLocale($language->code);
-                    $field->translateOrNew($language->code)->label = trans($node->lang_folder.'::fields.'.$row->trans_name);
-                  }
-                  \App::setLocale('es');
+                  $field = \DataManager::translateLocalization($languages, $field, 'label', $node->lang_folder.'::fields.'.$row->trans_name);
                   $field->type = $row->type;
                   $field->display_list = $row->display_list;
                   $field->display_item = $row->display_item;

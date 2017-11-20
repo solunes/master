@@ -231,4 +231,30 @@ class DataManager {
         }
         return $letters;
     }
+
+    public static function translateLocalization($languages, $item, $field, $trans_code, $trans_choice = NULL) {
+        $main_lang = 'es';
+        foreach($languages as $lang){
+            \App::setLocale($lang->code);
+            if(!config('solunes.translation')||$lang->code==$main_lang||\Lang::has($trans_code)){
+              if(is_int($trans_choice)){
+                $translation = trans_choice($trans_code, $trans_choice);
+              } else {
+                $translation = trans($trans_code);
+              }
+            } else {
+              $translation = \DataManager::generateGoogleTranslation($main_lang, $lang->code, $item->translate($main_lang)->$field);
+            }
+            $item->translateOrNew($lang->code)->$field = $translation;
+        }
+        \App::setLocale($main_lang);
+        return $item;
+    }
+
+    public static function generateGoogleTranslation($source, $target, $text) {
+        $translator = new \Dedicated\GoogleTranslate\Translator;
+        $result = $translator->setSourceLang($source)->setTargetLang($target)->translate($text);
+        return $result;
+    }
+
 }

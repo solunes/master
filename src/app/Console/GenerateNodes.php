@@ -41,12 +41,8 @@ class GenerateNodes extends Command
         \App::setLocale('es');
         $menu_dashboard->save();
         foreach($nodes as $node){
-          foreach($languages as $language){
-            \App::setLocale($language->code);
-            $node->translateOrNew($language->code)->singular = trans_choice($node->lang_folder.'::model.'.$node->name, 1);
-            $node->translateOrNew($language->code)->plural = trans_choice($node->lang_folder.'::model.'.$node->name, 0);
-          }
-          \App::setLocale('es');
+          $node = \DataManager::translateLocalization($languages, $node, 'singular', $node->lang_folder.'::model.'.$node->name, 1);
+          $node = \DataManager::translateLocalization($languages, $node, 'plural', $node->lang_folder.'::model.'.$node->name, 0);
           $node->save();
           $table_name = $node->table_name;
           $columns = \Schema::getColumnListing($table_name);
@@ -120,11 +116,7 @@ class GenerateNodes extends Command
           foreach($node->fields as $field) {
             $saved = false;
             if(!$field->label){
-                foreach($languages as $language){
-                  \App::setLocale($language->code);
-                  $field->translateOrNew($language->code)->label = trans($node->lang_folder.'::fields.'.$field->trans_name);
-                }
-                \App::setLocale('es');
+                $field = \DataManager::translateLocalization($languages, $field, 'label', $node->lang_folder.'::fields.'.$field->trans_name);
                 $saved = true;
             }
             if($saved===true){

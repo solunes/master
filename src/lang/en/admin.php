@@ -146,6 +146,7 @@ return array(
 	"child" => "Child",
 	"subchild" => "Subchild",
 	"field" => "Field",
+	"integer" => "Number",
 	"content" => "Content",
 	"excel" => "Excel",
 	"none" => "None",
