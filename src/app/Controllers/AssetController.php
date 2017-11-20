@@ -33,7 +33,7 @@ class AssetController extends Controller {
     public function postFroalaFileUpload(Request $request) {
 	  if($request->hasFile('file')) {
 	    $new_file = Asset::upload_file($request->file('file'), 'upload-file');
-	    $get_file = Asset::get_file($new_file, 'upload-file');
+	    $get_file = Asset::get_file('upload-file', $new_file);
         $response = new \StdClass;
         $response->link = $get_file;
         return stripslashes(json_encode($response));
