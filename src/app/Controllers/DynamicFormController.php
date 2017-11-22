@@ -51,8 +51,8 @@ class DynamicFormController extends Controller {
     public function getExportNode($node_name) {
         $dir = public_path('excel');
         array_map('unlink', glob($dir.'/*'));
-        $alphabet = \DataManager::generateAlphabet();
-        $node = \Solunes\Master\App\Node::where('name', $node_name)->first();
+        $node = \Solunes\Master\App\Node::where('name', $node_name)->with('fields')->first();
+        $alphabet = \DataManager::generateAlphabet(count($node->fields));
         $file = \Excel::create($node_name, function($excel) use($node, $alphabet) {
             \DataManager::generateInstructionsSheet($excel);
             \DataManager::exportNodeExcel($excel, $alphabet, $node);
