@@ -55,11 +55,11 @@ class DynamicFormController extends Controller {
         $alphabet = \DataManager::generateAlphabet(count($node->fields));
         $file = \Excel::create($node_name, function($excel) use($node, $alphabet) {
             \DataManager::generateInstructionsSheet($excel);
-            \DataManager::exportNodeExcel($excel, $alphabet, $node);
+            \DataManager::exportNodeExcel($excel, $alphabet, $node, true);
             $children = $node->children()->where('type', '!=', 'field')->get();
             if(count($children)>0){
                 foreach($children as $child){
-                    \DataManager::exportNodeExcel($excel, $alphabet, $child);
+                    \DataManager::exportNodeExcel($excel, $alphabet, $child, true);
                 }
             }
         })->store('xls', $dir, true);

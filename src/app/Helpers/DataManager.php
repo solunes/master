@@ -129,14 +129,18 @@ class DataManager {
         return $count_rows;
     }
 
-    public static function exportNodeExcel($excel, $alphabet, $node) {
+    public static function exportNodeExcel($excel, $alphabet, $node, $just_last = false) {
         $sheet_title = $node->name;
         $array = \DataManager::generateExportArray($alphabet, $node);
         $col_array = $array['col_array'];
         $col_width = $array['col_width'];
         $fields_array = $array['fields_array'];
         $field_options_array = $array['field_options_array'];
-        $items = \FuncNode::node_check_model($node)->get();
+        if($just_last){
+            $items = \FuncNode::node_check_model($node)->orderBy('id','DESC')->limit(1)->get();
+        } else {
+            $items = \FuncNode::node_check_model($node)->get();
+        }
         return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items);
     }
 
