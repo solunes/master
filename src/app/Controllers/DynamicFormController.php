@@ -62,7 +62,7 @@ class DynamicFormController extends Controller {
                     \DataManager::exportNodeExcel($excel, $alphabet, $child, true);
                 }
             }
-        })->store('xls', $dir, true);
+        })->store('xlsx', $dir, true);
         return response()->download($file['full']);
     }
 
@@ -144,7 +144,7 @@ class DynamicFormController extends Controller {
                     $nodes_ids[$last_node]['last'] += 1;
                 }
             }
-        })->store('xls', $dir, true);
+        })->store('xlsx', $dir, true);
         return response()->download($file['full']);
     }
 

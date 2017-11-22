@@ -147,7 +147,7 @@ class DataManager {
     public static function generateExportArray($alphabet, $node) {
         $col_array = [];
         $col_width = [];
-        $fields_array = $node->fields()->whereNotIn('type', ['child','subchild'])->get();
+        $fields_array = $node->fields()->whereNotIn('type', ['title','content','child','subchild'])->get();
         $field_options_array = [];
         foreach($fields_array as $key => $field){
             array_push($col_array, $field->name);

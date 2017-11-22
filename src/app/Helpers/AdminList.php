@@ -199,7 +199,7 @@ class AdminList {
                         $value .= $subitem->name;
                     }
                 } else {
-                    if($item_val){
+                    if($item_val&&is_object($item_val)){
                         $value = $item_val->name;
                     }
                 }
