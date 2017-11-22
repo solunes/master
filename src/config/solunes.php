@@ -61,6 +61,7 @@ return [
 	'custom_filter' => false,
 	'custom_filter_field' => false,
 	'custom_pdf_header' => false,
+	'select2' => true,
 
     // SERVICES
     'translation' => false,

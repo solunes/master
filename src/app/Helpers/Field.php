@@ -54,7 +54,7 @@ class Field {
         if(array_key_exists('class', $extras)){
             $class .= $extras['class'];
         }
-        if($type=='select'&&!array_key_exists('subtype', $extras)){
+        if($type=='select'&&config('solunes.select2')&&!array_key_exists('subtype', $extras)){
             $class .= 'js-select2';
         }
 
