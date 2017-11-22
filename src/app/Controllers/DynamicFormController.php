@@ -77,13 +77,13 @@ class DynamicFormController extends Controller {
             return redirect($this->prev)->with('message_error', 'Por favor seleccione los nodos que desea descargar.');
         }
         $name_array = array_merge(['image-folder','email'], $name_array);
-        $nodes = \Solunes\Master\App\Node::whereIn('name', $name_array)->get();
+        $nodes = \Solunes\Master\App\Node::whereIn('name', $name_array)->with('fields')->get();
         $dir = public_path('excel');
         array_map('unlink', glob($dir.'/*'));
-        $alphabet = \DataManager::generateAlphabet();
         $store_nodes = ['purchase','sale','partner-movement','place-movement','refund','income','expense','accounts-payable','accounts-receivable'];
-        $file = \Excel::create('import', function($excel) use($nodes, $alphabet, $store_nodes) {
+        $file = \Excel::create('import', function($excel) use($nodes, $store_nodes) {
             foreach($nodes as $node){
+                $alphabet = \DataManager::generateAlphabet(count($node->fields));
                 if(!in_array($node->name, $store_nodes)){
                     \DataManager::exportNodeExcel($excel, $alphabet, $node);
                     $children = $node->children()->where('type', '!=', 'field')->get();
