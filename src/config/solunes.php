@@ -13,6 +13,7 @@ return [
 	'master_admin_id' => 1,
 	'default_location' => '-16.495369;-68.134289',
 	'master_dashboard' => true,
+	'main_lang' => 'es',
     
     // PLUGINS
     'store' => false,

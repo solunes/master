@@ -237,7 +237,7 @@ class DataManager {
     }
 
     public static function translateLocalization($languages, $item, $field, $trans_code, $trans_choice = NULL) {
-        $main_lang = 'es';
+        $main_lang = config('solunes.main_lang');
         foreach($languages as $lang){
             \App::setLocale($lang->code);
             if(!config('solunes.translation')||$lang->code==$main_lang||\Lang::has($trans_code)){
