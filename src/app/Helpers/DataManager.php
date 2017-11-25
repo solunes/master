@@ -40,7 +40,7 @@ class DataManager {
                     if($new_item&&isset($field_array[$column])){
                         $field = $field_array[$column];
                         if($column==$field->name){
-                            $language_code = 'es';
+                            $language_code = config('solunes.main_lang');
                         } else {
                             $language_code = str_replace($field->name.'_','',$column);
                         }

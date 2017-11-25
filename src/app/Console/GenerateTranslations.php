@@ -29,7 +29,7 @@ class GenerateTranslations extends Command
         if(\App::environment('local')){
             $this->info('Comenzando la prueba.');
             $nodes = \Solunes\Master\App\Node::where('translation',1)->get();
-            $main_language = \Solunes\Master\App\Language::first();
+            $main_language = \Solunes\Master\App\Language::where('code',config('solunes.main_lang'))->first();
             $translation_languages = \Solunes\Master\App\Language::where('id','!=',$main_language->id)->get();
             $this->info('Se detectaron '.count($translation_languages).' lenguajes traducibles.');
             if(count($translation_languages)>0){
