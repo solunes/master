@@ -85,22 +85,22 @@ class MasterSeeder extends Seeder {
         \Solunes\Master\App\Variable::create([
             'name' => 'image_size',
             'type' => 'string',
-            'es' => ['value'=>'5'],
+            config('solunes.main_lang') => ['value'=>'5'],
         ]);
         \Solunes\Master\App\Variable::create([
             'name' => 'file_size',
             'type' => 'string',
-            'es' => ['value'=>'10'],
+            config('solunes.main_lang') => ['value'=>'10'],
         ]);
         \Solunes\Master\App\Variable::create([
             'name' => 'image_extension',
             'type' => 'string',
-            'es' => ['value'=>'jpg,jpeg,png,gif'],
+            config('solunes.main_lang') => ['value'=>'jpg,jpeg,png,gif'],
         ]);
         \Solunes\Master\App\Variable::create([
             'name' => 'file_extension',
             'type' => 'string',
-            'es' => ['value'=>'doc,docx,xls,xlsx,ppt,pptx,pdf,txt,jpg,jpeg,png,gif'],
+            config('solunes.main_lang') => ['value'=>'doc,docx,xls,xlsx,ppt,pptx,pdf,txt,jpg,jpeg,png,gif'],
         ]);
 
     }

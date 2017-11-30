@@ -17,7 +17,10 @@ class Dynamic {
       return $node;
     }
 
-    public static function edit_node($node, $array, $language = 'es') {
+    public static function edit_node($node, $array, $language = NULL) {
+      if(!$language){
+        $language = config('solunes.main_lang');
+      }
       foreach($array as $array_key => $array_val){
         if($array_key=='singular'||$array_key=='plural'){
           $node->translateOrNew($language)->$array_key = $array_val;
@@ -83,7 +86,10 @@ class Dynamic {
       return $field;
     }
 
-    public static function edit_field($field, $array, $language = 'es') {
+    public static function edit_field($field, $array, $language = NULL) {
+      if(!$language){
+        $language = config('solunes.main_lang');
+      }
       foreach($array as $array_key => $array_val){
         if($array_key=='label'){
           $field->translateOrNew($language)->$array_key = $array_val;
@@ -143,7 +149,10 @@ class Dynamic {
       return $field_name;
     }
 
-    public static function generate_field_options($options, $field, $language = 'es') {
+    public static function generate_field_options($options, $field, $language = NULL) {
+      if(!$language){
+        $language = config('solunes.main_lang');
+      }
       foreach($options as $key => $option){
         if(!$option['name']){
           $i_option = new \Solunes\Master\App\FieldOption;
@@ -156,10 +165,12 @@ class Dynamic {
             $i_option->name = $option['name'];
           }
         }
-        if($option['label']){
-          $i_option->translateOrNew($language)->label = $option['label'];
-        } else {
-          $i_option->translateOrNew($language)->label = '-';
+        foreach(\App\Language::get() as $lang){
+          if($option['label']){
+            $i_option->translateOrNew($lang->code)->label = \DataManager::generateGoogleTranslation($language, $lang->code, $option['label']);
+          } else {
+            $i_option->translateOrNew($lang->code)->label = '-';
+          }
         }
         if(is_numeric($option['active'])){
           $i_option->active = $option['active'];
@@ -248,7 +259,7 @@ class Dynamic {
                       $parent_id = NULL;
                   }
                   $node_array = ['type'=>$row->type, 'model'=>$row->model, 'parent_id'=>$parent_id, 'dynamic'=>1, 'folder'=>$row->folder, 'permission'=>$row->permission, 'singular'=>$row->singular_es, 'plural'=>$row->plural_es];
-                  $node = \Dynamic::edit_node($node, $node_array, 'es');
+                  $node = \Dynamic::edit_node($node, $node_array, config('solunes.main_lang'));
                   \Dynamic::generate_node_table($node->table_name, ['id'=>'increments']);
                   // Crear node extra
                   $node_extra = \Dynamic::generate_node_extra($node, 'action_field', ['edit','delete']);
@@ -286,7 +297,7 @@ class Dynamic {
                       $field_array[$change_key] = $change_val;
                     }
                   }
-                  $field = \Dynamic::edit_field($field, $field_array, 'es');
+                  $field = \Dynamic::edit_field($field, $field_array, config('solunes.main_lang'));
                   if((count($sheet)>50&&$field->type=='string')||$field->type=='radio'){
                     \Dynamic::generate_field_table($node, $field->type, $field->name, $field->relation, $last_field, config('solunes.varchar_lenght'));
                   } else {
@@ -318,11 +329,11 @@ class Dynamic {
                   }
 
                   if(isset($edits_array[$sheet_model][$row_name])){
-                      \Dynamic::edit_field($field, $edits_array[$sheet_model][$row_name], 'es');
+                      \Dynamic::edit_field($field, $edits_array[$sheet_model][$row_name], config('solunes.main_lang'));
                   }
 
                   if(!$row->relation&&($row->type=='select'||$row->type=='checkbox'||$row->type=='radio')&&isset($options_array[$sheet_model])){
-                    \Dynamic::generate_field_options($options_array[$sheet_model][$row_name], $field, 'es');
+                    \Dynamic::generate_field_options($options_array[$sheet_model][$row_name], $field, config('solunes.main_lang'));
                   }
                 }
               }

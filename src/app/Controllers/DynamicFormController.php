@@ -226,7 +226,7 @@ class DynamicFormController extends Controller {
                 'menu_name'=>'required',
             ];
         }
-
+        $languages = \Solunes\Master\App\Language::get();
         $validator = \Validator::make($request->all(), $rules);
         if($validator->passes()) {
             $node_array = [];
@@ -254,11 +254,14 @@ class DynamicFormController extends Controller {
             $node = \Dynamic::edit_node($node, $node_array);
             if($action=='create'){
                 // Agregar a menu correspondiente
-                $languages = \Solunes\Master\App\Language::get();
                 if($menu_parent = \Solunes\Master\App\Menu::find($request->input('menu_parent'))){
                     $menu = \Solunes\Master\App\Menu::create(['type'=>'normal', 'menu_type'=>'admin', 'permission'=>$menu_parent->permission, 'order'=>count($menu_parent->children)+1, 'parent_id'=>$menu_parent->id, 'level'=>intval($menu_parent->level)+1, 'icon'=>'th-list']);
-                    $menu->translateOrNew('es')->name = request()->input('menu_name');
-                    $menu->translateOrNew('es')->link = 'admin/model-list/'.$node->name;
+                    foreach($languages as $language){
+                      \App::setLocale($language->code);
+                      $menu->translateOrNew($language->code)->name = \DataManager::generateGoogleTranslation(config('solunes.main_lang'), $language->code, request()->input('menu_name'));
+                      $menu->translateOrNew($language->code)->link = 'admin/model-list/'.$node->name;
+                    }
+                    \App::setLocale(config('solunes.main_lang'));
                     $menu->save();
                 }
                 $count = 0;
@@ -274,7 +277,12 @@ class DynamicFormController extends Controller {
                 \Dynamic::generate_node_extra($node, 'action_node', $action_nodes);
             } else {
                 $menu = \Solunes\Master\App\Menu::whereTranslation('link', 'admin/model-list/'.$node->name)->first();
-                $menu->translateOrNew('es')->name = request()->input('menu_name');
+                foreach($languages as $language){
+                  \App::setLocale($language->code);
+                  $menu->translateOrNew($language->code)->name = \DataManager::generateGoogleTranslation(config('solunes.main_lang'), $language->code, request()->input('menu_name'));
+                  $menu->translateOrNew($language->code)->link = 'admin/model-list/'.$node->name;
+                }
+                \App::setLocale(config('solunes.main_lang'));
                 $menu->save();
             }
             return AdminItem::post_success($action, 'admin/form/edit/'.$node->id);
@@ -398,7 +406,7 @@ class DynamicFormController extends Controller {
                 $options_array[$option_key] = ['name'=>$request->input('options_name')[$option_key], 'label'=>$request->input('options_label')[$option_key], 'active'=>$request->input('options_active')[$option_key]];
               }
             }
-            \Dynamic::generate_field_options($options_array, $field, 'es');
+            \Dynamic::generate_field_options($options_array, $field, config('solunes.main_lang'));
             // Agregar array de condicionantes
             $sub_node = \Solunes\Master\App\Node::where('name', 'field-conditional')->first();
             if(count(request()->input('conditionals_trigger_value'))>0){

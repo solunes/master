@@ -216,7 +216,7 @@ class FuncNode {
               $menu->translateOrNew($language->code)->name = $node->plural;
               $menu->translateOrNew($language->code)->link = 'admin/model-list/'.$node->name;
             }
-            \App::setLocale('es');
+            \App::setLocale(config('solunes.main_lang'));
             $menu->save();
         }
     }
@@ -230,7 +230,7 @@ class FuncNode {
         $menu->translateOrNew($language->code)->name = $name;
         $menu->translateOrNew($language->code)->link = $url;
       }
-      \App::setLocale('es');
+      \App::setLocale(config('solunes.main_lang'));
       $menu->save();
       return true;
     }
@@ -299,7 +299,10 @@ class FuncNode {
         return $return;
     }
 
-    public static function put_data_field($item, $field, $input, $lang_code = 'es') {
+    public static function put_data_field($item, $field, $input, $lang_code = NULL) {
+      if(!$lang_code){
+        $lang_code = config('solunes.main_lang');
+      }
       $field_name = $field->name;
       if(is_array($input)){
         $final_input = json_encode($input);
@@ -319,7 +322,10 @@ class FuncNode {
       return $item;
     }
 
-    public static function put_in_database($item, $field, $field_name, $final_input, $lang_code = 'es') {
+    public static function put_in_database($item, $field, $field_name, $final_input, $lang_code = NULL) {
+      if(!$lang_code){
+        $lang_code = config('solunes.main_lang');
+      }
       if($field->translation==1){
         $item->translateOrNew($lang_code)->$field_name = $final_input;
       } else {
