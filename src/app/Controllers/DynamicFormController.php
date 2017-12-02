@@ -81,7 +81,8 @@ class DynamicFormController extends Controller {
         $dir = public_path('excel');
         array_map('unlink', glob($dir.'/*'));
         $store_nodes = ['purchase','sale','partner-movement','place-movement','refund','income','expense','accounts-payable','accounts-receivable'];
-        $file = \Excel::create('import', function($excel) use($nodes, $store_nodes) {
+        $languages = \Solunes\Master\App\Language::lists('code');
+        $file = \Excel::create('import', function($excel) use($nodes, $store_nodes, $languages) {
             foreach($nodes as $node){
                 $alphabet = \DataManager::generateAlphabet(count($node->fields));
                 if(!in_array($node->name, $store_nodes)){
@@ -117,7 +118,7 @@ class DynamicFormController extends Controller {
                     if($item['node'] != $last_node){
                         $node = \Solunes\Master\App\Node::where('name', $last_node)->first();
                         $sheet_title = $node->name.'#'.$nodes_ids[$last_node]['sheet'];
-                        $array = \DataManager::generateExportArray($alphabet, $node);
+                        $array = \DataManager::generateExportArray($alphabet, $node, $languages);
                         $col_array = $array['col_array'];
                         $col_width = $array['col_width'];
                         $fields_array = $array['fields_array'];
@@ -128,7 +129,7 @@ class DynamicFormController extends Controller {
                         if(count($children)>0){
                             foreach($children as $child){
                                 $sheet_title = $child->name.'#'.$nodes_ids[$last_node]['sheet'];
-                                $array = \DataManager::generateExportArray($alphabet, $child);
+                                $array = \DataManager::generateExportArray($alphabet, $child, $languages);
                                 $col_array = $array['col_array'];
                                 $col_width = $array['col_width'];
                                 $fields_array = $array['fields_array'];

@@ -131,7 +131,8 @@ class DataManager {
 
     public static function exportNodeExcel($excel, $alphabet, $node, $just_last = false) {
         $sheet_title = $node->name;
-        $array = \DataManager::generateExportArray($alphabet, $node);
+        $languages = \Solunes\Master\App\Language::lists('code');
+        $array = \DataManager::generateExportArray($alphabet, $node, $languages);
         $col_array = $array['col_array'];
         $col_width = $array['col_width'];
         $fields_array = $array['fields_array'];
@@ -144,7 +145,7 @@ class DataManager {
         return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items);
     }
 
-    public static function generateExportArray($alphabet, $node) {
+    public static function generateExportArray($alphabet, $node, $languages) {
         $col_array = [];
         $col_width = [];
         $fields_array = $node->fields()->whereNotIn('type', ['title','content','child','subchild'])->get();
