@@ -131,27 +131,34 @@ class DataManager {
 
     public static function exportNodeExcel($excel, $alphabet, $node, $just_last = false) {
         $sheet_title = $node->name;
-        $languages = \Solunes\Master\App\Language::lists('code');
+        $languages = \Solunes\Master\App\Language::where('code','!=',config('solunes.main_lang'))->lists('code');
         $array = \DataManager::generateExportArray($alphabet, $node, $languages);
         $col_array = $array['col_array'];
         $col_width = $array['col_width'];
         $fields_array = $array['fields_array'];
         $field_options_array = $array['field_options_array'];
+        $trans_array = $array['trans_array'];
         if($just_last){
             $items = \FuncNode::node_check_model($node)->orderBy('id','DESC')->limit(1)->get();
         } else {
             $items = \FuncNode::node_check_model($node)->get();
         }
-        return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items);
+        return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array);
     }
 
     public static function generateExportArray($alphabet, $node, $languages) {
+        $trans_array = [];
         $col_array = [];
         $col_width = [];
         $fields_array = $node->fields()->whereNotIn('type', ['title','content','child','subchild'])->get();
         $field_options_array = [];
         foreach($fields_array as $key => $field){
             array_push($col_array, $field->name);
+            if($field->translation){
+                foreach($languages as $language){
+                    $trans_array[$language][] = $field->name;
+                }
+            }
             if(count($field->field_options)>0){
                 foreach($field->field_options as $option){
                     $field_options_array[$field->name][$option->name] = $option->label;
@@ -159,12 +166,17 @@ class DataManager {
             }
             $col_width = \DataManager::generateColWidth($alphabet, $field, $key, $col_width);
         }
-        return ['col_array'=>$col_array, 'col_width'=>$col_width, 'fields_array'=>$fields_array, 'field_options_array'=>$field_options_array];
+        foreach($trans_array as $lang => $fields){
+            foreach($fields as $field_name){
+                array_push($col_array, $field_name.'_'.$lang);
+            }
+        }
+        return ['col_array'=>$col_array, 'col_width'=>$col_width, 'fields_array'=>$fields_array, 'field_options_array'=>$field_options_array, 'trans_array'=>$trans_array];
     }
 
-    public static function generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $child_table = NULL) {
+    public static function generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child_table = NULL) {
         //$excel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $excel->sheet($sheet_title, function($sheet) use($alphabet, $col_array, $col_width, $fields_array, $field_options_array, $items, $child_table) {
+        $excel->sheet($sheet_title, function($sheet) use($alphabet, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child_table) {
             $sheet->row(1, $col_array);
             $sheet->row(1, function($row) {
               $row->setFontWeight('bold');
@@ -179,9 +191,18 @@ class DataManager {
                         $fila++;
                     }
                 } else {
-                    $sheet->row($fila, \AdminList::make_fields_values($item, $fields_array, $field_options_array, '','excel'));
+                    $row_array = \AdminList::make_fields_values($item, $fields_array, $field_options_array, '','excel');
+                    foreach($trans_array as $lang => $fields){
+                        \App::setLocale($lang);
+                        foreach($fields as $trans_field){
+                            $row_array[] = $item->$trans_field;
+                        }
+                        \App::setLocale(config('solunes.main_lang'));
+                    }
+                    $sheet->row($fila, $row_array);
                     $fila++;
                 }
+
             }
             if(count($col_width)>0){
                 $sheet->setWidth($col_width);

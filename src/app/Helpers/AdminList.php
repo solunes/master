@@ -837,7 +837,7 @@ class AdminList {
                 array_push($col_array, $field->label);
                 $col_width = \DataManager::generateColWidth($alphabet, $field, $key, $col_width);
             }
-            \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $array['fields'], $array['field_options'], $array['items']);
+            \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $array['fields'], $array['field_options'], $array['items'], []);
             $children = $array['node']->children()->where('type', '!=', 'field')->get();
             if(count($children)>0){
                 foreach($children as $child){
@@ -851,7 +851,7 @@ class AdminList {
                         array_push($col_array, $field->label);
                         $col_width = \DataManager::generateColWidth($alphabet, $field, $key, $col_width);
                     }
-                    \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $child_fields, $array['field_options'], $array['items'], $child_table);
+                    \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $child_fields, $array['field_options'], $array['items'], [], $child_table);
                 }
             }
         })->store('xlsx', $dir, true);

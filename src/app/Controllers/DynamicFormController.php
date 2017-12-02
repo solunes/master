@@ -81,7 +81,7 @@ class DynamicFormController extends Controller {
         $dir = public_path('excel');
         array_map('unlink', glob($dir.'/*'));
         $store_nodes = ['purchase','sale','partner-movement','place-movement','refund','income','expense','accounts-payable','accounts-receivable'];
-        $languages = \Solunes\Master\App\Language::lists('code');
+        $languages = \Solunes\Master\App\Language::where('code','!=',config('solunes.main_lang'))->lists('code');
         $file = \Excel::create('import', function($excel) use($nodes, $store_nodes, $languages) {
             foreach($nodes as $node){
                 $alphabet = \DataManager::generateAlphabet(count($node->fields));
@@ -123,8 +123,9 @@ class DynamicFormController extends Controller {
                         $col_width = $array['col_width'];
                         $fields_array = $array['fields_array'];
                         $field_options_array = $array['field_options_array'];
+                        $trans_array = $array['trans_array'];
                         $items = \FuncNode::node_check_model($node)->where('id','>=', $initial_id)->where('id','<', $nodes_ids[$node->name]['last'])->get();
-                        \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items);
+                        \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array);
                         $children = $node->children()->where('type', '!=', 'field')->get();
                         if(count($children)>0){
                             foreach($children as $child){
@@ -134,7 +135,8 @@ class DynamicFormController extends Controller {
                                 $col_width = $array['col_width'];
                                 $fields_array = $array['fields_array'];
                                 $field_options_array = $array['field_options_array'];
-                                \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $child->table_name);
+                                $trans_array = $array['trans_array'];
+                                \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child->table_name);
                             }
                         }
                         $nodes_ids[$last_node]['sheet'] += 1;
