@@ -255,10 +255,14 @@ class DataManager {
         return $item;
     }
 
-    public static function generateGoogleTranslation($source, $target, $text) {
-        $translator = new \Dedicated\GoogleTranslate\Translator;
-        $result = $translator->setSourceLang($source)->setTargetLang($target)->translate($text);
-        return $result;
+    public static function generateGoogleTranslation($source, $target, $text, $format = 'html') {
+        $translator = new \Google\Cloud\Translate\TranslateClient(['key'=>config('services.google_cloud_api.key')]);
+        $result = $translator->translate($text, ['target'=>$target,'source'=>$source,'format'=>$format]);
+        if($result){
+            return $result['text'];
+        } else {
+            return NULL;
+        }
     }
 
 }

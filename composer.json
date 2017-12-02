@@ -25,7 +25,7 @@
         "barryvdh/laravel-debugbar": "2.*",
         "roumen/sitemap": "2.6.*",
         "codeitnowin/barcode": "2.*",
-        "ddctd143/google-translate": "dev-master",
+        "google/cloud-translate": "1.0.*",
         "anhskohbo/no-captcha": "2.*"
     },
     "require-dev": {
