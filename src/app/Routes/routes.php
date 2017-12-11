@@ -56,7 +56,6 @@ Route::group(['prefix'=>'admin'], function(){
     Route::post('form-field', 'DynamicFormController@postFormField');
     Route::get('form-field-order/{parent_id}/{name}/{action}', 'DynamicFormController@getFormFieldOrder');
     Route::get('export-forms', 'DynamicFormController@getExportForms');
-    Route::get('import-forms', 'DynamicFormController@getImportForms');
 });
 Route::group(['prefix'=>'auth'], function(){
     Route::get('login', 'Auth\LoginController@getLogin');

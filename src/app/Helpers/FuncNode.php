@@ -533,7 +533,7 @@ class FuncNode {
     public static function delete_from_admin_menu($array) {
       foreach($array as $name){
         $url = 'admin/model-list/'.$name;
-        $item = \Solunes\Master\App\Menu::where('type','normal')->where('menu_type','admin')->where('link', $url)->first();
+        $item = \Solunes\Master\App\Menu::where('type','normal')->where('menu_type','admin')->whereTranslation('link', $url)->first();
         $item->active = 0;
         $item->save();
       }
