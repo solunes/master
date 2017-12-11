@@ -221,6 +221,16 @@ class FuncNode {
         }
     }
 
+    public static function node_menu_deletion($array) {
+      foreach($array as $name){
+        $url = 'admin/model-list/'.$name;
+        $item = \Solunes\Master\App\Menu::where('type','normal')->where('menu_type','admin')->whereTranslation('link', $url)->first();
+        $item->active = 0;
+        $item->save();
+      }
+      return true;
+    }
+
     public static function custom_menu_creation($name, $url, $menu_parent, $icon = 'th-list') {
       $languages = \Solunes\Master\App\Language::get();
       $menu_array = ['menu_type'=>'admin', 'permission'=>$menu_parent->permission, 'parent_id'=>$menu_parent->id, 'level'=>$menu_parent->level + 1, 'icon'=>$icon];
@@ -528,16 +538,6 @@ class FuncNode {
             $subarray['items'] = $subarray['items']->get();
         }
         return $subarray;
-    }
-
-    public static function delete_from_admin_menu($array) {
-      foreach($array as $name){
-        $url = 'admin/model-list/'.$name;
-        $item = \Solunes\Master\App\Menu::where('type','normal')->where('menu_type','admin')->whereTranslation('link', $url)->first();
-        $item->active = 0;
-        $item->save();
-      }
-      return true;
     }
 
 }

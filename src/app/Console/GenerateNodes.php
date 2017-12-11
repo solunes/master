@@ -64,7 +64,9 @@ class GenerateNodes extends Command
             $model = $node->model;
             $initiated_model = new $model;
             // CREAR MENU
-            \FuncNode::node_menu_creation($node, $languages);
+            if($node->type=='normal'){
+              \FuncNode::node_menu_creation($node, $languages);
+            }
             // MENU CREADO, CREAR COLUMNAS
             $count = 0;
             foreach($columns as $col){
