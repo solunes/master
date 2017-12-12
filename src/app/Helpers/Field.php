@@ -16,10 +16,8 @@ class Field {
         }
         if($action=='edit'){
             $response .= Form::hidden('id', $i->id);
-            $response .= Form::submit(trans('master::admin.save'), array('class'=>'btn btn-site'));
-        } else {
-            $response .= Form::submit(trans('master::admin.'.$action), array('class'=>'btn btn-site'));
         }
+        $response .= Form::submit(trans('master::admin.save'), array('class'=>'btn btn-site'));
         $response .= '</div>';
         return $response;
     }
