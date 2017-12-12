@@ -5,7 +5,7 @@ return [
     'solunes_path' => env('FOLDER_SOLUNES_PATH', 'vendor/solunes'),
 	'vendor_path' => env('SOLUNES_PATH', 'vendor/solunes/master'),
 	'blocked_activities' => [],
-	'image_quality' => 85,
+	'image_quality' => 80,
 	'varchar_lenght' => 64,
 	'error_report' => true,
 	'send_notification_sms' => false,
@@ -17,6 +17,12 @@ return [
     
     // PLUGINS
     'store' => false,
+    'project' => false,
+    'inventory' => false,
+    'services' => false,
+    'reservation' => false,
+    'payment-paypal' => false,
+    'payment-khipu' => false,
 
 	// LIST
 	'pagination_count' => 500,
