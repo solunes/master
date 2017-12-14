@@ -281,7 +281,11 @@ class AdminList {
                 }
             }
             if($type=='table'){
-                $response .= '<td>'.$value.'</td>';
+                $response .= '<td ';
+                if(in_array($field->type, ['field','custom','title','content','child','subchild','hidden','map','barcode','file','image','text'])){
+                    $response .= 'class="ineditable" ';
+                }
+                $response .= 'data-field="'.$field->name.'" data-id="'.$item->id.'">'.$value.'</td>';
             } else if($type=='excel'){
                 array_push($response, $value);
             }
@@ -316,21 +320,21 @@ class AdminList {
                 if($action_field=='edit') {
                     if(count($langs)>0){
                         foreach($langs as $language){
-                            $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', false, $language->code).'</td>';
+                            $response .= '<td class="ineditable edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', false, $language->code).'</td>';
                         }
                     } else {
-                        $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', false, 'es').'</td>';
+                        $response .= '<td class="ineditable edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', false, 'es').'</td>';
                     }
                 } else if($action_field=='delete'){
                     if(request()->has('view-trash')&&request()->input('view-trash')=='true'){
-                        $response .= '<td class="restore">'.AdminList::make_delete($module, $model, $item, $restore = true).'</td>';
+                        $response .= '<td class="ineditable restore">'.AdminList::make_delete($module, $model, $item, $restore = true).'</td>';
                     } else {
-                        $response .= '<td class="delete">'.AdminList::make_delete($module, $model, $item).'</td>';
+                        $response .= '<td class="ineditable delete">'.AdminList::make_delete($module, $model, $item).'</td>';
                     }
                 } else if($action_field=='view'){
                     if(count($langs)>0){
                         foreach($langs as $language){
-                            $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', false, $language->code).'</td>';
+                            $response .= '<td class="ineditable edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', false, $language->code).'</td>';
                         }
                     } else {
                         $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', false, 'es').'</td>';
@@ -338,18 +342,18 @@ class AdminList {
                 } else if($action_field=='edit-child'){
                     if(count($langs)>0){
                         foreach($langs as $language){
-                            $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', true, $language->code).'</td>';
+                            $response .= '<td class="ineditable edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', true, $language->code).'</td>';
                         }
                     } else {
-                        $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', true, 'es').'</td>';
+                        $response .= '<td class="ineditable edit">'.AdminList::make_open($module, $model, $appends, $item, 'edit', true, 'es').'</td>';
                     }
                 } else if($action_field=='view-child'){
                     if(count($langs)>0){
                         foreach($langs as $language){
-                            $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', true, $language->code).'</td>';
+                            $response .= '<td class="ineditable edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', true, $language->code).'</td>';
                         }
                     } else {
-                        $response .= '<td class="edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', true, 'es').'</td>';
+                        $response .= '<td class="ineditable edit">'.AdminList::make_open($module, $model, $appends, $item, 'view', true, 'es').'</td>';
                     }
                 } else if($action_field=='create-child'){
                     $preurl = url($module.'/model/'.$model.'/create/'.$item->id);
@@ -357,7 +361,7 @@ class AdminList {
                     if($appends!=NULL){
                         $preurl .= $appends;
                     }
-                    $response .= '<td class="restore"><a href="'.$preurl.'">'.trans('master::admin.create-child').'</a></td>';
+                    $response .= '<td class="ineditable restore"><a href="'.$preurl.'">'.trans('master::admin.create-child').'</a></td>';
                 } else {
                     $response .= \CustomFunc::get_action_field_values($response, $module, $model, $item, $action_field, $langs);
                 } 

@@ -8,17 +8,17 @@
   @include('master::helpers.filter')
   @if(count($items)>0)
     {!! $items->appends(request()->except(array('page')))->render() !!}
-    <table class="admin-table table table-striped table-bordered table-hover dt-responsive">
+    <table id="general-list" class="admin-table editable-list table table-striped table-bordered table-hover dt-responsive">
       <thead>
         <tr class="title">
           <td>Nº</td>
           {!! AdminList::make_fields($langs, $fields, $action_fields) !!}
         </tr>
       </thead>
-      <tbody>
+      <tbody data-node="{{ $node->name }}">
         @foreach ($items as $key => $item)
           <tr>
-            <td>{{ $key+1 }}</td>
+            <td class="ineditable">{{ $key+1 }}</td>
             {!! AdminList::make_fields_values_rows($langs, $module, $model, $item, $fields, $field_options, $appends, $action_fields) !!}
           </tr>
         @endforeach
@@ -40,5 +40,6 @@
 @endsection
 @section('script')
   @include('master::scripts.lightbox-js')
+  @include('master::scripts.inline-edit-ajax-js')
   @include('master::helpers.graph')
 @endsection

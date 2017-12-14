@@ -129,6 +129,8 @@ return array(
 	"banned" => "Banned",
 	"package" => "Package",
 	"app" => "App",
+	"store" => "Store",
+	"project" => "Project",
 	"string" => "Text String",
 	"select" => "Select",
 	"password" => "Password",

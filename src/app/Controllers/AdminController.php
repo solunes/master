@@ -463,4 +463,42 @@ class AdminController extends Controller {
     	return $pdf;
 	}
 
+    public function generateItemField($node_name, $field_name, $item_id) {
+    	if($node=\Solunes\Master\App\Node::where('name',$node_name)->first()){
+    		if($field = $node->fields()->where('name', $field_name)->first()){
+    			$item = \FuncNode::node_check_model($node);
+    			$item = $item->where('id',$item_id)->first();
+    			if($item){
+    				$html = \Field::form_input($item, 'edit', $field->toArray(), $field->extras+['subtype'=>'multiple', 'subinput'=>'new', 'subcount'=>$item->id]);
+    				return ['name'=>$field->name,'html'=>(string)$html];
+    			} else {
+    				return 'Item no encontrado';
+    			}
+    		} else {
+    			return 'Campo no encontrado';
+    		}
+    	} else {
+    		return 'Nodo no encontrado';
+    	}
+	}
+
+    public function postItemFieldUpdate(Request $request) {
+    	$node_name = $request->input('node_name');
+    	$field_name = $request->input('field_name');
+    	$item_id = $request->input('item_id');
+    	$value = $request->input('value');
+    	if($node=\Solunes\Master\App\Node::where('name',$node_name)->first()){
+    		if($field = $node->fields()->where('name', $field_name)->first()){
+    			$item = \FuncNode::node_check_model($node);
+    			$item = $item->where('id',$item_id)->first();
+    			if($item&&$value){
+    				$item->$field_name = $value;
+    				$item->save();
+    				return ['done'=>true,'new_value'=>$value];
+    			}
+    		}
+    	}
+    	return ['done'=>false,'new_value'=>NULL];
+	}
+
 }

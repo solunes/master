@@ -135,6 +135,7 @@ return array(
 	"package" => "Paquete",
 	"app" => "App",
 	"store" => "Tienda",
+	"project" => "Proyecto",
 	"string" => "Texto",
 	"select" => "Selección",
 	"password" => "Contraseña",

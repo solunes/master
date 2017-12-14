@@ -42,6 +42,9 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('redirect-barcode/{node_name}/{item_id}', 'AdminController@redirectBarcode');
     Route::get('check-barcode/{node_id}/{barcode}', 'AdminController@checkBarcode');
     Route::get('generate-barcode-image/{barcode}', 'AdminController@generateBarcodeImage');
+    // Actualización de Contenido por AJAX
+    Route::get('generate-item-field/{node_name}/{field_name}/{item_id}', 'AdminController@generateItemField');
+    Route::post('item-field-update', 'AdminController@postItemFieldUpdate');
     // Formularios Dinámicos
     Route::get('import-nodes', 'DynamicFormController@getImportNodes');
     Route::post('import-nodes', 'DynamicFormController@postImportNodes');
