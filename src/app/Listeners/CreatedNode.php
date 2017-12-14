@@ -28,10 +28,10 @@ class CreatedNode {
         if(!$node->model){
             if($node->location=='package'){
                 $node->model = '\Solunes\Master\App\\'.str_replace('_','-',studly_case($node->name));
-            } else if($node->location=='store') {
-                $node->model = '\Solunes\Store\App\\'.str_replace('_','-',studly_case($node->name));
-            } else {
+            } else if($node->location=='app') {
                 $node->model = '\App\\'.str_replace('_','-',studly_case($node->name));
+            } else {
+                $node->model = '\Solunes\\'.ucfirst($node->location).'\App\\'.str_replace('_','-',studly_case($node->name));
             }
             $saved = true;
         }

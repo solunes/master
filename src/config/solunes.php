@@ -17,12 +17,11 @@ return [
     
     // PLUGINS
     'store' => false,
+    'sales' => false,
     'project' => false,
     'inventory' => false,
     'services' => false,
     'reservation' => false,
-    'payment-paypal' => false,
-    'payment-khipu' => false,
 
 	// LIST
 	'pagination_count' => 500,

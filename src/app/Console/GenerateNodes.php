@@ -134,6 +134,9 @@ class GenerateNodes extends Command
         // Importar parametros de nodos en Excel
         $this->info('95%: Se importara el excel de nodes para corregir los campos.');
         $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.vendor_path').'/src/nodes.xlsx')));
+        if(config('solunes.project')){
+          $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/project/src/nodes.xlsx')));
+        }
         if(config('solunes.store')){
           $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/store/src/nodes.xlsx')));
         }

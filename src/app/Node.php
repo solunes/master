@@ -82,10 +82,10 @@ class Node extends Model {
     }
 
     public function getLangFolderAttribute() {
-        if($this->location=='store'){
-          $folder = 'store';
-        } else {
+        if($this->location=='package'||$this->location=='app'){
           $folder = 'master';
+        } else {
+          $folder = $this->location;
         }
         return $folder;
     }

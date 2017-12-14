@@ -15,6 +15,8 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     protected $solunesNamespace = 'Solunes\Master\App\Controllers';
+    protected $projectNamespace = 'Solunes\Project\App\Controllers';
+    protected $storeNamespace = 'Solunes\Store\App\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -55,6 +57,16 @@ class RouteServiceProvider extends ServiceProvider
             require __DIR__ . '/../Routes/sitemap.php';
             require __DIR__ . '/../Routes/artisan.php';
         });
+        if(config('solunes.project')){
+            $router->group(['namespace' => $this->projectNamespace, 'middleware' => 'admin'], function ($router) {
+                require __DIR__ . '/../../../../project/src/app/Routes/admin.php';
+            });
+        }
+        if(config('solunes.store')){
+            $router->group(['namespace' => $this->storeNamespace, 'middleware' => 'admin'], function ($router) {
+                require __DIR__ . '/../../../../project/src/app/Routes/admin.php';
+            });
+        }
     }
 
     /**
@@ -67,7 +79,16 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes(Router $router)
     {
-        //
+        if(config('solunes.project')){
+            $router->group(['namespace' => $this->projectNamespace, 'middleware' => 'web'], function ($router) {
+                require __DIR__ . '/../../../../project/src/app/Routes/routes.php';
+            });
+        }
+        if(config('solunes.store')){
+            $router->group(['namespace' => $this->storeNamespace, 'middleware' => 'web'], function ($router) {
+                require __DIR__ . '/../../../../project/src/app/Routes/routes.php';
+            });
+        }
     }
 
 }
