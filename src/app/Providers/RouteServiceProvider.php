@@ -62,11 +62,11 @@ class RouteServiceProvider extends ServiceProvider
                 require __DIR__ . '/../../../../project/src/app/Routes/admin.php';
             });
         }
-        if(config('solunes.store')){
+        /*if(config('solunes.store')){
             $router->group(['namespace' => $this->storeNamespace, 'middleware' => 'admin'], function ($router) {
                 require __DIR__ . '/../../../../project/src/app/Routes/admin.php';
             });
-        }
+        }*/
     }
 
     /**
@@ -84,11 +84,11 @@ class RouteServiceProvider extends ServiceProvider
                 require __DIR__ . '/../../../../project/src/app/Routes/routes.php';
             });
         }
-        if(config('solunes.store')){
+        /*if(config('solunes.store')){
             $router->group(['namespace' => $this->storeNamespace, 'middleware' => 'web'], function ($router) {
                 require __DIR__ . '/../../../../project/src/app/Routes/routes.php';
             });
-        }
+        }*/
     }
 
 }

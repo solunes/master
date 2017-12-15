@@ -470,7 +470,7 @@ class AdminController extends Controller {
     			$item = $item->where('id',$item_id)->first();
     			if($item){
     				$html = \Field::form_input($item, 'edit', $field->toArray(), $field->extras+['subtype'=>'multiple', 'subinput'=>'new', 'subcount'=>$item->id]);
-    				return ['name'=>$field->name,'html'=>(string)$html];
+    				return ['name'=>$field->name,'type'=>$field->type,'html'=>(string)$html];
     			} else {
     				return 'Item no encontrado';
     			}
@@ -491,8 +491,8 @@ class AdminController extends Controller {
     		if($field = $node->fields()->where('name', $field_name)->first()){
     			$item = \FuncNode::node_check_model($node);
     			$item = $item->where('id',$item_id)->first();
-    			if($item&&$value){
-    				$item->$field_name = $value;
+    			if($item){
+    				$item = \FuncNode::put_data_field($item, $field, $value);
     				$item->save();
     				return ['done'=>true,'new_value'=>$value];
     			}

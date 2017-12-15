@@ -23,6 +23,29 @@
     });
   });
   function setFocus(id){
+    var dateconfig = {
+      format: 'yyyy-mm-dd',
+      formatSubmit: 'yyyy-mm-dd',
+      selectYears: 10,
+      selectMonths: true,
+      hiddenName: true,
+    }
+    var dateinput = $('.date-control').pickadate(dateconfig);
+    var datepicker = dateinput.pickadate('picker');
+    var timeconfig = {
+      format: 'HH:i',
+      formatSubmit: 'HH:i',
+      interval: 5,
+      min: [6,0],
+      max: [18,0],
+      hiddenName: true,
+    }
+    var timeinput = $('.time-control').pickatime(timeconfig);
+    var timepicker = timeinput.pickatime('picker');
+    timeinput = $('.time-control').pickatime(timeconfig);
+    timepicker = timeinput.pickatime('picker');
+    dateinput = $('.date-control').pickadate(dateconfig);
+    datepicker = dateinput.pickadate('picker');
     $(id).change(function() {
       console.log('changed');
       $(this).data('changed', true);
@@ -32,7 +55,13 @@
       processInput(id);
     });
     $(id).on('keydown', function(e) {
-      if(e.keyCode == 13||e.which == 13||e.which == 9) {
+      if(e.keyCode == 27) {
+        e.preventDefault();
+        console.log('esq');
+        $(this).data('changed', false);
+        processInput(id);
+        return false;
+      } else if(e.keyCode == 13||e.which == 13||e.which == 9) {
         e.preventDefault();
         $(this).data('changed', true);
         console.log('enter o tab');
