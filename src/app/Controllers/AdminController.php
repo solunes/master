@@ -494,11 +494,16 @@ class AdminController extends Controller {
     			if($item){
     				$item = \FuncNode::put_data_field($item, $field, $value);
     				$item->save();
-    				return ['done'=>true,'new_value'=>$value];
+    				return ['done'=>true,'message'=>'Campo editado correctamente','new_value'=>$value];
+    			} else {
+    				return ['done'=>false,'message'=>'No se encontró un item','new_value'=>NULL];
     			}
+    		} else {
+    			return ['done'=>false,'message'=>'No se encontró el campo','new_value'=>NULL];
     		}
+    	} else {
+    		return ['done'=>false,'message'=>'No se encontró el nodo','new_value'=>NULL];
     	}
-    	return ['done'=>false,'new_value'=>NULL];
 	}
 
 }

@@ -494,7 +494,7 @@ class FuncNode {
             if($email->reply_to){
               $reply_to = $email->reply_to;
             } else {
-              $find = ['http://','https://','www','/'];
+              $find = ['http://','https://','www.','/'];
               $replace = [''];
               $domain = str_replace($find, $replace, \Solunes\Master\App\Site::find(1)->domain);
               $reply_to = 'no-reply@'.$domain;

@@ -15,45 +15,56 @@
           var id = '#'+data.name;
           $field.html(data.html);
           $(id).focus();
-          setFocus(id)
+          setFocus(id, data.type)
         }, error: function(error) {
           console.log('error' + error);
         }
       });
     });
   });
-  function setFocus(id){
-    var dateconfig = {
-      format: 'yyyy-mm-dd',
-      formatSubmit: 'yyyy-mm-dd',
-      selectYears: 10,
-      selectMonths: true,
-      hiddenName: true,
+  function setFocus(id, type){
+    if(type=='date'){
+      console.log('date field: '+id+'.datepicker');
+      var dateconfig = {
+        format: 'yyyy-mm-dd',
+        formatSubmit: 'yyyy-mm-dd',
+        selectYears: 10,
+        selectMonths: true,
+        hiddenName: true,
+      }
+      var dateinput = $(id+'.datepicker').pickadate(dateconfig);
+      var datepicker = dateinput.pickadate('picker');
+      datepicker.on('close', function() {
+        console.log('close datepicker');
+        processInput(id);
+      })
+    } else if(type=='time'){
+      console.log('time field: '+id+'.`timepicker');
+      var timeconfig = {
+        format: 'HH:i',
+        formatSubmit: 'HH:i',
+        interval: 5,
+        min: [6,0],
+        max: [18,0],
+        hiddenName: true,
+      }
+      var timeinput = $(id+'.timepicker').pickatime(timeconfig);
+      var timepicker = timeinput.pickatime('picker');
+      timepicker.on('close', function() {
+        console.log('close timepicker');
+        processInput(id);
+      })
+    } else {
+      $(id).focusout(function() {
+        console.log('focusout');
+        processInput(id);
+      });
     }
-    var dateinput = $('.date-control').pickadate(dateconfig);
-    var datepicker = dateinput.pickadate('picker');
-    var timeconfig = {
-      format: 'HH:i',
-      formatSubmit: 'HH:i',
-      interval: 5,
-      min: [6,0],
-      max: [18,0],
-      hiddenName: true,
-    }
-    var timeinput = $('.time-control').pickatime(timeconfig);
-    var timepicker = timeinput.pickatime('picker');
-    timeinput = $('.time-control').pickatime(timeconfig);
-    timepicker = timeinput.pickatime('picker');
-    dateinput = $('.date-control').pickadate(dateconfig);
-    datepicker = dateinput.pickadate('picker');
     $(id).change(function() {
       console.log('changed');
       $(this).data('changed', true);
     });
-    $(id).focusout(function() {
-      console.log('focusout');
-      processInput(id);
-    });
+
     $(id).on('keydown', function(e) {
       if(e.keyCode == 27) {
         e.preventDefault();
@@ -79,13 +90,14 @@
     var item_id = $field.data('id');
     var new_value = $field.data('backup');
     if($(id).data('changed')===true){
+      console.log('Publicando cambios: '+value);
       $.ajax({
         url: "{{ url('admin/item-field-update') }}",
         type: 'POST',
         //dataType: 'json',
-        data: {'node_name':'banner','field_name':field_name,'item_id':item_id,'value':value},
+        data: {'node_name':node_name,'field_name':field_name,'item_id':item_id,'value':value},
         success: function(data) {
-          console.log('success');
+          console.log('Cambios realizados: '+JSON.stringify(data));
           if(data.done){
             new_value = data.new_value;
           }
