@@ -494,6 +494,18 @@ class AdminController extends Controller {
     			if($item){
     				$item = \FuncNode::put_data_field($item, $field, $value);
     				$item->save();
+    				if($field->type=='select'||$field->type=='radio'||$field->type=='checkbox'){
+    					if($field->relation){
+    						$field_name = str_replace('_id', '', $field_name);
+    						if($relation = $item->$field_name){
+    							$value = $relation->name;
+    						}
+    					} else {
+    						if($option = $field->field_options()->where('name',$value)->first()){
+    							$value = $option->label;
+    						}
+    					}
+    				}
     				return ['done'=>true,'message'=>'Campo editado correctamente','new_value'=>$value];
     			} else {
     				return ['done'=>false,'message'=>'No se encontró un item','new_value'=>NULL];
