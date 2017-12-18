@@ -278,6 +278,9 @@ class DataManager {
     }
 
     public static function generateGoogleTranslation($source, $target, $text, $format = 'html') {
+        if($source==$target){
+            return $text;
+        }
         $translator = new \Google\Cloud\Translate\TranslateClient(['key'=>config('services.google_cloud_api.key')]);
         $result = $translator->translate($text, ['target'=>$target,'source'=>$source,'format'=>$format]);
         if($result){
