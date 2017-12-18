@@ -165,7 +165,7 @@ class Dynamic {
             $i_option->name = $option['name'];
           }
         }
-        foreach(\App\Language::get() as $lang){
+        foreach(\Solunes\Master\App\Language::get() as $lang){
           if($option['label']){
             $i_option->translateOrNew($lang->code)->label = \DataManager::generateGoogleTranslation($language, $lang->code, $option['label']);
           } else {
