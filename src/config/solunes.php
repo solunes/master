@@ -17,16 +17,19 @@ return [
     
     // PLUGINS
     'store' => false,
+    'business' => false,
     'sales' => false,
     'project' => false,
     'inventory' => false,
     'services' => false,
+    'accounting' => false,
     'reservation' => false,
 
 	// LIST
 	'pagination_count' => 500,
 	'table_pagination' => 'false',
 	'table_pagination_count' => 25,
+	'list_inline_edit' => true,
 	
 	// FORM
 	'relation_fast_create_array' => [], // array de field names: 'name'

@@ -40,6 +40,8 @@
 @endsection
 @section('script')
   @include('master::scripts.lightbox-js')
-  @include('master::scripts.inline-edit-ajax-js')
+  @if(config('solunes.list_inline_edit'))
+    @include('master::scripts.inline-edit-ajax-js')
+  @endif
   @include('master::helpers.graph')
 @endsection
