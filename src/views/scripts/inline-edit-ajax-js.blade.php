@@ -12,7 +12,7 @@
         url: actionurl + "/" + node_name + "/" + field_name + "/" + item_id,
         type: 'GET',
         success: function(data) {
-          var id = '#'+data.name;
+          var id = '.editable-list tbody input[name^="new_'+data.name+'['+item_id+']"]';
           $field.html(data.html);
           $(id).focus();
           setFocus(id, data.type)
