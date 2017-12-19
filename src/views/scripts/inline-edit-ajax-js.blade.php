@@ -12,7 +12,12 @@
         url: actionurl + "/" + node_name + "/" + field_name + "/" + item_id,
         type: 'GET',
         success: function(data) {
-          var id = '.editable-list tbody input[name^="new_'+data.name+'['+item_id+']"]';
+          if(data.type=='select'){
+            var subvar = 'select';
+          } else {
+            var subvar = 'input';
+          }
+          var id = '.editable-list tbody '+subvar+'[name^="new_'+data.name+'['+item_id+']"]';
           $field.html(data.html);
           $(id).focus();
           setFocus(id, data.type)
@@ -32,10 +37,14 @@
         selectMonths: true,
         hiddenName: true,
       }
-      var dateinput = $(id+'.datepicker').pickadate(dateconfig);
+      var dateinput = $(id).pickadate(dateconfig);
       var datepicker = dateinput.pickadate('picker');
+      datepicker.on('set', function() {
+        console.log('changed datepicker');
+        $(id).data('changed', true);
+      })
       datepicker.on('close', function() {
-        console.log('close datepicker');
+        console.log('close timepicker');
         processInput(id);
       })
     } else if(type=='time'){
@@ -48,8 +57,12 @@
         max: [18,0],
         hiddenName: true,
       }
-      var timeinput = $(id+'.timepicker').pickatime(timeconfig);
+      var timeinput = $(id).pickatime(timeconfig);
       var timepicker = timeinput.pickatime('picker');
+      timepicker.on('set', function() {
+        console.log('changed timepicker');
+        $(id).data('changed', true);
+      })
       timepicker.on('close', function() {
         console.log('close timepicker');
         processInput(id);
