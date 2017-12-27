@@ -55,6 +55,7 @@ class MasterServiceProvider extends ServiceProvider {
         $loader->alias('Image', 'Intervention\Image\Facades\Image');
         $loader->alias('BarcodeGenerator', 'CodeItNow\BarcodeBundle\Utils\BarcodeGenerator');
         $loader->alias('Debugbar', 'Barryvdh\Debugbar\Facade');
+        $loader->alias('NoCaptcha', 'Anhskohbo\NoCaptcha\Facades\NoCaptcha');
 
         $loader->alias('AdminList', '\Solunes\Master\App\Helpers\AdminList');
         $loader->alias('AdminItem', '\Solunes\Master\App\Helpers\AdminItem');
