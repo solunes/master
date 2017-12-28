@@ -49,6 +49,9 @@ class Login {
         if(config('solunes.after_login')){
             \CustomFunc::after_login($user, $last_session, $redirect);
         }
+        if(session()->has('message_success')){
+            $message = session()->get('message_success');
+        }
         if($type==false){
             return redirect()->intended($redirect)->with('message_success', $message);
         } else {
