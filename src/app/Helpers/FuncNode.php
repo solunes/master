@@ -494,7 +494,8 @@ class FuncNode {
           $to_fixed_array[] = $email_account;
         }
       }
-      if($email = \Solunes\Master\App\Email::where('name', $email_name)->first()&&count($to_fixed_array)>0){
+      $email = \Solunes\Master\App\Email::where('name', $email_name)->first();
+      if($email&&count($to_fixed_array)>0){
         $msg = $email->content;
         if(count($vars_if)>0){
           foreach($vars_if as $var_name => $var_value){           
