@@ -15,6 +15,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     protected $solunesNamespace = 'Solunes\Master\App\Controllers';
+    protected $businessNamespace = 'Solunes\Business\App\Controllers';
     protected $projectNamespace = 'Solunes\Project\App\Controllers';
     protected $storeNamespace = 'Solunes\Store\App\Controllers';
 
@@ -57,6 +58,11 @@ class RouteServiceProvider extends ServiceProvider
             require __DIR__ . '/../Routes/sitemap.php';
             require __DIR__ . '/../Routes/artisan.php';
         });
+        if(config('solunes.business')){
+            $router->group(['namespace' => $this->businessNamespace, 'middleware' => 'admin'], function ($router) {
+                require __DIR__ . '/../../../../business/src/app/Routes/admin.php';
+            });
+        }
         if(config('solunes.project')){
             $router->group(['namespace' => $this->projectNamespace, 'middleware' => 'admin'], function ($router) {
                 require __DIR__ . '/../../../../project/src/app/Routes/admin.php';
@@ -79,6 +85,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes(Router $router)
     {
+        if(config('solunes.business')){
+            $router->group(['namespace' => $this->businessNamespace, 'middleware' => 'web'], function ($router) {
+                require __DIR__ . '/../../../../business/src/app/Routes/routes.php';
+            });
+        }
         if(config('solunes.project')){
             $router->group(['namespace' => $this->projectNamespace, 'middleware' => 'web'], function ($router) {
                 require __DIR__ . '/../../../../project/src/app/Routes/routes.php';

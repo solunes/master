@@ -32,14 +32,20 @@ class Seed extends Command
             $this->callSilent('empty:storage');
             $this->info('20%: Storage limpiado correctamente.');
             $this->callSilent('db:seed', ['--class'=>'DatabaseTruncateSeeder']);
-            if(config('solunes.project')){
-                $this->callSilent('db:seed', ['--class'=>'\Solunes\Project\Database\Seeds\DatabaseTruncateSeeder']);
-            }
             if(config('solunes.store')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Store\Database\Seeds\DatabaseTruncateSeeder']);
             }
+            if(config('solunes.project')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Project\Database\Seeds\DatabaseTruncateSeeder']);
+            }
+            if(config('solunes.business')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Business\Database\Seeds\DatabaseTruncateSeeder']);
+            }
             $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseTruncateSeeder']);
             $this->callSilent('db:seed', ['--class'=>'\Solunes\Master\Database\Seeds\DatabaseMasterSeeder']);
+            if(config('solunes.business')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Business\Database\Seeds\DatabaseMasterSeeder']);
+            }
             if(config('solunes.project')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Project\Database\Seeds\DatabaseMasterSeeder']);
             }
@@ -55,6 +61,9 @@ class Seed extends Command
             }
             $this->callSilent('import-excel');
             $this->info('95%: Campos de nodos creados correctamente.');
+            if(config('solunes.business')&&config('business.after_seed')){
+                $this->info('95%: '.\CustomBusiness::after_seed_actions());
+            }
             if(config('solunes.project')&&config('project.after_seed')){
                 $this->info('96%: '.\CustomProject::after_seed_actions());
             }
