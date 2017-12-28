@@ -179,4 +179,12 @@ class TestController extends Controller {
         return $pending_fields;
     }
 
+    public function previewEmail($msg){
+        $array['msg'] = $msg;
+        $array['email'] = 'edumejia30@gmail.com';
+        $array['button_link'] = 'http://www.solunes.com';
+        $array['button_title'] = 'Ver Sitio Web';
+        return view('master::emails.default', $array);
+    }
+
 }

@@ -39,12 +39,10 @@ class LoginController extends Controller {
 			  if(Auth::user()->status=='banned'){
 			  	Auth::logout();
 			  	return Login::fail($request->session(), $validator, trans('master::form.login_banned'), 10, 5);
-			  } else if(Auth::user()->status=='ask_password'){
-			  	return Login::success($request->session(), $last_session, Auth::user(), 'account', trans('master::form.login_success_password'), true);
+			  } else if(session()->has('url.intended')){
+			  	return Login::success($request->session(), $last_session, Auth::user(), session()->get('url.intended'), trans('master::form.login_success'));
 			  } else {
-			    if(session()->has('url.intended')){
-			        $redirect = session()->get('url.intended');
-			  	} else if(\Auth::user()->can('dashboard')){
+			    if(\Auth::user()->can('dashboard')){
 			  		$redirect = 'admin';
 			  	} else {
 			  		$redirect = '';
@@ -61,6 +59,16 @@ class LoginController extends Controller {
 
 	public function getLogout(Request $request) {
 		return Login::logout($request->session(), 'auth/login', trans('master::form.logout_success'));
+	}
+
+	public function getUnsuscribe($email) {
+		if($user = \App\User::where('email',urldecode($email))->first()){
+			$user->notifications_email = 0;
+			$user->save();
+			return redirect('auth/login')->with('message_success', 'Su correo fue retirado de nuestra lista de envío de correos. Muchas gracias por su tiempo.');
+		} else {
+			return redirect('auth/login')->with('message_error', 'No se pudo quitar la suscripción porque no se encontró un usuario que coincida con su correo electrónico.');
+		}
 	}
 
 }

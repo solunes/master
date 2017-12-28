@@ -14,7 +14,13 @@ return [
 	'default_location' => '-16.495369;-68.134289',
 	'master_dashboard' => true,
 	'main_lang' => 'es',
-    
+	'nocaptcha' => false,
+
+	// APP VARS
+	'app_name' => env('APP_NAME', 'Web App'),
+	'app_version' => env('APP_VERSION', 'v1.0.0'),
+	'app_color' => env('APP_COLOR', '#4c99bf'),
+
     // PLUGINS
     'store' => false,
     'business' => false,

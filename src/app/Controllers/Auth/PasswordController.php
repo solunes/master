@@ -13,6 +13,7 @@ class PasswordController extends Controller {
 
     public function __construct() {
       $this->middleware('guest');
+      $this->prev = $url->previous();
     }
 
     public function getRecover() {
@@ -21,12 +22,16 @@ class PasswordController extends Controller {
     
     public function postRequest(Request $request) {
       $error_messages = array('email.exists' => trans('master::form.email_exists_error'));
+      $redirect = $this->prev;
       $validator = Validator::make($request->all(), \App\PasswordReminder::$rules_reminder, $error_messages);
       if ($validator->passes()) {
         $email = $request->input('email');
-        return Login::pass_recover_success($email, 'auth/login', trans('master::form.password_request_success'), 60);
+        if($request->segment(1)=='password'&&$request->segment(2)=='recover'){
+          $redirect = 'auth/login';
+        }
+        return Login::pass_recover_success($email, $redirect, trans('master::form.password_request_success'), 60);
       } else {
-        return Login::failed_try($validator, 'password/recover', trans('master::form.password_request_error'));
+        return Login::failed_try($validator, $this->prev, trans('master::form.password_request_error'));
       }
     }
     
@@ -54,7 +59,7 @@ class PasswordController extends Controller {
           return Login::failed_try($validator, 'password/recover', trans('master::form.password_reset_error'));
         }
       } else {
-          return redirect('password/reset/'.$token)->with('message_error', trans('master::form.password_not_edited'))->withErrors($validator)->withInput();
+          return redirect($this->prev)->with('message_error', trans('master::form.password_not_edited'))->withErrors($validator)->withInput();
       }
     }
 

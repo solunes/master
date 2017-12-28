@@ -81,7 +81,7 @@ class Login {
             $password_reminder->created_at = $now;
             $password_reminder->save();
         }
-        Mail::send('master::emails.reminder', ['token' => $token], function($m) use($email) {
+        Mail::send('master::emails.reminder', ['token'=>$token, 'email'=>$email], function($m) use($email) {
             $m->to($email, 'User')->subject(config()->get('app.name').' | '.trans('master::mail.remind_password_title'));
         });
         return redirect($redirect)->with('message_success', $message);

@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<html lang="en-US">
-	<head>
-		<meta charset="utf-8">
-	</head>
-	<body>
-		<h2>{{ trans('master::mail.remind_password_title') }}</h2>
+@extends('master::layouts/email')
 
-		<div>
-			<p>{{ trans('master::mail.remind_password_content') }}:<br>{{ URL::to('password/reset', array($token)) }}.</p>
-			<p>{{ trans('master::mail.remind_password_expire') }} {{ Config::get('auth.reminder.expire', 60) }} {{ trans('master::mail.remind_password_expire_2') }}</p>
-			<p>{{ trans('master::mail.greetings') }}</p>
-			<p>{{ trans('master::mail.signature') }}</p>
-		</div>
-	</body>
-</html>
+@section('content')
+	<h2 style="font-family: Arial, Helvetica, sans-serif;margin-top: 16px;margin-bottom: 8px;word-break: break-word;font-size: 28px;line-height: 38px;font-weight: bold;">
+		Recuperar Contraseña
+	</h2>
+	<p style="font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 32px;word-break: break-word;font-size: 19px;line-height: 31px;">
+		{{ trans('master::mail.remind_password_content') }}
+	</p>
+	<p style="font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 32px;word-break: break-word;font-size: 19px;line-height: 31px;">
+		{{ trans('master::mail.remind_password_expire') }} {{ Config::get('auth.reminder.expire', 60) }} {{ trans('master::mail.remind_password_expire_2') }}
+	</p>
+	@include('master::emails.helpers.button', ['button_link'=>URL::to('password/reset', array($token)), 'button_title'=>'Recuperar Contraseña'])
+@endsection
+
+@section('unsuscribe-email')
+	{{ url('auth/unsuscribe/'.urlencode($email)) }}
+@endsection

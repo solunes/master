@@ -64,6 +64,7 @@ Route::group(['prefix'=>'auth'], function(){
     Route::get('login', 'Auth\LoginController@getLogin');
     Route::post('login', 'Auth\LoginController@postLogin');
     Route::get('logout', 'Auth\LoginController@getLogout');
+    Route::get('unsuscribe/{email}', 'Auth\LoginController@getUnsuscribe');
 });
 Route::group(['prefix'=>'password'], function(){
     Route::get('recover', 'Auth\PasswordController@getRecover');
@@ -83,4 +84,5 @@ Route::group(['prefix'=>'asset'], function(){
 });
 Route::group(['prefix'=>'test'], function(){
     Route::get('general-test', 'TestController@getGeneralTest');
+    Route::get('preview-email/{msg}', 'TestController@previewEmail');
 });

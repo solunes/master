@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="es-ES">
-	<head>
-		<meta charset="utf-8">
-	</head>
-	<body>
-		{!! $msg !!}
-	</body>
-</html>
+@extends('master::layouts/email')
+
+@section('content')
+	{!! $msg !!}
+@endsection
+
+@section('unsuscribe-email')
+	{{ url('auth/unsuscribe/'.urlencode($email)) }}
+@endsection

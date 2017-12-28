@@ -356,6 +356,27 @@ class FuncNode {
         return true;
     }
 
+    public static function make_dashboard_notitification($name, $user_ids, $url, $message) {
+      // Añadir array si es que se manda solo un ID
+      if(!is_array($user_ids)){
+        $user_ids = [$user_ids];
+      }
+      foreach(\App\User::whereIn('id', $user_ids)->get() as $user){
+        $notification = new \Solunes\Master\App\Notification;
+        $notification->name = $name;
+        $notification->user_id = $user->id;
+        $notification->url = $url;
+        $notification->save();
+        $subnotification = new \Solunes\Master\App\NotificationMessage;
+        $subnotification->parent_id = $notification->id;
+        $subnotification->type = 'dashboard';
+        $subnotification->is_sent = true;
+        $subnotification->message = $message;
+        $subnotification->save();
+      }
+      return true;
+    }
+
     public static function make_notitification($name, $user_ids, $url, $message, $email_parameters = []) {
       // Añadir array si es que se manda solo un ID
       if(!is_array($user_ids)){
@@ -490,7 +511,7 @@ class FuncNode {
         if(count($vars)>0){
           $msg = str_replace(array_keys($vars), array_values($vars), html_entity_decode($msg));
         }
-        \Mail::send('master::emails.default', ['msg' => $msg], function ($m) use($email, $to_array, $msg) {
+        \Mail::send('master::emails.default', ['msg'=>$msg, 'email'=>$email], function ($m) use($email, $to_array, $msg) {
             if($email->reply_to){
               $reply_to = $email->reply_to;
             } else {
