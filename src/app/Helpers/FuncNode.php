@@ -490,7 +490,7 @@ class FuncNode {
       // $vars = ['@search@'=>'Reemplazar con esto']
       $to_fixed_array = [];
       foreach($to_array as $email){
-        if(filter_var($email, FILTER_VALIDATE_EMAIL){
+        if(filter_var($email, FILTER_VALIDATE_EMAIL)){
           $to_fixed_array[] = $email;
         }
       }
