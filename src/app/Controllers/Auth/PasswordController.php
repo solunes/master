@@ -24,7 +24,12 @@ class PasswordController extends Controller {
     public function postRequest(Request $request) {
       $error_messages = array('email.exists' => trans('master::form.email_exists_error'));
       $redirect = $this->prev;
-      $validator = Validator::make($request->all(), \App\PasswordReminder::$rules_reminder, $error_messages);
+      $rules = \App\PasswordReminder::$rules_reminder;
+      // Añadir regla de comprobación Captcha si corresponde
+      if(config('solunes.nocaptcha_login')){
+        $rules['g-recaptcha-response'] = 'required|captcha';
+      }
+      $validator = Validator::make($request->all(), $rules, $error_messages);
       if ($validator->passes()) {
         $email = $request->input('email');
         if($request->segment(1)=='password'&&$request->segment(2)=='recover'){
