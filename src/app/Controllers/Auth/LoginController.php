@@ -43,7 +43,7 @@ class LoginController extends Controller {
 			if($logged){
 			  if(Auth::user()->status=='banned'){
 			  	Auth::logout();
-			  	return Login::fail($request->session(), $validator, trans('master::form.login_banned'), 10, 5);
+			  	return Login::fail($request->session(), $this->prev, $validator, trans('master::form.login_banned'), 10, 5);
 			  } else if(session()->has('url.intended')){
 			  	return Login::success($request->session(), $last_session, Auth::user(), session()->get('url.intended'), trans('master::form.login_success'));
 			  } else {
@@ -55,10 +55,10 @@ class LoginController extends Controller {
 			  	return Login::success($request->session(), $last_session, Auth::user(), $redirect, trans('master::form.login_success'));
 			  }
 			} else {
-			  	return Login::fail($request->session(), $validator, trans('master::form.login_fail'), 10, 5);
+			  	return Login::fail($request->session(), $this->prev, $validator, trans('master::form.login_fail'), 10, 5);
 			}
 		} else {
-			return Login::fail($request->session(), $validator, trans('master::form.error_form'), 10, 5);
+			return Login::fail($request->session(), $this->prev, $validator, trans('master::form.error_form'), 10, 5);
 		}
     }
 

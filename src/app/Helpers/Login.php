@@ -27,7 +27,7 @@ class Login {
         return array('blocked_time'=>$blocked_time, 'failed_attempts'=>$failed_attempts);
     }
 
-    public static function fail($session, $validator, $message, $max_fails = 10, $blocked_time = 5) {
+    public static function fail($session, $redirect, $validator, $message, $max_fails = 10, $blocked_time = 5) {
         if($session->has('login_fail')){
           if($session->get('login_fail')>=($max_fails-1)) {
             $session->put('login_block', date('Y-m-d H:i:s', time()+($blocked_time*60)));
@@ -38,7 +38,7 @@ class Login {
         } else {
             $session->put('login_fail', '1');
         }
-        return redirect('auth/login')->with('message_error', $message)->withErrors($validator)->withInput();
+        return redirect($redirect)->with('message_error', $message)->withErrors($validator)->withInput();
     }
 
     public static function success($session, $last_session, $user, $redirect, $message, $type = false) {
