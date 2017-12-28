@@ -488,6 +488,12 @@ class FuncNode {
 
     public static function make_email($email_name, $to_array, $vars = [], $vars_if = [], $vars_foreach = []) {
       // $vars = ['@search@'=>'Reemplazar con esto']
+      $to_fixed_array = [];
+      foreach($to_array as $email){
+        if(filter_var($email, FILTER_VALIDATE_EMAIL){
+          $to_fixed_array[] = $email;
+        }
+      }
       if($email = \Solunes\Master\App\Email::where('name', $email_name)->first()){
         $msg = $email->content;
         if(count($vars_if)>0){
@@ -511,7 +517,7 @@ class FuncNode {
         if(count($vars)>0){
           $msg = str_replace(array_keys($vars), array_values($vars), html_entity_decode($msg));
         }
-        \Mail::send('master::emails.default', ['msg'=>$msg, 'email'=>$email], function ($m) use($email, $to_array, $msg) {
+        \Mail::send('master::emails.default', ['msg'=>$msg, 'email'=>$email], function ($m) use($email, $to_fixed_array, $msg) {
             if($email->reply_to){
               $reply_to = $email->reply_to;
             } else {
@@ -525,7 +531,7 @@ class FuncNode {
             } else {
               $reply_to_name = \Solunes\Master\App\Site::find(1)->name;
             }
-            $m->to($to_array)->replyTo($reply_to, $reply_to_name)->subject($email->title);
+            $m->to($to_fixed_array)->replyTo($reply_to, $reply_to_name)->subject($email->title);
         });
         return true;
       } else {

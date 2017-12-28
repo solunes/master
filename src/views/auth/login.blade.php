@@ -34,7 +34,9 @@
             </div>
             @if(config('solunes.nocaptcha_login'))
               <div class="form-group">
-                {!! NoCaptcha::display() !!}
+                <div class="col-sm-offset-3 col-sm-6">
+                  {!! NoCaptcha::display() !!}
+                </div>
               </div>
             @endif
             <div class="form-group">
