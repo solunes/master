@@ -24,7 +24,12 @@ class LoginController extends Controller {
 	}
 
     public function postLogin(Request $request) {
-	    $validator = Validator::make($request->all(), \App\User::$rules_login);
+    	$rules = \App\User::$rules_login;
+    	// Añadir regla de comprobación Captcha si corresponde
+    	if(config('solunes.nocaptcha_login')){
+    		$rules['g-recaptcha-response'] = 'required|captcha';
+    	}
+	    $validator = Validator::make($request->all(), $rules);
 	    $logged = false;
 		if ($validator->passes()) {
 			$last_session = session()->getId();

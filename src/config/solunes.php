@@ -14,7 +14,6 @@ return [
 	'default_location' => '-16.495369;-68.134289',
 	'master_dashboard' => true,
 	'main_lang' => 'es',
-	'nocaptcha' => false,
 
 	// APP VARS
 	'app_name' => env('APP_NAME', 'Web App'),
@@ -38,6 +37,7 @@ return [
 	'list_inline_edit' => true,
 	
 	// FORM
+	'nocaptcha_login' => false,
 	'relation_fast_create_array' => [], // array de field names: 'name'
 	'item_get_after_vars' => [], // array de nodos: 'node'
 	'item_child_after_vars' => [],

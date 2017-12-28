@@ -30,8 +30,13 @@
             <div class="form-group">
               <div class="col-sm-offset-3 col-sm-6">
                 {!! HTML::link('password/recover', 'Olvidaste tu contraseña?') !!}
+              </div>
             </div>
-            </div>
+            @if(config('solunes.nocaptcha_login'))
+              <div class="form-group">
+                {!! NoCaptcha::display() !!}
+              </div>
+            @endif
             <div class="form-group">
               <div class="col-sm-offset-3 col-sm-6">
                 {!! Form::submit('Log In',['class' => 'btn btn-site']) !!}
@@ -51,4 +56,7 @@
 @endsection
 
 @section('script')
+  @if(config('solunes.nocaptcha_login'))
+    {!! NoCaptcha::renderJs(config('solunes.main_lang')) !!}
+  @endif
 @endsection

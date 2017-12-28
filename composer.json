@@ -26,7 +26,7 @@
         "roumen/sitemap": "2.6.*",
         "codeitnowin/barcode": "2.*",
         "google/cloud-translate": "1.0.*",
-        "anhskohbo/no-captcha": "2.*"
+        "anhskohbo/no-captcha": "3.*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.*"
