@@ -27,6 +27,7 @@ class Seed extends Command
      */
     public function handle(){
         if(\App::environment('local')){
+            $this->callSilent('down');
             $time_start = microtime(true); 
             $this->info('0%: Seed iniciado.');
             $this->callSilent('empty:storage');
@@ -75,6 +76,7 @@ class Seed extends Command
             }
             $this->info('100%: Seed finalizado.');
             $this->info('Total execution time in seconds: ' . (microtime(true) - $time_start));
+            $this->callSilent('up');
         } else {
             $this->info('No autorizado.');
         }

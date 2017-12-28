@@ -27,7 +27,8 @@ class Deploy extends Command
      */
     public function handle(){
         if(\App::environment('local')){
-            $this->info('0%: Deploy iniciado.');
+            $this->callSilent('down');
+            $this->info('0%: Deploy iniciado. Modo Mantenimiento iniciado');
             if(config('solunes.before_migrate')){
                 $this->info('10%: '.\CustomFunc::before_migrate_actions());
             }
@@ -51,6 +52,7 @@ class Deploy extends Command
             $this->callSilent('seed');
             $this->info('75%: Database seed ejecutado correctamente con nodos.');
             $this->info('100%: Deploy finalizado.');
+            $this->callSilent('up');
         } else {
             $this->info('No autorizado.');
         }
