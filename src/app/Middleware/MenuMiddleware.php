@@ -23,7 +23,7 @@ class MenuMiddleware
       } else {
         $user_permissions = [];
       }
-      if($request->segment(1)=='auth'||$request->segment(1)=='password'){
+      if(!auth()->check()){
         Menu::make('main', function($menu) {
           $login = $menu->add('Ingresar', 'auth/login');
           $login->prepend('<span class="title"><i class="fa fa-user"></i>');

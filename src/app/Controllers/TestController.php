@@ -184,7 +184,7 @@ class TestController extends Controller {
         $array['email'] = 'edumejia30@gmail.com';
         $array['button_link'] = 'http://www.solunes.com';
         $array['button_title'] = 'Ver Sitio Web';
-        return view('master::emails.default', $array);
+        return view('master::emails.test', $array);
     }
 
 }

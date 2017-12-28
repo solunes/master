@@ -58,7 +58,7 @@
                                 <tr>
                                   <td class="column_cell bg_primary brounded_circle px py text_white text_center" data-bgcolor="Primary" data-color="White" style="vertical-align: top;background-color: {{ config('solunes.app_color') }};color: #ffffff;border-radius: 50%;text-align: center;padding-top: 16px;padding-bottom: 16px;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
                                     <p class="img_full" style="color: inherit;font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 0px;word-break: break-word;font-size: 0 !important;line-height: 100%;clear: both;">
-                                      <img src="@yield('icon-url', 'http://www.stampready.net/dashboard/editor/user_uploads/zip_uploads/2017/10/16/4pId6zuQoxceDO0FnBKAPq38/notifications/images/lock_white.png')" width="48" height="48" alt="" style="max-width: 48px;-ms-interpolation-mode: bicubic;border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;display: block;width: 100%;margin: 0px auto;" />
+                                      <img src="{{ asset('assets/admin/img/email-icons') }}/@yield('icon', 'Mail').png" width="48" height="48" alt="" style="max-width: 48px;-ms-interpolation-mode: bicubic;border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;display: block;width: 100%;margin: 0px auto;" />
                                     </p>
                                   </td>
                                 </tr>
