@@ -532,7 +532,7 @@ class FuncNode {
             } else {
               $reply_to_name = \Solunes\Master\App\Site::find(1)->name;
             }
-            $m->to($to_fixed_array)->replyTo($reply_to, $reply_to_name)->subject($email->title);
+            $m->to($to_fixed_array)->replyTo($reply_to, $reply_to_name)->subject(config('solunes.app_name').' | '.$email->title);
         });
         return true;
       } else {

@@ -16,7 +16,7 @@ return [
 	'main_lang' => 'es',
 
 	// APP VARS
-	'app_name' => env('APP_NAME', 'Web App'),
+	'app_name' => strtoupper(env('APP_NAME', 'Web App')),
 	'app_version' => env('APP_VERSION', 'v1.0.0'),
 	'app_color' => env('APP_COLOR', '#4c99bf'),
 

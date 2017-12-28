@@ -85,7 +85,7 @@ class Login {
             $password_reminder->save();
         }
         Mail::send('master::emails.reminder', ['token'=>$token, 'email'=>$email], function($m) use($email) {
-            $m->to($email, 'User')->subject(config()->get('app.name').' | '.trans('master::mail.remind_password_title'));
+            $m->to($email, 'User')->subject(config('solunes.app_name').' | '.trans('master::mail.remind_password_title'));
         });
         return redirect($redirect)->with('message_success', $message);
     }
