@@ -489,9 +489,9 @@ class FuncNode {
     public static function make_email($email_name, $to_array, $vars = [], $vars_if = [], $vars_foreach = []) {
       // $vars = ['@search@'=>'Reemplazar con esto']
       $to_fixed_array = [];
-      foreach($to_array as $email){
-        if(filter_var($email, FILTER_VALIDATE_EMAIL)){
-          $to_fixed_array[] = $email;
+      foreach($to_array as $email_account){
+        if(filter_var($email_account, FILTER_VALIDATE_EMAIL)){
+          $to_fixed_array[] = $email_account;
         }
       }
       if($email = \Solunes\Master\App\Email::where('name', $email_name)->first()&&count($to_fixed_array)>0){

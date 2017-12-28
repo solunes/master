@@ -3,6 +3,7 @@
 namespace Solunes\Master\App\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\UrlGenerator;
 use Validator;
 use Mail;
 use Login;
@@ -11,7 +12,7 @@ use App\Http\Controllers\Controller;
 
 class PasswordController extends Controller {
 
-    public function __construct() {
+    public function __construct(UrlGenerator $url) {
       $this->middleware('guest');
       $this->prev = $url->previous();
     }
