@@ -29,6 +29,7 @@ return [
     'services' => false,
     'accounting' => false,
     'reservation' => false,
+    'pagostt' => false,
 
 	// LIST
 	'pagination_count' => 500,
