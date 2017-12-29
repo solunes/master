@@ -74,11 +74,6 @@ class RouteServiceProvider extends ServiceProvider
                 require __DIR__ . '/../../../../project/src/app/Routes/admin.php';
             });
         }*/
-        if(config('solunes.pagostt')){
-            $router->group(['namespace' => $this->pagosttNamespace, 'middleware' => 'admin'], function ($router) {
-                require __DIR__ . '/../../../../pagostt/src/app/Routes/api.php';
-            });
-        }
     }
 
     /**
@@ -109,6 +104,7 @@ class RouteServiceProvider extends ServiceProvider
         if(config('solunes.pagostt')){
             $router->group(['namespace' => $this->pagosttNamespace, 'middleware' => 'web'], function ($router) {
                 require __DIR__ . '/../../../../pagostt/src/app/Routes/routes.php';
+                require __DIR__ . '/../../../../pagostt/src/app/Routes/api.php';
             });
         }
     }
