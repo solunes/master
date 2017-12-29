@@ -33,6 +33,9 @@ class Seed extends Command
             $this->callSilent('empty:storage');
             $this->info('20%: Storage limpiado correctamente.');
             $this->callSilent('db:seed', ['--class'=>'DatabaseTruncateSeeder']);
+            if(config('solunes.pagostt')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Pagostt\Database\Seeds\DatabaseTruncateSeeder']);
+            }
             if(config('solunes.store')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Store\Database\Seeds\DatabaseTruncateSeeder']);
             }
@@ -52,6 +55,9 @@ class Seed extends Command
             }
             if(config('solunes.store')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Store\Database\Seeds\DatabaseMasterSeeder']);
+            }
+            if(config('solunes.pagostt')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Pagostt\Database\Seeds\DatabaseMasterSeeder']);
             }
             $this->callSilent('db:seed', ['--class'=>'DatabaseMasterSeeder']);
             $this->info('50%: Base de datos llenada correctamente.');
