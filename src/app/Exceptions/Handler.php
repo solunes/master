@@ -22,18 +22,25 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        if (config('solunes.error_report') === true && config('app.debug') === false && !$e instanceof ModelNotFoundException && !$e instanceof HttpException) {
-        //if(!$e instanceof HttpException){
-            // ENVIAR EMAIL CON LOG DEL ERROR A SOPORTE@SOLUNES.COM
-            $app_name = config('app.name');
-            if(\Auth::check()){
-                $user = auth()->user()->name;
-            } else {
-                $user = 'Usuario no identificado';
+        if(!$e instanceof ModelNotFoundException && !$e instanceof HttpException){
+            // Activar si está dado de baja
+            if (\App::isDownForMaintenance())
+                \Artisan::call('up');
             }
-            \Mail::send('master::emails.error', ['app_name' => $app_name, 'user' => $user, 'url'=>request()->url(), 'log' => str_replace('#', '<br>#', $e)], function ($m) use($app_name) {
-                $m->to('edumejia30@gmail.com', 'Eduardo Mejia')->subject('Error de sistema en: '.strtoupper($app_name));
-            });
+            // Enviar email
+            if (config('solunes.error_report') === true && config('app.debug') === false) {
+            //if(!$e instanceof HttpException){
+                // ENVIAR EMAIL CON LOG DEL ERROR A SOPORTE@SOLUNES.COM
+                $app_name = config('app.name');
+                if(\Auth::check()){
+                    $user = auth()->user()->name;
+                } else {
+                    $user = 'Usuario no identificado';
+                }
+                \Mail::send('master::emails.error', ['app_name' => $app_name, 'user' => $user, 'url'=>request()->url(), 'log' => str_replace('#', '<br>#', $e)], function ($m) use($app_name) {
+                    $m->to('edumejia30@gmail.com', 'Eduardo Mejia')->subject('Error de sistema en: '.strtoupper($app_name));
+                });
+            }
         }
         return parent::report($e);
     }
