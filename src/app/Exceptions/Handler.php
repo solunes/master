@@ -24,7 +24,7 @@ class Handler extends ExceptionHandler
     {
         if(!$e instanceof ModelNotFoundException && !$e instanceof HttpException){
             // Activar si está dado de baja
-            if (\App::isDownForMaintenance())
+            if (\App::isDownForMaintenance()){
                 \Artisan::call('up');
             }
             // Enviar email
