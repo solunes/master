@@ -8,13 +8,13 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-
     'abreviation' => 'Abreviación',
     'action' => 'Acción',
     'action_value' => 'Valor de la Acción',
     'active' => '¿Activo?',
     'activity' => 'Actividad',
     'address' => 'Dirección',
+    'agency' => 'Agencia',
     'alert_actions' => 'Acciones de Alerta',
     'alert_conditionals' => 'Condicionantes de Alerta',
     'alert_users' => 'Usuarios de Alerta',
@@ -32,6 +32,7 @@ return [
     'col_name' => 'Nombre de Columna',
     'color' => 'Color',
     'conditional' => 'Condicional',
+    'contact' => 'Contacto',
     'content' => 'Contenido',
     'counter' => 'Contador',
     'country_code' => 'Código de País',
