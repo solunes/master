@@ -124,7 +124,8 @@ class TestController extends Controller {
 	}
 
 	public function getTransResponse($name, $delete){
-		$new_name = str_replace($delete, "",$name);
+        $new_name = str_replace($delete, "",$name);
+        $new_name = str_replace(':: fields.', "",$new_name);
         $new_name_2 = $new_name;
         if($delete==':model.'){
             $new_name_2 = 'Muestra|Muestras';

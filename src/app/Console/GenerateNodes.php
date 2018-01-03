@@ -143,6 +143,9 @@ class GenerateNodes extends Command
         if(config('solunes.store')){
           $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/store/src/nodes.xlsx')));
         }
+        if(config('solunes.pagostt')){
+          $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/pagostt/src/nodes.xlsx')));
+        }
         $this->info(\FuncNode::load_nodes_excel(public_path('seed/nodes.xlsx')));
         $this->info('100%: Se crearon '.$total_count.' campos.');
     }
