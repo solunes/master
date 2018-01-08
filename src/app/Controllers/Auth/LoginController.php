@@ -46,9 +46,8 @@ class LoginController extends Controller {
 			  	$message = trans('master::form.login_'.$user->status);
 			  	Auth::logout();
 			  	if($user->status=='pending_confirmation'){
-			  		//\Crypt::encrypt($user->email)
 			  		$confirmation_url = url('auth/send-confirmation-email/'.urlencode($user->email));
-			  		session()->put('confirmation_url', $confirmation_url);
+			  		session()->set('confirmation_url', $confirmation_url);
 			  	}
 			  	return Login::fail($request->session(), $this->prev, $validator, $message, 10, 5);
 			  } else if(session()->has('url.intended')){
