@@ -174,6 +174,11 @@ class FuncNode {
         }
     }
 
+    public static function get_node($node_name) {
+      $node = \Solunes\Master\App\Node::where('name', $node_name)->first();
+      return $node;
+    }
+
     public static function node_check_model($node) {
         $model = new $node->model;
         if($node->dynamic&&$node->parent_id==NULL){

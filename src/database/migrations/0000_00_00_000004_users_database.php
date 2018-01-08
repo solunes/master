@@ -21,7 +21,7 @@ class UsersDatabase extends Migration
             $table->integer('cellphone')->nullable();
             $table->string('username')->nullable();
             $table->string('password', 60);
-            $table->enum('status', ['normal','ask_password','banned'])->default('normal');
+            $table->enum('status', ['normal','ask_password','pending_confirmation','banned'])->default('normal');
             $table->boolean('notifications_app')->default(0);
             $table->boolean('notifications_email')->default(0);
             $table->boolean('notifications_sms')->default(0);

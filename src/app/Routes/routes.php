@@ -84,5 +84,6 @@ Route::group(['prefix'=>'asset'], function(){
 });
 Route::group(['prefix'=>'test'], function(){
     Route::get('general-test', 'TestController@getGeneralTest');
+    Route::get('generate-help-edit-fields/{node}/{type}/{action}/{id}', 'TestController@generateHelpEditFields');
     Route::get('preview-email/{msg}', 'TestController@previewEmail');
 });

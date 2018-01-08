@@ -62,7 +62,7 @@ class TestController extends Controller {
             $nodes_array = \Solunes\Master\App\Node::where('location', 'app')->lists('id');
             $items = \Solunes\Master\App\Field::whereIn('parent_id', $nodes_array)->where('type', 'text')->get();
             if(count($items)>0){
-                $response .= '<br><br><strong>Textos largos.</strong> Revisar si es necesario editar nodes.xls:';
+                $response .= '<br><br><strong>Textos largos.</strong> Revisar si es necesario editar nodes.xls y añadir texto con Froala:';
                 foreach($items as $item){
                     if(!$item->field_extras()->where('type', 'class')->where('value', 'textarea')->first()){
                 		$strong = $this->checkIfStrong($item->name, ['content','description']);
@@ -77,14 +77,19 @@ class TestController extends Controller {
             $nodes = \Solunes\Master\App\Node::where('location', 'app')->get();
             if(count($nodes)>0){
                 $response .= '<br><br><strong>Listado de Nodos.</strong> Revisar si el listado de nodos es correcto:';
+                $array_response = [];
                 foreach($nodes as $node){
-                	$response .= "<br>- ".$this->generateLink(url('admin/model-list/'.$node->name), $node->name)." -> Nº (count)";
-                	foreach($node->fields()->displayList('show')->where('type', '!=', 'field')->get() as $field){
+                	$response .= "<br><strong>".$this->generateLink(url('admin/model-list/'.$node->name), $node->name)." -></strong>";
+                    foreach($node->fields()->displayList('show')->where('type', '!=', 'field')->get() as $field){
                 		$strong = $this->checkIfStrong($field->type, ['text','subchild']);
                 		$response .= $strong['begin'];
-                		$response .= ' - '.$field->label.' ('.$field->type.')';
+                		$response .= ' - <a target="_blank" title="Ayuda: Para ocultar" href="'.url('test/generate-help-edit-fields/'.$node->name.'/'.$field->name.'/display_list/excel').'">'.$field->label.'</a> ('.$field->type.')';
                 		$response .= $strong['end'];
                 	}
+                    $response .= '<br>- No se muestran: ';
+                    foreach($node->fields()->displayList('excel')->where('type', '!=', 'field')->where('name', '!=', 'id')->get() as $field){
+                        $response .= ' - <a target="_blank" title="Ayuda: Para mostrar" href="'.url('test/generate-help-edit-fields/'.$node->name.'/'.$field->name.'/display_list/show').'">'.$field->label.'</a> ('.$field->type.')';
+                    }
                 }
             }
 
@@ -178,6 +183,14 @@ class TestController extends Controller {
             }
         }
         return $pending_fields;
+    }
+
+    public function generateHelpEditFields($node, $field, $column, $new_value){
+        $response = 'Abrir "public/seed/nodes.xls" y añadir la columna en la hoja "edit-fields"';
+        $response .= '<table><tr><td>node</td><td>field</td><td>column</td><td>new_value</td></tr>';
+        $response .= '<tr><td>'.$node.'</td><td>'.$field.'</td><td>'.$column.'</td><td>'.$new_value.'</td></tr>';
+        $response .= '</table>';
+        return $response;
     }
 
     public function previewEmail($msg){
