@@ -108,4 +108,15 @@ class Login {
         return redirect('admin')->with('message_error', trans('master::admin.'.$error));
     }
 
+    public static function send_confirmation_email($email, $name) {
+        if(session()->has('confirmation_url')){
+            session()->forget('confirmation_url');
+        }
+        $confirmation_url = url('auth/verify-email/'.\Crypt::encrypt($email));
+        $vars = ['name'=>$name, 'email'=>$email, 'confirmation_url'=>$confirmation_url];
+        Mail::send('master::emails.verification-email', $vars, function($m) use($name, $email) {
+            $m->to($email, $name)->subject(config('solunes.app_name').' | '.trans('master::mail.verify_email_title'));
+        });
+    }
+
 }

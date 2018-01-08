@@ -17,6 +17,8 @@ return [
     'login_success' => 'You logged in correctly!',
     'login_success_password' => "You logged in correctly! But we recommend you to change your password to a secure one.",
     'login_banned' => 'Your account has been banned. We recommend you to contact the administrator.',
+    'login_pending_confirmation' => 'Your account is not confirmed yet, please confirm it in order to login.',
+    'login_pending_confirmation_button' => 'Send confirmation email',
     'logout_success' => 'You have logged out successfully.',
     'password_match_error' => 'Both passwords must match.',
     'email_exists_error' => 'This email was not found on our database.',

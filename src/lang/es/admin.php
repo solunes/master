@@ -132,6 +132,7 @@ return array(
 	"blank" => "Vacío",
 	"ask_password" => "Preguntar Contraseña",
 	"banned" => "Bloqueado",
+	"pending_confirmation" => "Confirmación Pendiente",
 	"package" => "Paquete",
 	"app" => "App",
 	"store" => "Tienda",

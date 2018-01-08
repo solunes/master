@@ -64,6 +64,8 @@ Route::group(['prefix'=>'auth'], function(){
     Route::get('login', 'Auth\LoginController@getLogin');
     Route::post('login', 'Auth\LoginController@postLogin');
     Route::get('logout', 'Auth\LoginController@getLogout');
+    Route::get('send-confirmation-email/{encoded_email}', 'Auth\LoginController@getSendConfirmationEmail');
+    Route::get('verify-email/{encrypted_email}', 'Auth\LoginController@getVerifyEmail');
     Route::get('unsuscribe/{email}', 'Auth\LoginController@getUnsuscribe');
 });
 Route::group(['prefix'=>'password'], function(){

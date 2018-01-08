@@ -41,9 +41,16 @@ class LoginController extends Controller {
 				$logged = true;
 			}
 			if($logged){
-			  if(Auth::user()->status=='banned'){
+			  $user = Auth::user();
+			  if($user->status=='banned'||$user->status=='pending_confirmation'){
+			  	$message = trans('master::form.login_'.$user->status);
 			  	Auth::logout();
-			  	return Login::fail($request->session(), $this->prev, $validator, trans('master::form.login_banned'), 10, 5);
+			  	if($user->status=='pending_confirmation'){
+			  		//\Crypt::encrypt($user->email)
+			  		$confirmation_url = url('auth/send-confirmation-email/'.urlencode($user->email));
+			  		session()->put('confirmation_url', $confirmation_url);
+			  	}
+			  	return Login::fail($request->session(), $this->prev, $validator, $message, 10, 5);
 			  } else if(session()->has('url.intended')){
 			  	return Login::success($request->session(), $last_session, Auth::user(), session()->get('url.intended'), trans('master::form.login_success'));
 			  } else {
@@ -64,6 +71,27 @@ class LoginController extends Controller {
 
 	public function getLogout(Request $request) {
 		return Login::logout($request->session(), 'auth/login', trans('master::form.logout_success'));
+	}
+
+	public function getSendConfirmationEmail($encoded_email) {
+    	$email = urldecode($encoded_email);
+		if($email&&$user = \App\User::where('status','pending_confirmation')->where('email',$email)->first()){
+			\Login::send_confirmation_email($user->email, $user->name);
+			return redirect('auth/login')->with('message_success', 'Se envió un email de confirmación a su cuenta de correo: '.$user->email.'. Por favor revísela en su bandeja de entrada y en la de spam si no logra encontrarlo.');
+		} else {
+			return redirect('auth/login')->with('message_error', 'Hubo un problema al enviar el correo electrónico. Contáctese con administración.');
+		}
+	}
+
+	public function getVerifyEmail($encrypted_email) {
+    	$email = \Crypt::decrypt($encrypted_email);
+		if($email&&$user = \App\User::where('status','pending_confirmation')->where('email',$email)->first()){
+			$user->status = 'normal';
+			$user->save();
+			return redirect('auth/login')->with('message_success', 'Su correo fue confirmado correctamente, ahora puede iniciar sesión normalmente. Muchas gracias por su tiempo.');
+		} else {
+			return redirect('auth/login')->with('message_error', 'Hubo un problema al verificar su email. Contáctese con administración.');
+		}
 	}
 
 	public function getUnsuscribe($email) {

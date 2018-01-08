@@ -17,6 +17,8 @@ return [
     'login_success' => 'Inició sesión correctamente!',
     'login_success_password' => "Inició sesión correctamente! Pero le recomendamos cambiar su contraseña por una segura.",
     'login_banned' => 'Tu cuenta se encuentra bloqueada. Te recomendamos contactar al administrador.',
+    'login_pending_confirmation' => 'Su cuenta no está confirmada aún. Por favor confírmela verificando su correo.',
+    'login_pending_confirmation_button' => 'Enviar email nuevamente',
     'logout_success' => 'Su sesión fue cerrada correctamente.',
     'password_match_error' => 'Ambas contrasñeas deben ser las mismas.',
     'email_exists_error' => 'Este correo electrónico no fue encontrado en nuestra base de datos.',

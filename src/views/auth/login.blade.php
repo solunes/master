@@ -7,6 +7,14 @@
       <div class="row">
         <div class="col-sm-offset-2 col-sm-8">
           @if($blocked_time==0)
+            
+          @if(session()->has('confirmation_url')&&session()->get('confirmation_url'))
+            <h2>Verificar Email</h2>
+            <p>Si desea que volvamos a enviar el email de confirmación a su cuenta de correo, haga click aquí:</p>
+            <p><a class="btn btn-site" href="{{ session()->get('confirmation_url') }}">Enviar Email de Confirmación</a><br><br></p>
+            <div class="page-bar"></div>
+          @endif
+
           {!! Form::open(array('name'=>'login_form', 'role'=>'form', 'url'=>'auth/login', 'class'=>'form-horizontal prevent-double-submit')) !!}
             <h2 class="col-sm-offset-3 col-sm-9">LOG IN</h2>
             @if($failed_attempts>0)
@@ -14,7 +22,7 @@
             @endif
 
             <div class="form-group">
-              {!! Form::label('user', 'eMail/Usuario', ['class'=>'col-sm-3 control-label']) !!} 
+              {!! Form::label('user', 'eMail / Usuario', ['class'=>'col-sm-3 control-label']) !!} 
               <div class="col-sm-6">
                 {!! Form::text('user', NULL, ['class'=> 'form-control']) !!}
               </div>

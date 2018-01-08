@@ -127,6 +127,7 @@ return array(
 	"blank" => "Blank",
 	"ask_password" => "Ask Password",
 	"banned" => "Banned",
+	"pending_confirmation" => "Confirmación Pendiente",
 	"package" => "Package",
 	"app" => "App",
 	"store" => "Store",
