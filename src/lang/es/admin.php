@@ -110,6 +110,16 @@ return array(
 	"admin" => "Admin",
 	"member" => "Miembro",
 
+	// PACKAGES
+	"package" => "Paquete",
+	"app" => "App",
+	"business" => "Negocio",
+	"project" => "Proyecto",
+	"sales" => "Ventas",
+	"inventory" => "Inventario",
+	"store" => "Tienda",
+	"pagostt" => "PagosTT",
+
 	// GLOBAL TRANS
 	"0" => "No",
 	"1" => "Si",
@@ -133,12 +143,6 @@ return array(
 	"ask_password" => "Preguntar Contraseña",
 	"banned" => "Bloqueado",
 	"pending_confirmation" => "Confirmación Pendiente",
-	"package" => "Paquete",
-	"app" => "App",
-	"store" => "Tienda",
-	"business" => "Negocio",
-	"project" => "Proyecto",
-	"pagostt" => "PagosTT",
 	"string" => "Texto",
 	"select" => "Selección",
 	"password" => "Contraseña",

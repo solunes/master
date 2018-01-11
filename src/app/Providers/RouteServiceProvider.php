@@ -17,6 +17,8 @@ class RouteServiceProvider extends ServiceProvider
     protected $solunesNamespace = 'Solunes\Master\App\Controllers';
     protected $businessNamespace = 'Solunes\Business\App\Controllers';
     protected $projectNamespace = 'Solunes\Project\App\Controllers';
+    protected $salesNamespace = 'Solunes\Sales\App\Controllers';
+    protected $inventoryNamespace = 'Solunes\Inventory\App\Controllers';
     protected $storeNamespace = 'Solunes\Store\App\Controllers';
     protected $pagosttNamespace = 'Solunes\Pagostt\App\Controllers';
 
@@ -94,6 +96,16 @@ class RouteServiceProvider extends ServiceProvider
         if(config('solunes.project')){
             $router->group(['namespace' => $this->projectNamespace, 'middleware' => 'web'], function ($router) {
                 require __DIR__ . '/../../../../project/src/app/Routes/routes.php';
+            });
+        }
+        if(config('solunes.sales')){
+            $router->group(['namespace' => $this->salesNamespace, 'middleware' => 'web'], function ($router) {
+                require __DIR__ . '/../../../../sales/src/app/Routes/routes.php';
+            });
+        }
+        if(config('solunes.inventory')){
+            $router->group(['namespace' => $this->inventoryNamespace, 'middleware' => 'web'], function ($router) {
+                require __DIR__ . '/../../../../inventory/src/app/Routes/routes.php';
             });
         }
         /*if(config('solunes.store')){

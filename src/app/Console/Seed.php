@@ -39,6 +39,12 @@ class Seed extends Command
             if(config('solunes.store')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Store\Database\Seeds\DatabaseTruncateSeeder']);
             }
+            if(config('solunes.inventory')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Inventory\Database\Seeds\DatabaseTruncateSeeder']);
+            }
+            if(config('solunes.sales')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Sales\Database\Seeds\DatabaseTruncateSeeder']);
+            }
             if(config('solunes.project')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Project\Database\Seeds\DatabaseTruncateSeeder']);
             }
@@ -52,6 +58,12 @@ class Seed extends Command
             }
             if(config('solunes.project')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Project\Database\Seeds\DatabaseMasterSeeder']);
+            }
+            if(config('solunes.sales')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Sales\Database\Seeds\DatabaseMasterSeeder']);
+            }
+            if(config('solunes.inventory')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Inventory\Database\Seeds\DatabaseMasterSeeder']);
             }
             if(config('solunes.store')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Store\Database\Seeds\DatabaseMasterSeeder']);

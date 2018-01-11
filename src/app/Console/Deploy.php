@@ -41,6 +41,12 @@ class Deploy extends Command
             if(config('solunes.project')){
                 $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/project/src/database/migrations']);
             }
+            if(config('solunes.sales')){
+                $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/sales/src/database/migrations']);
+            }
+            if(config('solunes.inventory')){
+                $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/inventory/src/database/migrations']);
+            }
             if(config('solunes.store')){
                 $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/store/src/database/migrations']);
             }
