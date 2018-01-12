@@ -69,6 +69,13 @@ class AdminList {
         if(count($relation_fields)>0){
             foreach($relation_fields as $relation){
                 $sub_node = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $relation->value))->first();
+                // Error en caso de que no esté bien definida la relación
+                if(!$sub_node){
+                    $message = 'Agregar a nodes.xlsx, hoja "edit-fields" las <br>siguientes lineas y luego haga un deploy:<br><br>';
+                    $message .= ''.$single_model.' | '.$relation->name.' | relation | 0<br>';
+                    $message .= ''.$single_model.' | '.$relation->name.' | type | string';
+                    abort(506, $message);
+                }
                 if($sub_node->translation){
                     $items = $items->with([$relation->trans_name, $relation->trans_name.'.translations']);
                 } else {

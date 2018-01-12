@@ -68,7 +68,7 @@ class Handler extends ExceptionHandler
             }
 
             if (view()->exists('master::errors.'.$e->getStatusCode())) {
-                return response()->view('master::errors.'.$e->getStatusCode(), [], $e->getStatusCode());
+                return response()->view('master::errors.'.$e->getStatusCode(), ['message'=>$e->getMessage()], $e->getStatusCode());
             }
         } else {
             if (config('app.debug') === false) {

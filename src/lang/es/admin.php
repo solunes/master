@@ -60,6 +60,8 @@ return array(
 	"500_description" => "Esto es incomodo, pero hubo un error en el servidor. Lo solucionaremos a la brevedad posible.",
 	"503_title" => "503 - Servicio no Disponible",
 	"503_description" => "Actualmente el servicio no está disponible, intente nuevamente en unos minutos.",
+	"506_title" => "506 - Error Interno de Master",
+	"506_description" => "Se encontró el siguiente error en el sistema que puede ser corregido realizando la siguiente acción",
 
 	// DATES
 	"graph_label_line" => "Reporte en Lineas (Mensual): Por",

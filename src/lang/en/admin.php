@@ -58,6 +58,8 @@ return array(
 	"500_description" => "This is embarrasing, but we found an error on the server. We will fix it as soon as possible.",
 	"503_title" => "503 - Service unavailable",
 	"503_description" => "Actually, the service is unavailable. Please retry again in some minutes.",
+	"506_title" => "506 - Master Internal Error",
+	"506_description" => "The next error was found. Please fix following the instructions",
 
 	// NODE GRAPH
 	"graph_label_line" => "Lines Report (Monthly): By",
