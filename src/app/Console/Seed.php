@@ -39,8 +39,14 @@ class Seed extends Command
             if(config('solunes.store')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Store\Database\Seeds\DatabaseTruncateSeeder']);
             }
+            if(config('solunes.payments')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Payments\Database\Seeds\DatabaseTruncateSeeder']);
+            }
             if(config('solunes.inventory')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Inventory\Database\Seeds\DatabaseTruncateSeeder']);
+            }
+            if(config('solunes.product')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Product\Database\Seeds\DatabaseTruncateSeeder']);
             }
             if(config('solunes.sales')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Sales\Database\Seeds\DatabaseTruncateSeeder']);
@@ -62,8 +68,14 @@ class Seed extends Command
             if(config('solunes.sales')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Sales\Database\Seeds\DatabaseMasterSeeder']);
             }
+            if(config('solunes.product')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Product\Database\Seeds\DatabaseMasterSeeder']);
+            }
             if(config('solunes.inventory')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Inventory\Database\Seeds\DatabaseMasterSeeder']);
+            }
+            if(config('solunes.payments')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Payments\Database\Seeds\DatabaseMasterSeeder']);
             }
             if(config('solunes.store')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Store\Database\Seeds\DatabaseMasterSeeder']);
@@ -90,7 +102,7 @@ class Seed extends Command
                 $this->info('97%: '.\CustomStore::after_seed_actions());
             }
             if(config('solunes.after_seed')){
-                $this->info('98%: '.\CustomFunc::after_seed_actions());
+                $this->info('99%: '.\CustomFunc::after_seed_actions());
             }
             $this->info('100%: Seed finalizado.');
             $this->info('Total execution time in seconds: ' . (microtime(true) - $time_start));

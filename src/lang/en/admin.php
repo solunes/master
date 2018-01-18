@@ -114,7 +114,9 @@ return array(
 	"business" => "Business",
 	"project" => "Project",
 	"sales" => "Sales",
+	"product" => "Products",
 	"inventory" => "Inventory",
+	"payments" => "Payments",
 	"store" => "Store",
 	"pagostt" => "PagosTT",
 
