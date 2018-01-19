@@ -45,6 +45,8 @@ class Login {
         $session->forget('login_fail');
         if(config('solunes.store')){
             \CustomStore::after_login($user, $last_session, $redirect);
+        } else if(config('solunes.sales')){
+            \CustomSales::after_login($user, $last_session, $redirect);
         }
         if(config('solunes.after_login')){
             \CustomFunc::after_login($user, $last_session, $redirect);
