@@ -213,6 +213,7 @@ class AdminList {
             } else {
                 switch($field_type){
                     case 'string':
+                    case 'integer':
                     case 'barcode':
                         $value = $item_val;
                     break;

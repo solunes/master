@@ -37,7 +37,7 @@ return [
 	'pagination_count' => 500,
 	'table_pagination' => 'false',
 	'table_pagination_count' => 25,
-	'list_inline_edit' => true,
+	'list_inline_edit' => false,
 	
 	// FORM
 	'nocaptcha_login' => false,

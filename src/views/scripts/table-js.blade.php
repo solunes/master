@@ -2,10 +2,12 @@
 $(document).ready(function() {
     $('table.admin-table').dataTable({
         "paging": {{ config('solunes.table_pagination') }},
+        @if(config('solunes.table_pagination'))
         "pageLength": {{ config('solunes.table_pagination_count') }},
+        "lengthMenu": [[{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, -1], [{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, "Todos"] ],
+        @endif
         "autoWidth": false,
         "responsive": true,
-      	"lengthMenu": [[{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, -1], [{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, "Todos"] ],
         "order": [0, "asc"],
         "language": {
             "info": "Mostrando la página _PAGE_ de _PAGES_",
@@ -30,11 +32,13 @@ $(document).ready(function() {
     });
     $('table.admin-multilevel-table').dataTable({
         "paging": {{ config('solunes.table_pagination') }},
+        @if(config('solunes.table_pagination'))
         "pageLength": {{ config('solunes.table_pagination_count') }},
+        "lengthMenu": [[{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, -1], [{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, "Todos"] ],
+        @endif
         "autoWidth": false,
         "responsive": true,
         "bSort" : false,
-        "lengthMenu": [[{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, -1], [{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, "Todos"] ],
         "language": {
             "info": "Mostrando la página _PAGE_ de _PAGES_",
             "infoEmpty": "No hay datos en la tabla",
