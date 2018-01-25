@@ -67,7 +67,7 @@ class DynamicFormController extends Controller {
     }
 
     public function getExportNodes() {
-        $array['items'] = \Solunes\Master\App\Node::where('location', '!=','package')->whereNull('parent_id')->withTrashed()->get();
+        $array['items'] = \Solunes\Master\App\Node::where('location', '!=','package')->withTrashed()->get();
         return view('master::list.export-nodes', $array);
     }
 
