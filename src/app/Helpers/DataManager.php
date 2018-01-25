@@ -141,7 +141,7 @@ class DataManager {
         if($just_last){
             $items = \FuncNode::node_check_model($node)->orderBy('id','DESC')->limit(1)->get();
         } else {
-            $items = \FuncNode::node_check_model($node)->get();
+            $items = \FuncNode::node_check_model($node)->orderBy('id','ASC')->get();
         }
         return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, NULL, $database);
     }

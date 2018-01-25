@@ -207,7 +207,11 @@ class AdminList {
                         if($subkey>0){
                             $value .= ';';
                         }
-                        $value .= $subitem->name;
+                        if($database){
+                            $value .= $subitem->id;
+                        } else {
+                            $value .= $subitem->name;
+                        }
                     }
                 } else {
                     if($item_val&&is_object($item_val)){
