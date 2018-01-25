@@ -129,7 +129,7 @@ class DataManager {
         return $count_rows;
     }
 
-    public static function exportNodeExcel($excel, $alphabet, $node, $just_last = false) {
+    public static function exportNodeExcel($excel, $alphabet, $node, $just_last = false, $database = false) {
         $sheet_title = $node->name;
         $languages = \Solunes\Master\App\Language::where('code','!=',config('solunes.main_lang'))->lists('code');
         $array = \DataManager::generateExportArray($alphabet, $node, $languages);
@@ -143,7 +143,7 @@ class DataManager {
         } else {
             $items = \FuncNode::node_check_model($node)->get();
         }
-        return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array);
+        return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, NULL, $database);
     }
 
     public static function generateExportArray($alphabet, $node, $languages) {
@@ -174,9 +174,9 @@ class DataManager {
         return ['col_array'=>$col_array, 'col_width'=>$col_width, 'fields_array'=>$fields_array, 'field_options_array'=>$field_options_array, 'trans_array'=>$trans_array];
     }
 
-    public static function generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child_table = NULL) {
+    public static function generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child_table = NULL, $database = false) {
         //$excel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $excel->sheet($sheet_title, function($sheet) use($alphabet, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child_table) {
+        $excel->sheet($sheet_title, function($sheet) use($alphabet, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child_table, $database) {
             $sheet->row(1, $col_array);
             $sheet->row(1, function($row) {
               $row->setFontWeight('bold');
@@ -187,11 +187,11 @@ class DataManager {
             foreach($items as $item_key => $item){
                 if($child_table){
                     foreach($item->$child_table as $subitem_key => $subitem){
-                        $sheet->row($fila, array_merge([$item->name, $subitem_key+1], AdminList::make_fields_values($subitem, $fields_array, $field_options_array, '','excel')));
+                        $sheet->row($fila, array_merge([$item->name, $subitem_key+1], AdminList::make_fields_values($subitem, $fields_array, $field_options_array, '','excel', $database)));
                         $fila++;
                     }
                 } else {
-                    $row_array = \AdminList::make_fields_values($item, $fields_array, $field_options_array, '','excel');
+                    $row_array = \AdminList::make_fields_values($item, $fields_array, $field_options_array, '','excel', $database);
                     foreach($trans_array as $lang => $fields){
                         \App::setLocale($lang);
                         foreach($fields as $trans_field){

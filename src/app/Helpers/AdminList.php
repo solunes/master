@@ -171,7 +171,7 @@ class AdminList {
         }
     }
 
-    public static function make_fields_values($item, $fields, $field_options, $appends, $type = 'table') {
+    public static function make_fields_values($item, $fields, $field_options, $appends, $type = 'table', $database = false) {
         if($type=='excel'){
             $response = [];
         } else {
@@ -181,7 +181,11 @@ class AdminList {
             $field_name = $field->name;
             $field_trans_name = $field->trans_name;
             $field_type = $field->type;
-            $item_val = $item->$field_trans_name;
+            if($database&&$field->relation&&in_array($field->type, ['select','radio','checkbox'])){
+                $item_val = $item->$field_name;
+            } else {
+                $item_val = $item->$field_trans_name;
+            }
             $count = 0;
             if($type=='excel'){
                 $value = NULL;
@@ -208,6 +212,8 @@ class AdminList {
                 } else {
                     if($item_val&&is_object($item_val)){
                         $value = $item_val->name;
+                    } else {
+                        $value = $item_val;
                     }
                 }
             } else {

@@ -55,11 +55,11 @@ class DynamicFormController extends Controller {
         $alphabet = \DataManager::generateAlphabet(count($node->fields));
         $file = \Excel::create($node_name, function($excel) use($node, $alphabet) {
             \DataManager::generateInstructionsSheet($excel);
-            \DataManager::exportNodeExcel($excel, $alphabet, $node, true);
+            \DataManager::exportNodeExcel($excel, $alphabet, $node, true, true);
             $children = $node->children()->where('type', '!=', 'field')->get();
             if(count($children)>0){
                 foreach($children as $child){
-                    \DataManager::exportNodeExcel($excel, $alphabet, $child, true);
+                    \DataManager::exportNodeExcel($excel, $alphabet, $child, true, true);
                 }
             }
         })->store('xlsx', $dir, true);
@@ -86,11 +86,11 @@ class DynamicFormController extends Controller {
             foreach($nodes as $node){
                 $alphabet = \DataManager::generateAlphabet(count($node->fields));
                 if(!in_array($node->name, $store_nodes)){
-                    \DataManager::exportNodeExcel($excel, $alphabet, $node);
+                    \DataManager::exportNodeExcel($excel, $alphabet, $node, false, true);
                     $children = $node->children()->where('type', '!=', 'field')->get();
                     if(count($children)>0){
                         foreach($children as $child){
-                            \DataManager::exportNodeExcel($excel, $alphabet, $child);
+                            \DataManager::exportNodeExcel($excel, $alphabet, $child, false, true);
                         }
                     }
                 }
