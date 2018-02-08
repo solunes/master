@@ -48,7 +48,7 @@ class MasterSeeder extends Seeder {
         $node_permission = \Solunes\Master\App\Node::create(['name'=>'permission', 'folder'=>'system']);
         $node_role = \Solunes\Master\App\Node::create(['name'=>'role', 'folder'=>'system']);
         $node_permission_role = \Solunes\Master\App\Node::create(['name'=>'permission-role', 'table_name'=>'permission_role', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\Permission', 'parent_id'=>$node_role->id]);
-        $node_user = \Solunes\Master\App\Node::create(['name'=>'user', 'location'=>'app', 'folder'=>'global']);
+        $node_user = \Solunes\Master\App\Node::create(['name'=>'user', 'location'=>'app', 'folder'=>'user']);
         \Solunes\Master\App\Filter::create(['node_id'=>$node_user->id, 'parameter'=>'status']);
         $node_role_user = \Solunes\Master\App\Node::create(['name'=>'role-user', 'table_name'=>'role_user', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\Role', 'parent_id'=>$node_user->id]);
         $node_indicator_alert_user = \Solunes\Master\App\Node::create(['name'=>'indicator-alert-user', 'table_name'=>'indicator_alert_users', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\IndicatorAlert', 'parent_id'=>$node_user->id]);
@@ -76,10 +76,11 @@ class MasterSeeder extends Seeder {
         $member = \Solunes\Master\App\Role::create(['name'=>'member', 'display_name'=>'Miembro']);
         $system_perm = \Solunes\Master\App\Permission::create(['name'=>'system', 'display_name'=>'Sistema']);
         $global_perm = \Solunes\Master\App\Permission::create(['name'=>'global', 'display_name'=>'Global']);
-        $site_perm = \Solunes\Master\App\Permission::create(['name'=>'site', 'display_name'=>'Site']);
+        $user_perm = \Solunes\Master\App\Permission::create(['name'=>'user', 'display_name'=>'Usuarios']);
+        $site_perm = \Solunes\Master\App\Permission::create(['name'=>'site', 'display_name'=>'Sitio']);
         $form_perm = \Solunes\Master\App\Permission::create(['name'=>'form', 'display_name'=>'Formulario']);
         $dashboard_perm = \Solunes\Master\App\Permission::create(['name'=>'dashboard', 'display_name'=>'Dashboard']);
-        $admin->permission_role()->sync([$global_perm->id, $site_perm->id, $form_perm->id, $dashboard_perm->id]);
+        $admin->permission_role()->sync([$global_perm->id, $site_perm->id, $user_perm->id, $form_perm->id, $dashboard_perm->id]);
 
         // Tamaños de archivos
         \Solunes\Master\App\Variable::create([

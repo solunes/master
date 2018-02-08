@@ -211,7 +211,9 @@ class MasterDatabase extends Migration
             $table->string('name');
             $table->integer('user_id')->nullable();
             $table->enum('type', ['normal','custom'])->default('normal');
-            $table->enum('data', ['count_total','count','formula'])->default('count_total');
+            $table->enum('data_count', ['total','daily'])->default('total');
+            $table->enum('data', ['count','sum_field','avarage_field','formula'])->default('count');
+            $table->string('field_name')->nullable();
             $table->text('formula')->nullable();
             $table->enum('color', ['blue','red','green','purple','yellow','gray','black'])->default('green');
             $table->string('custom')->nullable();

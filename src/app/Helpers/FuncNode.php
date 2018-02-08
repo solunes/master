@@ -459,9 +459,11 @@ class FuncNode {
     }
 
     public static function update_indicator_values($indicator) {
-        $node = $indicator->node;
-        $node_model = \FuncNode::node_check_model($node);
-        $first_date = $node_model->whereNotNull('created_at')->where('created_at', '!=', '0000-00-00 00:00:00')->orderBy('created_at', 'ASC')->first()->created_at->format('Y-m-d');
+      $node = $indicator->node;
+      $node_model = \FuncNode::node_check_model($node);
+      $first = $node_model->whereNotNull('created_at')->where('created_at', '!=', '0000-00-00 00:00:00')->orderBy('created_at', 'ASC')->first();
+      if($first){
+        $first_date = $first->created_at->format('Y-m-d');
         $first_date = new \DateTime($first_date);
         $last_date = new \DateTime( date('Y-m-d') );
         $last_date->modify('+1 day');
@@ -469,16 +471,21 @@ class FuncNode {
         $array['filter_category_id'] = $indicator->id;
         foreach ($period as $date) {
             $node_model = \FuncNode::node_check_model($node);
-            if($indicator->data=='count_total'){
-              $items = $node_model::where('created_at','<=', $date->format("Y-m-d 23:59:59"));
-            } else if($indicator->data=='count') {
+            if($indicator->data_count=='daily') {
               $items = $node_model::where('created_at','>=', $date->format("Y-m-d 00:00:00"))->where('created_at','<=', $date->format("Y-m-d 23:59:59"));
             } else {
               $items = $node_model::where('created_at','<=', $date->format("Y-m-d 23:59:59"));
             }
             $array = \AdminList::filter_node($array, $node, $node_model, $items, 'indicator');
             $items = $array['items'];
-            $indicator_value = $items->count();
+            $indicator_value = 0;
+            if($indicator->data=='sum_field'){
+              $indicator_value = $items->sum($indicator->field_name);
+            } else if($indicator->data=='avarage_field'){
+              $indicator_value = $items->avg($indicator->field_name);
+            } else {
+              $indicator_value = $items->count();
+            }
             if($today_indicator = $indicator->indicator_values()->where('date', $date->format("Y-m-d"))->first()) {
             } else {
                 $today_indicator = new \Solunes\Master\App\IndicatorValue;
@@ -488,7 +495,8 @@ class FuncNode {
             $today_indicator->value = $indicator_value;
             $today_indicator->save();
         }
-        return true;
+      } 
+      return true;
     }
 
     public static function make_email($email_name, $to_array, $vars = [], $vars_if = [], $vars_foreach = []) {

@@ -159,7 +159,7 @@
         $("#plot_example_{{ $alert->id }}"),
         [
           {data:t,lines:{fill:.6,lineWidth:0},color:["{{ $alert->indicator->color }}"]},
-          @if($custom_results)
+          @if(isset($custom_results)&&$custom_results)
             {!! $custom_results['line'] !!}
             {!! $custom_results['point'] !!}
           @endif
