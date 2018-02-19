@@ -198,7 +198,10 @@ class AdminController extends Controller {
         return \AdminItem::get_item_view($this->module, $node, $single_model, $id, $variables);
 	}
 
-	public function getChildModel($single_model, $action, $id = NULL) {
+	public function getChildModel($single_model, $action, $id = NULL, $lang = NULL) {
+		if($lang){
+			\App::setLocale($lang);
+		}
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
         $model = \FuncNode::node_check_model($node);
         $options = ['child'=>true];
