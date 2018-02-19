@@ -30,7 +30,7 @@ class DynamicFormController extends Controller {
         if(!$request->hasFile('file')||!$request->file('file')->isValid()){
             return redirect($this->prev)->with('message_error', 'Por favor seleccione un archivo para importar en XLS o XLSX.');
         }
-        $name_array = \Solunes\Master\App\Node::where('location', '!=','package')->whereNull('parent_id')->withTrashed()->lists('name')->toArray();
+        $name_array = \Solunes\Master\App\Node::where('location', '!=','package')->withTrashed()->lists('name')->toArray();
         $name_array = array_merge(['image-folder','email'], $name_array);
         $languages = \Solunes\Master\App\Language::get();
         \Excel::load($request->file('file'), function($reader) use($languages, $name_array) {
