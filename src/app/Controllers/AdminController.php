@@ -168,7 +168,10 @@ class AdminController extends Controller {
         }
 	}
 
-	public function getModel($single_model, $action, $id = NULL) {
+	public function getModel($single_model, $action, $id = NULL, $lang = NULL) {
+		if($lang){
+			\App::setLocale($lang);
+		}
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
         $model = \FuncNode::node_check_model($node);
         $options = [];
@@ -295,6 +298,9 @@ class AdminController extends Controller {
       $model = $request->input('model_node');
       $action = $request->input('action_form');
       $lang_code = $request->input('lang_code');
+	  if($lang_code){
+		\App::setLocale($lang_code);
+	  }
       $response = AdminItem::post_request($model, $action, $request);
       $item = $response[1];
       $node_model = $response[2];
