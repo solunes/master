@@ -41,6 +41,7 @@ return [
 	
 	// FORM
 	'nocaptcha_login' => false,
+	'excel_import_select_labels' => true,
 	'relation_fast_create_array' => [], // array de field names: 'name'
 	'item_get_after_vars' => [], // array de nodos: 'node'
 	'item_child_after_vars' => [],

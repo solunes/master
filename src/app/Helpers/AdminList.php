@@ -229,8 +229,14 @@ class AdminList {
                     break;
                     case 'select':
                     case 'radio':
-                        if($item_val||$item_val===0){
-                            $value = $field_options[$field_name][$item_val];
+                        if(config('solunes.excel_import_select_labels')&&$type!='excel'){
+                            if($item_val||$item_val===0){
+                                $value = $field_options[$field_name][$item_val];
+                            }
+                        } else {
+                            if($item_val||$item_val===0){
+                                $value = $item_val;
+                            }
                         }
                     break;
                     case 'text':

@@ -51,7 +51,7 @@ class DataManager {
                                     $input = $get_submodel->id;
                                 }
                             }
-                        } else if(!$field->relation&&($field->type=='select'||$field->type=='radio')){
+                        } else if(!$field->relation&&config('solunes.excel_import_select_labels')&&($field->type=='select'||$field->type=='radio')){
                             if($subanswer = $field->field_options()->whereTranslation('label', $input)->first()){
                                 $input = $subanswer->name;
                             } else {
@@ -60,8 +60,12 @@ class DataManager {
                         } else if(!$field->relation&&$field->type=='checkbox'){
                             $subinput = [];
                             foreach(explode(' | ', $input) as $subval){
-                                if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
-                                    $subinput[] = $subanswer->name;
+                                if(config('solunes.excel_import_select_labels')){
+                                    if($subanswer = $field->field_options()->whereTranslation('label', $subval)->first()){
+                                        $subinput[] = $subanswer->name;
+                                    }
+                                } else {
+                                    $subinput[] = $subval;
                                 }
                             }
                             if(count($subinput)>0){
