@@ -59,4 +59,12 @@ trait UserPermission {
         return $array;
     }
 
+    public function getProfileImgNormalAttribute() {
+        if($this->image){
+            return asset('assets/admin/img/user.jpg');
+        } else {
+            return $path;
+        }
+    }
+
 }

@@ -81,6 +81,7 @@ class NodesDatabase extends Migration
         Schema::create('notifications', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
+            $table->enum('type', ['alert','event','log'])->default('alert');
             $table->string('name')->nullable();
             $table->string('url')->nullable();
             $table->datetime('checked_date')->nullable();

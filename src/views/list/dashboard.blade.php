@@ -1,20 +1,26 @@
 @extends('master::layouts/admin')
 
 @section('content')
-    <div class="page-bar">
-        <ul class="page-breadcrumb">
-            <li><span>Dashboard</span></li>
-        </ul>
-        <div class="page-toolbar">
-            <div id="reportrange" class="pull-right tooltips btn btn-sm" data-container="body" data-placement="bottom" data-original-title="Cambiar rango de fechas del panel">
-                <i class="icon-calendar"></i>&nbsp;
-                <span class="thin uppercase hidden-xs"></span>&nbsp;
-                <i class="fa fa-angle-down"></i>
-            </div>
+    <div class="m-subheader ">
+      <div class="d-flex align-items-center">
+        <div class="mr-auto">
+          <h3 class="m-subheader__title ">
+            Dashboard
+          </h3>
         </div>
+        <div>
+          <span class="m-subheader__daterange" id="reportrange">
+            <span class="m-subheader__daterange-label">
+              <span class="m-subheader__daterange-title"></span>
+              <span class="m-subheader_reportrange_daterange-date m--font-brand"></span>
+            </span>
+            <a href="#" class="btn btn-sm btn-brand m-btn m-btn--icon m-btn--icon-only m-btn--custom m-btn--pill">
+              <i class="la la-angle-down"></i>
+            </a>
+          </span>
+        </div>
+      </div>
     </div>
-    <!-- END PAGE BAR -->
-    <!-- END PAGE HEADER-->
 
     <h4><a href="{{ url('admin/model/indicator/create') }}">Crear indicador</a> | 
       <a href="{{ url('admin/indicators') }}">Agregar/Ocultar indicador</a></h4>
