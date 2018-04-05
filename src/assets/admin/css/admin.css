@@ -1928,6 +1928,9 @@ body.admin-site table.dataTable thead .sorting:after {
 body.admin-site .table .title {
   color: #136957;
   font-weight: 600; }
+body.admin-site .table > thead > tr > th, body.admin-site .table > thead > tr > td, body.admin-site .table > tbody > tr > th, body.admin-site .table > tbody > tr > td, body.admin-site .table > tfoot > tr > th, body.admin-site .table > tfoot > tr > td {
+  vertical-align: middle;
+  font-size: 16px; }
 body.admin-site .admin-table .title {
   color: #136957;
   font-weight: 600;
