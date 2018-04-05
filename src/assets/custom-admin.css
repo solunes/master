@@ -754,7 +754,7 @@
   .admin-site .picker__header select {
     padding: 4px; }
   .admin-site .picker__holder {
-    margin-left: -120px;
+    margin-left: 20px;
     min-width: 400px; }
   .admin-site .content-wrap.pdf-wrap {
     width: 100%;

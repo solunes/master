@@ -26,8 +26,7 @@ class MenuMiddleware
       if(!auth()->check()){
         Menu::make('main', function($menu) {
           $login = $menu->add('Ingresar', 'auth/login');
-          $login->prepend('<span class="title"><i class="fa fa-user"></i>');
-          $login->append('</span>');
+          $login = $menu->add('Olvidaste tu contraseña?', 'password/recover');
         });
       } else {
         $menu_options = \Solunes\Master\App\Menu::where('site_id', 1)->isActive()->menuQuery('admin', 1)->get();
