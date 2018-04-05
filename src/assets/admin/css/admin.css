@@ -1383,6 +1383,7 @@
   /* PDF Doc */
   /* Froala View */
   /* Parent Node */
+  /* Loader */
   /* Form Control */
   /* Flex */
   /* Tooltip */
@@ -1571,9 +1572,18 @@
     .admin-site .parent_node .accordion-content {
       padding: 10px;
       border-top: 1px dashed #999; }
+  .admin-site .m-page-loader.m-page-loader--base {
+    background: none; }
+  .admin-site .control-label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: 500; }
+  .admin-site label.mt-checkbox, .admin-site label.mt-radio {
+    margin-right: 10px;
+    font-weight: 400; }
   .admin-site input.form-control, .admin-site select.form-control {
     height: auto;
-    padding: 6px 12px; }
+    padding: 12px 12px; }
   .admin-site .flex {
     position: relative;
     display: -webkit-box;
