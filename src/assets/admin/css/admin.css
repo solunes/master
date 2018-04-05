@@ -1966,7 +1966,11 @@ body.admin-site .btn-brand {
   background: #136957;
   border-color: #136957; }
 body.admin-site .m-wrapper {
+<<<<<<< HEAD
   border-radius: 12px; }
+=======
+  border-radius: 0px 0px 12px 12px; }
+>>>>>>> 5abe91bd033a0a8a79ff7c777538dbfdbddc2318
 
 .admin-site .row {
   display: block;
