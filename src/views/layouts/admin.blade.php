@@ -260,6 +260,7 @@
                         </div>
                       </div>
                     </li>
+                    @if(auth()->user()->isAdmin())
                     <li class="m-nav__item m-topbar__quick-actions m-dropdown m-dropdown--skin-light m-dropdown--large m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push m-dropdown--mobile-full-width m-dropdown--skin-light"  m-dropdown-toggle="click">
                       <a href="#" class="m-nav__link m-dropdown__toggle">
                         <span class="m-nav__link-badge m-badge m-badge--dot m-badge--info m--hide"></span>
@@ -274,10 +275,10 @@
                         <div class="m-dropdown__inner">
                           <div class="m-dropdown__header m--align-center">
                             <span class="m-dropdown__header-title">
-                              Quick Actions
+                              Acciones Rápidas
                             </span>
                             <span class="m-dropdown__header-subtitle">
-                              Shortcuts
+                              Accesos Directos
                             </span>
                           </div>
                           <div class="m-dropdown__body m-dropdown__body--paddingless">
@@ -285,30 +286,30 @@
                               <div class="m-scrollable" data-scrollable="false" data-max-height="380" data-mobile-max-height="200">
                                 <div class="m-nav-grid m-nav-grid--skin-light">
                                   <div class="m-nav-grid__row">
-                                    <a href="#" class="m-nav-grid__item">
+                                    <a href="{{ url('admin') }}" class="m-nav-grid__item">
                                       <i class="m-nav-grid__icon flaticon-file"></i>
                                       <span class="m-nav-grid__text">
-                                        Generate Report
+                                        Dashboard
                                       </span>
                                     </a>
-                                    <a href="#" class="m-nav-grid__item">
+                                    <a href="{{ url('admin/model-list/user') }}" class="m-nav-grid__item">
                                       <i class="m-nav-grid__icon flaticon-time"></i>
                                       <span class="m-nav-grid__text">
-                                        Add New Event
+                                        Usuarios
                                       </span>
                                     </a>
                                   </div>
                                   <div class="m-nav-grid__row">
-                                    <a href="#" class="m-nav-grid__item">
+                                    <a href="{{ url('admin/import-nodes') }}" class="m-nav-grid__item">
                                       <i class="m-nav-grid__icon flaticon-folder"></i>
                                       <span class="m-nav-grid__text">
-                                        Create New Task
+                                        Subir en Masa
                                       </span>
                                     </a>
-                                    <a href="#" class="m-nav-grid__item">
+                                    <a href="{{ url('admin/model-list/contact-form') }}" class="m-nav-grid__item">
                                       <i class="m-nav-grid__icon flaticon-clipboard"></i>
                                       <span class="m-nav-grid__text">
-                                        Completed Tasks
+                                        Formularios de Contacto
                                       </span>
                                     </a>
                                   </div>
@@ -319,10 +320,11 @@
                         </div>
                       </div>
                     </li>
+                    @endif
                     <li class="m-nav__item m-topbar__user-profile  m-dropdown m-dropdown--medium m-dropdown--arrow  m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light" m-dropdown-toggle="click">
                       <a href="#" class="m-nav__link m-dropdown__toggle">
                         <span class="m-topbar__userpic">
-                          <img src="{{ asset('assets/admin/img/user.jpg') }}" class="m--img-rounded m--marginless m--img-centered" alt=""/>
+                          <img src="{{ asset('assets/admin/img/no_picture.jpg') }}" class="m--img-rounded m--marginless m--img-centered" alt=""/>
                         </span>
                         <span class="m-nav__link-icon m-topbar__usericon  m--hide">
                           <span class="m-nav__link-icon-wrapper">
@@ -330,7 +332,7 @@
                           </span>
                         </span>
                         <span class="m-topbar__username m--hide">
-                          Nick
+                          {{ auth()->user()->name }}
                         </span>
                       </a>
                       <div class="m-dropdown__wrapper">
@@ -339,14 +341,14 @@
                           <div class="m-dropdown__header m--align-center">
                             <div class="m-card-user m-card-user--skin-light">
                               <div class="m-card-user__pic">
-                                <img src="{{ asset('assets/admin/img/user.jpg') }}" class="m--img-rounded m--marginless" alt=""/>
+                                <img src="{{ asset('assets/admin/img/no_picture.jpg') }}" class="m--img-rounded m--marginless" alt=""/>
                               </div>
                               <div class="m-card-user__details">
                                 <span class="m-card-user__name m--font-weight-500">
-                                  Mark Andre
+                                  {{ auth()->user()->name }}
                                 </span>
                                 <a href="" class="m-card-user__email m--font-weight-300 m-link">
-                                  mark.andre@gmail.com
+                                  {{ auth()->user()->email }}
                                 </a>
                               </div>
                             </div>
@@ -356,63 +358,45 @@
                               <ul class="m-nav m-nav--skin-light">
                                 <li class="m-nav__section m--hide">
                                   <span class="m-nav__section-text">
-                                    Section
+                                    Secciones
                                   </span>
                                 </li>
                                 <li class="m-nav__item">
-                                  <a href="profile.html" class="m-nav__link">
+                                  <a href="{{ url('account') }}" class="m-nav__link">
                                     <i class="m-nav__link-icon flaticon-profile-1"></i>
                                     <span class="m-nav__link-title">
                                       <span class="m-nav__link-wrap">
                                         <span class="m-nav__link-text">
-                                          My Profile
+                                          Mi Perfil
                                         </span>
-                                        <span class="m-nav__link-badge">
+                                        <!--<span class="m-nav__link-badge">
                                           <span class="m-badge m-badge--success">
                                             2
                                           </span>
-                                        </span>
+                                        </span>-->
                                       </span>
                                     </span>
                                   </a>
                                 </li>
                                 <li class="m-nav__item">
-                                  <a href="profile.html" class="m-nav__link">
+                                  <a href="{{ url('admin/my-inbox') }}" class="m-nav__link">
                                     <i class="m-nav__link-icon flaticon-share"></i>
                                     <span class="m-nav__link-text">
-                                      Activity
-                                    </span>
-                                  </a>
-                                </li>
-                                <li class="m-nav__item">
-                                  <a href="profile.html" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-chat-1"></i>
-                                    <span class="m-nav__link-text">
-                                      Messages
-                                    </span>
-                                  </a>
-                                </li>
-                                <li class="m-nav__separator m-nav__separator--fit"></li>
-                                <li class="m-nav__item">
-                                  <a href="profile.html" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-info"></i>
-                                    <span class="m-nav__link-text">
-                                      FAQ
-                                    </span>
-                                  </a>
-                                </li>
-                                <li class="m-nav__item">
-                                  <a href="profile.html" class="m-nav__link">
-                                    <i class="m-nav__link-icon flaticon-lifebuoy"></i>
-                                    <span class="m-nav__link-text">
-                                      Support
+                                      Mis Mensajes
+                                        @if(count($inbox_unread_array)>0)
+                                        <span class="m-nav__link-badge">
+                                          <span class="m-badge m-badge--success">
+                                            {{ count($inbox_unread_array) }}
+                                          </span>
+                                        </span>
+                                      @endif
                                     </span>
                                   </a>
                                 </li>
                                 <li class="m-nav__separator m-nav__separator--fit"></li>
                                 <li class="m-nav__item">
-                                  <a href="snippets/pages/user/login-1.html" class="btn m-btn--pill    btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
-                                    Logout
+                                  <a href="{{ url('auth/logout') }}" class="btn m-btn--pill    btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
+                                    Cerrar Sesión
                                   </a>
                                 </li>
                               </ul>
@@ -420,15 +404,6 @@
                           </div>
                         </div>
                       </div>
-                    </li>
-                    <li id="m_quick_sidebar_toggle" class="m-nav__item">
-                      <a href="#" class="m-nav__link m-dropdown__toggle">
-                        <span class="m-nav__link-icon m-nav__link-icon-alt">
-                          <span class="m-nav__link-icon-wrapper">
-                            <i class="flaticon-grid-menu"></i>
-                          </span>
-                        </span>
-                      </a>
                     </li>
                   </ul>
                 </div>
@@ -482,43 +457,22 @@
             <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
               <span class="m-footer__copyright">
                 {{ $footer_name.' '.date('Y').' | '.$footer_rights }} | Desarrollado por: 
-                <a target="_blank" href="http://www.solunes.com" class="m-link">
+                <a target="_blank" href="http://www.solunes.com" style="color: #fff;">
                   Solunes Digital
                 </a>
               </span>
             </div>
             <div class="m-stack__item m-stack__item--right m-stack__item--middle m-stack__item--first">
               <ul class="m-footer__nav m-nav m-nav--inline m--pull-right">
-                <li class="m-nav__item">
+                <!--<li class="m-nav__item">
                   <a href="#" class="m-nav__link">
                     <span class="m-nav__link-text">
                       About
                     </span>
                   </a>
-                </li>
+                </li>-->
                 <li class="m-nav__item">
-                  <a href="#"  class="m-nav__link">
-                    <span class="m-nav__link-text">
-                      Privacy
-                    </span>
-                  </a>
-                </li>
-                <li class="m-nav__item">
-                  <a href="#" class="m-nav__link">
-                    <span class="m-nav__link-text">
-                      T&C
-                    </span>
-                  </a>
-                </li>
-                <li class="m-nav__item">
-                  <a href="#" class="m-nav__link">
-                    <span class="m-nav__link-text">
-                      Purchase
-                    </span>
-                  </a>
-                </li>
-                <li class="m-nav__item">
-                  <a href="#" class="m-nav__link" data-toggle="m-tooltip" title="Support Center" data-placement="left">
+                  <a href="#" class="m-nav__link" data-toggle="m-tooltip" title="Ayuda: Muy Pronto" data-placement="left">
                     <i class="m-nav__link-icon flaticon-info m--icon-font-size-lg3"></i>
                   </a>
                 </li>
@@ -533,7 +487,7 @@
   </div>
 
   <!-- begin::Quick Sidebar -->
-  <div id="m_quick_sidebar" class="m-quick-sidebar m-quick-sidebar--tabbed m-quick-sidebar--skin-light">
+  <!--<div id="m_quick_sidebar" class="m-quick-sidebar m-quick-sidebar--tabbed m-quick-sidebar--skin-light">
     <div class="m-quick-sidebar__content m--hide">
       <span id="m_quick_sidebar_close" class="m-quick-sidebar__close">
         <i class="la la-close"></i>
@@ -1133,7 +1087,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>-->
   <!-- end::Quick Sidebar -->         
     <!-- begin::Scroll Top -->
   <div id="m_scroll_top" class="m-scroll-top">
