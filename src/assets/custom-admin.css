@@ -811,7 +811,7 @@
       padding: 10px;
       border-top: 1px dashed #999; }
   .admin-site .m-page-loader.m-page-loader--base {
-    background: none; }
+    background: #ffffff; }
   .admin-site .control-label {
     font-size: 16px;
     margin-bottom: 5px;

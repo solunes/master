@@ -105,11 +105,12 @@
             </div>
             <!--end::Search-->
             <!-- begin::Topbar -->
-            @if(auth()->check()&&auth()->user()->hasPermission('dashboard'))
+            @if(auth()->check())
             <div class="m-stack__item m-stack__item--right m-header-head" id="m_header_nav">
               <div id="m_header_topbar" class="m-topbar  m-stack m-stack--ver m-stack--general">
                 <div class="m-stack__item m-topbar__nav-wrapper">
                   <ul class="m-topbar__nav m-nav m-nav--inline">
+                    @if(auth()->user()->hasPermission('dashboard'))
                     <li class="m-nav__item m-topbar__notifications m-dropdown m-dropdown--large m-dropdown--arrow m-dropdown--align-center  m-dropdown--mobile-full-width" m-dropdown-toggle="click" m-dropdown-persistent="1">
                       <a href="#" class="m-nav__link m-dropdown__toggle" @if($notifications_unread>0) id="m_topbar_notification_icon" @endif >
                         @if($notifications_unread>0)
@@ -260,6 +261,7 @@
                         </div>
                       </div>
                     </li>
+                    @endif
                     @if(auth()->user()->isAdmin())
                     <li class="m-nav__item m-topbar__quick-actions m-dropdown m-dropdown--skin-light m-dropdown--large m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push m-dropdown--mobile-full-width m-dropdown--skin-light"  m-dropdown-toggle="click">
                       <a href="#" class="m-nav__link m-dropdown__toggle">
