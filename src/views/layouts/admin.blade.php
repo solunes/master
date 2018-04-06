@@ -458,10 +458,8 @@
           <div class="m-stack m-stack--flex-tablet-and-mobile m-stack--ver m-stack--desktop">
             <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
               <span class="m-footer__copyright">
-                {{ $footer_name.' '.date('Y').' | '.$footer_rights }} | Desarrollado por: 
-                <a target="_blank" href="http://www.solunes.com" style="color: #fff;">
-                  Solunes Digital
-                </a>
+                {{ $footer_name.' '.date('Y').' | '.$footer_rights }} | {{ trans('master::layout.developed_by') }} 
+                  {{ trans('master::layout.developer') }}
               </span>
             </div>
             <div class="m-stack__item m-stack__item--right m-stack__item--middle m-stack__item--first">
