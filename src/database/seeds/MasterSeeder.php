@@ -81,7 +81,7 @@ class MasterSeeder extends Seeder {
         $form_perm = \Solunes\Master\App\Permission::create(['name'=>'form', 'display_name'=>'Formulario']);
         $dashboard_perm = \Solunes\Master\App\Permission::create(['name'=>'dashboard', 'display_name'=>'Dashboard']);
         $admin->permission_role()->sync([$global_perm->id, $site_perm->id, $user_perm->id, $form_perm->id, $dashboard_perm->id]);
-
+        
         // Tamaños de archivos
         \Solunes\Master\App\Variable::create([
             'name' => 'image_size',

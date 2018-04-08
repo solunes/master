@@ -72,6 +72,13 @@ class LoginController extends Controller {
 		return Login::logout($request->session(), 'auth/login', trans('master::form.logout_success'));
 	}
 
+	public function getInfo() {
+	    $array = ['page'=>\Solunes\Master\App\Page::first(), 'i'=>NULL, 'dt'=>false];
+        $node = \Solunes\Master\App\Node::where('name', 'content')->first();
+        $subarray = \FuncNode::get_items_array($node, 'instructions-login');
+        return view('master::auth.instructions', $subarray);
+	}
+
 	public function getSendConfirmationEmail($encoded_email) {
     	$email = urldecode($encoded_email);
 		if($email&&$user = \App\User::where('status','pending_confirmation')->where('email',$email)->first()){
