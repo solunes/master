@@ -39,9 +39,13 @@ return [
 	'table_pagination_count' => 25,
 	'list_inline_edit' => false,
 	
+	// GLOBAL
+	'login_instructions' => false,
+	'admin_inbox_disabled' => false,
+	'admin_inbox_excluded' => ['member'], // Incluir roles a ser excluidos del inbox, por defecto member
+
 	// FORM
 	'nocaptcha_login' => false,
-	'login_instructions' => false,
 	'excel_import_select_labels' => true,
 	'relation_fast_create_array' => [], // array de field names: 'name'
 	'item_get_after_vars' => [], // array de nodos: 'node'

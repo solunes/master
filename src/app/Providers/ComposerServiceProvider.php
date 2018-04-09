@@ -19,6 +19,10 @@ class ComposerServiceProvider extends ServiceProvider
                     $query->where('user_id', $user_id);
                 })->with('indicator','indicator.indicator_values')->get();
                 /* Inbox */
+                $array['enabled_inbox'] = true;
+                if(config('solunes.admin_inbox_disabled')===true||in_array(auth()->user()->role_user()->first()->name, config('solunes.admin_inbox_excluded'))){
+                    $array['enabled_inbox'] = false;
+                }
                 $array['inbox'] = \Solunes\Master\App\Inbox::userInbox($user_id)->with('other_users','last_message')->orderBy('updated_at','DESC')->limit(10)->get();
                 $array['inbox_unread_array'] = \Solunes\Master\App\Inbox::userUnreadInbox($user_id)->lists('id')->toArray();
                 /* Notifications */
