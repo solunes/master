@@ -27,6 +27,9 @@ class MenuMiddleware
         Menu::make('main', function($menu) {
           $login = $menu->add('Ingresar', 'auth/login');
           $login = $menu->add('Olvidaste tu contraseña?', 'password/recover');
+          if(config('solunes.login_instructions')){
+            $login = $menu->add('Instrucciones', 'auth/info');
+          }
         });
       } else {
         $menu_options = \Solunes\Master\App\Menu::where('site_id', 1)->isActive()->menuQuery('admin', 1)->get();
