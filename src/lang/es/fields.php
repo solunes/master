@@ -156,6 +156,7 @@ return [
     'score' => 'Calificación',
     'section' => 'Sección',
     'select_field' => 'Seleccionar campo',
+    'select_subfield' => 'Seleccionar relación',
     'since' => 'Desde',
     'singular' => 'Singular',
     'slug' => 'Slug',

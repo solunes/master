@@ -569,6 +569,18 @@ class AdminList {
             $array['filter_string_options'] = ['none'=>trans('master::fields.none'),'is'=>trans('master::fields.is'),'is_not'=>trans('master::fields.is_not'),'is_greater'=>trans('master::fields.is_greater'),'is_less'=>trans('master::fields.is_less'),'where_in'=>trans('master::fields.where_in')];
             foreach($filters as $filter){
                 $field_name = $filter->parameter;
+                $parent_filter_type = NULL;
+                if($filter->type=='parent_field'){
+                    $parent_filter_type = 'child';
+                }
+                $node_double = $node;
+                if($filter->type=='parent_field'&&$field_name=='parent_relation'){
+                    $action_value = json_decode($filter->action_value, true);
+                    $node_double = \Solunes\Master\App\Node::where('name', $action_value['node'])->first();
+                    $field_name = $action_value['parent_field'];
+                    $parent_filter_type = 'parent';
+                    $parent_field_join = str_replace('_id', '', $action_value['original_field']);
+                }
                 $array['filters'][$field_name] = ['subtype'=>$filter->subtype, 'id'=>$filter->id];
                 if($filter->display=='user'){
                     $array['filters'][$field_name]['show_delete'] = true;
@@ -582,7 +594,7 @@ class AdminList {
                     }
                 }
                 if(config('solunes.custom_filter')&&$custom_check!='false'){
-                    $custom_array = \CustomFunc::custom_filter($custom_check, $array, $items, $appends, $node, $model, $filter, $type, $field_name, $parent_field_join);
+                    $custom_array = \CustomFunc::custom_filter($custom_check, $array, $items, $appends, $node_double, $model, $filter, $type, $field_name, $parent_field_join);
                     $array = $custom_array['array'];
                     $appends = $custom_array['appends'];
                     $items = $custom_array['items'];
@@ -594,13 +606,13 @@ class AdminList {
                         $items = $custom_array['items'];
                     } else {
                         // Calcular Custom Value
-                        $custom_array = \AdminList::filter_custom_value($array, $appends, $node, $filter, $type, $field_name);
+                        $custom_array = \AdminList::filter_custom_value($array, $appends, $node_double, $filter, $type, $field_name);
                         $array = $custom_array['array'];
                         $appends = $custom_array['appends'];
                         $custom_value = $custom_array['custom_value'];
                         $field = $custom_array['field'];
                         // Obtener items segun tipo
-                        $custom_array = \AdminList::filter_items_get($items, $node, $model, $filter, $field, $field_name, $custom_value, $parent_field_join);
+                        $custom_array = \AdminList::filter_items_get($items, $node_double, $model, $filter, $field, $field_name, $custom_value, $parent_field_join, $parent_filter_type);
                         $items = $custom_array['items'];
                         $date_model = $custom_array['date_model'];
                         // Corregir campos de fecha
@@ -677,7 +689,7 @@ class AdminList {
         }
         $field = $node->fields()->where('name', $field_name)->first();
         if($filter->type=='parent_field'){
-            $array['filters'][$field_name]['label'] = strtoupper($node->name).': '.$field->label;
+            $array['filters'][$field_name]['label'] = strtoupper($node->singular).': '.$field->label;
         } else {
             $array['filters'][$field_name]['label'] = $field->label;
         }
@@ -685,7 +697,7 @@ class AdminList {
         return ['array'=>$array, 'appends'=>$appends, 'custom_value'=>$custom_value, 'field'=>$field];
     }
 
-    public static function filter_items_get($items, $node, $model, $filter, $field, $field_name, $custom_value, $parent_field_join = 'parent_id') {
+    public static function filter_items_get($items, $node, $model, $filter, $field, $field_name, $custom_value, $parent_field_join = 'parent_id', $parent_type = 'child') {
         $custom_value_count = count($custom_value);
         $date_model = NULL;
         if($filter->type=='field'){
@@ -699,8 +711,13 @@ class AdminList {
                 $date_model = $parent_model;
                 $parent_array = $parent_model::whereNotNull('id');
                 $parent_array = \AdminList::filter_custom_array($parent_array, $custom_value, $field, $field_name);
-                $parent_array = $parent_array->lists($parent_field_join)->toArray();
-                $items = $items->whereIn('id', $parent_array);
+                if($parent_type=='child'){
+                    $parent_array = $parent_array->lists($parent_field_join)->toArray();
+                    $items = $items->whereIn('id', $parent_array);
+                } else {
+                    $parent_array = $parent_array->lists('id')->toArray();
+                    $items = $items->whereIn($parent_field_join.'_id', $parent_array);
+                }
             }
         }
         return ['items'=>$items, 'date_model'=>$date_model];

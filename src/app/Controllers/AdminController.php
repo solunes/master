@@ -368,16 +368,34 @@ class AdminController extends Controller {
 		$rejected_ids = [];
 		$node = \Solunes\Master\App\Node::where('name', $node_name)->first();
 		$filters = $node->filters()->checkCategory($category)->checkDisplay();
+		$new_filters = clone $filters;
 		if($category=='admin'){
         	$rejected_ids = $filters->where('type','field')->lists('parameter')->toArray();
+        	$rejected_parent_ids = $new_filters->where('type','parent_field')->lists('action_value')->toArray();
 		} else  {
         	$rejected_ids = $filters->where('category_id', $category_id)->lists('parameter')->toArray();
+        	$rejected_parent_ids = [];
 		}
 		$array['category'] = $category;
 		$array['type'] = $type;
 		$array['node_id'] = $node->id;
 		$array['category_id'] = $category_id;
 		$array['fields'] = $node->fields()->whereNotIn('name', $rejected_ids)->filters()->get()->lists('label','name')->toArray();
+      	$subfields = [];
+      	$new_rejected_ids = ['id'];
+    	if(count($rejected_parent_ids)>0){
+    		foreach($rejected_parent_ids as $rejected_parent_id){
+    			$rejected_parent_id = json_decode($rejected_parent_id, true);
+    			$new_rejected_ids[] = $rejected_parent_id['parent_field'];
+    		}
+    	}
+      	foreach($node->fields()->where('relation', 1)->get() as $subfield){
+      		if($subnode = \Solunes\Master\App\Node::where('name', $subfield->value)->first()){
+      			$subfields[$subnode->name]['label'] = $subfield->label;
+				$subfields[$subnode->name]['fields'] = $subnode->fields()->filters()->whereNotIn('name', $new_rejected_ids)->get()->lists('label','name')->toArray();
+      		}
+      	}
+      	$array['subfields'] = $subfields;
       	return view('master::modal.filter', $array);
 	}
 
@@ -393,7 +411,19 @@ class AdminController extends Controller {
 			$category_id = $request->input('category_id');
 			$node_id = $request->input('node_id');
 			$node = \Solunes\Master\App\Node::find($node_id);
+			$action_value = NULL;
+			$parameter = $request->input('select_field');
 			$field = $node->fields()->where('name', $request->input('select_field'))->first();
+			if($field->relation){
+				$subfield = 'select_subfield_'.$field->value;
+				if($request->has($subfield)&&$request->input($subfield)!==''&&$node = \Solunes\Master\App\Node::where('name',$field->value)->first()){
+					$field = $node->fields()->where('name', $request->input($subfield))->first();
+					$type = 'parent_field';
+					$old_parameter = $parameter;
+					$parameter = 'parent_relation';
+					$action_value = json_encode(['node'=>$node->name, 'parent_field'=>$field->name, 'field'=>$parameter, 'original_field'=>$old_parameter]);
+				}
+			}
 			if($field->type=='date'){
 				$subtype = 'date';
 			} else if($field->type=='string'||$field->type=='text'||$field->type=='barcode'){
@@ -411,7 +441,8 @@ class AdminController extends Controller {
 			$filter->display = $display;
 			$filter->type = $type;
 			$filter->subtype = $subtype;
-			$filter->parameter = $request->input('select_field');
+			$filter->parameter = $parameter;
+			$filter->action_value = $action_value;
 			$filter->save();
 			$url = $this->prev;
 			if (strpos($url, '?') !== false) {
