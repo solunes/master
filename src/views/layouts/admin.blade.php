@@ -50,7 +50,7 @@
             <div class="m-stack__item m-brand m-stack__item--left">
               <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                 <div class="m-stack__item m-stack__item--middle m-brand__logo">
-                  <a href="index.html" class="m-brand__logo-wrapper">
+                  <a href="{{ url('inicio') }}" class="m-brand__logo-wrapper">
                     <img alt="" src="{{ asset('assets/img/logoadmin.png') }}" class="m-brand__logo-default"/>
                     <img alt="" src="{{ asset('assets/img/logoadmin.png') }}" class="m-brand__logo-inverse"/>
                   </a>
