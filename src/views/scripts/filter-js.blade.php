@@ -3,11 +3,11 @@
 		$(".open_filter_container").click(function(){
 			if($(this).data('status')=='closed'){
 				$(this).data('status', 'open');
-				$(this).html('<i class="fa fa-angle-up"></i> Ocultar Filtro');
+				$(this).html('<i class="fa fa-angle-up"></i> Ocultar Buscador');
 		    	$(".filter_container").show(500);
 			} else {
 				$(this).data('status', 'closed');
-				$(this).html('<i class="fa fa-angle-down"></i> Mostrar Filtro');
+				$(this).html('<i class="fa fa-angle-down"></i> Mostrar Buscador');
 		    	$(".filter_container").hide(500);
 			}
 		});

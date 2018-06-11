@@ -89,13 +89,14 @@ class GenerateNodes extends Command
               foreach($node->children as $child){
                 $count++;
                 $multiple = false;
+                $relation = true;
                 if($child->type=='field'){
                     $child_value = str_replace($node->name.'-', '', $child->name);
                     $child_value = str_replace('-'.$node->name, '', $child_value);
-                    $relation = true;
+                    //$relation = true;
                 } else {
                     $child_value = $child->name;
-                    $relation = false;
+                    //$relation = false;
                 }
                 if($child->type=='subchild'){
                   $multiple = true;
@@ -157,6 +158,9 @@ class GenerateNodes extends Command
         }
         if(config('solunes.pagostt')){
           $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/pagostt/src/nodes.xlsx')));
+        }
+        if(config('solunes.notification')){
+          $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/notification/src/nodes.xlsx')));
         }
         $this->info(\FuncNode::load_nodes_excel(public_path('seed/nodes.xlsx')));
         $this->info('100%: Se crearon '.$total_count.' campos.');

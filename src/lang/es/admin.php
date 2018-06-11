@@ -12,6 +12,7 @@ return array(
 	"view" => "Ver",
 	"save" => "Guardar",
 	"filter" => "Filtrar",
+	"search" => "Buscar",
 	"generate" => "Generar",
 	"download" => "Descargar",
 	"download" => "Descargar",
@@ -48,6 +49,7 @@ return array(
 	"node_edited" => "Nodo Editado",
 	"add_filter" => "Añadir Filtro",
 	"delete_all_filters" => "Eliminar todos los filtros",
+	"edit_list" => "Editar Columnas",
 
 	// ERROR MESSAGEs
 	"error_title" => "¡ups! :(",
@@ -122,6 +124,7 @@ return array(
 	"inventory" => "Inventario",
 	"payments" => "Pagos",
 	"store" => "Tienda",
+	"notification" => "Notificación",
 	"pagostt" => "PagosTT",
 
 	// GLOBAL TRANS

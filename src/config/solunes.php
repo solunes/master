@@ -31,6 +31,7 @@ return [
     'services' => false,
     'accounting' => false,
     'reservation' => false,
+    'notification' => false,
     'pagostt' => false,
 
 	// LIST

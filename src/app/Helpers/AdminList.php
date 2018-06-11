@@ -566,7 +566,7 @@ class AdminList {
                 $array['search'] = 1;
             }
             $array['filters'] = [];
-            $array['filter_string_options'] = ['none'=>trans('master::fields.none'),'is'=>trans('master::fields.is'),'is_not'=>trans('master::fields.is_not'),'is_greater'=>trans('master::fields.is_greater'),'is_less'=>trans('master::fields.is_less'),'where_in'=>trans('master::fields.where_in')];
+            $array['filter_string_options'] = ['is'=>trans('master::fields.is'),'is_not'=>trans('master::fields.is_not'),'is_greater'=>trans('master::fields.is_greater'),'is_less'=>trans('master::fields.is_less'),'where_in'=>trans('master::fields.where_in')];
             foreach($filters as $filter){
                 $field_name = $filter->parameter;
                 $parent_filter_type = NULL;
@@ -689,7 +689,7 @@ class AdminList {
         }
         $field = $node->fields()->where('name', $field_name)->first();
         if($filter->type=='parent_field'){
-            $array['filters'][$field_name]['label'] = strtoupper($node->singular).': '.$field->label;
+            $array['filters'][$field_name]['label'] = mb_strtoupper($node->singular, 'UTF-8').': '.$field->label;
         } else {
             $array['filters'][$field_name]['label'] = $field->label;
         }

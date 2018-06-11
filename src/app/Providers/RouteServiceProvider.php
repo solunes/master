@@ -23,6 +23,7 @@ class RouteServiceProvider extends ServiceProvider
     protected $paymentsNamespace = 'Solunes\Payments\App\Controllers';
     protected $storeNamespace = 'Solunes\Store\App\Controllers';
     protected $pagosttNamespace = 'Solunes\Pagostt\App\Controllers';
+    protected $notificationNamespace = 'Solunes\Notification\App\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.

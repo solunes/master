@@ -12,6 +12,7 @@ return array(
 	"view" => "View",
 	"save" => "Save",
 	"filter" => "Filter",
+	"search" => "Buscar",
 	"generate" => "Generate",
 	"download" => "Download",
 	"view_trash" => "View Trash",
@@ -46,6 +47,7 @@ return array(
 	"node_edited" => "Node Updated",
 	"add_filter" => "Add Filter",
 	"delete_all_filters" => "Delete all filters",
+	"edit_list" => "Edit Columns",
 
 	// ERROR MESSAGEs
 	"error_title" => "oops! :(",
@@ -118,6 +120,7 @@ return array(
 	"inventory" => "Inventory",
 	"payments" => "Payments",
 	"store" => "Store",
+	"notification" => "Notification",
 	"pagostt" => "PagosTT",
 
 

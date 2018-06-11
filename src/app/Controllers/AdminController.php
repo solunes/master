@@ -364,6 +364,33 @@ class AdminController extends Controller {
 	    return redirect($this->prev)->with('message_success', $message);
     }
 
+	public function getModalEditList($category, $type, $category_id, $node_name) {
+		$node = \Solunes\Master\App\Node::where('name', $node_name)->first();
+		$fields = [];
+		$options = ['excel'=>'Ocultar', 'show'=>'Mostrar'];
+      	foreach($node->fields()->where('name','!=','id')->get() as $field){
+      		$fields[$field->name] = ['name'=>$field->name, 'label'=>$field->label, 'value'=>$field->display_list];
+      	}
+      	$array['node_name'] = $node_name;
+      	$array['fields'] = $fields;
+      	$array['options'] = $options;
+      	return view('master::modal.list-fields', $array);
+	}
+
+	public function postModalEditList(Request $request) {
+		if($request->has('node_name')&&$node = \Solunes\Master\App\Node::where('name', $request->input('node_name'))->first()){
+	      	foreach($node->fields()->where('name','!=','id')->get() as $field){
+	      		if($field->display_list!=$request->input($field->name)){
+	      			$field->display_list = $request->input($field->name);
+	      		}
+	      		$field->save();
+	      	}
+	      	return redirect($this->prev)->with('message_success','Campos actualizados correctamente.');
+	      } else {
+	      	return redirect($this->prev)->with('message_error','Hubo un error.');
+	      }
+	}
+
 	public function getModalFilter($category, $type, $category_id, $node_name) {
 		$rejected_ids = [];
 		$node = \Solunes\Master\App\Node::where('name', $node_name)->first();
@@ -392,7 +419,7 @@ class AdminController extends Controller {
       	foreach($node->fields()->where('relation', 1)->get() as $subfield){
       		if($subnode = \Solunes\Master\App\Node::where('name', $subfield->value)->first()){
       			$subfields[$subnode->name]['label'] = $subfield->label;
-				$subfields[$subnode->name]['fields'] = $subnode->fields()->filters()->whereNotIn('name', $new_rejected_ids)->get()->lists('label','name')->toArray();
+				$subfields[$subnode->name]['fields'] = array_merge(['no-subfilter'=>'Sin Subfiltro'], $subnode->fields()->filters()->whereNotIn('name', $new_rejected_ids)->get()->lists('label','name')->toArray());
       		}
       	}
       	$array['subfields'] = $subfields;
@@ -416,7 +443,7 @@ class AdminController extends Controller {
 			$field = $node->fields()->where('name', $request->input('select_field'))->first();
 			if($field->relation){
 				$subfield = 'select_subfield_'.$field->value;
-				if($request->has($subfield)&&$request->input($subfield)!==''&&$node = \Solunes\Master\App\Node::where('name',$field->value)->first()){
+				if($request->has($subfield)&&$request->input($subfield)!==''&&$request->input($subfield)!=='no-subfilter'&&$node = \Solunes\Master\App\Node::where('name',$field->value)->first()){
 					$field = $node->fields()->where('name', $request->input($subfield))->first();
 					$type = 'parent_field';
 					$old_parameter = $parameter;

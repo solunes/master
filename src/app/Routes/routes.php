@@ -37,7 +37,11 @@ Route::group(['prefix'=>'admin'], function(){
     Route::post('modal-filter', 'AdminController@postModalFilter');
     Route::get('delete-filter/{id}', 'AdminController@getDeleteFilter');
     Route::get('delete-all-filters/{category}/{category_id}/{node_id?}', 'AdminController@getDeleteAllFilters');
+    Route::get('delete-filter/{id}', 'AdminController@getDeleteFilter');
     Route::get('modal-map/{name}/{value}', 'AdminController@getModalMap');
+    // Editar Lista
+    Route::get('edit-list/{category}/{type}/{category_id}/{node_name}', 'AdminController@getModalEditList');
+    Route::post('edit-list', 'AdminController@postModalEditList');
     // Códigos de Barras
     Route::get('redirect-barcode/{node_name}/{item_id}', 'AdminController@redirectBarcode');
     Route::get('check-barcode/{node_id}/{barcode}', 'AdminController@checkBarcode');

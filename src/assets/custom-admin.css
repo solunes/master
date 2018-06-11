@@ -641,6 +641,8 @@
     background: #f3f3f3; }
     .admin-site .dropdown-menu-list li.unread i, .admin-site tr.unread i {
       color: #136957; }
+  .admin-site h3 a {
+    font-size: 1.75rem; }
   .admin-site .inbox-conversations a.btn {
     margin-bottom: 25px; }
   .admin-site .inbox-conversations a {
@@ -821,7 +823,7 @@
     font-weight: 400; }
   .admin-site input.form-control, .admin-site select.form-control {
     height: auto;
-    padding: 12px 12px; }
+    padding: 10px; }
   .admin-site .flex {
     position: relative;
     display: -webkit-box;
@@ -1156,7 +1158,7 @@ body.admin-site .m_quick_sidebar_toggle .m-topbar .m-topbar__nav.m-nav > .m-nav_
   border: 1px solid #136957;
   color: white; }
 body.admin-site .m-topbar .m-topbar__nav.m-nav > .m-nav__item > .m-nav__link .m-nav__link-icon:hover .m-nav__link-icon-wrapper {
-  background: white; }
+  background: #eee; }
 body.admin-site table.dataTable thead .sorting_asc:after {
   color: #136957;
   vertical-align: middle; }
@@ -1228,6 +1230,16 @@ body.admin-site .m-wrapper {
 
   .admin-site div.dataTables_wrapper div.dataTables_filter label {
     text-align: right; } }
+/* Top Menu */
+@media (min-width: 1025px) {
+  .admin-site.m-header--fixed.m-header--minimize-on .m-header .m-header__top {
+    background-color: #136957 !important; } }
+@media (max-width: 1024px) {
+  .admin-site.m-aside-header-menu-mobile.m-aside-header-menu-mobile--skin-light {
+    background-color: #c3c3c3; } }
+body.admin-site h3 a {
+  font-size: 1.5rem; }
+
 .admin-site .form-control, .form-control[readonly] {
   border-color: #ccc; }
 
