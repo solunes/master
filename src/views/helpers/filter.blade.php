@@ -18,7 +18,7 @@
       <a href="{{ url('admin/delete-all-filters/'.$filter_category.'/'.$filter_category_id.'/'.$filter_node) }}" onclick="return confirm('¿Está seguro que desea eliminar todos los filtros?');">
         <button class="btn btn-site" style="margin-top: 0;">{{ trans('master::admin.delete_all_filters') }}</button>
       </a>
-      <a class="lightbox" href="{{ url('admin/edit-list/'.$filter_category.'/'.$filter_type.'/'.$filter_category_id.'/'.$filter_node) }}?lightbox[width]=500&lightbox[height]=400" id="edit-list-button">
+      <a class="lightbox" href="{{ url('admin/edit-list/'.$filter_category.'/'.$filter_type.'/'.$filter_category_id.'/'.$filter_node) }}?lightbox[width]=700&lightbox[height]=600" id="edit-list-button">
         <button class="btn btn-site" style="margin-top: 0;">{{ trans('master::admin.edit_list') }}</button>
       </a>
     </div>
