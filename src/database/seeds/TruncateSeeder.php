@@ -49,6 +49,7 @@ class TruncateSeeder extends Seeder {
         \Solunes\Master\App\FieldOption::truncate();
         \Solunes\Master\App\FieldConditional::truncate();
         \Solunes\Master\App\FieldExtra::truncate();
+        \Solunes\Master\App\FieldRelation::truncate();
         \Solunes\Master\App\FieldTranslation::truncate();
         \Solunes\Master\App\Field::truncate();
         \Solunes\Master\App\Filter::truncate();

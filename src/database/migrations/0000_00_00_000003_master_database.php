@@ -169,11 +169,19 @@ class MasterDatabase extends Migration
             $table->increments('id');
             $table->integer('field_id')->unsigned();
             $table->string('locale')->index();
-            $table->string('label');
+            $table->string('label')->nullable();
             $table->text('tooltip')->nullable();
             $table->text('message')->nullable();
             $table->unique(['field_id','locale']);
             $table->foreign('field_id')->references('id')->on('fields')->onDelete('cascade');
+        });
+        Schema::create('field_relations', function(Blueprint $table) {
+            $table->increments('id');
+            $table->integer('parent_id')->unsigned();
+            $table->integer('related_field_code')->nullable();
+            $table->string('name')->nullable();
+            $table->string('label')->nullable();
+            $table->foreign('parent_id')->references('id')->on('fields')->onDelete('cascade');
         });
         Schema::create('field_extras', function (Blueprint $table) {
             $table->increments('id');
@@ -278,12 +286,11 @@ class MasterDatabase extends Migration
         Schema::dropIfExists('field_options');
         Schema::dropIfExists('field_conditionals');
         Schema::dropIfExists('field_extras');
+        Schema::dropIfExists('field_relations');
         Schema::dropIfExists('field_translation');
         Schema::dropIfExists('fields');
-        Schema::dropIfExists('sections'); // BORRAR
         Schema::dropIfExists('filters');
         Schema::dropIfExists('node_extras');
-        Schema::dropIfExists('node_requests'); // BORRAR
         Schema::dropIfExists('node_translation');
         Schema::dropIfExists('nodes');
         Schema::dropIfExists('menu_translation');

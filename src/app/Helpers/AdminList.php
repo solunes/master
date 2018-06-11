@@ -57,7 +57,7 @@ class AdminList {
         } else {
             $display_fields = ['show'];
         }
-        $array['fields'] = $node->fields()->displayList($display_fields)->where('type', '!=', 'field')->with('translations', 'field_options', 'field_extras')->get();
+        $array['fields'] = $node->fields()->displayList($display_fields)->where('type', '!=', 'field')->with('translations', 'field_options', 'field_extras', 'field_relations')->get();
         $field_ops = \Solunes\Master\App\Field::whereIn('parent_id', $node_array)->displayList($display_fields)->has('field_options')->with('field_options')->get();
         $array['field_options'] = [];
         foreach($field_ops as $field_op){
@@ -65,7 +65,7 @@ class AdminList {
                 $array['field_options'][$field_op->name][$field_option->name] = $field_option->label;
             }
         }
-        $relation_fields = $node->fields()->displayList($display_fields)->where('relation', 1)->get();
+        $relation_fields = $node->fields()->displayList($display_fields)->where('relation', 1)->with('field_relations')->get();
         if(count($relation_fields)>0){
             foreach($relation_fields as $relation){
                 $sub_node = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $relation->value))->first();
@@ -80,6 +80,13 @@ class AdminList {
                     $items = $items->with([$relation->trans_name, $relation->trans_name.'.translations']);
                 } else {
                     $items = $items->with($relation->trans_name);
+                }
+                foreach($relation->field_relations as $field_relation){
+                    if($related_field = $field_relation->related_field){
+                        foreach($related_field->field_options as $field_option){
+                            $array['field_options'][$related_field->name][$field_option->name] = $field_option->label;
+                        }
+                    }
                 }
             }
         }
@@ -135,6 +142,11 @@ class AdminList {
             $response = '';
             foreach($fields as $field){
                 $response .= '<td>'.$field->label.'</td>';
+                if($field->relation&&count($field->field_relations)>0){
+                  foreach($field->field_relations as $field_relation){
+                    $response .= '<td>'.$field_relation->label.'</td>';
+                  }
+                }
             }
             foreach($action_fields as $action_field){
                 if($action_field=='edit'){
@@ -178,6 +190,38 @@ class AdminList {
             $response = '';
         }
         foreach($fields as $field){
+            $value = \AdminList::get_field_value($field, $item, $field_options, $appends, $type, $database);
+            if($type=='table'){
+                $response .= '<td ';
+                if(in_array($field->type, ['field','custom','title','content','child','subchild','hidden','map','barcode','file','image','text'])){
+                    $response .= 'class="ineditable" ';
+                }
+                $response .= 'data-field="'.$field->name.'" data-id="'.$item->id.'">'.$value.'</td>';
+            } else if($type=='excel'){
+                array_push($response, $value);
+            }
+            if($field->relation&&count($field->field_relations)>0){
+                foreach($field->field_relations as $field_relation){
+                    $relation_name = $field->trans_name;
+                    $related_field = $field_relation->related_field;
+                    if($related_field){
+                        $new_value = \AdminList::get_field_value($related_field, $item->$relation_name, $field_options, $appends, $type, $database);
+                    } else {
+                        $new_value = NULL;
+                    }
+                    if($type=='table'){
+                        $response .= '<td class="ineditable" data-field="'.$field->name.'-'.$relation_name.'" data-id="'.$item->id.'">'.$new_value.'</td>';
+                    } else if($type=='excel'){
+                        array_push($response, $new_value);
+                    }
+                }
+            }
+        }
+        return $response;
+    }
+
+    public static function get_field_value($field, $item, $field_options, $appends, $type, $database) {
+        if($item){
             $field_name = $field->name;
             $field_trans_name = $field->trans_name;
             $field_type = $field->type;
@@ -230,7 +274,7 @@ class AdminList {
                     case 'select':
                     case 'radio':
                         if(config('solunes.excel_import_select_labels')&&$type!='excel'){
-                            if($item_val||$item_val===0){
+                            if(isset($field_options[$field_name])&&isset($field_options[$field_name][$item_val])&&($item_val||$item_val===0)){
                                 $value = $field_options[$field_name][$item_val];
                             }
                         } else {
@@ -259,7 +303,7 @@ class AdminList {
                                 $array_value = [$item_val];
                             }
                             $value = '';
-                            $folder = $field->field_extras->where('type', 'folder')->first()->value;
+                            $folder = $field->field_extras()->where('type', 'folder')->first()->value;
                             foreach($array_value as $key => $val){
                                 $count++;
                                 if($count>1){
@@ -304,17 +348,10 @@ class AdminList {
                     break;
                 }
             }
-            if($type=='table'){
-                $response .= '<td ';
-                if(in_array($field->type, ['field','custom','title','content','child','subchild','hidden','map','barcode','file','image','text'])){
-                    $response .= 'class="ineditable" ';
-                }
-                $response .= 'data-field="'.$field->name.'" data-id="'.$item->id.'">'.$value.'</td>';
-            } else if($type=='excel'){
-                array_push($response, $value);
-            }
+        } else {
+            $value = '-';
         }
-        return $response;
+        return $value;
     }
 
     public static function make_fields_values_rows($langs, $module, $model, $item, $fields, $field_options, $appends, $action_fields = ['edit', 'delete']) {
@@ -880,6 +917,9 @@ class AdminList {
             $col_width = [];
             foreach($array['fields'] as $key => $field){
                 array_push($col_array, $field->label);
+                foreach($field->field_relations as $field_relation){
+                    array_push($col_array, $field_relation->label);
+                }
                 $col_width = \DataManager::generateColWidth($alphabet, $field, $key, $col_width);
             }
             \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $array['fields'], $array['field_options'], $array['items'], []);
@@ -894,6 +934,9 @@ class AdminList {
                     $child_fields = $child->fields()->where('display_item', 'show')->where('name','!=','parent_id')->get();
                     foreach($child_fields as $key => $field){
                         array_push($col_array, $field->label);
+                        foreach($field->field_relations as $field_relation){
+                            array_push($col_array, $field_relation->label);
+                        }
                         $col_width = \DataManager::generateColWidth($alphabet, $field, $key, $col_width);
                     }
                     \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $child_fields, $array['field_options'], $array['items'], [], $child_table);

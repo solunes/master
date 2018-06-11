@@ -17,6 +17,7 @@ return [
     'field-conditional' => 'Field Conditional|Field Conditionals',
     'field-extra' => 'Field Extra|Field Extras',
     'field-option' => 'Field Option|Field Options',
+    'field-relation' => 'Field Relation|Field Relations',
     'filter' => 'Filter|Filters',
     'indicator' => 'Indicator|Indicators',
     'indicator-formula' => 'Indicator Formula|Indicator Formulas',

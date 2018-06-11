@@ -57,6 +57,10 @@ class Field extends Model {
         return $this->belongsTo('Solunes\Master\App\Node');
     }
 
+    public function field_relations() {
+        return $this->hasMany('Solunes\Master\App\FieldRelation', 'parent_id');
+    }
+
     public function field_extras() {
         return $this->hasMany('Solunes\Master\App\FieldExtra', 'parent_id');
     }

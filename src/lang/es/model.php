@@ -17,6 +17,7 @@ return [
     'field-conditional' => 'Condicional de Campo|Condicionales de Campo',
     'field-extra' => 'Extra de Campo|Extras de Campo',
     'field-option' => 'Opción de Campo|Opciones de Campo',
+    'field-relation' => 'Relación de Campo|Relaciones de Campo',
     'filter' => 'Filtro|Filtros',
     'indicator' => 'Indicador|Indicadores',
     'indicator-formula' => 'Formula de Indicador|Formulas de Indicadores',
