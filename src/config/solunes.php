@@ -3,6 +3,7 @@
 return [
 	// GLOBAL
     'solunes_path' => env('FOLDER_SOLUNES_PATH', 'vendor/solunes'),
+    'todotix_path' => env('FOLDER_TODOTIX_PATH', 'vendor/todotix'),
 	'vendor_path' => env('SOLUNES_PATH', 'vendor/solunes/master'),
 	'blocked_activities' => [],
 	'image_quality' => 80,
@@ -33,6 +34,7 @@ return [
     'reservation' => false,
     'notification' => false,
     'pagostt' => false,
+    'todotix-customer' => false,
 
 	// LIST
 	'pagination_count' => 500,

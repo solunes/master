@@ -62,6 +62,9 @@ class Deploy extends Command
             if(config('solunes.notification')){
                 $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/notification/src/database/migrations']);
             }
+            if(config('solunes.todotix-customer')){
+                $this->callSilent('migrate', ['--path'=>'/'.config('solunes.todotix_path').'/customer/src/database/migrations']);
+            }
             $this->callSilent('migrate', ['--path'=>'/database/migrations']);
             $this->info('60%: Migrate ejecutado correctamente.');
             if(config('solunes.after_migrate')){

@@ -24,6 +24,7 @@ class RouteServiceProvider extends ServiceProvider
     protected $storeNamespace = 'Solunes\Store\App\Controllers';
     protected $pagosttNamespace = 'Solunes\Pagostt\App\Controllers';
     protected $notificationNamespace = 'Solunes\Notification\App\Controllers';
+    protected $todotixCustomerNamespace = 'Todotix\Customer\App\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -92,6 +93,11 @@ class RouteServiceProvider extends ServiceProvider
         if(config('solunes.payments')){
             $router->group(['namespace' => $this->paymentsNamespace, 'middleware' => 'admin'], function ($router) {
                 require __DIR__ . '/../../../../payments/src/app/Routes/admin.php';
+            });
+        }
+        if(config('solunes.todotix-customer')){
+            $router->group(['namespace' => $this->todotixCustomerNamespace, 'middleware' => 'admin'], function ($router) {
+                require __DIR__ . '/../../../../../todotix/customer/src/app/Routes/admin.php';
             });
         }
         /*if(config('solunes.store')){

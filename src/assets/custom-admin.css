@@ -635,6 +635,8 @@
   /* Store: Sale */ }
   .admin-site .page-header.navbar .page-logo .logo-default {
     margin: 10px 0 0 0; }
+  .admin-site .m-body .m-wrapper, .admin-site .m-body {
+    overflow: visible; }
   .admin-site .page-header.navbar .top-menu .navbar-nav > li.dropdown-extended .dropdown-menu > li.external > h3 {
     color: #136957; }
   .admin-site .dropdown-menu-list li.unread, .admin-site tr.unread {
@@ -823,7 +825,8 @@
     font-weight: 400; }
   .admin-site input.form-control, .admin-site select.form-control {
     height: auto;
-    padding: 10px; }
+    padding: 10px;
+    width: 100%; }
   .admin-site .flex {
     position: relative;
     display: -webkit-box;

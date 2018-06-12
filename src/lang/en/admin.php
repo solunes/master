@@ -122,6 +122,7 @@ return array(
 	"store" => "Store",
 	"notification" => "Notification",
 	"pagostt" => "PagosTT",
+	"customer" => "Cliente",
 
 
 	// GLOBAL TRANS
