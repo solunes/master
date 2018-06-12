@@ -158,6 +158,11 @@ class RouteServiceProvider extends ServiceProvider
                 require __DIR__ . '/../../../../pagostt/src/app/Routes/api.php';
             });
         }
+        if(config('solunes.todotix-customer')){
+            $router->group(['namespace' => $this->todotixCustomerNamespace, 'middleware' => 'web'], function ($router) {
+                require __DIR__ . '/../../../../../todotix/customer/src/app/Routes/routes.php';
+            });
+        }
     }
 
 }
