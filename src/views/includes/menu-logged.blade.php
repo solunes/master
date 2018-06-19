@@ -36,6 +36,7 @@
   <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left m-menu__submenu--tabs">
     <span class="m-menu__arrow m-menu__arrow--adjust"></span>
     <ul class="m-menu__subnav">
+      @if(config('solunes.admin_initial_menu.my_profile'))
       <li class="m-menu__item "  m-menu-link-redirect="1" aria-haspopup="true">
         <a  href="{{ url('account') }}" class="m-menu__link ">
           <i class="m-menu__link-icon flaticon-support"></i>
@@ -44,6 +45,8 @@
           </span>
         </a>
       </li>
+      @endif
+      @if(config('solunes.admin_initial_menu.logout'))
       <li class="m-menu__item "  m-menu-link-redirect="1" aria-haspopup="true">
         <a  href="{{ url('auth/logout') }}" class="m-menu__link ">
           <i class="m-menu__link-icon flaticon-support"></i>
@@ -52,6 +55,7 @@
           </span>
         </a>
       </li>
+      @endif
     </ul>
   </div>
 </li>

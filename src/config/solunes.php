@@ -45,8 +45,12 @@ return [
 	// GLOBAL
 	'login_instructions' => false,
     'admin_initial_menu' => [
-        'dashboard'=> true,
-        'my_account'=> true
+        'login'=> true,
+        'password_recover'=> true,
+        'dashboard'=> false,
+        'my_account'=> true,
+        'my_profile'=> false,
+        'logout'=> true
     ],
 	'admin_inbox_disabled' => false,
 	'admin_inbox_disabled' => false,
