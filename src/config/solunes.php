@@ -44,6 +44,11 @@ return [
 	
 	// GLOBAL
 	'login_instructions' => false,
+    'admin_initial_menu' => [
+        'dashboard'=> true,
+        'my_account'=> true
+    ],
+	'admin_inbox_disabled' => false,
 	'admin_inbox_disabled' => false,
 	'admin_inbox_excluded' => ['member'], // Incluir roles a ser excluidos del inbox, por defecto member
 
@@ -92,5 +97,8 @@ return [
 
     // SERVICES
     'translation' => false,
+    'sms_notification' => false,
+    'email_notification' => true,
+    'push_notification' => false,
 
 ];
