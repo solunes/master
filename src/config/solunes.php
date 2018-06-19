@@ -49,7 +49,7 @@ return [
         'password_recover'=> true,
         'dashboard'=> false,
         'my_account'=> true,
-        'my_profile'=> false,
+        'my_profile'=> true,
         'logout'=> true
     ],
 	'admin_inbox_disabled' => false,
