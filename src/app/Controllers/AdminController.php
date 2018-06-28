@@ -367,13 +367,25 @@ class AdminController extends Controller {
 	public function getModalEditList($category, $type, $category_id, $node_name) {
 		$node = \Solunes\Master\App\Node::where('name', $node_name)->first();
 		$fields = [];
-		$options = ['excel'=>'Ocultar', 'show'=>'Mostrar'];
+		$relation_fields = [];
       	foreach($node->fields()->where('name','!=','id')->get() as $field){
       		$fields[$field->name] = ['name'=>$field->name, 'label'=>$field->label, 'value'=>$field->display_list];
+      		if($field->relation&&$subnode = \Solunes\Master\App\Node::where('name', $field->trans_name)->first()){
+      			$subfield_relations = $field->field_relations()->lists('related_field_code')->toArray();
+      			foreach($subnode->fields()->whereNotIn('name',['id','name'])->orderBy('order','ASC')->get() as $relation){
+      				$relation_display = 'hide';
+      				if(in_array($relation->id, $subfield_relations)){
+      					$relation_display = 'show';
+      				}
+      				$relation_fields[$subnode->singular][$relation->name] = ['name'=>$field->name.'-'.$relation->name, 'label'=>$relation->label, 'value'=>$relation_display];
+      			}
+      		}
       	}
       	$array['node_name'] = $node_name;
       	$array['fields'] = $fields;
-      	$array['options'] = $options;
+      	$array['relation_fields'] = $relation_fields;
+      	$array['options'] = ['excel'=>'Ocultar', 'show'=>'Mostrar'];
+      	$array['relation_options'] = ['hide'=>'Ocultar', 'show'=>'Mostrar'];
       	return view('master::modal.list-fields', $array);
 	}
 
@@ -382,8 +394,26 @@ class AdminController extends Controller {
 	      	foreach($node->fields()->where('name','!=','id')->get() as $field){
 	      		if($field->display_list!=$request->input($field->name)){
 	      			$field->display_list = $request->input($field->name);
+	      			$field->save();
 	      		}
-	      		$field->save();
+	      		if($field->relation&&$subnode = \Solunes\Master\App\Node::where('name', $field->value)->first()){
+	      			$subfield_relations = $field->field_relations()->lists('related_field_code')->toArray();
+	      			foreach($subnode->fields()->whereNotIn('name',['id','name'])->orderBy('order','ASC')->get() as $relation){
+	      				$field_name = $field->name.'-'.$relation->name;
+	      				if($request->has($field_name)){
+		      				if($request->input($field_name)=='hide'&&in_array($relation->id, $subfield_relations)){
+		      					$field->field_relations()->where('related_field_code', $relation->id)->delete();
+		      				} else if($request->input($field_name)=='show'&&!in_array($relation->id, $subfield_relations)) {
+		      					$new_relation = new \Solunes\Master\App\FieldRelation;
+		      					$new_relation->parent_id = $field->id;
+		      					$new_relation->related_field_code = $relation->id;
+		      					$new_relation->name = $relation->name;
+		      					$new_relation->label = $field->label.' - '.$relation->label;
+		      					$new_relation->save();
+		      				}
+	      				}
+		      		}
+	      		}
 	      	}
 	      	return redirect($this->prev)->with('message_success','Campos actualizados correctamente.');
 	      } else {

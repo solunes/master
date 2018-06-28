@@ -25,8 +25,12 @@ class MenuMiddleware
       }
       if(!auth()->check()){
         Menu::make('main', function($menu) {
-          $login = $menu->add('Ingresar', 'auth/login');
-          $login = $menu->add('Olvidaste tu contraseña?', 'password/recover');
+          if(config('solunes.admin_initial_menu.login')){
+            $login = $menu->add('Ingresar', 'auth/login');
+          }
+          if(config('solunes.admin_initial_menu.password_recover')){
+            $login = $menu->add('Olvidaste tu contraseña?', 'password/recover');
+          }
           if(config('solunes.login_instructions')){
             $login = $menu->add('Instrucciones', 'auth/info');
           }

@@ -96,7 +96,7 @@ class MasterDatabase extends Migration
             $table->string('name');
             $table->string('table_name')->nullable();
             $table->string('model')->nullable();
-            $table->enum('location', ['package', 'app', 'business', 'project', 'sales', 'product', 'inventory', 'payments', 'store', 'notification', 'pagostt'])->default('app');
+            $table->enum('location', ['package', 'app', 'business', 'project', 'sales', 'product', 'inventory', 'payments', 'store', 'notification', 'pagostt', 'customer'])->default('app');
             $table->enum('type', ['normal', 'child', 'subchild', 'field'])->default('normal');
             $table->string('folder')->nullable();
             $table->integer('parent_id')->nullable();

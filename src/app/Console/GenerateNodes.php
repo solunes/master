@@ -30,16 +30,18 @@ class GenerateNodes extends Command
         $this->info('20%: Las tablas fueron limpiadas.');
         $nodes = \Solunes\Master\App\Node::get();
         $total_count = 0;
-        \App::setLocale('es');
         $languages = \Solunes\Master\App\Language::get();
-        $menu_dashboard = \Solunes\Master\App\Menu::create(['menu_type'=>'admin', 'permission'=>'dashboard', 'icon'=>'dashboard']);
-        foreach($languages as $language){
-          \App::setLocale($language->code);
-          $menu_dashboard->translateOrNew($language->code)->name = trans('master::admin.dashboard');
-          $menu_dashboard->translateOrNew($language->code)->link = 'admin';
+        \App::setLocale(config('solunes.main_lang'));
+        if(config('solunes.admin_initial_menu.dashboard')){
+          $menu_dashboard = \Solunes\Master\App\Menu::create(['menu_type'=>'admin', 'permission'=>'dashboard', 'icon'=>'dashboard']);
+          foreach($languages as $language){
+            \App::setLocale($language->code);
+            $menu_dashboard->translateOrNew($language->code)->name = trans('master::admin.dashboard');
+            $menu_dashboard->translateOrNew($language->code)->link = 'admin';
+          }
+          \App::setLocale(config('solunes.main_lang'));
+          $menu_dashboard->save();
         }
-        \App::setLocale('es');
-        $menu_dashboard->save();
         foreach($nodes as $node){
           $node = \DataManager::translateLocalization($languages, $node, 'singular', $node->lang_folder.'::model.'.$node->name, 1);
           $node = \DataManager::translateLocalization($languages, $node, 'plural', $node->lang_folder.'::model.'.$node->name, 0);
@@ -161,6 +163,9 @@ class GenerateNodes extends Command
         }
         if(config('solunes.notification')){
           $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/notification/src/nodes.xlsx')));
+        }
+        if(config('solunes.todotix-customer')){
+          $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.todotix_path').'/customer/src/nodes.xlsx')));
         }
         $this->info(\FuncNode::load_nodes_excel(public_path('seed/nodes.xlsx')));
         $this->info('100%: Se crearon '.$total_count.' campos.');

@@ -3,6 +3,7 @@
 return [
 	// GLOBAL
     'solunes_path' => env('FOLDER_SOLUNES_PATH', 'vendor/solunes'),
+    'todotix_path' => env('FOLDER_TODOTIX_PATH', 'vendor/todotix'),
 	'vendor_path' => env('SOLUNES_PATH', 'vendor/solunes/master'),
 	'blocked_activities' => [],
 	'image_quality' => 80,
@@ -33,6 +34,7 @@ return [
     'reservation' => false,
     'notification' => false,
     'pagostt' => false,
+    'todotix-customer' => false,
 
 	// LIST
 	'pagination_count' => 500,
@@ -42,6 +44,15 @@ return [
 	
 	// GLOBAL
 	'login_instructions' => false,
+    'admin_initial_menu' => [
+        'login'=> true,
+        'password_recover'=> true,
+        'dashboard'=> false,
+        'my_account'=> true,
+        'my_profile'=> false,
+        'logout'=> true
+    ],
+	'admin_inbox_disabled' => false,
 	'admin_inbox_disabled' => false,
 	'admin_inbox_excluded' => ['member'], // Incluir roles a ser excluidos del inbox, por defecto member
 
@@ -90,5 +101,8 @@ return [
 
     // SERVICES
     'translation' => false,
+    'sms_notification' => false,
+    'email_notification' => true,
+    'push_notification' => false,
 
 ];
