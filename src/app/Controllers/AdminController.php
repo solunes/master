@@ -370,7 +370,8 @@ class AdminController extends Controller {
 		$relation_fields = [];
       	foreach($node->fields()->where('name','!=','id')->get() as $field){
       		$fields[$field->name] = ['name'=>$field->name, 'label'=>$field->label, 'value'=>$field->display_list];
-      		if($field->relation&&$subnode = \Solunes\Master\App\Node::where('name', $field->trans_name)->first()){
+      		$node_name_rel = str_replace('_','-',$field->value);
+      		if($field->relation&&$subnode = \Solunes\Master\App\Node::where('name', $node_name_rel)->first()){
       			$subfield_relations = $field->field_relations()->lists('related_field_code')->toArray();
       			foreach($subnode->fields()->whereNotIn('name',['id','name'])->orderBy('order','ASC')->get() as $relation){
       				$relation_display = 'hide';
@@ -396,7 +397,8 @@ class AdminController extends Controller {
 	      			$field->display_list = $request->input($field->name);
 	      			$field->save();
 	      		}
-	      		if($field->relation&&$subnode = \Solunes\Master\App\Node::where('name', $field->value)->first()){
+      			$node_name_rel = str_replace('_','-',$field->value);
+	      		if($field->relation&&$subnode = \Solunes\Master\App\Node::where('name', $node_name_rel)->first()){
 	      			$subfield_relations = $field->field_relations()->lists('related_field_code')->toArray();
 	      			foreach($subnode->fields()->whereNotIn('name',['id','name'])->orderBy('order','ASC')->get() as $relation){
 	      				$field_name = $field->name.'-'.$relation->name;
@@ -447,9 +449,11 @@ class AdminController extends Controller {
     		}
     	}
       	foreach($node->fields()->where('relation', 1)->get() as $subfield){
-      		if($subnode = \Solunes\Master\App\Node::where('name', $subfield->value)->first()){
-      			$subfields[$subnode->name]['label'] = $subfield->label;
-				$subfields[$subnode->name]['fields'] = array_merge(['no-subfilter'=>'Sin Subfiltro'], $subnode->fields()->filters()->whereNotIn('name', $new_rejected_ids)->get()->lists('label','name')->toArray());
+      		$subfield_replace = str_replace('_','-',$subfield->value);
+      		if($subnode = \Solunes\Master\App\Node::where('name', $subfield_replace)->first()){
+      			$subnode_replace = str_replace('-','_',$subnode->name);
+      			$subfields[$subnode_replace]['label'] = $subfield->label;
+				$subfields[$subnode_replace]['fields'] = array_merge(['no-subfilter'=>'Sin Subfiltro'], $subnode->fields()->filters()->whereNotIn('name', $new_rejected_ids)->get()->lists('label','name')->toArray());
       		}
       	}
       	$array['subfields'] = $subfields;
@@ -472,8 +476,10 @@ class AdminController extends Controller {
 			$parameter = $request->input('select_field');
 			$field = $node->fields()->where('name', $request->input('select_field'))->first();
 			if($field->relation){
-				$subfield = 'select_subfield_'.$field->value;
-				if($request->has($subfield)&&$request->input($subfield)!==''&&$request->input($subfield)!=='no-subfilter'&&$node = \Solunes\Master\App\Node::where('name',$field->value)->first()){
+      			$field_replace = str_replace('-','_',$field->value);
+      			$node_replace = str_replace('_','-',$field->value);
+				$subfield = 'select_subfield_'.$field_replace;
+				if($request->has($subfield)&&$request->input($subfield)!==''&&$request->input($subfield)!=='no-subfilter'&&$node = \Solunes\Master\App\Node::where('name',$node_replace)->first()){
 					$field = $node->fields()->where('name', $request->input($subfield))->first();
 					$type = 'parent_field';
 					$old_parameter = $parameter;

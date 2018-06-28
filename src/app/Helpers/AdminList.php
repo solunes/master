@@ -743,9 +743,9 @@ class AdminList {
                 $items = \AdminList::filter_custom_array($items, $custom_value, $field, $field_name);
             }
         } else if($filter->type=='parent_field') {
+            $parent_model = $node->model;
+            $date_model = $parent_model;
             if($custom_value_count>0){
-                $parent_model = $node->model;
-                $date_model = $parent_model;
                 $parent_array = $parent_model::whereNotNull('id');
                 $parent_array = \AdminList::filter_custom_array($parent_array, $custom_value, $field, $field_name);
                 if($parent_type=='child'){
@@ -762,6 +762,7 @@ class AdminList {
 
     public static function filter_date_field($array, $date_model, $filter, $field_name) {
         if($filter->subtype=='date'){
+            \Log::info($date_model);
             if($first_day_field = $date_model::whereNotNull($field_name)->orderBy($field_name,'ASC')->first()){
                 $array['filters'][$field_name]['first_day'] = $first_day_field->$field_name;
             } else {
