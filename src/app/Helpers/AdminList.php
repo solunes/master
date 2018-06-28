@@ -247,15 +247,19 @@ class AdminList {
                     $value = 'Nº: '.count($item_val);
                 } else if($field->type=='field'){
                     $value = NULL;
-                    foreach($item_val as $subkey => $subitem){
-                        if($subkey>0){
-                            $value .= ';';
+                    if($item_val){
+                        foreach($item_val as $subkey => $subitem){
+                            if($subkey>0){
+                                $value .= ';';
+                            }
+                            if($database){
+                                $value .= $subitem->id;
+                            } else {
+                                $value .= $subitem->name;
+                            }
                         }
-                        if($database){
-                            $value .= $subitem->id;
-                        } else {
-                            $value .= $subitem->name;
-                        }
+                    } else {
+                        \Log::info('Error al exportar: '.$field_name);
                     }
                 } else {
                     if($item_val&&is_object($item_val)){
