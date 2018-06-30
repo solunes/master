@@ -409,7 +409,7 @@ class Field {
                 }
                 $response .= '<div class="upload_thumb '.$type.'_thumb">';
                 if($type=='image'){
-                  $response .= '<a class="lightbox" href="'.Asset::get_image_path($folder, 'normal', $value).'">'.Asset::get_image($folder, 'mini', $value).'</a>';
+                  $response .= '<a class="lightbox" href="'.Asset::get_image_path($folder, 'normal', $value).'"><img src="'.asset(Asset::get_image_path($folder, 'mini', $value)).'" /></a>';
                 } else {
                   $response .= '<a href="'.Asset::get_file($folder, $value).'" target="_blank">'.$value.'</a>';
                 }

@@ -82,15 +82,20 @@ class DynamicFormController extends Controller {
         array_map('unlink', glob($dir.'/*'));
         $store_nodes = ['purchase','sale','partner-movement','place-movement','refund','income','expense','accounts-payable','accounts-receivable'];
         $languages = \Solunes\Master\App\Language::where('code','!=',config('solunes.main_lang'))->lists('code');
-        $file = \Excel::create('import', function($excel) use($nodes, $store_nodes, $languages) {
+        $used_array = [];
+        $file = \Excel::create('import', function($excel) use($nodes, $store_nodes, $used_array, $languages) {
             foreach($nodes as $node){
                 $alphabet = \DataManager::generateAlphabet(count($node->fields));
-                if(!in_array($node->name, $store_nodes)){
+                if(!in_array($node->name, $store_nodes)&&!in_array($node->name, $used_array)){
+                    $used_array[] = $node->name;
                     \DataManager::exportNodeExcel($excel, $alphabet, $node, false, true);
                     $children = $node->children()->where('type', '!=', 'field')->get();
                     if(count($children)>0){
                         foreach($children as $child){
-                            \DataManager::exportNodeExcel($excel, $alphabet, $child, false, true);
+                            if(!in_array($node->name, $used_array)){
+                                $used_array[] = $node->name;
+                                \DataManager::exportNodeExcel($excel, $alphabet, $child, false, true);
+                            }
                         }
                     }
                 }
