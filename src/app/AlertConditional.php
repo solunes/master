@@ -11,7 +11,6 @@ class AlertConditional extends Model {
 
 	/* Creating rules */
 	public static $rules_create = array(
-		'parent_id'=>'required',
 		'field_id'=>'required',
 		'active'=>'required',
 		'conditional'=>'required',
@@ -20,7 +19,6 @@ class AlertConditional extends Model {
 
 	/* Updating rules */
 	public static $rules_edit = array(
-		'parent_id'=>'required',
 		'field_id'=>'required',
 		'active'=>'required',
 		'conditional'=>'required',

@@ -11,14 +11,12 @@ class AlertAction extends Model {
 
 	/* Creating rules */
 	public static $rules_create = array(
-		'parent_id'=>'required',
 		'type'=>'required',
 		'content'=>'required',
 	);
 
 	/* Updating rules */
 	public static $rules_edit = array(
-		'parent_id'=>'required',
 		'type'=>'required',
 		'content'=>'required',
 	);

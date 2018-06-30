@@ -410,7 +410,7 @@ class FuncNode {
         foreach($notifications_array as $type){
           $final_message = $message;
           if($type=='dashboard'){
-            // ENVIAR PUSH NOTIFICATION A APP
+            // Se genera bien
             $sent = true;
           } else if($type=='email'){
             // ENVIAR EMAIL
@@ -429,7 +429,7 @@ class FuncNode {
             if(isset($email_parameters['vars_foreach'])){
               $vars_foreach = $email_parameters['vars_foreach'];
             }
-            $sent = \Func::make_email($email_name, [$user->email], $vars, $vars_if, $vars_foreach);
+            $sent = \FuncNode::make_email($email_name, [$user->email], $vars, $vars_if, $vars_foreach);
           } else if($type=='sms'){
             // ENVIAR SMS
             // TODO: INTEGRAR CON AWS SNS PARA HACER UN POST Y REGISTRARLO EN ALGUNA APP DE SMS
