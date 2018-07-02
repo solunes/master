@@ -105,6 +105,7 @@ class MasterDatabase extends Migration
             $table->boolean('dynamic')->default(0);
             $table->boolean('customized')->default(0);
             $table->boolean('translation')->default(0);
+            $table->boolean('indicators')->default(0);
             $table->boolean('soft_delete')->default(0);
             $table->timestamps();
             $table->softDeletes();
@@ -213,60 +214,31 @@ class MasterDatabase extends Migration
             $table->unique(['field_option_id','locale']);
             $table->foreign('field_option_id')->references('id')->on('field_options')->onDelete('cascade');
         });
-        Schema::create('indicators', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('node_id')->unsigned();
-            $table->string('name');
-            $table->integer('user_id')->nullable();
-            $table->enum('type', ['normal','custom'])->default('normal');
-            $table->enum('data_count', ['total','daily'])->default('total');
-            $table->enum('data', ['count','sum_field','avarage_field','formula'])->default('count');
-            $table->string('field_name')->nullable();
-            $table->text('formula')->nullable();
-            $table->enum('color', ['blue','red','green','purple','yellow','gray','black'])->default('green');
-            $table->string('custom')->nullable();
-            $table->enum('result', ['number','custom'])->default('number');
-            $table->string('result_custom')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
-            $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');
-        });
-        Schema::create('indicator_alerts', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('parent_id')->unsigned();
-            $table->string('name')->nullable();
-            $table->integer('goal')->nullable();
-            $table->date('final_date')->nullable();
-            $table->foreign('parent_id')->references('id')->on('indicators')->onDelete('cascade');
-        });
-        Schema::create('indicator_alert_users', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('indicator_alert_id')->unsigned();
-            $table->integer('user_id')->nullable();
-            $table->foreign('indicator_alert_id')->references('id')->on('indicator_alerts')->onDelete('cascade');
-        });
-        Schema::create('indicator_graphs', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('parent_id')->unsigned();
-            $table->string('name')->nullable();
-            $table->enum('graph', ['number','bar','pie','line'])->default('line');
-            $table->integer('goal')->nullable();
-            $table->foreign('parent_id')->references('id')->on('indicators')->onDelete('cascade');
-        });
-        Schema::create('indicator_graph_users', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('indicator_graph_id')->unsigned();
-            $table->integer('user_id')->nullable();
-            $table->foreign('indicator_graph_id')->references('id')->on('indicator_graphs')->onDelete('cascade');
-        });
-        Schema::create('indicator_values', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('parent_id')->unsigned();
-            $table->date('date')->nullable();
-            $table->string('type')->default('normal')->nullable();
-            $table->string('value')->nullable();
-            $table->foreign('parent_id')->references('id')->on('indicators')->onDelete('cascade');
-        });
+        if(config('solunes.indicators')){
+            Schema::create('indicators', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('node_id')->unsigned();
+                $table->string('name');
+                $table->integer('user_id')->nullable();
+                $table->text('filter_query')->nullable();
+                $table->enum('graph_type', ['line','bar','pie','table'])->default('line');
+                $table->enum('default_date', ['total','this-week','last-week','this-month','last-month','this-year','last-year','custom'])->default('total');
+                $table->text('custom_date')->nullable();
+                $table->enum('color', ['blue','red','green','purple','yellow','gray','black'])->default('green');
+                $table->timestamps();
+                $table->softDeletes();
+                $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');
+            });
+            Schema::create('indicator_users', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('parent_id')->unsigned();
+                $table->integer('user_id')->nullable();
+                $table->enum('graph_type', ['parent','line','bar','pie','table'])->default('parent');
+                $table->enum('default_date', ['parent','total','this-week','last-week','this-month','last-month','this-year','last-year','custom'])->default('parent');
+                $table->text('custom_date')->nullable();
+                $table->foreign('parent_id')->references('id')->on('indicators')->onUpdate('cascade')->onDelete('cascade');
+            });
+        }
     }
 
     /**
@@ -276,11 +248,12 @@ class MasterDatabase extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('indicator_values');
-        Schema::dropIfExists('indicator_graph_users');
-        Schema::dropIfExists('indicator_graphs');
-        Schema::dropIfExists('indicator_alert_users');
-        Schema::dropIfExists('indicator_alerts');
+        Schema::dropIfExists('indicator_values'); // Borrar
+        Schema::dropIfExists('indicator_graph_users'); // Borrar
+        Schema::dropIfExists('indicator_graphs'); // Borrar
+        Schema::dropIfExists('indicator_alert_users'); // Borrar
+        Schema::dropIfExists('indicator_alerts'); // Borrar
+        Schema::dropIfExists('indicator_users');
         Schema::dropIfExists('indicators');
         Schema::dropIfExists('field_option_translation');
         Schema::dropIfExists('field_options');

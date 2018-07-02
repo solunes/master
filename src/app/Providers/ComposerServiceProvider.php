@@ -15,9 +15,7 @@ class ComposerServiceProvider extends ServiceProvider
             if(auth()->check()){
                 $user_id = auth()->user()->id;
                 /* Indicadores */
-                $array['alerts'] = \Solunes\Master\App\IndicatorAlert::whereHas('indicator_alert_users', function ($query) use($user_id) {
-                    $query->where('user_id', $user_id);
-                })->with('indicator','indicator.indicator_values')->get();
+                $array['alerts'] = \Solunes\Master\App\Indicator::get();
                 /* Inbox */
                 $array['enabled_inbox'] = true;
                 if(config('solunes.admin_inbox_disabled')===true||in_array(auth()->user()->role_user()->first()->name, config('solunes.admin_inbox_excluded'))){

@@ -26,24 +26,46 @@ class AdminController extends Controller {
 	}
 
 	public function getIndex() {
-		if(request()->has('start_date')){
-			$array['start_date'] = request()->input('start_date');
-		} else {
-			$array['start_date'] = date('Y-m-d', strtotime("-29 days"));
-		}
-		if(request()->has('end_date')){
-			$array['end_date'] = request()->input('end_date');
-		} else {
-			$array['end_date'] = date('Y-m-d');
-		}
-        $user_id = auth()->user()->id;
-		$array['block_alerts'] = \Solunes\Master\App\IndicatorGraph::whereHas('indicator_graph_users', function ($query) use($user_id) {
-            $query->where('user_id', $user_id);
-        })->where('graph','number')->has('indicator')->with('indicator')->get();
-		$array['graph_alerts'] = \Solunes\Master\App\IndicatorGraph::whereHas('indicator_graph_users', function ($query) use($user_id) {
-            $query->where('user_id', $user_id);
-        })->where('graph','!=','number')->has('indicator')->with('indicator')->get();
-      	return view('master::list.dashboard', $array);
+        if(config('solunes.indicators')){
+			if(request()->has('start_date')){
+				$array['start_date'] = request()->input('start_date');
+			} else {
+				$array['start_date'] = date('Y-m-d', strtotime("-29 days"));
+			}
+			if(request()->has('end_date')){
+				$array['end_date'] = request()->input('end_date');
+			} else {
+				$array['end_date'] = date('Y-m-d');
+			}
+        	$array['nodes'] = \Solunes\Master\App\Node::where('indicators', 1)->get();
+        	$array['indicator'] = \Solunes\Master\App\Indicator::first();
+        	if(request()->input('search')){
+        		$array['items'] = \Solunes\Master\App\Node::where('indicators', 1)->get();
+        	} else {
+        		$array['items'] = [];
+        	}
+        	$view = 'master::list.dashboard-new';
+        } else {
+			if(request()->has('start_date')){
+				$array['start_date'] = request()->input('start_date');
+			} else {
+				$array['start_date'] = date('Y-m-d', strtotime("-29 days"));
+			}
+			if(request()->has('end_date')){
+				$array['end_date'] = request()->input('end_date');
+			} else {
+				$array['end_date'] = date('Y-m-d');
+			}
+	        $user_id = auth()->user()->id;
+			$array['block_alerts'] = \Solunes\Master\App\IndicatorGraph::whereHas('indicator_graph_users', function ($query) use($user_id) {
+	            $query->where('user_id', $user_id);
+	        })->where('graph','number')->has('indicator')->with('indicator')->get();
+			$array['graph_alerts'] = \Solunes\Master\App\IndicatorGraph::whereHas('indicator_graph_users', function ($query) use($user_id) {
+	            $query->where('user_id', $user_id);
+	        })->where('graph','!=','number')->has('indicator')->with('indicator')->get();
+	        $view = 'master::list.dashboard';
+        }
+      	return view($view, $array);
 	}
 
     public function getMyNotifications() {

@@ -36,6 +36,10 @@ return [
     'pagostt' => false,
     'todotix-customer' => false,
 
+	// PACKAGES
+	'alerts' => true,
+	'indicators' => true,
+
 	// LIST
 	'pagination_count' => 500,
 	'table_pagination' => 'false',

@@ -22,7 +22,7 @@ class MasterSeeder extends Seeder {
         ]);
         \Solunes\Master\App\Site::create([
             'name' => 'Plataforma',
-            'domain' => 'http://master.dev/',
+            'domain' => 'http://master.test/',
             'root' => '/',
             'google_verification' => '',
             'analytics' => ''
@@ -37,10 +37,10 @@ class MasterSeeder extends Seeder {
         $node_field_relation = \Solunes\Master\App\Node::create(['name'=>'field-relation', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_field->id]);
         $node_field_conditional = \Solunes\Master\App\Node::create(['name'=>'field-conditional', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_field->id]);
         $node_field_option = \Solunes\Master\App\Node::create(['name'=>'field-option', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_field->id]);
-        $node_indicator = \Solunes\Master\App\Node::create(['name'=>'indicator', 'folder'=>'system', 'customized'=>1]);
-        $node_indicator_alert = \Solunes\Master\App\Node::create(['name'=>'indicator-alert', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_indicator->id]);
-        $node_indicator_graph = \Solunes\Master\App\Node::create(['name'=>'indicator-graph', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_indicator->id]);
-        $node_indicator_value = \Solunes\Master\App\Node::create(['name'=>'indicator-value', 'type'=>'child', 'location'=>'package', 'parent_id'=>$node_indicator->id]);
+        if(config('solunes.indicators')){
+            $node_indicator = \Solunes\Master\App\Node::create(['name'=>'indicator', 'folder'=>'system']);
+            \Solunes\Master\App\Node::create(['name'=>'indicator-user', 'type'=>'child', 'location'=>'package', 'parent_id'=>$node_indicator->id]);
+        }
         $node_site = \Solunes\Master\App\Node::create(['name'=>'site', 'folder'=>'global']);
         $node_page = \Solunes\Master\App\Node::create(['name'=>'page', 'folder'=>'global']);
         $node_menu = \Solunes\Master\App\Node::create(['name'=>'menu', 'folder'=>'global', 'multilevel'=>true]);
@@ -52,14 +52,14 @@ class MasterSeeder extends Seeder {
         $node_user = \Solunes\Master\App\Node::create(['name'=>'user', 'location'=>'app', 'folder'=>'user']);
         \Solunes\Master\App\Filter::create(['node_id'=>$node_user->id, 'parameter'=>'status']);
         $node_role_user = \Solunes\Master\App\Node::create(['name'=>'role-user', 'table_name'=>'role_user', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\Role', 'parent_id'=>$node_user->id]);
-        $node_indicator_alert_user = \Solunes\Master\App\Node::create(['name'=>'indicator-alert-user', 'table_name'=>'indicator_alert_users', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\IndicatorAlert', 'parent_id'=>$node_user->id]);
-        $node_indicator_graph_user = \Solunes\Master\App\Node::create(['name'=>'indicator-graph-user', 'table_name'=>'indicator_graph_users', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\IndicatorGraph', 'parent_id'=>$node_user->id]);
-        
+
         // Normal Nodes
-        $node_alert = \Solunes\Master\App\Node::create(['name'=>'alert', 'folder'=>'global']);
-        \Solunes\Master\App\Node::create(['name'=>'alert-action', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_alert->id]);
-        \Solunes\Master\App\Node::create(['name'=>'alert-conditional', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_alert->id]);
-        \Solunes\Master\App\Node::create(['name'=>'alert-user', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_alert->id]);
+        if(config('solunes.alerts')){
+            $node_alert = \Solunes\Master\App\Node::create(['name'=>'alert', 'folder'=>'global']);
+            \Solunes\Master\App\Node::create(['name'=>'alert-action', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_alert->id]);
+            \Solunes\Master\App\Node::create(['name'=>'alert-conditional', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_alert->id]);
+            \Solunes\Master\App\Node::create(['name'=>'alert-user', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_alert->id]);
+        }
         $node_email = \Solunes\Master\App\Node::create(['name'=>'email', 'folder'=>'global']);
         $node_activity = \Solunes\Master\App\Node::create(['name'=>'activity', 'table_name'=>'activities', 'folder'=>'system']);
         $node_notification = \Solunes\Master\App\Node::create(['name'=>'notification', 'folder'=>'system']);

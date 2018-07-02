@@ -13,40 +13,42 @@ class NodesDatabase extends Migration
     public function up()
     {
         // Global
-        Schema::create('alerts', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('node_id')->unsigned();
-            $table->string('name');
-            $table->enum('type', ['normal', 'custom'])->default('normal')->nullable();
-            $table->string('code')->nullable();
-            $table->timestamps();
-            $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');
-        });
-        Schema::create('alert_actions', function(Blueprint $table) {
-            $table->increments('id');
-            $table->integer('parent_id')->unsigned();
-            $table->enum('type', ['dashboard','email','sms','app'])->default('dashboard')->nullable();
-            $table->string('title')->nullable();
-            $table->text('content')->nullable();
-            $table->foreign('parent_id')->references('id')->on('alerts')->onDelete('cascade');
-        });
-        Schema::create('alert_conditionals', function(Blueprint $table) {
-            $table->increments('id');
-            $table->integer('parent_id')->unsigned();
-            $table->integer('field_id')->unsigned();
-            $table->boolean('active')->nullable();
-            $table->enum('conditional', ['is', 'is_not', 'is_greater', 'is_less', 'where_in'])->default('is')->nullable();
-            $table->text('value')->nullable();
-            $table->foreign('parent_id')->references('id')->on('alerts')->onDelete('cascade');
-            $table->foreign('field_id')->references('id')->on('fields')->onDelete('cascade');
-        });
-        Schema::create('alert_users', function(Blueprint $table) {
-            $table->increments('id');
-            $table->integer('parent_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->foreign('parent_id')->references('id')->on('alerts')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
+        if(config('solunes.alerts')){
+            Schema::create('alerts', function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('node_id')->unsigned();
+                $table->string('name');
+                $table->enum('type', ['normal', 'custom'])->default('normal')->nullable();
+                $table->string('code')->nullable();
+                $table->timestamps();
+                $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');
+            });
+            Schema::create('alert_actions', function(Blueprint $table) {
+                $table->increments('id');
+                $table->integer('parent_id')->unsigned();
+                $table->enum('type', ['dashboard','email','sms','app'])->default('dashboard')->nullable();
+                $table->string('title')->nullable();
+                $table->text('content')->nullable();
+                $table->foreign('parent_id')->references('id')->on('alerts')->onDelete('cascade');
+            });
+            Schema::create('alert_conditionals', function(Blueprint $table) {
+                $table->increments('id');
+                $table->integer('parent_id')->unsigned();
+                $table->integer('field_id')->unsigned();
+                $table->boolean('active')->nullable();
+                $table->enum('conditional', ['is', 'is_not', 'is_greater', 'is_less', 'where_in'])->default('is')->nullable();
+                $table->text('value')->nullable();
+                $table->foreign('parent_id')->references('id')->on('alerts')->onDelete('cascade');
+                $table->foreign('field_id')->references('id')->on('fields')->onDelete('cascade');
+            });
+            Schema::create('alert_users', function(Blueprint $table) {
+                $table->increments('id');
+                $table->integer('parent_id')->unsigned();
+                $table->integer('user_id')->unsigned();
+                $table->foreign('parent_id')->references('id')->on('alerts')->onDelete('cascade');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            });            
+        }
         Schema::create('emails', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('site_id')->unsigned()->default(1);

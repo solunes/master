@@ -859,7 +859,7 @@ class AdminList {
                     foreach($graph_model as $graph_i){
                         if($field->relation&&$graph_i->$field_trans_name){
                             $field_val = $graph_i->$field_trans_name->name;
-                        } else if(!$field->relation&&$field->type=='select'||$field->type=='radio'||$field->type=='checkbox'){
+                        } else if(!$field->relation&&($field->type=='select'||$field->type=='radio'||$field->type=='checkbox')){
                             $field_val = $array['field_options'][$field->name][$graph_i->$graph_item_name];
                         } else {
                             $field_val = $graph_i->$graph_item_name;
