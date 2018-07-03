@@ -37,13 +37,30 @@ class AdminController extends Controller {
 			} else {
 				$array['end_date'] = date('Y-m-d');
 			}
-        	$array['nodes'] = \Solunes\Master\App\Node::where('indicators', 1)->get();
-        	$array['indicator'] = \Solunes\Master\App\Indicator::first();
-        	if(request()->input('search')){
-        		$array['items'] = \Solunes\Master\App\Node::where('indicators', 1)->get();
+			$user_id = auth()->user()->id;
+        	$indicators = \Solunes\Master\App\Indicator::where('user_id', $user_id)->orWhereHas('indicator_users', function ($query) use($user_id) {
+	            $query->where('user_id', $user_id);
+	        })->get();
+	        $array['indicators'] = $indicators;
+	        if(request()->has('indicator_id')&&$indicator = \Solunes\Master\App\Indicator::find(request()->input('indicator_id'))){
+        		$indicator = $indicator;
+	        } else if(count($indicators)>0){
+        		$indicator = $indicators->first();
+	        } else {
+	        	$indicator = NULL;
+	        }
+	        $graphs = NULL;
+        	if($indicator){
+        		$node = \Solunes\Master\App\Node::find($indicator->id);
+        		$items = \FuncNode::node_check_model($node);
+        		$items = $items->get();
+        		$array['items'] = $items;
+        		$graphs['indicator-'.$indicator->id] = ['type'=>$indicator->graph_type, 'name'=>'name', 'label'=>'Nombre', 'items'=>$items, 'subitems'=>[], 'field_names'=>[]];
         	} else {
         		$array['items'] = [];
         	}
+        	$array['graphs'] = $graphs;
+        	$array['indicator'] = $indicator;
         	$view = 'master::list.dashboard-new';
         } else {
 			if(request()->has('start_date')){

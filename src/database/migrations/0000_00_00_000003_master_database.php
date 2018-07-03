@@ -221,10 +221,10 @@ class MasterDatabase extends Migration
                 $table->string('name');
                 $table->integer('user_id')->nullable();
                 $table->text('filter_query')->nullable();
-                $table->enum('graph_type', ['line','bar','pie','table'])->default('line');
+                $table->enum('graph_type', ['lines','bar','pie','table'])->default('lines');
                 $table->enum('default_date', ['total','this-week','last-week','this-month','last-month','this-year','last-year','custom'])->default('total');
                 $table->text('custom_date')->nullable();
-                $table->enum('color', ['blue','red','green','purple','yellow','gray','black'])->default('green');
+                $table->enum('color', ['blue','red','green','purple','yellow','gray','black'])->default('blue');
                 $table->timestamps();
                 $table->softDeletes();
                 $table->foreign('node_id')->references('id')->on('nodes')->onDelete('cascade');

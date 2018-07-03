@@ -33,20 +33,22 @@
     </div>
 
     <h4>
-      @if(count($nodes)>0)
-        @foreach($nodes as $node)
-          <a href="{{ url('admin/model/indicator/create') }}">{{ $node->name }}</a> | 
+      @if(count($indicators)>0)
+        @foreach($indicators as $key => $indicator)
+          @if($key>0) | @endif
+          <a href="{{ url('admin?indicator_id='.$indicator->id) }}">{{ $indicator->name }}</a>
         @endforeach
       @endif
     </h4>
    
-    @if(count($items)>0)
+    @if($indicator&&count($items)>0)
       <div class="row">
         <div class="col-md-7 col-sm-8">
-          <div id="graph" style="width: 100%; height: 400px;">
+          <div id="list-graph-indicator-{{ $indicator->id }}" style="width: 100%; height: 400px;"></div>
         </div>
         <div class="col-md-5 col-sm-4">
           FILTROS
+          <br>{{ count($items) }} items.
         </div>
       </div>
     @else
@@ -108,4 +110,6 @@
       $('<div id="tooltip" class="chart-tooltip">'+i+"</div>").css({position:"absolute",display:"none",top:t-40,left:e-40,border:"0px solid #ccc",padding:"2px 6px","background-color":"#fff"}).appendTo("body").fadeIn(200);
     };
   </script>
+
+  @include('master::helpers.graph')
 @endsection
