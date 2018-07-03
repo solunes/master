@@ -105,5 +105,13 @@ class MasterSeeder extends Seeder {
             config('solunes.main_lang') => ['value'=>'doc,docx,xls,xlsx,ppt,pptx,pdf,txt,jpg,jpeg,png,gif'],
         ]);
 
+        if(config('solunes.indicators')&&$user_node = \Solunes\Master\App\Node::where('name', 'user')->first()){
+            \Solunes\Master\App\Indicator::create([
+                'node_id' => $user_node->id,
+                'name' => 'Cantidad de Usuarios',
+                'user_id' => config('solunes.master_admin_id'),
+                'filter_query' => json_encode([]),
+            ]);
+        }
     }
 }
