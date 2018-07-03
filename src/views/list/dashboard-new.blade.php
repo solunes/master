@@ -76,7 +76,6 @@
       } else {
         $('#reportrange').addClass('loaded');
       }
-
     }
 
     $('#reportrange').daterangepicker({
