@@ -43,4 +43,13 @@ class Indicator extends Model {
         return $this->hasMany('Solunes\Master\App\IndicatorUser', 'parent_id');
     }
 
+    public function my_indicator_value() {
+        if(auth()->check()){
+            $user_id = auth()->user()->id;
+        } else {
+            $user_id = 0;
+        }
+        return $this->hasOne('Solunes\Master\App\IndicatorUser', 'parent_id')->where('user_id', $user_id);
+    }
+
 }

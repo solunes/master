@@ -222,7 +222,8 @@ class MasterDatabase extends Migration
                 $table->integer('user_id')->nullable();
                 $table->text('filter_query')->nullable();
                 $table->enum('graph_type', ['lines','bar','pie','table'])->default('lines');
-                $table->enum('default_date', ['total','this-week','last-week','this-month','last-month','this-year','last-year','custom'])->default('total');
+                $table->integer('field_id')->nullable();
+                $table->enum('default_date', ['total','this-week','last-week','this-month','last-month','this-year','last-year','custom'])->default('this-year');
                 $table->text('custom_date')->nullable();
                 $table->enum('color', ['blue','red','green','purple','yellow','gray','black'])->default('blue');
                 $table->timestamps();
@@ -234,7 +235,8 @@ class MasterDatabase extends Migration
                 $table->integer('parent_id')->unsigned();
                 $table->integer('user_id')->nullable();
                 $table->enum('graph_type', ['parent','line','bar','pie','table'])->default('parent');
-                $table->enum('default_date', ['parent','total','this-week','last-week','this-month','last-month','this-year','last-year','custom'])->default('parent');
+                $table->integer('field_id')->nullable();
+                $table->enum('default_date', ['parent','total','this-week','last-week','this-month','last-month','this-year','last-year','custom'])->default('this-year');
                 $table->text('custom_date')->nullable();
                 $table->foreign('parent_id')->references('id')->on('indicators')->onUpdate('cascade')->onDelete('cascade');
             });

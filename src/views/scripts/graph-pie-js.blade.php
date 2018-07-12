@@ -29,8 +29,8 @@
           type: 'pie',
           name: '{{ trans("master::admin.graph_total") }}',
           data: [
-          @foreach($graph_items as $item)
-            [<?php echo '"'.$graph_field_names[$item->$column].' ('.$item->total.')"'; ?>,  {{ $item->total }}],
+          @foreach($graph_items as $subitem_label => $subitem_total)
+            [<?php echo '"'.$subitem_label.'"'; ?>,  {{ $subitem_total }}],
           @endforeach
           ]
       }]

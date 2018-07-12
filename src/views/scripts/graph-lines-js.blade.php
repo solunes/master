@@ -38,8 +38,8 @@
               borderWidth: 0
           },
           series: [
-            @foreach($graph_items as $item)
-              {name: <?php echo '"'.$graph_field_names[$item->$column].' ('.$item->total.')."'; ?>, data: {{ $graph_subitems[$item->$column] }}},
+            @foreach($graph_items as $subitem_label => $subitem_total)
+              {name: <?php echo '"'.$subitem_label.'"'; ?>, data: <?php echo $subitem_total; ?> },
             @endforeach
           ]
       });

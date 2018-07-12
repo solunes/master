@@ -43,12 +43,23 @@
    
     @if($indicator&&count($items)>0)
       <div class="row">
-        <div class="col-md-7 col-sm-8">
+        <div class="col-md-8 col-sm-9">
           <div id="list-graph-indicator-{{ $indicator->id }}" style="width: 100%; height: 400px;"></div>
         </div>
-        <div class="col-md-5 col-sm-4">
+        <div class="col-md-4 col-sm-3">
           FILTROS
-          <br>{{ count($items) }} items.
+          <br>TOTAL: {{ count($items) }} items.
+          <br><br><br>
+          @if(count($fields)>0)
+            <h4>Mostrar por Campo:</h4>
+            <ul>
+              @foreach($fields as $field_item)
+                <li @if($field&&$field->id==$field_item->id) class="active" @endif >
+                  <a href="{{ url($url.'field_name='.$field_item->name) }}">{{ $field_item->label }}</a>
+                </li>
+              @endforeach
+            </ul>
+          @endif
         </div>
       </div>
     @else

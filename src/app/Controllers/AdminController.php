@@ -42,6 +42,13 @@ class AdminController extends Controller {
 	            $query->where('user_id', $user_id);
 	        })->get();
 	        $array['indicators'] = $indicators;
+	        $url = url()->full();
+	        if(strpos($url, '?') === false){
+	        	$url = $url.'?';
+	        } else {
+	        	$url = $url.'&';
+	        }
+	        $array['url'] = $url;
 	        if(request()->has('indicator_id')&&$indicator = \Solunes\Master\App\Indicator::find(request()->input('indicator_id'))){
         		$indicator = $indicator;
 	        } else if(count($indicators)>0){
@@ -51,11 +58,77 @@ class AdminController extends Controller {
 	        }
 	        $graphs = NULL;
         	if($indicator){
-        		$node = \Solunes\Master\App\Node::find($indicator->id);
+        		$my_indicator_value = $indicator->my_indicator_value;
+        		$node = \Solunes\Master\App\Node::find($indicator->node_id);
+        		$fields = $node->fields()->whereIn('type',['select','radio','checkbox'])->get();
         		$items = \FuncNode::node_check_model($node);
-        		$items = $items->get();
-        		$array['items'] = $items;
-        		$graphs['indicator-'.$indicator->id] = ['type'=>$indicator->graph_type, 'name'=>'name', 'label'=>'Nombre', 'items'=>$items, 'subitems'=>[], 'field_names'=>[]];
+        		if($indicator->graph_type == 'lines'){
+	                $range = range(1,12);
+                    $count = '[';
+	                foreach($range as $month){
+	                  $cloned_model = clone $items;
+	                  $count .= $cloned_model->where( \DB::raw('MONTH(created_at)'), '=', $month )->count().',';
+	                }
+                    $count .= ']';
+        		} else {
+		    		$count = $items->count();
+        		}
+		    	$array_items['Total'] = $count;
+        		$field = NULL;
+        		if(request()->has('field_name')){
+        			$field = $fields->where('name', request()->input('field_name'))->first();
+        			if($field){
+        				if(!$my_indicator_value){
+        					$my_indicator_value = new \Solunes\Master\App\IndicatorUser;
+        					$my_indicator_value->parent_id = $indicator->id;
+        					$my_indicator_value->user_id = auth()->user()->id;
+        				}
+        				$my_indicator_value->field_id = $field->id;
+	        			$my_indicator_value->save();
+        			}
+        		} else if($my_indicator_value&&$my_indicator_value->field_id){
+        			$field = $fields->where('id', $my_indicator_value->field_id)->first();
+        		} else if(count($fields)>0){
+        			$field = $fields->first();
+        		}
+		    	$array['fields'] = $fields;
+		    	$array['field'] = $field;
+		    	$array['items'] = $array_items;
+        		if($field){
+        			$no_results = 0;
+        			$no_results_count = 0;
+	        		foreach($field->options as $option_value => $option_name){
+	        			$check = false;
+		        		if($indicator->graph_type == 'lines'){
+			                $range = range(1,12);
+		                    $count = '[';
+			                foreach($range as $month){
+			                  $cloned_model = clone $items;
+			                  $subcount = $cloned_model->where($field->name, $option_value)->where( \DB::raw('MONTH(created_at)'), '=', $month )->count();
+			                  $count .= $subcount.',';
+			                  if($subcount>0){
+			                  	$check = true;
+			                  }
+			                }
+		                    $count .= ']';
+		        		} else {
+				    		$count = $items->count();
+			                if($subcount>0){
+			                  	$check = true;
+			                }
+		        		}
+		        		if($check){
+		    				$array_items[$field->label.': '.$option_name] = $count;
+		        		} else {
+		        			$no_results = $count;
+		        			$no_results_count++;
+		        		}
+	        		}
+	        		if($no_results_count>0){
+		    			$array_items[$field->label.': Sin Resultados ('.$no_results_count.')'] = $no_results;
+	        		}
+        		}
+        		$graphs['indicator-'.$indicator->id] = ['type'=>$indicator->graph_type, 'name'=>'name', 'label'=>'Nombre', 'items'=>$array_items];
         	} else {
         		$array['items'] = [];
         	}
