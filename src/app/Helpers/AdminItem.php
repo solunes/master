@@ -407,7 +407,9 @@ class AdminItem {
         }
         $result .= $download.'</h3>';
         if($action=='edit'&&$i&&$i->created_at){
-            $result .= '<p>'.trans('master::admin.created_at').': '.$i->created_at->format('Y-m-d').'</p>';
+            $result .= '<p>'.trans('master::admin.created_at').': ';
+            $result .= $i->created_at->format('Y-m-d H:i');
+            $result .= '</p>';
         }
         return $result;
     }   
