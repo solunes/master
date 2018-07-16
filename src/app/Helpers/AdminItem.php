@@ -77,6 +77,9 @@ class AdminItem {
         if(isset($options['child'])){
             $fields = $fields->where('type', '!=', 'child');
         }
+        if(config('solunes.custom_admin_get_item')){
+            $fields = \CustomFunc::custom_admin_get_item($node, $item, $fields);
+        }
         $variables['fields'] = $fields->whereNull('child_table')->checkPermission()->with('translations','field_extras','field_options_active')->get();
         if($node->fields()->whereIn('type', ['image', 'file'])->count()>0){
             $variables['files'] = true;
