@@ -160,6 +160,9 @@ class Field extends Model {
                     $subquery->orWhereIn('permission', $permissions);
                 }
             }
+            if(config('solunes.custom_admin_get_item')){
+                $query = \CustomFunc::custom_admin_get_item($this->parent, $this, $query);
+            }
         });
     }
 

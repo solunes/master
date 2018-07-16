@@ -83,6 +83,7 @@ return [
 	'after_seed' => false,
 	'after_login' => false,
 	'custom_admin_get_list' => false,
+	'custom_admin_get_item' => false,
 	'custom_get_items' => false,
 	'admin_menu_extras' => false,
 	'admin_menu_extra_array' => [], // Incluir los IDs de link de los menús para ejecutar
