@@ -289,7 +289,7 @@ class AdminItem {
         if(config('solunes.item_post_after_subitems')&&in_array($single_model, config('solunes.item_post_after_subitems'))){
             $model->item_post_after_subitems($model, $item, $type);
         }
-        foreach($node->indicators as $indicator){
+        /*foreach($node->indicators as $indicator){
             $node_model = \FuncNode::node_check_model($node);
             $items = \FuncNode::node_check_model($node);
             $array = \AdminList::filter_node(['filter_category_id'=>$indicator->id], $node, $node_model, $items, 'indicator');
@@ -307,7 +307,7 @@ class AdminItem {
             }
             $today_indicator->value = $indicator_value;
             $today_indicator->save();
-        }
+        }*/
         \Asset::delete_temp();
         return $item;
     }
