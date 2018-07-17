@@ -138,8 +138,8 @@ class AdminList {
             }
             $action_fields = $subaction_fields;
         }
-        if(config('solunes.custom_admin_list_actions')){
-            $action_fields = \CustomFunc::custom_admin_list_actions($node, $fields, $action_fields);
+        if(config('solunes.custom_admin_field_actions')){
+            $action_fields = \CustomFunc::custom_admin_field_actions($node, $fields, $action_fields);
         }
         if(count($fields)>0){
             $response = '';
@@ -381,8 +381,8 @@ class AdminList {
                 }
             }
         }
-        if(config('solunes.custom_admin_list_actions')){
-            $action_fields = \CustomFunc::custom_admin_list_actions($node, $fields, $action_fields);
+        if(config('solunes.custom_admin_field_actions')){
+            $action_fields = \CustomFunc::custom_admin_field_actions($node, $fields, $action_fields);
         }
         if(count($fields)>0){
             $response = '';
@@ -493,6 +493,9 @@ class AdminList {
     }
 
     public static function make_list_header($module, $node, $id, $parent, $appends, $count = 0, $total_count = 0, $action_nodes = ['back','create','excel']) {
+        if(config('solunes.custom_admin_node_actions')){
+            $action_nodes = \CustomFunc::custom_admin_node_actions($node, $action_nodes);
+        }
         $title = $node->plural;
         if($count == $total_count){
             $title .= ' ( '.$count.' )';
@@ -566,6 +569,9 @@ class AdminList {
             $action_nodes = json_decode($node_extra->value_array, true);
         } else {
             $action_nodes = ['back','create','excel'];
+        }
+        if(config('solunes.custom_admin_node_actions')){
+            $action_nodes = \CustomFunc::custom_admin_node_actions($node, $action_nodes);
         }
         if(($key = array_search('back', $action_nodes)) !== false) {
             unset($action_nodes[$key]);
