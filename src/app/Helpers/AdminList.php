@@ -139,7 +139,7 @@ class AdminList {
             $action_fields = $subaction_fields;
         }
         if(config('solunes.custom_admin_field_actions')){
-            $action_fields = \CustomFunc::custom_admin_field_actions($node, $fields, $action_fields);
+            $action_fields = \CustomFunc::custom_admin_field_actions(request()->segment(3), $fields, $action_fields);
         }
         if(count($fields)>0){
             $response = '';
@@ -382,7 +382,7 @@ class AdminList {
             }
         }
         if(config('solunes.custom_admin_field_actions')){
-            $action_fields = \CustomFunc::custom_admin_field_actions($node, $fields, $action_fields);
+            $action_fields = \CustomFunc::custom_admin_field_actions(request()->segment(3), $fields, $action_fields);
         }
         if(count($fields)>0){
             $response = '';
