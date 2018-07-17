@@ -138,6 +138,9 @@ class AdminList {
             }
             $action_fields = $subaction_fields;
         }
+        if(config('solunes.custom_admin_list_actions')){
+            $action_fields = \CustomFunc::custom_admin_list_actions($node, $fields, $action_fields);
+        }
         if(count($fields)>0){
             $response = '';
             foreach($fields as $field){
@@ -377,6 +380,9 @@ class AdminList {
                     $action_fields[] = $sub;
                 }
             }
+        }
+        if(config('solunes.custom_admin_list_actions')){
+            $action_fields = \CustomFunc::custom_admin_list_actions($node, $fields, $action_fields);
         }
         if(count($fields)>0){
             $response = '';

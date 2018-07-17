@@ -82,6 +82,7 @@ return [
 	'before_seed' => false,
 	'after_seed' => false,
 	'after_login' => false,
+	'custom_admin_list_actions' => false,
 	'custom_admin_get_list' => false,
 	'custom_admin_get_item' => false,
 	'custom_get_items' => false,
