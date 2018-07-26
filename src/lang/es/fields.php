@@ -185,6 +185,12 @@ return [
     'value_type' => 'Tipo de Valor',
     'version' => 'Versión',
     'width' => 'Ancho en px',
+    'custom_date' => 'Fecha Personalizada',
+    'default_date' => 'Fecha por Defecto',
+    'filter_query' => 'Código de Consulta',
+    'graph_type' => 'Tipo de Gráfico',
+    'indicator_users' => 'Usuarios de Indicador',
+    'indicators' => 'Indicadores',
 
     /* Filter Fields  */
     'none' => 'Ninguna Acción',

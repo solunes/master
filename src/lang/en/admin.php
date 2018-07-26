@@ -48,6 +48,15 @@ return array(
 	"add_filter" => "Add Filter",
 	"delete_all_filters" => "Delete all filters",
 	"edit_list" => "Edit Columns",
+	'last-month' => 'Last Month',
+	'last-week' => 'Last Week',
+	'last-year' => 'Last Year',
+	'lines' => 'Lines',
+	'parent' => 'Parent',
+	'table' => 'Table',
+	'this-month' => 'This Month',
+	'this-week' => 'This Week',
+	'this-year' => 'This Year',
 
 	// ERROR MESSAGEs
 	"error_title" => "oops! :(",
