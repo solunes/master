@@ -82,9 +82,10 @@ class External {
     public static function share_email($recipient, $title = NULL, $message = NULL) {
       $original_url = 'mailto:';
       $url = $original_url.$recipient.'?';
-      if($title){
-        $url .= '&subject='.$title;
+      if(!$title){
+        $title = ' ';
       }
+      $url .= 'subject='.$title;
       if($message){
         $url .= '&body='.$message;
       }
