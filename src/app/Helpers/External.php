@@ -27,23 +27,59 @@ class External {
       return $final_url;
     }
 
-    public static function share_facebook($url) {
+    public static function share_url($method_name, $url = NULL, $message = NULL) {
+      $full_method_name = 'share_'.$method_name;
+      if(!$url){
+        $url = request()->fullUrl();
+      }
+      switch ($method_name) {
+        case 'facebook':
+        case 'google':
+          $final_url = \External::$full_method_name($url);
+          break;
+        case 'twitter':
+          if(!$message){
+            $message = 'Miren lo que encontré';
+          }
+          $final_url = \External::$full_method_name($url, $message);
+          break;
+        case 'linkedin':
+          $final_url = \External::$full_method_name($url);
+          break;
+        case 'email':
+          if(!$message){
+            $message = 'Miren lo que encontré';
+          }
+          $message .= ' - '.$url;
+          $final_url = \External::$full_method_name(NULL, NULL, $message);
+          break;
+        case 'pinterest':
+          if(!$message){
+            $message = 'Miren lo que encontré';
+          }
+          $final_url = \External::$full_method_name($url, $message);
+          break;
+      }
+      return $final_url;
+    }
+
+    public static function share_facebook($url = NULL) {
       $original_url = 'https://www.facebook.com/sharer/sharer.php?u=';
       $url = $original_url.urlencode($url);
       return $url;
     }
 
-    public static function share_twitter($url, $title) {
+    public static function share_twitter($url, $title = NULL) {
       $original_url = 'https://twitter.com/intent/tweet?';
       if(!$title){
-        $title = 'Comparte tu contenido en twitter';
+        $title = 'Miren lo que encontré';
       }
       $title .= ' - ';
       $url = $original_url.'text='.$title.'&url='.urlencode($url);
       return $url;
     }
 
-    public static function share_email($recipient, $title, $message) {
+    public static function share_email($recipient, $title = NULL, $message = NULL) {
       $original_url = 'mailto:';
       $url = $original_url.$recipient.'?';
       if($title){
@@ -55,10 +91,10 @@ class External {
       return $url;
     }
 
-    public static function share_linkedin($url, $title, $message) {
+    public static function share_linkedin($url, $title = NULL, $message = NULL) {
       $original_url = 'https://www.linkedin.com/shareArticle?mini=true&';
       if(!$title){
-        $title = 'Comparte tu contenido en linkedin';
+        $title = 'Miren lo que encontré';
       }
       $url = $original_url.'url='.urlencode($url).'&title='.$title;
       if($message){
@@ -67,10 +103,10 @@ class External {
       return $url;
     }
 
-    public static function share_pinterest($url, $message, $image) {
+    public static function share_pinterest($url, $message = NULL, $image = NULL) {
       $original_url = 'https://pinterest.com/pin/create/button/?';
       if(!$message){
-        $message = 'Comparte tu contenido en Pinterest';
+        $message = 'Miren lo que encontré';
       }
       $url = $original_url.'url='.urlencode($url).'&description='.$message;
       if($image){
