@@ -1,0 +1,23 @@
+/* Se crean mixins para formas o estilos globales, por ejemplo botones, títulos principales
+
+*/
+
+//Boton principal: 	Ej: Enviar, Comprar, Llamar (Botones de llamada a la acción)
+@mixin btn-main {
+	background: $admin-color-1; color: #fff; padding: 10px 36px; border-radius: 26px; font-size: $admin-fz-6;
+}
+
+//Título principal: Ej: h1
+@mixin title-h1 {
+	color: $admin-color-1; font-size: $admin-fz-1; font-family: $admin-ff-1; text-align: center;
+}
+
+//Título principal: Ej: h2
+@mixin title-h2 {
+	color: $admin-color-1; font-size: $admin-fz-2; font-family: $admin-ff-2; text-align: left;
+}
+
+//Título principal: Ej: p
+@mixin paragraph {
+	color: $admin-color-1; font-size: $admin-fz-2; font-family: $admin-ff-2; text-align: content;
+}

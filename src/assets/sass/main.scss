@@ -1,0 +1,28 @@
+/* 
+Se crean variables para colores, tipografía y propiedades específicas de css
+NOTA: añadir el prefijo "admin" para señalar que es una variable del panel de adminitración
+*/
+
+//====== PALETA DE COLORES ======//
+$admin-color-1: #00000a;
+$admin-color-2: #00000b;
+$admin-color-3: #00000c;
+$admin-color-4: #00000d;
+$admin-color-5: #00000e;
+$admin-color-6: #00000f;
+
+//====== TIPOGRAFIAS ======//
+
+//Tipografía para títulos (h1, h2, h3, h4, h5)
+$admin-ff-1: 'Roboto Slab', serif;
+
+//Tipografía para párrafos u otros (p, a, span, b)
+$admin-ff-2: 'Open Sans', sans-serif;
+
+//====== TAMAÑO DE LETRAS ======//
+$admin-fz-1: 26px;
+$admin-fz-2: 24px;
+$admin-fz-3: 20px;
+$admin-fz-4: 16px;
+$admin-fz-5: 14px;
+$admin-fz-6: 12px;

@@ -32,30 +32,30 @@
       </div>
     </div>
 
-    <h4>
+<!--     <h4> --><div class="admin-mb">
       @if(count($indicators)>0)
         @foreach($indicators as $key => $indicator)
           @if($key>0) | @endif
-          <a href="{{ url('admin?indicator_id='.$indicator->id) }}">{{ $indicator->name }}</a>
+          <a href="{{ url('admin?indicator_id='.$indicator->id) }}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">{{ $indicator->name }}</a>
         @endforeach
       @endif
-    </h4>
-   
+<!--     </h4> --></div>
+
     @if($indicator&&count($items)>0)
       <div class="row">
-        <div class="col-md-8 col-sm-9">
+        <div class="col-md-9 col-sm-9">
           <div id="list-graph-indicator-{{ $indicator->id }}" style="width: 100%; height: 400px;"></div>
         </div>
-        <div class="col-md-4 col-sm-3">
-          FILTROS
-          <br>TOTAL: {{ count($items) }} items.
-          <br><br><br>
+        <div class="col-md-3 col-sm-3 box-list">
+          <h5>Filtros</h5> 
+          <span class="">TOTAL: {{ count($items) }} items.</span>         
+          <br><br>
           @if(count($fields)>0)
-            <h4>Mostrar por Campo:</h4>
-            <ul>
+            <h5>Mostrar por Campo:</h5>
+            <ul class="admin-list">
               @foreach($fields as $field_item)
                 <li @if($field&&$field->id==$field_item->id) class="active" @endif >
-                  <a href="{{ url($url.'field_name='.$field_item->name) }}">{{ $field_item->label }}</a>
+                  <a href="{{ url($url.'field_name='.$field_item->name) }}"><i class="fa fa-angle-right" aria-hidden="true"></i> {{ $field_item->label }}</a>
                 </li>
               @endforeach
             </ul>
