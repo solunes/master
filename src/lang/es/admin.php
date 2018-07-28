@@ -50,6 +50,15 @@ return array(
 	"add_filter" => "Añadir Filtro",
 	"delete_all_filters" => "Eliminar todos los filtros",
 	"edit_list" => "Editar Columnas",
+	'last-month' => 'Mes Anterior',
+	'last-week' => 'Semana Anterior',
+	'last-year' => 'Año Anterior',
+	'lines' => 'Lineas',
+	'parent' => 'De',
+	'table' => 'Tabla',
+	'this-month' => 'Este Mes',
+	'this-week' => 'Esta Semana',
+	'this-year' => 'Este Año',
 
 	// ERROR MESSAGEs
 	"error_title" => "¡ups! :(",
