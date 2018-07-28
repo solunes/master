@@ -37,6 +37,13 @@ class AdminController extends Controller {
 			} else {
 				$array['end_date'] = date('Y-m-d');
 			}
+			if(request()->has('graph_type')){
+				$array['graph_type'] = request()->input('graph_type');
+				$array['graph_type_isset'] = true;
+			} else {
+				$array['graph_type'] = 'lines';
+				$array['graph_type_isset'] = false;
+			}
 			$user_id = auth()->user()->id;
         	$indicators = \Solunes\Master\App\Indicator::where('user_id', $user_id)->orWhereHas('indicator_users', function ($query) use($user_id) {
 	            $query->where('user_id', $user_id);
@@ -58,22 +65,32 @@ class AdminController extends Controller {
 	        }
 	        $graphs = NULL;
         	if($indicator){
+        		if(!$array['graph_type_isset']){
+        			$array['graph_type'] = $indicator->graph_type;
+        		}
         		$my_indicator_value = $indicator->my_indicator_value;
         		$node = \Solunes\Master\App\Node::find($indicator->node_id);
         		$fields = $node->fields()->whereIn('type',['select','radio','checkbox'])->get();
         		$items = \FuncNode::node_check_model($node);
-        		if($indicator->graph_type == 'lines'){
+        		$array_items = [];
+        		if($array['graph_type'] == 'lines'){
 	                $range = range(1,12);
-                    $count = '[';
+                    $count_text = '[';
+                    $count = 0;
 	                foreach($range as $month){
 	                  $cloned_model = clone $items;
-	                  $count .= $cloned_model->where( \DB::raw('MONTH(created_at)'), '=', $month )->count().',';
+	                  $month_count = $cloned_model->where( \DB::raw('MONTH(created_at)'), '=', $month )->count();
+	                  $count += $month_count;
+	                  $count_text .= $month_count.',';
 	                }
-                    $count .= ']';
+                    $count_text .= ']';
+		    		$array_items['Total ('.$count.')'] = $count_text;
         		} else {
 		    		$count = $items->count();
         		}
-		    	$array_items['Total'] = $count;
+		    	$total_items_count = $count;
+		    	$no_items_count = 0;
+		    	$items_count = 0;
         		$field = NULL;
         		if(request()->has('field_name')){
         			$field = $fields->where('name', request()->input('field_name'))->first();
@@ -93,45 +110,59 @@ class AdminController extends Controller {
         		}
 		    	$array['fields'] = $fields;
 		    	$array['field'] = $field;
-		    	$array['items'] = $array_items;
+		    	$array['items'] = $total_items_count;
         		if($field){
         			$no_results = 0;
         			$no_results_count = 0;
 	        		foreach($field->options as $option_value => $option_name){
 	        			$check = false;
-		        		if($indicator->graph_type == 'lines'){
+		        		if($array['graph_type'] == 'lines'){
 			                $range = range(1,12);
-		                    $count = '[';
+		                    $count_text = '[';
+		                    $count = 0;
 			                foreach($range as $month){
 			                  $cloned_model = clone $items;
-			                  $subcount = $cloned_model->where($field->name, $option_value)->where( \DB::raw('MONTH(created_at)'), '=', $month )->count();
-			                  $count .= $subcount.',';
-			                  if($subcount>0){
+			                  $month_count = $cloned_model->where($field->name, $option_value)->where( \DB::raw('MONTH(created_at)'), '=', $month )->count();
+			                  $count += $month_count;
+			                  $count_text .= $month_count.',';
+			                  if($month_count>0){
 			                  	$check = true;
 			                  }
 			                }
-		                    $count .= ']';
+		                    $count_text .= ']';
 		        		} else {
-				    		$count = $items->count();
-			                if($subcount>0){
+			                $cloned_model = clone $items;
+				    		$count = $cloned_model->where($field->name, $option_value)->count();
+			                if($count>0){
 			                  	$check = true;
 			                }
 		        		}
 		        		if($check){
-		    				$array_items[$field->label.': '.$option_name] = $count;
+		        			if($array['graph_type'] == 'lines'){
+		    					$array_items[$field->label.': '.$option_name.' ('.$count.')'] = $count_text;
+		        			} else {
+		    					$array_items[$field->label.': '.$option_name.' ('.$count.')'] = $count;
+		        			}
+		    				$items_count += $count;
 		        		} else {
-		        			$no_results = $count;
 		        			$no_results_count++;
 		        		}
 	        		}
-	        		if($no_results_count>0){
-		    			$array_items[$field->label.': Sin Resultados ('.$no_results_count.')'] = $no_results;
+	        		$no_items_count = $total_items_count - $items_count;
+	        		if($array['graph_type'] != 'bar' && $no_results_count>0){
+		    			$array_items[$field->label.': '.$no_results_count.' Sin Resultados (0)'] = 0;
+	        		}
+	        		if($array['graph_type'] != 'lines'){
+		    			if($no_items_count>0){
+		    				$array_items['Items sin elemento ('.$no_items_count.') '] = $no_items_count;
+		    			}
 	        		}
         		}
-        		$graphs['indicator-'.$indicator->id] = ['type'=>$indicator->graph_type, 'name'=>'name', 'label'=>'Nombre', 'items'=>$array_items];
+        		$graphs['indicator-'.$indicator->id] = ['type'=>$array['graph_type'], 'name'=>'name', 'label'=>$indicator->name, 'items'=>$array_items];
         	} else {
         		$array['items'] = [];
         	}
+        	$array['graph_type_label'] = trans('master::admin.'.$array['graph_type']);
         	$array['graphs'] = $graphs;
         	$array['indicator'] = $indicator;
         	$view = 'master::list.dashboard-new';
