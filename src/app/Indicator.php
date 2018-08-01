@@ -18,7 +18,7 @@ class Indicator extends Model {
     public static $rules_create = array(
         'node_id'=>'required',
         'name'=>'required',
-        'user_id'=>'required',
+        //'user_id'=>'required',
         'graph_type'=>'required',
         'default_date'=>'required',
         'color'=>'required',
@@ -29,7 +29,7 @@ class Indicator extends Model {
         'id'=>'required',
         'node_id'=>'required',
         'name'=>'required',
-        'user_id'=>'required',
+        //'user_id'=>'required',
         'graph_type'=>'required',
         'default_date'=>'required',
         'color'=>'required',
@@ -37,6 +37,10 @@ class Indicator extends Model {
 
     public function node() {
         return $this->belongsTo('Solunes\Master\App\Node');
+    }
+
+    public function field() {
+        return $this->belongsTo('Solunes\Master\App\Field');
     }
 
     public function indicator_users() {

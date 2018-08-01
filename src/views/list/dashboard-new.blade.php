@@ -1,5 +1,9 @@
 @extends('master::layouts/admin')
 
+@section('css')
+  @include('master::scripts.lightbox-css')
+@endsection
+
 @section('content')
     <div class="m-subheader ">
       <div class="d-flex align-items-center">
@@ -34,14 +38,20 @@
 
     <div class="admin-mb">
       @if(count($indicators)>0)
-        @foreach($indicators as $key => $indicator)
+        @foreach($indicators as $key => $indicator_option)
           @if($key>0) | @endif
-          <a href="{{ url('admin?indicator_id='.$indicator->id) }}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">{{ $indicator->name }}</a>
+          <a href="{{ url('admin?indicator_id='.$indicator_option->id) }}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air @if($indicator_option->id==$indicator->id) active @endif ">{{ $indicator_option->name }}</a>
         @endforeach
       @endif
-    </div>
+      @if(auth()->user()->isAdmin())
+      <a href="{{ url('admin/model/indicator/create') }}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">Crear un Indicador</a>
+      @endif
+      @if($not_added_indicators>0)
+      <a href="{{ url('admin/assign-indicator-modal?lightbox[width]=600&lightbox[height]=400') }}" class="lightbox btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">Asignarme un Indicador</a>
+      @endif
+    </div><br>
 
-    @if($indicator&&$items>0)
+    @if($indicator)
       <div class="row">
         <div class="col-md-9 col-sm-9">
           <div id="list-graph-indicator-{{ $indicator->id }}" style="width: 100%; height: 400px;"></div>
@@ -62,16 +72,25 @@
           @endif
         </div>
       </div>
+      <div class="subfooter right">
+        @if(auth()->user()->isSuperAdmin()||auth()->user()->id==$indicator->user_id)
+        <a href="{{ url('admin/model/indicator/edit/'.$indicator->id) }}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">Editar Indicador</a>
+        <a href="{{ url('admin/model/indicator/delete/'.$indicator->id) }}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">Borrar Indicador para Todos</a>
+        @else
+        <a href="{{ url('admin/remove-indicator/'.$indicator->id) }}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">Removar este Indicador de mi Dashboard</a>
+        @endif
+      </div>
     @else
       <div class="row">
         <div class="col-sm-12">
-          <h3>No se encontraron resultados para su gráfico.</h3>
+          <h4>No se encontraron resultados para su gráfico.</h4>
         </div>
       </div>
     @endif
 @endsection
 
 @section('script')
+  @include('master::scripts.lightbox-js')
   <script src="{{ asset('assets/admin/scripts/dashboard.js') }}"></script>
   <script type="text/javascript">
   $(function() {

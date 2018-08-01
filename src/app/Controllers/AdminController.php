@@ -48,7 +48,11 @@ class AdminController extends Controller {
         	$indicators = \Solunes\Master\App\Indicator::where('user_id', $user_id)->orWhereHas('indicator_users', function ($query) use($user_id) {
 	            $query->where('user_id', $user_id);
 	        })->get();
+		    $not_added_indicators = \Solunes\Master\App\Indicator::where('user_id', '!=', $user_id)->whereDoesntHave('indicator_users', function ($query) use($user_id) {
+		        $query->where('user_id', $user_id);
+		    })->count();
 	        $array['indicators'] = $indicators;
+	        $array['not_added_indicators'] = $not_added_indicators;
 	        $url = url()->full();
 	        if(strpos($url, '?') === false){
 	        	$url = $url.'?';
@@ -187,6 +191,42 @@ class AdminController extends Controller {
 	        $view = 'master::list.dashboard';
         }
       	return view($view, $array);
+	}
+
+    public function getAssignIndicatorModal() {
+    	$user_id = auth()->user()->id;
+        $indicators = \Solunes\Master\App\Indicator::where('user_id', '!=', $user_id)->whereDoesntHave('indicator_users', function ($query) use($user_id) {
+	        $query->where('user_id', $user_id);
+	    })->lists('name','id')->toArray();
+    	$array['items'] = $indicators;
+      	return view('master::modal.assign-indicator', $array);
+	}
+
+    public function postAssignIndicators(Request $request) {
+    	$user_id = auth()->user()->id;
+    	$indicators_id = $request->input('indicator_id');
+    	if(count($indicators_id)>0){
+    	  foreach($indicators_id as $indicator_id){
+    	  	$indicator = \Solunes\Master\App\Indicator::find($indicator_id);
+    	  	if($indicator){
+    	  		$indicator_user = new \Solunes\Master\App\IndicatorUser;
+    	  		$indicator_user->parent_id = $indicator->id;
+    	  		$indicator_user->user_id = $user_id;
+    	  		$indicator_user->save();
+    	  	}
+    	  }
+    	}
+	    return redirect($this->prev)->with('message_success','Indicadores actualizados correctamente.');
+	}
+
+    public function getRemoveIndicator($indicator_id) {
+    	if($indicator = \Solunes\Master\App\Indicator::find($indicator_id)){
+    		$indicator_user = $indicator->indicator_users()->where('user_id', auth()->user()->id)->first();
+    		if($indicator_user){
+    			$indicator_user->delete();
+    		}
+    	}
+	    return redirect($this->prev)->with('message_success','El indicador fue removido correctamente.');
 	}
 
     public function getMyNotifications() {
@@ -452,14 +492,14 @@ class AdminController extends Controller {
       $node_model = $response[2];
 	  if($response[0]->passes()) {
 	  	$item = AdminItem::post_request_success($request, $model, $item, 'admin');
-	  	if($model=='indicator'&&$action=='create'){
+	  	/*if($model=='indicator'&&$action=='create'){
 	  		$indicator = \Solunes\Master\App\Indicator::find($item->id);
 		  	if(config('solunes.custom_indicator_values')){
 		  		\CustomFunc::update_indicator_values($indicator);
 		  	} else {
 		  		\FuncNode::update_indicator_values($indicator);
 		  	}
-	  	}
+	  	}*/
         if(config('solunes.item_post_redirect_success')&&in_array($model, config('solunes.item_post_redirect_success'))){
         	if($custom_redirect = $node_model->item_post_redirect_success($this->module, $model, $item->id, $action)){
         		return $custom_redirect;
@@ -486,12 +526,12 @@ class AdminController extends Controller {
 	  }
     }
 
-	public function getIndicators() {
+	/*public function getIndicators() {
 		$array['indicators'] = \Solunes\Master\App\Indicator::get();
       	return view('master::list.indicators', $array);
-    }
+    }*/
 
-	public function changeIndicatorUser($type, $action, $id) {
+	/*public function changeIndicatorUser($type, $action, $id) {
 		if($type=='alert'){
 			$indicator = \Solunes\Master\App\IndicatorAlert::find($id)->indicator_alert_users();
 		} else {
@@ -505,7 +545,7 @@ class AdminController extends Controller {
 			$message = 'El indicador fue retirado correctamente';
 		}
 	    return redirect($this->prev)->with('message_success', $message);
-    }
+    }*/
 
 	public function getModalEditList($category, $type, $category_id, $node_name) {
 		$node = \Solunes\Master\App\Node::where('name', $node_name)->first();

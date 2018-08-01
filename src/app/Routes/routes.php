@@ -24,9 +24,12 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('inbox/{id}', 'AdminController@getInboxId');
     Route::post('inbox-reply', 'AdminController@postInboxReply');
     // Indicadores
+    Route::get('assign-indicator-modal', 'AdminController@getAssignIndicatorModal');
+    Route::post('assign-indicators', 'AdminController@postAssignIndicators');
+    Route::get('remove-indicator/{indicator_id}', 'AdminController@getRemoveIndicator');
     Route::get('model/indicator/{action}/{id?}/{lang?}', 'AdminController@getModelIndicator');
-    Route::get('indicators', 'AdminController@getIndicators');
-    Route::get('change-indicator-user/{type}/{action}/{id}', 'AdminController@changeIndicatorUser');
+    //Route::get('indicators', 'AdminController@getIndicators');
+    //Route::get('change-indicator-user/{type}/{action}/{id}', 'AdminController@changeIndicatorUser');
     // Modelos globales
     Route::get('model-list/{model}', 'AdminController@getModelList');
     Route::get('model/{model}/{action}/{id?}/{lang?}', 'AdminController@getModel');

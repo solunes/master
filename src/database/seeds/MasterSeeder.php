@@ -38,7 +38,7 @@ class MasterSeeder extends Seeder {
         $node_field_conditional = \Solunes\Master\App\Node::create(['name'=>'field-conditional', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_field->id]);
         $node_field_option = \Solunes\Master\App\Node::create(['name'=>'field-option', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_field->id]);
         if(config('solunes.indicators')){
-            $node_indicator = \Solunes\Master\App\Node::create(['name'=>'indicator', 'folder'=>'system']);
+            $node_indicator = \Solunes\Master\App\Node::create(['name'=>'indicator', 'folder'=>'global']);
             \Solunes\Master\App\Node::create(['name'=>'indicator-user', 'type'=>'child', 'location'=>'package', 'parent_id'=>$node_indicator->id]);
         }
         $node_site = \Solunes\Master\App\Node::create(['name'=>'site', 'folder'=>'global']);
