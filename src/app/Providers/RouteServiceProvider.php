@@ -145,6 +145,7 @@ class RouteServiceProvider extends ServiceProvider
         if(config('solunes.payments')){
             $router->group(['namespace' => $this->paymentsNamespace, 'middleware' => 'web'], function ($router) {
                 require __DIR__ . '/../../../../payments/src/app/Routes/routes.php';
+                require __DIR__ . '/../../../../payments/src/app/Routes/api.php';
             });
         }
         /*if(config('solunes.store')){
