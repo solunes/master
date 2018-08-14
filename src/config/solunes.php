@@ -45,6 +45,7 @@ return [
 	'table_pagination' => 'false',
 	'table_pagination_count' => 25,
 	'list_inline_edit' => false,
+	'filter_subptions' => true,
 	
 	// GLOBAL
 	'login_instructions' => false,

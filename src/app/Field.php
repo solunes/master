@@ -106,6 +106,16 @@ class Field extends Model {
         if($this->relation){
             if($subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $this->value))->first()){
                 $submodel = \FuncNode::node_check_model($subnode);
+                if(config('solunes.filter_subptions')){
+                    $fields = $subnode->fields()->where('type','select')->lists('name');
+                    foreach($fields as $field){
+                        $field_name = 'f_'.$field;
+                        if(request()->has($field_name)){
+                            $value = request()->input($field_name);
+                            $submodel = $submodel->where($field, $value);
+                        }
+                    }
+                }
                 if(config('solunes.store')&&config('store.get_options_relation')&&$this->relation_cond){
                     $submodel = \CustomStore::get_options_relation($submodel, $this, $subnode, request()->segment(5));
                 }
