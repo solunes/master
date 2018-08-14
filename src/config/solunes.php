@@ -13,6 +13,7 @@ return [
 	'send_notification_app' => false,
 	'master_admin_id' => 1,
 	'default_location' => '-16.495369;-68.134289',
+	'google_maps_key' => 'AIzaSyBaLzWbrRu2mktt_Ho3ejDUxRMss-51wBc',
 	'master_dashboard' => true,
 	'main_lang' => 'es',
 

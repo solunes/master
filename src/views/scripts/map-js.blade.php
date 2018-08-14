@@ -1,1 +1,1 @@
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBM9WvJSlDEv4CVMuCABBosg4Z-mcOB7hM&libraries=places"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{ config('solunes.google_maps_key') }}&libraries=places"></script>
