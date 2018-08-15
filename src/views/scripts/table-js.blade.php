@@ -10,7 +10,11 @@ $(document).ready(function() {
         "responsive": true,
         "order": [0, "asc"],
         "language": {
+            @if(config('solunes.table_pagination'))
             "info": "Mostrando la página _PAGE_ de _PAGES_",
+            @else
+            "info": " ",
+            @endif
             "infoEmpty": "No hay datos en la tabla",
             "infoFiltered": "(filtrado de _MAX_ items)",
             "lengthMenu": "Mostrar _MENU_ items por página",
