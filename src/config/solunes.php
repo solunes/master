@@ -47,7 +47,8 @@ return [
 	'table_pagination_count' => 25,
 	'list_inline_edit' => false,
 	'filter_subptions' => true,
-	
+	'filter_subptions_exceptions' => [],
+
 	// GLOBAL
 	'login_instructions' => false,
     'admin_initial_menu' => [

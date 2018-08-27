@@ -104,9 +104,11 @@ class Field extends Model {
     public function getOptionsAttribute() {
         $return = [];
         if($this->relation){
-            if($subnode = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $this->value))->first()){
+            $node_value = str_replace('_', '-', $this->value);
+            if($subnode = \Solunes\Master\App\Node::where('name', $node_value)->first()){
                 $submodel = \FuncNode::node_check_model($subnode);
                 if(config('solunes.filter_subptions')){
+                  if(!isset(config('solunes.filter_subptions_exceptions')[$node_value])||config('solunes.filter_subptions_exceptions')[$node_value]==$field){
                     $fields = $subnode->fields()->where('type','select')->lists('name');
                     foreach($fields as $field){
                         $field_name = 'f_'.$field;
@@ -115,6 +117,7 @@ class Field extends Model {
                             $submodel = $submodel->where($field, $value);
                         }
                     }
+                  }
                 }
                 if(config('solunes.store')&&config('store.get_options_relation')&&$this->relation_cond){
                     $submodel = \CustomStore::get_options_relation($submodel, $this, $subnode, request()->segment(5));
