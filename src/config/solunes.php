@@ -35,6 +35,7 @@ return [
     'reservation' => false,
     'notification' => false,
     'pagostt' => false,
+    'customer' => false,
     'todotix-customer' => false,
 
 	// PACKAGES

@@ -36,6 +36,9 @@ class Seed extends Command
             if(config('solunes.todotix-customer')){
                 $this->callSilent('db:seed', ['--class'=>'\Todotix\Customer\Database\Seeds\DatabaseTruncateSeeder']);
             }
+            if(config('solunes.customer')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Customer\Database\Seeds\DatabaseTruncateSeeder']);
+            }
             if(config('solunes.notification')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Notification\Database\Seeds\DatabaseTruncateSeeder']);
             }
@@ -92,6 +95,9 @@ class Seed extends Command
             if(config('solunes.notification')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Notification\Database\Seeds\DatabaseMasterSeeder']);
             }
+            if(config('solunes.customer')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Customer\Database\Seeds\DatabaseMasterSeeder']);
+            }
             if(config('solunes.todotix-customer')){
                 $this->callSilent('db:seed', ['--class'=>'\Todotix\Customer\Database\Seeds\DatabaseMasterSeeder']);
             }
@@ -113,7 +119,7 @@ class Seed extends Command
             if(config('solunes.store')&&config('store.after_seed')){
                 $this->info('97%: '.\CustomStore::after_seed_actions());
             }
-            if(config('solunes.todotix-customer')){
+            if(config('solunes.todotix-customer')||config('solunes.customer')){
                 $this->info('98%: '.\Customer::after_seed_actions());
             }
             if(config('solunes.after_seed')){
