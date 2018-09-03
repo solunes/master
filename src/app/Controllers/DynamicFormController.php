@@ -59,6 +59,7 @@ class DynamicFormController extends Controller {
             $children = $node->children()->where('type', '!=', 'field')->get();
             if(count($children)>0){
                 foreach($children as $child){
+                    $alphabet = \DataManager::generateAlphabet(count($child->fields));
                     \DataManager::exportNodeExcel($excel, $alphabet, $child, true, true);
                 }
             }
@@ -94,6 +95,7 @@ class DynamicFormController extends Controller {
                         foreach($children as $child){
                             if(!in_array($node->name, $used_array)){
                                 $used_array[] = $node->name;
+                                $alphabet = \DataManager::generateAlphabet(count($child->fields));
                                 \DataManager::exportNodeExcel($excel, $alphabet, $child, false, true);
                             }
                         }

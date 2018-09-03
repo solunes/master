@@ -47,6 +47,7 @@ return [
 	'table_pagination' => 'false',
 	'table_pagination_count' => 25,
 	'list_inline_edit' => false,
+	'list_export_pdf' => true,
 	'filter_subptions' => true,
 	'filter_subptions_exceptions' => [],
 

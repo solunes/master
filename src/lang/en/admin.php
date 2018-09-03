@@ -15,6 +15,7 @@ return array(
 	"search" => "Buscar",
 	"generate" => "Generate",
 	"download" => "Download",
+	"download_pdf" => "Download in PDF",
 	"view_trash" => "View Trash",
 	"stop_trash" => "Stop Trash",
 	"edit" => "Edit",

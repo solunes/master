@@ -4,10 +4,14 @@
   @include('master::scripts.lightbox-css')
 @endsection
 @section('content')
-  {!! AdminList::make_list_header($module, $node, $id, $parent, $appends, count($items), $items_count, $action_nodes) !!}
-  @include('master::helpers.filter')
+  @if(!$pdf)
+    {!! AdminList::make_list_header($module, $node, $id, $parent, $appends, count($items), $items_count, $action_nodes) !!}
+    @include('master::helpers.filter')
+  @endif
   @if(count($items)>0)
-    {!! $items->appends(request()->except(array('page')))->render() !!}
+    @if(!$pdf)
+      {!! $items->appends(request()->except(array('page')))->render() !!}
+    @endif
     <table id="general-list" class="admin-table editable-list table table-striped table-bordered table-hover dt-responsive">
       <thead>
         <tr class="title">
@@ -24,11 +28,14 @@
         @endforeach
       </tbody>
     </table>
-    {!! $items->appends(request()->except(array('page')))->render() !!}
+    @if(!$pdf)
+      {!! $items->appends(request()->except(array('page')))->render() !!}
+    @endif
   @else
     <p>{{ trans('master::admin.no_items') }}</p>
   @endif
-  @if(isset($graphs)&&$graphs&&count($graphs)>0)
+
+  @if(!$pdf&&isset($graphs)&&$graphs&&count($graphs)>0)
     <div class="row">
       @foreach($graphs as $graph_name => $graph)
         <div class="col-sm-{{ $graph_col_size }}">
@@ -39,10 +46,12 @@
   @endif
 @endsection
 @section('script')
-  @include('master::scripts.lightbox-js')
-  @include('master::scripts.select-js')
-  @if(config('solunes.list_inline_edit'))
-    @include('master::scripts.inline-edit-ajax-js')
+  @if(!$pdf)
+    @include('master::scripts.lightbox-js')
+    @include('master::scripts.select-js')
+    @if(config('solunes.list_inline_edit'))
+      @include('master::scripts.inline-edit-ajax-js')
+    @endif
+    @include('master::helpers.graph')
   @endif
-  @include('master::helpers.graph')
 @endsection

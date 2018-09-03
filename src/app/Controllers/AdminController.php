@@ -341,6 +341,8 @@ class AdminController extends Controller {
 		$array = AdminList::get_list($this, $model);
         if(request()->has('download-excel')){
             return AdminList::generate_query_excel($array);
+        } else if(request()->has('download-pdf')){
+            return AdminList::generate_query_pdf($array);
         } else if(config('solunes.list_extra_actions')&&$extra_actions = \CustomFunc::list_extra_actions($array)){
             return $extra_actions;
         } else {

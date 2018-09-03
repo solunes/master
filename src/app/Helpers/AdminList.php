@@ -110,12 +110,12 @@ class AdminList {
         }
 
         $array['items_count'] = $items->count();
-        if(request()->has('download-excel')){
+        if(request()->has('download-excel')||request()->has('download-pdf')){
             $array['items'] = $items->get();
         } else {
             $array['items'] = $items->paginate(config('solunes.pagination_count'));
         }
-
+        $array['pdf'] = false;
         return $array;
     }
 
@@ -149,6 +149,17 @@ class AdminList {
                   foreach($field->field_relations as $field_relation){
                     $response .= '<td>'.$field_relation->label.'</td>';
                   }
+                }
+            }
+            if(request()->has('download-pdf')){
+                if (($key = array_search('edit', $action_fields)) !== false) {
+                    unset($action_fields[$key]);
+                }
+                if (($key = array_search('delete', $action_fields)) !== false) {
+                    unset($action_fields[$key]);
+                }
+                if (($key = array_search('restore', $action_fields)) !== false) {
+                    unset($action_fields[$key]);
                 }
             }
             foreach($action_fields as $action_field){
@@ -387,6 +398,17 @@ class AdminList {
         if(count($fields)>0){
             $response = '';
             $response .= \AdminList::make_fields_values($item, $fields, $field_options, $appends, 'table');
+            if(request()->has('download-pdf')){
+                if (($key = array_search('edit', $action_fields)) !== false) {
+                    unset($action_fields[$key]);
+                }
+                if (($key = array_search('delete', $action_fields)) !== false) {
+                    unset($action_fields[$key]);
+                }
+                if (($key = array_search('restore', $action_fields)) !== false) {
+                    unset($action_fields[$key]);
+                }
+            }
             foreach($action_fields as $action_field){
                 if($action_field=='edit') {
                     if(count($langs)>0){
@@ -537,6 +559,9 @@ class AdminList {
                     $download_url = '?download-excel=true';
                 }
                 $response .= ' | <a href="'.url($url.$download_url).'"><i class="fa fa-download"></i> '.trans('master::admin.download').'</a>';
+                if(config('solunes.list_export_pdf')){
+                    $response .= ' | <a href="'.url($url.str_replace('download-excel','download-pdf',$download_url)).'"><i class="fa fa-download"></i> '.trans('master::admin.download_pdf').'</a>';
+                }
             } else {
                 $response .= ' | '.\CustomFunc::get_action_node($response, $node, $id, $action_node);
             }
@@ -923,6 +948,24 @@ class AdminList {
         return response()->download($file);
     }
 
+    public static function generate_query_pdf($array) {
+        $array['pdf'] = true;
+        if(config('solunes.custom_field')){
+            $array['header_title'] = \CustomFunc::custom_pdf_header($array['node'], $id);
+        } else {
+            $array['header_title'] = 'Reporte';
+        }
+        $array['title'] = 'Reporte de '.$array['node']->plural;
+        $array['site'] = \Solunes\Master\App\Site::find(1);
+        $pdf = \PDF::loadView('master::list.general-list', $array);
+        $zoom = config('snappy.pdf.options.zoom');
+        if(!$zoom){
+            $zoom = 0.7;
+        }
+        $header = \View::make('pdf.header', $array);
+        return $pdf->setPaper('letter')->setOrientation('landscape')->setOption('zoom', round($zoom*0.7, 1))->setOption('header-html', $header->render())->stream($array['node']->plural.'_'.date('Y-m-d').'.pdf');
+    }
+
     public static function generate_query_excel_file($array, $dir) {
         $filename = str_replace(' ', '-', $array['node']->plural.'_'.date('Y-m-d'));
         $filename = preg_replace('/[^A-Za-z0-9\-]/', '', $filename);
@@ -949,6 +992,7 @@ class AdminList {
                     $col_array = [trans('master::fields.parent'), trans('master::fields.counter')];
                     $col_width = [];
                     $child_fields = $child->fields()->where('display_item', 'show')->where('name','!=','parent_id')->get();
+                    $alphabet = \DataManager::generateAlphabet(count($child_fields));
                     foreach($child_fields as $key => $field){
                         array_push($col_array, $field->label);
                         foreach($field->field_relations as $field_relation){

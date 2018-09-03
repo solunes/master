@@ -15,7 +15,7 @@ return array(
 	"search" => "Buscar",
 	"generate" => "Generar",
 	"download" => "Descargar",
-	"download" => "Descargar",
+	"download_pdf" => "Descargar en PDF",
 	"view_trash" => "Abrir Basurero",
 	"stop_trash" => "Cerrar Basurero",
 	"edit" => "Editar",
