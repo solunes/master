@@ -963,7 +963,7 @@ class AdminList {
             $zoom = 0.7;
         }
         $header = \View::make('pdf.header', $array);
-        return $pdf->setPaper('letter')->setOrientation('landscape')->setOption('zoom', round($zoom*0.7, 1))->setOption('header-html', $header->render())->stream($array['node']->plural.'_'.date('Y-m-d').'.pdf');
+        return $pdf->setPaper('letter')->setOrientation('landscape')->setOption('zoom', round($zoom*0.8, 1))->setOption('header-html', $header->render())->stream($array['node']->plural.'_'.date('Y-m-d').'.pdf');
     }
 
     public static function generate_query_excel_file($array, $dir) {
