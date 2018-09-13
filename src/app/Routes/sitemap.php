@@ -1,6 +1,6 @@
 <?php
 
-Route::get('sitemap.xml', function(){
+/*Route::get('sitemap.xml', function(){
 
     // create new sitemap object
     $sitemap = App::make("sitemap");
@@ -33,4 +33,4 @@ Route::get('sitemap.xml', function(){
     }
     return $sitemap->render('xml');
 
-});
+});*/
