@@ -44,6 +44,15 @@ class Field {
             $parameters['options'] = $field['options'];
             if($type=='select'&&!$required){
                 $parameters['options'] = [''=>'-'] + $parameters['options'];
+            } else if($type=='checkbox'||$type=='radio'){
+                if(isset($parameters['options']['first_label'])){
+                    $parameters['first_label'] = $parameters['options']['first_label'];
+                    unset($parameters['options']['first_label']);
+                }
+                if(isset($parameters['options']['last_label'])){
+                    $parameters['last_label'] = $parameters['options']['last_label'];
+                    unset($parameters['options']['last_label']);
+                }
             }
         }
  
@@ -320,6 +329,9 @@ class Field {
         } else {
         $response .= '<div class="mt-radio-inline">';
         }
+        if(isset($parameters['first_label'])){
+            $response .= '<label class="mt-radio">'.$parameters['first_label'].'</label>';
+        }
         foreach($option_array as $key => $option) {
             $array['class'] = 'field_'.$name.' option_'.$key;
             if($type=='radio'||$type=='score'||$type=='main_score'){
@@ -328,6 +340,9 @@ class Field {
                 $response .= '<label class="mt-checkbox">'.$option.' '.Form::checkbox($name.'[]', $key, AdminItem::make_checkbox_value($key, $value), $array);
             }
             $response .= '<span></span></label>';
+        }
+        if(isset($parameters['last_label'])){
+            $response .= '<label class="mt-radio">'.$parameters['last_label'].'</label>';
         }
         $response .= '</div>';
         return $response;
