@@ -38,7 +38,7 @@ class MasterServiceProvider extends ServiceProvider {
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
         $this->app->register('Barryvdh\Snappy\ServiceProvider');
         $this->app->register('Intervention\Image\ImageServiceProvider');
-        $this->app->register('Roumen\Sitemap\SitemapServiceProvider');
+        //$this->app->register('Roumen\Sitemap\SitemapServiceProvider');
         $this->app->register('Anhskohbo\NoCaptcha\NoCaptchaServiceProvider');
         $this->app->register('Barryvdh\Debugbar\ServiceProvider');
 
