@@ -9,6 +9,7 @@
   <meta name="description" content="@yield('description', $site->description)" />
   <meta name="keywords" content="{{ $site->keywords }}" />
   <meta name="google-site-verification" content="{{ $site->google_verification }}" />
+  @if(!$pdf)
   <link rel="shortcut icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" type="image/x-icon">
   <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('assets/img/favicon/favicon-57.png') }}">
   <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('assets/img/favicon/favicon-72.png') }}">
@@ -25,12 +26,21 @@
         });
   </script>
   <!--end::Web font -->
+  @endif
 
   <!-- BEGIN GLOBAL MANDATORY STYLES -->
   <link rel="stylesheet" href="{{ asset('assets/admin/css/vendor.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/master.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/admin.css') }}">
+  @if(!$pdf)
   <link rel="stylesheet" href="{{ url(elixir("assets/css/main.css")) }}">
+  @else
+  <style>
+    input.form-control, input.form-control[disabled], .form-control[disabled], textarea { width: 100%; color: #000 !important; }
+    select.form-control, select.form-control[disabled] { width: 100%; color: #555 !important; }
+    h4 { margin-top: 20px; font-weight: bold; font-size: 16px; }
+  </style>
+  @endif
   @yield('css')
 </head>
 @if(!$pdf)

@@ -128,6 +128,7 @@ return array(
 	"sales" => "Sales",
 	"product" => "Products",
 	"inventory" => "Inventory",
+	"accounting" => "Accounting",
 	"payments" => "Payments",
 	"store" => "Store",
 	"notification" => "Notification",

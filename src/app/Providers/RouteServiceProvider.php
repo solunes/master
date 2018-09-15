@@ -20,6 +20,7 @@ class RouteServiceProvider extends ServiceProvider
     protected $salesNamespace = 'Solunes\Sales\App\Controllers';
     protected $productNamespace = 'Solunes\Product\App\Controllers';
     protected $inventoryNamespace = 'Solunes\Inventory\App\Controllers';
+    protected $accountingNamespace = 'Solunes\Accounting\App\Controllers';
     protected $paymentsNamespace = 'Solunes\Payments\App\Controllers';
     protected $storeNamespace = 'Solunes\Store\App\Controllers';
     protected $pagosttNamespace = 'Solunes\Pagostt\App\Controllers';
@@ -91,6 +92,11 @@ class RouteServiceProvider extends ServiceProvider
                 require __DIR__ . '/../../../../inventory/src/app/Routes/admin.php';
             });
         }
+        if(config('solunes.accounting')){
+            $router->group(['namespace' => $this->accountingNamespace, 'middleware' => 'admin'], function ($router) {
+                require __DIR__ . '/../../../../accounting/src/app/Routes/admin.php';
+            });
+        }
         if(config('solunes.payments')){
             $router->group(['namespace' => $this->paymentsNamespace, 'middleware' => 'admin'], function ($router) {
                 require __DIR__ . '/../../../../payments/src/app/Routes/admin.php';
@@ -146,6 +152,11 @@ class RouteServiceProvider extends ServiceProvider
         if(config('solunes.inventory')){
             $router->group(['namespace' => $this->inventoryNamespace, 'middleware' => 'web'], function ($router) {
                 require __DIR__ . '/../../../../inventory/src/app/Routes/routes.php';
+            });
+        }
+        if(config('solunes.accounting')){
+            $router->group(['namespace' => $this->accountingNamespace, 'middleware' => 'web'], function ($router) {
+                require __DIR__ . '/../../../../accounting/src/app/Routes/routes.php';
             });
         }
         if(config('solunes.payments')){

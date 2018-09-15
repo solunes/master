@@ -131,6 +131,7 @@ return array(
 	"sales" => "Ventas",
 	"product" => "Productos",
 	"inventory" => "Inventario",
+	"accounting" => "Contabilidad",
 	"payments" => "Pagos",
 	"store" => "Tienda",
 	"notification" => "Notificación",

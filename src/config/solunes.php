@@ -29,6 +29,7 @@ return [
     'project' => false,
     'product' => false,
     'inventory' => false,
+    'accounting' => false,
     'payments' => false,
     'services' => false,
     'accounting' => false,

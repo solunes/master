@@ -51,6 +51,9 @@ class Seed extends Command
             if(config('solunes.payments')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Payments\Database\Seeds\DatabaseTruncateSeeder']);
             }
+            if(config('solunes.accounting')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Accounting\Database\Seeds\DatabaseTruncateSeeder']);
+            }
             if(config('solunes.inventory')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Inventory\Database\Seeds\DatabaseTruncateSeeder']);
             }
@@ -82,6 +85,9 @@ class Seed extends Command
             }
             if(config('solunes.inventory')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Inventory\Database\Seeds\DatabaseMasterSeeder']);
+            }
+            if(config('solunes.accounting')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Accounting\Database\Seeds\DatabaseMasterSeeder']);
             }
             if(config('solunes.payments')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Payments\Database\Seeds\DatabaseMasterSeeder']);
