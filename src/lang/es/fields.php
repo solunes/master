@@ -14,6 +14,7 @@ return [
     'active' => '¿Activo?',
     'activity' => 'Actividad',
     'address' => 'Dirección',
+    'address_extra' => 'Dirección (Extra)',
     'agency' => 'Agencia',
     'alert_actions' => 'Acciones de Alerta',
     'alert_conditionals' => 'Condicionantes de Alerta',
