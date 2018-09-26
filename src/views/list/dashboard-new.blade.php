@@ -65,7 +65,13 @@
             <ul class="admin-list">
               @foreach($fields as $field_item)
                 <li @if($field&&$field->id==$field_item->id) class="active" @endif >
-                  <a href="{{ url($url.'field_name='.$field_item->name) }}"><i class="fa fa-angle-right" aria-hidden="true"></i> {{ $field_item->label }}</a>
+                  <a href="{{ url($url.'field_name='.$field_item->name) }}" title="{{ $field_item->label }}"><i class="fa fa-angle-right" aria-hidden="true"></i> 
+                    @if(strlen($field_item->label)>46)
+                      {{ substr($field_item->label,0,45).'..' }}
+                    @else
+                      {{ $field_item->label }}
+                    @endif
+                  </a>
                 </li>
               @endforeach
             </ul>
