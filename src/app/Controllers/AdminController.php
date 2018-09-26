@@ -88,7 +88,11 @@ class AdminController extends Controller {
 	                  $count_text .= $month_count.',';
 	                }
                     $count_text .= ']';
-		    		$array_items['Total ('.$count.')'] = $count_text;
+                    $label_name = 'Total';
+                    if(config('solunes.indicator_total_count')){
+                    	$label_name .= ' ('.$count.')';
+                    }
+		    		$array_items[$label_name] = $count_text;
         		} else {
 		    		$count = $items->count();
         		}
@@ -142,10 +146,14 @@ class AdminController extends Controller {
 			                }
 		        		}
 		        		if($check){
+		        			$label_name = $field->label.': '.$option_name;
+                    		if(config('solunes.indicator_total_count')){
+                    			$label_name .= ' ('.$count.')';
+                    		}
 		        			if($array['graph_type'] == 'lines'){
-		    					$array_items[$field->label.': '.$option_name.' ('.$count.')'] = $count_text;
+		    					$array_items[$label_name] = $count_text;
 		        			} else {
-		    					$array_items[$field->label.': '.$option_name.' ('.$count.')'] = $count;
+		    					$array_items[$label_name] = $count;
 		        			}
 		    				$items_count += $count;
 		        		} else {
@@ -154,11 +162,19 @@ class AdminController extends Controller {
 	        		}
 	        		$no_items_count = $total_items_count - $items_count;
 	        		if($array['graph_type'] != 'bar' && $no_results_count>0){
-		    			$array_items[$field->label.': '.$no_results_count.' Sin Resultados (0)'] = 0;
+	        			$label_name = $field->label.': '.$no_results_count.' Sin Resultados';
+                		if(config('solunes.indicator_total_count')){
+                			$label_name .= ' (0)';
+                		}
+		    			$array_items[$label_name] = 0;
 	        		}
 	        		if($array['graph_type'] != 'lines'){
 		    			if($no_items_count>0){
-		    				$array_items['Items sin elemento ('.$no_items_count.') '] = $no_items_count;
+		        			$label_name = 'Items sin elemento';
+	                		if(config('solunes.indicator_total_count')){
+	                			$label_name .= ' ('.$no_items_count.')';
+	                		}
+		    				$array_items[$label_name] = $no_items_count;
 		    			}
 	        		}
         		}
