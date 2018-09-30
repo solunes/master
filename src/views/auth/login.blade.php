@@ -52,6 +52,15 @@
                 {!! Form::submit('Log In',['class' => 'btn btn-site']) !!}
               </div>
             </div>
+          {!! Form::close() !!}
+          @else
+            <h2 class="col-sm-offset-1 col-sm-9">Iniciar Sesión</h2>
+            <h3 class="col-sm-offset-1 col-sm-9">Cometió muchos intentos fallidos para iniciar sesión, por lo que debe esperar {{ $blocked_time }} minutos para volverlo a intentar.</h3>
+            <h3 class="col-sm-offset-1 col-sm-9"><a href="{{ url('auth/login') }}">Recargar página</a> | 
+            {!! HTML::link('password/recover', 'Olvidaste tu contraseña?') !!}</h3>
+          @endif
+
+          <div class="form-horizontal">
             <div class="form-group">
               <div class="col-sm-offset-3 col-sm-6">
                 @if(config('solunes.socialite_google'))
@@ -68,14 +77,7 @@
                 @endif
               </div>
             </div>
-          {!! Form::close() !!}
-          @else
-            <h2 class="col-sm-offset-1 col-sm-9">Iniciar Sesión</h2>
-            <h3 class="col-sm-offset-1 col-sm-9">Cometió muchos intentos fallidos para iniciar sesión, por lo que debe esperar {{ $blocked_time }} minutos para volverlo a intentar.</h3>
-            <h3 class="col-sm-offset-1 col-sm-9"><a href="{{ url('auth/login') }}">Recargar página</a> | 
-            {!! HTML::link('password/recover', 'Olvidaste tu contraseña?') !!}</h3>
-          @endif
-          
+          </div>
 
         </div>
       </div>
