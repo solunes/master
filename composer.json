@@ -26,7 +26,8 @@
         "barryvdh/laravel-debugbar": "2.*",
         "codeitnowin/barcode": "2.*",
         "google/cloud-translate": "1.0.*",
-        "anhskohbo/no-captcha": "3.*"
+        "anhskohbo/no-captcha": "3.*",
+        "laravel/socialite": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.*"
