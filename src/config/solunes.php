@@ -40,6 +40,12 @@ return [
     'customer' => false,
     'todotix-customer' => false,
 
+    // SOCIALITE
+    'socialite_google' => true,
+    'socialite_facebook' => true,
+    'socialite_twitter' => false,
+    'socialite_github' => false,
+
 	// PACKAGES
 	'alerts' => true,
 	'indicators' => true,

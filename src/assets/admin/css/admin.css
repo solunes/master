@@ -1354,6 +1354,38 @@
   -moz-box-sizing: border-box !important;
   box-sizing: border-box !important; }
 
+.auth-btn-google .btn-site {
+  background: #dd4b39 !important;
+  color: #fff !important; }
+
+.auth-btn-google:hover .btn-site {
+  background: #ff6350 !important;
+  color: #fff !important; }
+
+.auth-btn-facebook .btn-site {
+  background: #3d5a98 !important;
+  color: #fff !important; }
+
+.auth-btn-facebook:hover .btn-site {
+  background: #5683e2 !important;
+  color: #fff !important; }
+
+.auth-btn-twitter .btn-site {
+  background: #28a9e0 !important;
+  color: #fff !important; }
+
+.auth-btn-twitter:hover .btn-site {
+  background: #6ed4ff !important;
+  color: #fff !important; }
+
+.auth-btn-github .btn-site {
+  background: #2b414e !important;
+  color: #fff !important; }
+
+.auth-btn-github:hover .btn-site {
+  background: #436e88 !important;
+  color: #fff !important; }
+
 .admin-site.pdf-site {
   background: #fff; }
   .admin-site.pdf-site .control-label {
