@@ -43,6 +43,7 @@ return [
 	// PACKAGES
 	'alerts' => true,
 	'indicators' => true,
+	'indicator_total_count' => true,
 
 	// LIST
 	'pagination_count' => 500,
