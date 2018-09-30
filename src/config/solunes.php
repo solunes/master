@@ -16,6 +16,7 @@ return [
 	'google_maps_key' => 'AIzaSyBaLzWbrRu2mktt_Ho3ejDUxRMss-51wBc',
 	'master_dashboard' => true,
 	'main_lang' => 'es',
+	'socialite' => true,
 
 	// APP VARS
 	'app_name' => strtoupper(env('APP_NAME', 'Web App')),

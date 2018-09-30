@@ -38,7 +38,7 @@ class MasterServiceProvider extends ServiceProvider {
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
         $this->app->register('Barryvdh\Snappy\ServiceProvider');
         $this->app->register('Intervention\Image\ImageServiceProvider');
-        //$this->app->register('Roumen\Sitemap\SitemapServiceProvider');
+        $this->app->register('Laravel\Socialite\SocialiteServiceProvider');
         $this->app->register('Anhskohbo\NoCaptcha\NoCaptchaServiceProvider');
         $this->app->register('Barryvdh\Debugbar\ServiceProvider');
 
@@ -56,6 +56,7 @@ class MasterServiceProvider extends ServiceProvider {
         $loader->alias('BarcodeGenerator', 'CodeItNow\BarcodeBundle\Utils\BarcodeGenerator');
         $loader->alias('Debugbar', 'Barryvdh\Debugbar\Facade');
         $loader->alias('NoCaptcha', 'Anhskohbo\NoCaptcha\Facades\NoCaptcha');
+        $loader->alias('Socialite', 'Laravel\Socialite\Facades\Socialite');
 
         $loader->alias('AdminList', '\Solunes\Master\App\Helpers\AdminList');
         $loader->alias('AdminItem', '\Solunes\Master\App\Helpers\AdminItem');

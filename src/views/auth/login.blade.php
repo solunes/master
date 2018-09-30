@@ -59,6 +59,9 @@
             <h3 class="col-sm-offset-1 col-sm-9"><a href="{{ url('auth/login') }}">Recargar página</a> | 
             {!! HTML::link('password/recover', 'Olvidaste tu contraseña?') !!}</h3>
           @endif
+          <a href="{{ url('/auth/google') }}" class="btn btn-google"><i class="fa fa-google"></i> Google Plus</a>
+          <a href="{{ url('/auth/facebook') }}" class="btn btn-facebook"><i class="fa fa-facebook"></i> Facebook</a>
+
         </div>
       </div>
     </div>
