@@ -60,12 +60,18 @@ class AuthController extends Controller {
         	$authUser->save();
             return $authUser;
         }
-        return User::create([
+        $authUser = User::create([
+            'first_name'     => $user->name,
+            'last_name'     => $user->name,
+            'password'     => '12345678',
             'name'     => $user->name,
             'email'    => $user->email,
             'provider' => $provider,
             'provider_id' => $user->id
         ]);
+        $role = \Solunes\Master\App\Role::where('name','member')->first();
+        $authUser->role_user()->attach($role->id);
+        return $authUser;
     }
 
 }
