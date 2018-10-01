@@ -60,6 +60,7 @@
             {!! HTML::link('password/recover', 'Olvidaste tu contraseña?') !!}</h3>
           @endif
 
+          @if(config('solunes.socialite'))
           <div class="form-horizontal">
             <div class="form-group">
               <div class="col-sm-offset-3 col-sm-6">
@@ -78,6 +79,7 @@
               </div>
             </div>
           </div>
+          @endif
 
         </div>
       </div>

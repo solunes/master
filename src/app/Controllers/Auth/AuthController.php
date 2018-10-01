@@ -34,14 +34,10 @@ class AuthController extends Controller {
      */
     public function handleProviderCallback($provider)
     {
-        \Log::info('login0');
         $user = Socialite::driver($provider)->user();
-
-        \Log::info('login1');
         $authUser = $this->findOrCreateUser($user, $provider);
-        \Log::info('login2');
         Auth::login($authUser, true);
-        return redirect($this->redirectTo);
+        return redirect('admin');
     }
 
     /**
