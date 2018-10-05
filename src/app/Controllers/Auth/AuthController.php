@@ -60,17 +60,37 @@ class AuthController extends Controller {
         	$authUser->save();
             return $authUser;
         }
-        $authUser = User::create([
-            'first_name'     => $user->name,
-            'last_name'     => $user->name,
-            'password'     => '12345678',
-            'name'     => $user->name,
-            'email'    => $user->email,
-            'provider' => $provider,
-            'provider_id' => $user->id
-        ]);
-        $role = \Solunes\Master\App\Role::where('name','member')->first();
-        $authUser->role_user()->attach($role->id);
+        if(config('solunes.customer')){
+            $authCustomer = \Solunes\Customer\App\Customer::where('email', $user->email)->first();
+            if(!$authCustomer){
+                $authCustomer = \Solunes\Customer\App\Customer::create([
+                    'first_name'     => $user->name,
+                    'last_name'     => $user->name,
+                    'password'     => '12345678',
+                    'name'     => $user->name,
+                    'email'    => $user->email,
+                ]);
+            }
+            $authUser = $authCustomer->user;
+            if ($authUser) {
+                $authUser->provider = $provider;
+                $authUser->provider_id = $user->id;
+                $authUser->save();
+                return $authUser;
+            }
+        } else {
+            $authUser = User::create([
+                'first_name'     => $user->name,
+                'last_name'     => $user->name,
+                'password'     => '12345678',
+                'name'     => $user->name,
+                'email'    => $user->email,
+                'provider' => $provider,
+                'provider_id' => $user->id
+            ]);
+            $role = \Solunes\Master\App\Role::where('name','member')->first();
+            $authUser->role_user()->attach($role->id);
+        }
         return $authUser;
     }
 
