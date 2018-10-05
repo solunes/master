@@ -14,6 +14,11 @@ use App\Http\Controllers\Controller;
 
 class AuthController extends Controller {
 
+    public function __construct(UrlGenerator $url) {
+        //$this->middleware('guest', ['except' => 'getLogout']);
+        $this->prev = $url->previous();
+    }
+
     /**
      * Redirect the user to the OAuth Provider.
      *
@@ -37,7 +42,24 @@ class AuthController extends Controller {
         $user = Socialite::driver($provider)->user();
         $authUser = $this->findOrCreateUser($user, $provider);
         Auth::login($authUser, true);
-        return redirect('admin');
+        if($authUser->status=='banned'||$authUser->status=='pending_confirmation'){
+            $message = trans('master::form.login_'.$authUser->status);
+            Auth::logout();
+            if($authUser->status=='pending_confirmation'){
+                $confirmation_url = url('auth/send-confirmation-email/'.urlencode($authUser->email));
+                session()->set('confirmation_url', $confirmation_url);
+            }
+            return redirect($this->prev)->with('message_error', 'No puede iniciar sesión porque su cuenta no se encuentra disponible.');
+        } else if(session()->has('url.intended')){
+            return redirect(session()->get('url.intended'))->with('message_success', 'Felicidades, inició sesión correctamente.');
+        } else {
+            if(\Auth::user()->can('dashboard')){
+                $redirect = 'admin';
+            } else {
+                $redirect = '';
+            }
+            return redirect($redirect);
+        }
     }
 
     /**
