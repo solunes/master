@@ -63,11 +63,14 @@ class AuthController extends Controller {
         if(config('solunes.customer')){
             $authCustomer = \Solunes\Customer\App\Customer::where('email', $user->email)->first();
             if(!$authCustomer){
+                $name = \External::reduceName($user->name);
+                $first_name = $name['first_name'];
+                $last_name = $name['last_name'];
                 $authCustomer = \Solunes\Customer\App\Customer::create([
-                    'first_name'     => $user->name,
-                    'last_name'     => $user->name,
+                    'first_name'     => $first_name,
+                    'last_name'     => $last_name,
                     'password'     => '12345678',
-                    'name'     => $user->name,
+                    'name'     => $name,
                     'email'    => $user->email,
                 ]);
             }
@@ -79,11 +82,14 @@ class AuthController extends Controller {
                 return $authUser;
             }
         } else {
+            $name = \External::reduceName($user->name);
+            $first_name = $name['first_name'];
+            $last_name = $name['last_name'];
             $authUser = User::create([
-                'first_name'     => $user->name,
-                'last_name'     => $user->name,
+                'first_name'     => $first_name,
+                'last_name'     => $last_name,
                 'password'     => '12345678',
-                'name'     => $user->name,
+                'name'     => $name,
                 'email'    => $user->email,
                 'provider' => $provider,
                 'provider_id' => $user->id
