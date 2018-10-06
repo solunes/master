@@ -14,6 +14,11 @@ use App\Http\Controllers\Controller;
 
 class AuthController extends Controller {
 
+    public function __construct(UrlGenerator $url) {
+        //$this->middleware('guest', ['except' => 'getLogout']);
+        $this->prev = $url->previous();
+    }
+
     /**
      * Redirect the user to the OAuth Provider.
      *
@@ -36,8 +41,39 @@ class AuthController extends Controller {
     {
         $user = Socialite::driver($provider)->user();
         $authUser = $this->findOrCreateUser($user, $provider);
+        $last_session = session()->getId();
         Auth::login($authUser, true);
-        return redirect('admin');
+        if($authUser->status=='banned'||$authUser->status=='pending_confirmation'){
+            $message = trans('master::form.login_'.$authUser->status);
+            Auth::logout();
+            if($authUser->status=='pending_confirmation'){
+                $confirmation_url = url('auth/send-confirmation-email/'.urlencode($authUser->email));
+                session()->set('confirmation_url', $confirmation_url);
+            }
+            return \Login::fail(request()->session(), $this->prev, [], $message, 10, 5);
+        } else if(session()->has('url.intended')){
+            $redirect = session()->get('url.intended');
+            if(config('solunes.sales')){
+                \CustomSales::after_login($authUser, $last_session, $redirect);
+            }
+            if(config('solunes.after_login')){
+                \CustomFunc::after_login($authUser, $last_session, $redirect);
+            }
+            return redirect($redirect)->with('message_success', trans('master::form.login_success'));
+        } else {
+            if(\Auth::user()->can('dashboard')){
+                $redirect = 'admin';
+            } else {
+                $redirect = '';
+            }
+            if(config('solunes.sales')){
+                \CustomSales::after_login($authUser, $last_session, $redirect);
+            }
+            if(config('solunes.after_login')){
+                \CustomFunc::after_login($authUser, $last_session, $redirect);
+            }
+            return redirect($redirect)->with('message_success', trans('master::form.login_success'));
+        }
     }
 
     /**
@@ -55,20 +91,48 @@ class AuthController extends Controller {
         }
         $authUser = User::where('email', $user->email)->first();
         if ($authUser) {
-        	$authUser->provider = $provider;
-        	$authUser->provider_id = $user->id;
-        	$authUser->save();
+            $authUser->provider = $provider;
+            $authUser->provider_id = $user->id;
+            $authUser->save();
             return $authUser;
         }
-        $authUser = User::create([
-            'name'     => $user->name,
-            'email'    => $user->email,
-            'password'     => '12345678',
-            'provider' => $provider,
-            'provider_id' => $user->id
-        ]);
-        $role = \Solunes\Master\App\Role::where('name','member')->first();
-        $authUser->role_user()->attach($role->id);
+        if(config('solunes.customer')){
+            $authCustomer = \Solunes\Customer\App\Customer::where('email', $user->email)->first();
+            if(!$authCustomer){
+                $name = \External::reduceName($user->name);
+                $first_name = $name['first_name'];
+                $last_name = $name['last_name'];
+                $authCustomer = \Solunes\Customer\App\Customer::create([
+                    'first_name'     => $first_name,
+                    'last_name'     => $last_name,
+                    'password'     => '12345678',
+                    'name'     => $name,
+                    'email'    => $user->email,
+                ]);
+            }
+            $authUser = $authCustomer->user;
+            if ($authUser) {
+                $authUser->provider = $provider;
+                $authUser->provider_id = $user->id;
+                $authUser->save();
+                return $authUser;
+            }
+        } else {
+            $name = \External::reduceName($user->name);
+            $first_name = $name['first_name'];
+            $last_name = $name['last_name'];
+            $authUser = User::create([
+                'first_name'     => $first_name,
+                'last_name'     => $last_name,
+                'password'     => '12345678',
+                'name'     => $name,
+                'email'    => $user->email,
+                'provider' => $provider,
+                'provider_id' => $user->id
+            ]);
+            $role = \Solunes\Master\App\Role::where('name','member')->first();
+            $authUser->role_user()->attach($role->id);
+        }
         return $authUser;
     }
 

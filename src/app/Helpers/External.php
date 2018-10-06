@@ -122,4 +122,25 @@ class External {
       return $url;
     }
 
+    public static function reduceName($name) {
+      $first_name = $last_name = null;
+      $arr = explode(' ', $name);
+      $num = count($arr);
+      $count = floor($num/2);
+      foreach($arr as $key => $arr_item){
+          if($key==0||$key==1&&$num>3||$key==2&&$num>5){
+              if($first_name){
+                  $first_name .= ' ';
+              }
+              $first_name .= $arr_item;
+          } else {
+              if($last_name){
+                  $last_name .= ' ';
+              }
+              $last_name .= $arr_item;
+          }
+      }
+      return ['first_name'=>$first_name, 'last_name'=>$last_name];
+    }
+
 }
