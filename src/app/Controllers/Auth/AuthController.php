@@ -85,6 +85,21 @@ class AuthController extends Controller {
      */
     public function findOrCreateUser($user, $provider)
     {
+        if(config('solunes.customer')){
+            $authCustomer = \Solunes\Customer\App\Customer::where('email', $user->email)->first();
+            if(!$authCustomer){
+                $name = \External::reduceName($user->name);
+                $first_name = $name['first_name'];
+                $last_name = $name['last_name'];
+                $authCustomer = \Solunes\Customer\App\Customer::create([
+                    'first_name'     => $first_name,
+                    'last_name'     => $last_name,
+                    'password'     => '12345678',
+                    'name'     => $user->name,
+                    'email'    => $user->email,
+                ]);
+            }
+        }
         $authUser = User::where('provider_id', $user->id)->first();
         if ($authUser) {
             return $authUser;
@@ -96,43 +111,20 @@ class AuthController extends Controller {
             $authUser->save();
             return $authUser;
         }
-        if(config('solunes.customer')){
-            $authCustomer = \Solunes\Customer\App\Customer::where('email', $user->email)->first();
-            if(!$authCustomer){
-                $name = \External::reduceName($user->name);
-                $first_name = $name['first_name'];
-                $last_name = $name['last_name'];
-                $authCustomer = \Solunes\Customer\App\Customer::create([
-                    'first_name'     => $first_name,
-                    'last_name'     => $last_name,
-                    'password'     => '12345678',
-                    'name'     => $name,
-                    'email'    => $user->email,
-                ]);
-            }
-            $authUser = $authCustomer->user;
-            if ($authUser) {
-                $authUser->provider = $provider;
-                $authUser->provider_id = $user->id;
-                $authUser->save();
-                return $authUser;
-            }
-        } else {
-            $name = \External::reduceName($user->name);
-            $first_name = $name['first_name'];
-            $last_name = $name['last_name'];
-            $authUser = User::create([
-                'first_name'     => $first_name,
-                'last_name'     => $last_name,
-                'password'     => '12345678',
-                'name'     => $name,
-                'email'    => $user->email,
-                'provider' => $provider,
-                'provider_id' => $user->id
-            ]);
-            $role = \Solunes\Master\App\Role::where('name','member')->first();
-            $authUser->role_user()->attach($role->id);
-        }
+        $name = \External::reduceName($user->name);
+        $first_name = $name['first_name'];
+        $last_name = $name['last_name'];
+        $authUser = User::create([
+            'first_name'     => $first_name,
+            'last_name'     => $last_name,
+            'password'     => '12345678',
+            'name'     => $user->name,
+            'email'    => $user->email,
+            'provider' => $provider,
+            'provider_id' => $user->id
+        ]);
+        $role = \Solunes\Master\App\Role::where('name','member')->first();
+        $authUser->role_user()->attach($role->id);
         return $authUser;
     }
 
