@@ -72,10 +72,25 @@ class AdminController extends Controller {
         		if(!$array['graph_type_isset']){
         			$array['graph_type'] = $indicator->graph_type;
         		}
+        		$filter_query = json_decode($indicator->filter_query, true);
         		$my_indicator_value = $indicator->my_indicator_value;
         		$node = \Solunes\Master\App\Node::find($indicator->node_id);
         		$fields = $node->fields()->whereIn('type',['select','radio','checkbox'])->get();
         		$items = \FuncNode::node_check_model($node);
+        		if(count($filter_query)>0){
+        			if(isset($filter_query['dates'])){
+		        		if($array['start_date']){
+		        			$items = $items->where('created_at', '>=', $array['start_date'].' 00:00:00');
+		        		}
+		        		if($array['end_date']){
+		        			$items = $items->where('created_at', '<=', $array['end_date'].' 23:59:59');
+		        		}
+        				unset($filter_query['dates']);
+        			}
+        			foreach($filter_query as $filter_query_key => $filter_query_item){
+        				$items = $items->where($filter_query_key, $filter_query_item);
+        			}
+        		}
         		$array_items = [];
         		if($array['graph_type'] == 'lines'){
 	                $range = range(1,12);
