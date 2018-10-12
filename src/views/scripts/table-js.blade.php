@@ -103,7 +103,6 @@ $(document).ready(function() {
         "responsive": true,
         @endif
         "autoWidth": false,
-        @endif
         //"lengthMenu": [ [25, 50, 100, 250, 500, -1], [25, 50, 100, 250, 500, "Todos"] ],
         'columnDefs': [{
             'targets': 0,
