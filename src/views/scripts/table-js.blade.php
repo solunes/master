@@ -1,3 +1,9 @@
+<style type="text/css">
+    div.dataTables_wrapper {
+        width: 100%;
+        margin: 0 auto;
+    }
+</style>
 <script type="text/javascript"> 
 $(document).ready(function() {
     $('table.admin-table').dataTable({
@@ -6,8 +12,16 @@ $(document).ready(function() {
         "pageLength": {{ config('solunes.table_pagination_count') }},
         "lengthMenu": [[{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, -1], [{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, "Todos"] ],
         @endif
-        "autoWidth": false,
+        @if(config('solunes.list_vertical_scroll')>0)
+        "scrollY": "{{ config('solunes.list_vertical_scroll') }}px",
+        "scrollCollapse": true,
+        @endif
+        @if(config('solunes.list_horizontal_scroll')=='true')
+        "scrollX": true,
+        @else
         "responsive": true,
+        @endif
+        "autoWidth": false,
         "order": [0, "asc"],
         "language": {
             @if(config('solunes.table_pagination')=='true')
@@ -40,8 +54,16 @@ $(document).ready(function() {
         "pageLength": {{ config('solunes.table_pagination_count') }},
         "lengthMenu": [[{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, -1], [{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, "Todos"] ],
         @endif
-        "autoWidth": false,
+        @if(config('solunes.list_vertical_scroll')>0)
+        "scrollY": "{{ config('solunes.list_vertical_scroll') }}px",
+        "scrollCollapse": true,
+        @endif
+        @if(config('solunes.list_horizontal_scroll')=='true')
+        "scrollX": true,
+        @else
         "responsive": true,
+        @endif
+        "autoWidth": false,
         "bSort" : false,
         "language": {
             @if(config('solunes.table_pagination')=='true')
@@ -71,8 +93,17 @@ $(document).ready(function() {
     $('table.admin-table-checkbox').dataTable({
         "paging": false,
         //"pageLength": 1000,
-        "autoWidth": false,
+        @if(config('solunes.list_vertical_scroll')>0)
+        "scrollY": "{{ config('solunes.list_vertical_scroll') }}px",
+        "scrollCollapse": true,
+        @endif
+        @if(config('solunes.list_horizontal_scroll')=='true')
+        "scrollX": true,
+        @else
         "responsive": true,
+        @endif
+        "autoWidth": false,
+        @endif
         //"lengthMenu": [ [25, 50, 100, 250, 500, -1], [25, 50, 100, 250, 500, "Todos"] ],
         'columnDefs': [{
             'targets': 0,

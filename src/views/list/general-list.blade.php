@@ -12,7 +12,7 @@
     @if(!$pdf)
       {!! $items->appends(request()->except(array('page')))->render() !!}
     @endif
-    <table id="general-list" class="admin-table editable-list table table-striped table-bordered table-hover dt-responsive">
+    <table id="general-list" class="admin-table editable-list table table-striped table-bordered table-hover @if(config('solunes.list_horizontal_scroll')=='true') nowrap @else dt-responsive @endif">
       <thead>
         <tr class="title">
           <td>Nº</td>
