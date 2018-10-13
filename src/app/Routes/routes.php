@@ -53,7 +53,7 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('generate-item-field/{node_name}/{field_name}/{item_id}', 'AdminController@generateItemField');
     Route::post('item-field-update', 'AdminController@postItemFieldUpdate');
     // Formularios Dinámicos
-    Route::get('import-nodes', 'DynamicFormController@getImportNodes');
+    Route::get('import-nodes/{node_id?}', 'DynamicFormController@getImportNodes');
     Route::post('import-nodes', 'DynamicFormController@postImportNodes');
     Route::get('export-nodes', 'DynamicFormController@getExportNodes');
     Route::post('export-nodes', 'DynamicFormController@postExportNodes');

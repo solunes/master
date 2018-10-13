@@ -197,14 +197,14 @@ class AdminList {
         }
     }
 
-    public static function make_fields_values($item, $fields, $field_options, $appends, $type = 'table', $database = false) {
+    public static function make_fields_values($item, $fields, $field_options, $appends, $type = 'table', $database = false, $just_last = false) {
         if($type=='excel'){
             $response = [];
         } else {
             $response = '';
         }
         foreach($fields as $field){
-            $value = \AdminList::get_field_value($field, $item, $field_options, $appends, $type, $database);
+            $value = \AdminList::get_field_value($field, $item, $field_options, $appends, $type, $database, $just_last);
             if($type=='table'){
                 $response .= '<td ';
                 if(in_array($field->type, ['field','custom','title','content','child','subchild','hidden','map','barcode','file','image','text'])){
@@ -219,7 +219,7 @@ class AdminList {
                     $relation_name = $field->trans_name;
                     $related_field = $field_relation->related_field;
                     if($related_field){
-                        $new_value = \AdminList::get_field_value($related_field, $item->$relation_name, $field_options, $appends, $type, $database);
+                        $new_value = \AdminList::get_field_value($related_field, $item->$relation_name, $field_options, $appends, $type, $database, $just_last);
                     } else {
                         $new_value = NULL;
                     }
@@ -234,7 +234,7 @@ class AdminList {
         return $response;
     }
 
-    public static function get_field_value($field, $item, $field_options, $appends, $type, $database) {
+    public static function get_field_value($field, $item, $field_options, $appends, $type, $database, $just_last = false) {
         if($item){
             $field_name = $field->name;
             $field_trans_name = $field->trans_name;
@@ -276,10 +276,14 @@ class AdminList {
                         \Log::info('Error al exportar: '.$field_name);
                     }
                 } else {
-                    if($item_val&&is_object($item_val)){
-                        $value = $item_val->name;
+                    if($just_last&&$field_name=='parent_id'){
+                        $value = 'new-1';
                     } else {
-                        $value = $item_val;
+                        if($item_val&&is_object($item_val)){
+                            $value = $item_val->name;
+                        } else {
+                            $value = $item_val;
+                        }
                     }
                 }
             } else {
@@ -287,7 +291,11 @@ class AdminList {
                     case 'string':
                     case 'integer':
                     case 'barcode':
-                        $value = $item_val;
+                        if($just_last&&$field_name=='id'){
+                            $value = 'new-1';
+                        } else {
+                            $value = $item_val;
+                        }
                     break;
                     case 'select':
                     case 'radio':

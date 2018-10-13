@@ -21,8 +21,12 @@ class DynamicFormController extends Controller {
       $this->prev = $url->previous();
       $this->module = 'admin';
     }
-    public function getImportNodes() {
-        $array['items'] = \Solunes\Master\App\Node::where('location', '!=','package')->whereNull('parent_id')->withTrashed()->get();
+    public function getImportNodes($node_id = NULL) {
+        if($node_id){
+            $array['items'] = \Solunes\Master\App\Node::where('id',$node_id)->get();
+        } else {
+            $array['items'] = \Solunes\Master\App\Node::where('location', '!=','package')->whereNull('parent_id')->withTrashed()->get();
+        }
         return view('master::list.import-nodes', $array);
     }
 
@@ -34,6 +38,8 @@ class DynamicFormController extends Controller {
         $name_array = array_merge(['image-folder','email'], $name_array);
         $languages = \Solunes\Master\App\Language::get();
         \Excel::load($request->file('file'), function($reader) use($languages, $name_array) {
+            $super_parent_sheet = null;
+            $super_parent_array = [];
             foreach($reader->get() as $sheet){
                 $sheet_model = $sheet->getTitle();
                 $strpos_sheet = strpos($sheet_model, '#');
@@ -41,7 +47,12 @@ class DynamicFormController extends Controller {
                     $sheet_model = substr($sheet_model, 0, $strpos_sheet);
                 }
                 if(in_array($sheet_model, $name_array)){
-                    $count_rows = \DataManager::importExcelRows($sheet, $languages);
+                    if(!$super_parent_sheet){
+                        $super_parent_array = \DataManager::importExcelRows($sheet, $languages, $super_parent_sheet, $super_parent_array);
+                        $super_parent_sheet = $sheet_model;
+                    } else {
+                        \DataManager::importExcelRows($sheet, $languages, $super_parent_sheet, $super_parent_array);
+                    }
                 }
             }
         });
@@ -81,13 +92,12 @@ class DynamicFormController extends Controller {
         $nodes = \Solunes\Master\App\Node::whereIn('name', $name_array)->with('fields')->get();
         $dir = public_path('excel');
         array_map('unlink', glob($dir.'/*'));
-        $store_nodes = ['purchase','sale','partner-movement','place-movement','refund','income','expense','accounts-payable','accounts-receivable'];
         $languages = \Solunes\Master\App\Language::where('code','!=',config('solunes.main_lang'))->lists('code');
         $used_array = [];
-        $file = \Excel::create('import', function($excel) use($nodes, $store_nodes, $used_array, $languages) {
+        $file = \Excel::create('import', function($excel) use($nodes, $used_array, $languages) {
             foreach($nodes as $node){
                 $alphabet = \DataManager::generateAlphabet(count($node->fields));
-                if(!in_array($node->name, $store_nodes)&&!in_array($node->name, $used_array)){
+                if(!in_array($node->name, $used_array)){
                     $used_array[] = $node->name;
                     \DataManager::exportNodeExcel($excel, $alphabet, $node, false, true);
                     $children = $node->children()->where('type', '!=', 'field')->get();
@@ -100,58 +110,6 @@ class DynamicFormController extends Controller {
                             }
                         }
                     }
-                }
-            }
-            if(\Solunes\Master\App\Node::where('name', 'place-accountability')->first()){
-                $combined_array = [];
-                foreach($store_nodes as $node_name){
-                    $node = \Solunes\Master\App\Node::where('name', $node_name)->first();
-                    $items = \FuncNode::node_check_model($node)->get();
-                    $nodes_ids[$node->name] = ['sheet'=>0, 'last'=>1];
-                    foreach($items as $item){
-                        $combined_array[] = ['node'=>$node_name, 'id'=>$item->id, 'created_at'=>$item->created_at];
-                    }
-                }
-                $collection = collect($combined_array);
-                $collection = $collection->sortBy('created_at');
-                $last_node = NULL;
-                $initial_id = 1;
-                $last_node_replace = true;
-                foreach($collection as $key => $item){
-                    if($last_node_replace){
-                        $last_node_replace = false;
-                        $last_node = $item['node'];
-                    } 
-                    if($item['node'] != $last_node){
-                        $node = \Solunes\Master\App\Node::where('name', $last_node)->first();
-                        $sheet_title = $node->name.'#'.$nodes_ids[$last_node]['sheet'];
-                        $array = \DataManager::generateExportArray($alphabet, $node, $languages);
-                        $col_array = $array['col_array'];
-                        $col_width = $array['col_width'];
-                        $fields_array = $array['fields_array'];
-                        $field_options_array = $array['field_options_array'];
-                        $trans_array = $array['trans_array'];
-                        $items = \FuncNode::node_check_model($node)->where('id','>=', $initial_id)->where('id','<', $nodes_ids[$node->name]['last'])->get();
-                        \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array);
-                        $children = $node->children()->where('type', '!=', 'field')->get();
-                        if(count($children)>0){
-                            foreach($children as $child){
-                                $sheet_title = $child->name.'#'.$nodes_ids[$last_node]['sheet'];
-                                $array = \DataManager::generateExportArray($alphabet, $child, $languages);
-                                $col_array = $array['col_array'];
-                                $col_width = $array['col_width'];
-                                $fields_array = $array['fields_array'];
-                                $field_options_array = $array['field_options_array'];
-                                $trans_array = $array['trans_array'];
-                                \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child->table_name);
-                            }
-                        }
-                        $nodes_ids[$last_node]['sheet'] += 1;
-                        // Se cambia de nodo
-                        $last_node = $item['node'];
-                        $initial_id = $nodes_ids[$last_node]['last'];
-                    } 
-                    $nodes_ids[$last_node]['last'] += 1;
                 }
             }
         })->store('xlsx', $dir, true);

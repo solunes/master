@@ -4,7 +4,7 @@ namespace Solunes\Master\App\Helpers;
 
 class DataManager {
 
-    public static function importExcelRows($sheet, $languages) {
+    public static function importExcelRows($sheet, $languages, $super_parent_sheet = NULL, $super_parent_array = []) {
         $count_rows = $sheet->count();
         $sheet_model = $sheet->getTitle();
         $strpos_sheet = strpos($sheet_model, '#');
@@ -27,10 +27,12 @@ class DataManager {
             foreach($node->fields()->where('type', 'field')->get() as $field){
                 $field_sub_array[$field->name] = $field;
             }
-            $sheet->each(function($row) use ($node, $field_array, $field_sub_array, $sub_field_insert) {
+            foreach($sheet as $row){
+            //$sheet->each(function($row) use ($node, $field_array, $field_sub_array, $sub_field_insert, $super_parent_sheet, $super_parent_array) {
                 $new_item = false;
                 foreach($row->all() as $column => $input){
                     if($column=='id'&&$input){
+                        $item_id_value = $input;
                         $model = \FuncNode::node_check_model($node);
                         if(!$item = $model->where('id', $row->id)->first()){
                             $item = $model;
@@ -45,10 +47,14 @@ class DataManager {
                             $language_code = str_replace($field->name.'_','',$column);
                         }
                         if($field->relation&&$input&&!is_numeric($input)){
-                            if($sub_model = \Solunes\Master\App\Node::where('name', $field->value)->first()){
-                                $sub_model = $sub_model->model;
-                                if($get_submodel = $sub_model::where('name', $input)->first()){
-                                    $input = $get_submodel->id;
+                            if (!is_null($super_parent_sheet)&&$field->name=='parent_id'&&strpos($input, 'new-') !== false) {
+                                $input = $super_parent_array[$input];
+                            } else {
+                                if($sub_model = \Solunes\Master\App\Node::where('name', $field->value)->first()){
+                                    $sub_model = $sub_model->model;
+                                    if($get_submodel = $sub_model::where('name', $input)->first()){
+                                        $input = $get_submodel->id;
+                                    }
                                 }
                             }
                         } else if(!$field->relation&&config('solunes.excel_import_select_labels')&&($field->type=='select'||$field->type=='radio')){
@@ -124,13 +130,17 @@ class DataManager {
                 }
                 if($new_item){
                     $item->save();
+                    if (is_null($super_parent_sheet)&&strpos($item_id_value, 'new-') !== false) {
+                        $super_parent_array[$item_id_value] = $item->id;
+                    }
                     foreach($sub_field_insert as $column => $input){
                         $item->$column()->sync($input);
                     }
                 }
-            });
+            //});
+            }
         }
-        return $count_rows;
+        return $super_parent_array;
     }
 
     public static function exportNodeExcel($excel, $alphabet, $node, $just_last = false, $database = false) {
@@ -147,7 +157,7 @@ class DataManager {
         } else {
             $items = \FuncNode::node_check_model($node)->orderBy('id','ASC')->get();
         }
-        return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, NULL, $database);
+        return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, NULL, $database, $just_last);
     }
 
     public static function generateExportArray($alphabet, $node, $languages) {
@@ -178,9 +188,9 @@ class DataManager {
         return ['col_array'=>$col_array, 'col_width'=>$col_width, 'fields_array'=>$fields_array, 'field_options_array'=>$field_options_array, 'trans_array'=>$trans_array];
     }
 
-    public static function generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child_table = NULL, $database = false) {
+    public static function generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child_table = NULL, $database = false, $just_last = false) {
         //$excel->getDefaultStyle()->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-        $excel->sheet($sheet_title, function($sheet) use($alphabet, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child_table, $database) {
+        $excel->sheet($sheet_title, function($sheet) use($alphabet, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, $child_table, $database, $just_last) {
             $sheet->row(1, $col_array);
             $sheet->row(1, function($row) {
               $row->setFontWeight('bold');
@@ -191,11 +201,11 @@ class DataManager {
             foreach($items as $item_key => $item){
                 if($child_table){
                     foreach($item->$child_table as $subitem_key => $subitem){
-                        $sheet->row($fila, array_merge([$item->name, $subitem_key+1], AdminList::make_fields_values($subitem, $fields_array, $field_options_array, '','excel', $database)));
+                        $sheet->row($fila, array_merge([$item->name, $subitem_key+1], AdminList::make_fields_values($subitem, $fields_array, $field_options_array, '','excel', $database, $just_last)));
                         $fila++;
                     }
                 } else {
-                    $row_array = \AdminList::make_fields_values($item, $fields_array, $field_options_array, '','excel', $database);
+                    $row_array = \AdminList::make_fields_values($item, $fields_array, $field_options_array, '','excel', $database, $just_last);
                     foreach($trans_array as $lang => $fields){
                         \App::setLocale($lang);
                         foreach($fields as $trans_field){
