@@ -362,7 +362,14 @@ class Field {
                 $response = '<a id="link-'.$name.'" class="lightbox" href="'.url('admin/modal-map/'.$name.'/'.$value.'?lightbox[width]=800&lightbox[height]=500').'" rel="'.$array['rel'].'" data-value="'.$value.'">'.$map_text.'</a>';
             }
         } else {
-            $response = '<div id="map-'.$name.'" class="map-box" style="height: 500px;"></div>';
+            $response = NULL;
+            if(request()->has('download-pdf')){
+                $response .= '<div style="height: 500px; width: 1200px;">';
+            }
+            $response .= '<div id="map-'.$name.'" class="map-box" style="height: 500px;"></div>';
+            if(request()->has('download-pdf')){
+                $response .= '</div>';
+            }
             $response .= '<input id="search-'.$name.'" class="map-search-box" type="text" placeholder="Buscar">';
             if($value==NULL){
                 $value = config('solunes.default_location');

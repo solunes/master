@@ -148,7 +148,7 @@ class AdminItem {
         $variables['site'] = \Solunes\Master\App\Site::find(1);
         $pdf = \PDF::loadView($view, $variables);
         $header = \View::make('pdf.header', $variables);
-        return $pdf->setPaper('letter')->setOption('margin-bottom', '18mm')->setOption('margin-left', '16mm')->setOption('margin-right', '16mm')->setOption('margin-top', '28mm')->setOption('header-html', $header->render())->stream($node->singular.'_'.date('Y-m-d').'.pdf');
+        return $pdf->setPaper('letter')->setOption('margin-bottom', '18mm')->setOption('margin-left', '16mm')->setOption('margin-right', '16mm')->setOption('margin-top', '28mm')->setOption('enable-javascript', true)->setOption('enable-smart-shrinking', true)->setOption('no-stop-slow-scripts', true)->setOption('header-html', $header->render())->stream($node->singular.'_'.date('Y-m-d').'.pdf');
     }
 
     public static function delete_restore_item($module, $prev, $node, $model, $single_model, $action, $id, $options, $additional_vars = NULL) {

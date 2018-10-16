@@ -527,6 +527,7 @@
   <div class="content-wrap pdf-wrap">
     @yield('content')
   </div>
+  @yield('script')
 </body>
 @endif
 </html>
