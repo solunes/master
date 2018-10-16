@@ -424,7 +424,13 @@ class Field {
                 }
                 $response .= '<div class="upload_thumb '.$type.'_thumb">';
                 if($type=='image'){
-                  $response .= '<a class="lightbox" href="'.Asset::get_image_path($folder, 'normal', $value).'"><img src="'.asset(Asset::get_image_path($folder, 'mini', $value)).'" /></a>';
+                  $response .= '<a class="lightbox" href="'.Asset::get_image_path($folder, 'normal', $value).'">';
+                  if(request()->has('download-pdf')){
+                    $response .= '<img src="data:image/jpeg;base64,'.base64_encode(@file_get_contents(asset(Asset::get_image_path($folder, 'mini', $value)))).'" />';
+                  } else {
+                    $response .= '<img src="'.asset(Asset::get_image_path($folder, 'mini', $value)).'" />';
+                  }
+                  $response .= '</a>';
                 } else {
                   $response .= '<a href="'.Asset::get_file($folder, $value).'" target="_blank">'.$value.'</a>';
                 }
