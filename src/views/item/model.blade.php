@@ -39,7 +39,7 @@
 @endsection
 @section('script')
   @include('master::helpers.froala')
-  <?php $scripts_array = ['conditionals','upload','map-field','tooltip','accordion','radio']; ?>
+  <?php $scripts_array = ['conditionals','upload','tooltip','accordion','radio']; ?>
   @if($barcode_enabled)
     <?php $scripts_array[] = 'barcode'; ?>
   @endif
@@ -49,6 +49,7 @@
   @else
     <?php $scripts_array = array_merge($scripts_array, ['map','child','leave-form','select','lightbox']); ?>
   @endif
+  <?php $scripts_array[] = 'map-field'; ?>
   @if(config('solunes.item_remove_scripts')&&array_key_exists($node->name, config('solunes.item_remove_scripts')))
     <?php $scripts_array = array_diff($scripts_array, config('solunes.item_remove_scripts')[$node->name]); ?>
   @endif
