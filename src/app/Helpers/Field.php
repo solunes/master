@@ -366,7 +366,7 @@ class Field {
             if(request()->has('download-pdf')){
                 $response .= '<div style="height: 500px; width: 1200px;">';
             }
-            $response .= '<div id="map-'.$name.'" class="map-box" style="height: 500px;"></div>';
+            $response .= '<div id="map-'.$name.'" class="map-box" style="height: 500px; width: 100%;"></div>';
             if(request()->has('download-pdf')){
                 $response .= '</div>';
             }
