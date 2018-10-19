@@ -12,8 +12,6 @@ return [
 	'send_notification_sms' => false,
 	'send_notification_app' => false,
 	'master_admin_id' => 1,
-	'default_location' => '-16.495369;-68.134289',
-	'google_maps_key' => 'AIzaSyBaLzWbrRu2mktt_Ho3ejDUxRMss-51wBc',
 	'master_dashboard' => true,
 	'main_lang' => 'es',
 	'socialite' => false,
@@ -61,6 +59,13 @@ return [
 	'list_export_pdf' => true,
 	'filter_subptions' => true,
 	'filter_subptions_exceptions' => [],
+
+	// MAP SERVICES
+	'google_maps_key' => 'AIzaSyBaLzWbrRu2mktt_Ho3ejDUxRMss-51wBc',
+	'default_location' => '-16.495369;-68.134289',
+	'default_map' => 'google.maps.MapTypeId.ROADMAP',
+	'default_zoom' => '17',
+	'default_map_height' => '500px',
 
 	// GLOBAL
 	'login_instructions' => false,

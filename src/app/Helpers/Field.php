@@ -364,9 +364,9 @@ class Field {
         } else {
             $response = NULL;
             if(request()->has('download-pdf')){
-                $response .= '<div style="height: 500px; width: 1200px;">';
+                $response .= '<div style="height: '.config('solunes.default_map_height').'; width: 1200px;">';
             }
-            $response .= '<div id="map-'.$name.'" class="map-box" style="height: 500px; width: 100%;"></div>';
+            $response .= '<div id="map-'.$name.'" class="map-box" style="height: '.config('solunes.default_map_height').'; width: 100%;"></div>';
             if(request()->has('download-pdf')){
                 $response .= '</div>';
             }

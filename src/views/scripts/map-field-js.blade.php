@@ -10,11 +10,11 @@
 
           var mapOptions = {
             center: new google.maps.LatLng(-16.51409139, -68.12485814),
-            zoom: 15,
+            zoom: {{ config('solunes.default_zoom') }},
             minZoom: 5,
             maxZoom: 20,
             scrollwheel: false,
-            mapTypeId: google.maps.MapTypeId.HYBRID,
+            mapTypeId: {{ config('solunes.default_map') }},
             mapTypeControl: false,
             streetViewControl: false,
             zoomControl: true,
@@ -88,7 +88,7 @@
 
           zoomChangeBoundsListener = google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
               if (this.getZoom()){
-                this.setZoom(16);
+                this.setZoom({{ config('solunes.default_zoom') }});
               }
           });
           setTimeout(function(){google.maps.event.removeListener(zoomChangeBoundsListener)}, 2000);
