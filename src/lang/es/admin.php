@@ -137,6 +137,7 @@ return array(
 	"notification" => "Notificación",
 	"pagostt" => "PagosTT",
 	"customer" => "Cliente",
+	"reservation" => "Reservas",
 
 	// GLOBAL TRANS
 	"0" => "No",

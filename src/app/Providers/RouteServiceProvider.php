@@ -26,6 +26,7 @@ class RouteServiceProvider extends ServiceProvider
     protected $pagosttNamespace = 'Solunes\Pagostt\App\Controllers';
     protected $notificationNamespace = 'Solunes\Notification\App\Controllers';
     protected $customerNamespace = 'Solunes\Customer\App\Controllers';
+    protected $reservationNamespace = 'Solunes\Reservation\App\Controllers';
     protected $todotixCustomerNamespace = 'Todotix\Customer\App\Controllers';
 
     /**
@@ -102,6 +103,11 @@ class RouteServiceProvider extends ServiceProvider
                 require __DIR__ . '/../../../../payments/src/app/Routes/admin.php';
             });
         }
+        if(config('solunes.reservation')){
+            $router->group(['namespace' => $this->reservationNamespace, 'middleware' => 'admin'], function ($router) {
+                require __DIR__ . '/../../../../reservation/src/app/Routes/admin.php';
+            });
+        }
         if(config('solunes.customer')){
             $router->group(['namespace' => $this->customerNamespace, 'middleware' => 'admin'], function ($router) {
                 require __DIR__ . '/../../../../customer/src/app/Routes/admin.php';
@@ -174,6 +180,11 @@ class RouteServiceProvider extends ServiceProvider
             $router->group(['namespace' => $this->pagosttNamespace, 'middleware' => 'web'], function ($router) {
                 require __DIR__ . '/../../../../pagostt/src/app/Routes/routes.php';
                 require __DIR__ . '/../../../../pagostt/src/app/Routes/api.php';
+            });
+        }
+        if(config('solunes.reservation')){
+            $router->group(['namespace' => $this->reservationNamespace, 'middleware' => 'web'], function ($router) {
+                require __DIR__ . '/../../../../reservation/src/app/Routes/routes.php';
             });
         }
         if(config('solunes.customer')){

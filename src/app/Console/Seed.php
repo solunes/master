@@ -39,6 +39,9 @@ class Seed extends Command
             if(config('solunes.customer')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Customer\Database\Seeds\DatabaseTruncateSeeder']);
             }
+            if(config('solunes.reservation')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Reservation\Database\Seeds\DatabaseTruncateSeeder']);
+            }
             if(config('solunes.notification')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Notification\Database\Seeds\DatabaseTruncateSeeder']);
             }
@@ -100,6 +103,9 @@ class Seed extends Command
             }
             if(config('solunes.notification')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Notification\Database\Seeds\DatabaseMasterSeeder']);
+            }
+            if(config('solunes.reservation')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Reservation\Database\Seeds\DatabaseMasterSeeder']);
             }
             if(config('solunes.customer')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Customer\Database\Seeds\DatabaseMasterSeeder']);

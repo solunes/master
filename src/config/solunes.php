@@ -36,6 +36,7 @@ return [
     'notification' => false,
     'pagostt' => false,
     'customer' => false,
+    'reservation' => false,
     'todotix-customer' => false,
 
     // SOCIALITE
