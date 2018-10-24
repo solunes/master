@@ -32,7 +32,6 @@ return [
     'payments' => false,
     'services' => false,
     'accounting' => false,
-    'reservation' => false,
     'notification' => false,
     'pagostt' => false,
     'customer' => false,

@@ -33,14 +33,14 @@ class Seed extends Command
             $this->callSilent('empty:storage');
             $this->info('20%: Storage limpiado correctamente.');
             $this->callSilent('db:seed', ['--class'=>'DatabaseTruncateSeeder']);
+            if(config('solunes.reservation')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Reservation\Database\Seeds\DatabaseTruncateSeeder']);
+            }
             if(config('solunes.todotix-customer')){
                 $this->callSilent('db:seed', ['--class'=>'\Todotix\Customer\Database\Seeds\DatabaseTruncateSeeder']);
             }
             if(config('solunes.customer')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Customer\Database\Seeds\DatabaseTruncateSeeder']);
-            }
-            if(config('solunes.reservation')){
-                $this->callSilent('db:seed', ['--class'=>'\Solunes\Reservation\Database\Seeds\DatabaseTruncateSeeder']);
             }
             if(config('solunes.notification')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Notification\Database\Seeds\DatabaseTruncateSeeder']);
@@ -104,14 +104,14 @@ class Seed extends Command
             if(config('solunes.notification')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Notification\Database\Seeds\DatabaseMasterSeeder']);
             }
-            if(config('solunes.reservation')){
-                $this->callSilent('db:seed', ['--class'=>'\Solunes\Reservation\Database\Seeds\DatabaseMasterSeeder']);
-            }
             if(config('solunes.customer')){
                 $this->callSilent('db:seed', ['--class'=>'\Solunes\Customer\Database\Seeds\DatabaseMasterSeeder']);
             }
             if(config('solunes.todotix-customer')){
                 $this->callSilent('db:seed', ['--class'=>'\Todotix\Customer\Database\Seeds\DatabaseMasterSeeder']);
+            }
+            if(config('solunes.reservation')){
+                $this->callSilent('db:seed', ['--class'=>'\Solunes\Reservation\Database\Seeds\DatabaseMasterSeeder']);
             }
             $this->callSilent('db:seed', ['--class'=>'DatabaseMasterSeeder']);
             $this->info('50%: Base de datos llenada correctamente.');

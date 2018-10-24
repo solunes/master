@@ -65,14 +65,14 @@ class Deploy extends Command
             if(config('solunes.notification')){
                 $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/notification/src/database/migrations']);
             }
-            if(config('solunes.reservation')){
-                $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/reservation/src/database/migrations']);
-            }
             if(config('solunes.customer')){
                 $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/customer/src/database/migrations']);
             }
             if(config('solunes.todotix-customer')){
                 $this->callSilent('migrate', ['--path'=>'/'.config('solunes.todotix_path').'/customer/src/database/migrations']);
+            }
+            if(config('solunes.reservation')){
+                $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/reservation/src/database/migrations']);
             }
             $this->callSilent('migrate', ['--path'=>'/database/migrations']);
             $this->info('60%: Migrate ejecutado correctamente.');
