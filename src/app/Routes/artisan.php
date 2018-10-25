@@ -15,6 +15,11 @@ Route::get('artisan/generate-translations', function () {
   return dd(Artisan::output());
 });
 
+Route::get('artisan/backup-save', function () {
+  Artisan::call('backup-save');
+  return dd(Artisan::output());
+});
+
 Route::get('artisan/test-system', function () {
   Artisan::call('test-system');
   return dd(Artisan::output());

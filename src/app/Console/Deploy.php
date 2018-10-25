@@ -83,6 +83,7 @@ class Deploy extends Command
             $this->info('75%: Database seed ejecutado correctamente con nodos.');
             $this->info('100%: Deploy finalizado.');
             $this->callSilent('up');
+            \Log::info('Deploy realizado con exito al sistema.');
         } else {
             $this->info('No autorizado.');
         }
