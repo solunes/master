@@ -49,6 +49,12 @@ return [
 	'indicators' => true,
 	'indicator_total_count' => true,
 
+	// BACKUP
+	'enable_backup' => true,
+	'enable_solunes_defaults' => true,
+	'enable_backup_files' => false, // And database
+	'enable_backup_schedule' => false,
+
 	// LIST
 	'pagination_count' => 500,
 	'list_horizontal_scroll' => false,

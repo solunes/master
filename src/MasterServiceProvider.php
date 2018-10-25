@@ -41,6 +41,7 @@ class MasterServiceProvider extends ServiceProvider {
         $this->app->register('Laravel\Socialite\SocialiteServiceProvider');
         $this->app->register('Anhskohbo\NoCaptcha\NoCaptchaServiceProvider');
         $this->app->register('Barryvdh\Debugbar\ServiceProvider');
+        $this->app->register('Spatie\Backup\BackupServiceProvider');
 
         /* Registrar Alias */
         $loader = \Illuminate\Foundation\AliasLoader::getInstance();
@@ -77,6 +78,7 @@ class MasterServiceProvider extends ServiceProvider {
             \Solunes\Master\App\Console\ImportExcel::class,
             \Solunes\Master\App\Console\GenerateTranslations::class,
             \Solunes\Master\App\Console\TestSystem::class,
+            \Solunes\Master\App\Console\BackupSave::class,
         ]);
 
         $this->mergeConfigFrom(
