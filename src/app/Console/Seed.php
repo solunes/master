@@ -115,11 +115,14 @@ class Seed extends Command
             }
             $this->callSilent('db:seed', ['--class'=>'DatabaseMasterSeeder']);
             $this->info('50%: Base de datos llenada correctamente.');
-            $this->callSilent('generate-nodes');
-            $this->info('70%: Campos de nodos creados correctamente.');
             if(config('solunes.before_seed')){
-                $this->info('80%: '.\CustomFunc::before_seed_actions());
+                $this->info('60%: '.\CustomFunc::before_seed_actions());
             }
+            if(config('solunes.todotix-customer')||config('solunes.customer')){
+                $this->info('65%: '.\Customer::before_seed_actions());
+            }
+            $this->callSilent('generate-nodes');
+            $this->info('75%: Campos de nodos creados correctamente.');
             $this->callSilent('import-excel');
             $this->info('95%: Campos de nodos creados correctamente.');
             if(config('solunes.business')&&config('business.after_seed')){
@@ -130,9 +133,6 @@ class Seed extends Command
             }
             if(config('solunes.store')&&config('store.after_seed')){
                 $this->info('97%: '.\CustomStore::after_seed_actions());
-            }
-            if(config('solunes.todotix-customer')||config('solunes.customer')){
-                $this->info('98%: '.\Customer::after_seed_actions());
             }
             if(config('solunes.after_seed')){
                 $this->info('99%: '.\CustomFunc::after_seed_actions());
