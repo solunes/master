@@ -10,7 +10,7 @@ class CreatingMenu {
                 \App::setLocale($language->code);
             	$menu->translateOrNew($language->code)->name = $page->name;
         	}
-            $menu->save();
+            //$menu->save();
         }
 
         // Definir Order
@@ -21,7 +21,7 @@ class CreatingMenu {
                 $order = 0;
             }
             $menu->order = $order+1;
-            $menu->save();
+            //$menu->save();
         }
 
     }
