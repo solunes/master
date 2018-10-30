@@ -20,6 +20,8 @@ class DynamicFormController extends Controller {
       $this->middleware('permission:dashboard')->only('getIndex');
       $this->prev = $url->previous();
       $this->module = 'admin';
+      $this->nodesCount = 0;
+      $this->rowsCount = 0;
     }
     public function getImportNodes($node_id = NULL) {
         if($node_id){
@@ -37,7 +39,9 @@ class DynamicFormController extends Controller {
         $name_array = \Solunes\Master\App\Node::where('location', '!=','package')->withTrashed()->lists('name')->toArray();
         $name_array = array_merge(['image-folder','email'], $name_array);
         $languages = \Solunes\Master\App\Language::get();
-        \Excel::load($request->file('file'), function($reader) use($languages, $name_array) {
+        $total_count = 0;
+        $nodes_count = 0;
+        $count = \Excel::load($request->file('file'), function($reader) use($languages, $name_array, $total_count, $nodes_count) {
             $super_parent_sheet = null;
             $super_parent_array = [];
             foreach($reader->get() as $sheet){
@@ -48,15 +52,28 @@ class DynamicFormController extends Controller {
                 }
                 if(in_array($sheet_model, $name_array)){
                     if(!$super_parent_sheet){
-                        $super_parent_array = \DataManager::importExcelRows($sheet, $languages, $super_parent_sheet, $super_parent_array);
+                        $import_excel_results = \DataManager::importExcelRows($sheet, $languages, $super_parent_sheet, $super_parent_array);
+                        $super_parent_array = $import_excel_results['super_parent_array'];
                         $super_parent_sheet = $sheet_model;
                     } else {
-                        \DataManager::importExcelRows($sheet, $languages, $super_parent_sheet, $super_parent_array);
+                        $import_excel_results = \DataManager::importExcelRows($sheet, $languages, $super_parent_sheet, $super_parent_array);
                     }
+                    $count_rows = $import_excel_results['count_rows'];
+                    if($count_rows>0){
+                        $nodes_count++;
+                    }
+                    $total_count += $count_rows;
                 }
             }
+            $this->nodesCount = $nodes_count;
+            $this->rowsCount = $total_count;
         });
-        return redirect($this->prev)->with('message_success', 'Se importó el documento correctamente.');
+        \Log::info(json_encode($count));
+        if($this->rowsCount==0){
+            return redirect($this->prev)->with('message_error', 'No se encontraron registros para importar en el documento.');
+        } else {
+            return redirect($this->prev)->with('message_success', 'Se importó el documento correctamente con '.$this->nodesCount.' nodo(s) y '.$this->rowsCount.' item(s) en total.');
+        }
     }
 
     public function getExportNode($node_name) {

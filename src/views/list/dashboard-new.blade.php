@@ -62,10 +62,10 @@
           <br><br>
           @if(count($fields)>0)
             <h5>Filtrar por Campo:</h5>
-            <ul class="admin-list">
+            <ul class="admin-list {{ $indicator->id }}">
               @foreach($fields as $field_item)
                 <li @if($field&&$field->id==$field_item->id) class="active" @endif >
-                  <a href="{{ url($url.'field_name='.$field_item->name) }}" title="{{ $field_item->label }}"><i class="fa fa-angle-right" aria-hidden="true"></i> 
+                  <a href="{{ url($url.'field_name='.$field_item->name) }}" id="filter-dashboard-{{ $field_item->name }}" title="{{ $field_item->label }}"><i class="fa fa-angle-right" aria-hidden="true"></i> 
                     @if(strlen($field_item->label)>46)
                       {{ substr($field_item->label,0,45).'..' }}
                     @else

@@ -5,7 +5,7 @@ namespace Solunes\Master\App\Helpers;
 class DataManager {
 
     public static function importExcelRows($sheet, $languages, $super_parent_sheet = NULL, $super_parent_array = []) {
-        $count_rows = $sheet->count();
+        $count_rows = 0;
         $sheet_model = $sheet->getTitle();
         $strpos_sheet = strpos($sheet_model, '#');
         if($strpos_sheet !== false){
@@ -129,6 +129,7 @@ class DataManager {
                     }
                 }
                 if($new_item){
+                    $count_rows++;
                     $item->save();
                     if (is_null($super_parent_sheet)&&strpos($item_id_value, 'new-') !== false) {
                         $super_parent_array[$item_id_value] = $item->id;
@@ -140,7 +141,7 @@ class DataManager {
             //});
             }
         }
-        return $super_parent_array;
+        return ['count_rows'=>$count_rows, 'super_parent_array'=>$super_parent_array];
     }
 
     public static function exportNodeExcel($excel, $alphabet, $node, $just_last = false, $database = false) {
