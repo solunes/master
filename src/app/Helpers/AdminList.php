@@ -517,8 +517,8 @@ class AdminList {
             $delete_confirmation = NULL;
         } else {
             $action = 'delete';
-            if(config('solunes.delete_item_custom')){
-                $delete_confirmation = ' onclick="return confirm(\''.\CustomFunc::delete_item_custom($module, $model, $item).'\');"';
+            if(config('solunes.delete_item_custom_message')){
+                $delete_confirmation = ' onclick="return confirm(\''.\CustomFunc::delete_item_custom_message($module, $model, $item).'\');"';
             } else {
                 $delete_confirmation = ' onclick="return confirm(\''.trans('master::admin.delete_confirmation').'\');"';
             }

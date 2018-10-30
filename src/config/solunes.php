@@ -65,7 +65,7 @@ return [
 	'list_export_pdf' => true,
 	'filter_subptions' => true,
 	'filter_subptions_exceptions' => [],
-	'delete_item_custom' => false,
+	'delete_item_custom_message' => false,
 
 	// MAP SERVICES
 	'google_maps_key' => 'AIzaSyBaLzWbrRu2mktt_Ho3ejDUxRMss-51wBc',
