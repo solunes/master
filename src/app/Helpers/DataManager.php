@@ -304,4 +304,15 @@ class DataManager {
         }
     }
 
+    public static function checkUniqueValue($key, $value) {
+        $inserted = 0;
+        try { 
+            $message = \DB::table('unique_checks')->insert(['key' => $key, 'value' => $value]);
+            $inserted = 1;
+        } catch(\Illuminate\Database\QueryException $ex){ 
+            $inserted = 0;
+        }
+        return $inserted;
+    }
+
 }

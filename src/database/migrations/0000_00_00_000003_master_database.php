@@ -241,6 +241,13 @@ class MasterDatabase extends Migration
                 $table->foreign('parent_id')->references('id')->on('indicators')->onUpdate('cascade')->onDelete('cascade');
             });
         }
+        Schema::create('unique_checks', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('key')->nullable();
+            $table->string('value')->nullable();
+            $table->unique(['key', 'value']);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -250,6 +257,7 @@ class MasterDatabase extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('unique_checks');
         Schema::dropIfExists('indicator_values'); // Borrar
         Schema::dropIfExists('indicator_graph_users'); // Borrar
         Schema::dropIfExists('indicator_graphs'); // Borrar
