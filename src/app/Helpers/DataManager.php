@@ -305,7 +305,45 @@ class DataManager {
         }
     }
 
-    public static function checkUniqueValue($key, $value) {
+    /* Gestor JSON de Almacenamiento */ 
+    public static function loadJson($key) {
+        $jsonArray = @file_get_contents(base_path('storage/json/'.$key.'.json'));
+        if($jsonArray === false){
+            $jsonArray = [];
+            \Func::saveJson($key, $jsonArray);
+            $data = $jsonArray;
+        } else {
+            $data = json_decode($jsonArray, true);
+        }
+        return $data;
+    }
+
+    public static function getItemJson($key, $subkey) {
+        $array = \Func::loadJson($key);
+        if(isset($array[$subkey])){
+            return $array[$subkey];
+        }
+        return false; 
+    }
+
+    public static function addItemJson($key, $subkey, $new_item = 1) {
+        $array = \Func::loadJson($key);
+        $array[$subkey] = $new_item;
+        \Func::saveJson($key, $array);
+    }
+
+    public static function replaceItemJson($key, $subkey, $new_item = 1) {
+        $array[$subkey] = $new_item;
+        \Func::saveJson($key, $array);
+    }
+
+    public static function saveJson($key, $array) {
+        $newJsonString = json_encode($array, JSON_PRETTY_PRINT);
+        file_put_contents(base_path('storage/json/'.$key.'.json'), stripslashes($newJsonString));  
+    }
+
+    /* Introducir valores unicos con revisión, 1 pasa, 0 duplicado */ 
+    public static function putUniqueValue($key, $value) {
         $inserted = 0;
         try { 
             $message = \DB::table('unique_checks')->insert(['key' => $key, 'value' => $value]);

@@ -71,6 +71,7 @@ class MasterSeeder extends Seeder {
         $node_image_folder = \Solunes\Master\App\Node::create(['name'=>'image-folder', 'folder'=>'system']);
         \Solunes\Master\App\Node::create(['name'=>'image-size', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_image_folder->id]);
         $node_temp_file = \Solunes\Master\App\Node::create(['name'=>'temp-file', 'folder'=>'system']);
+        $node_unique_check = \Solunes\Master\App\Node::create(['name'=>'unique-check', 'folder'=>'system']);
 
         // Creación de Permisos y Rangos
         $admin = \Solunes\Master\App\Role::create(['name'=>'admin', 'display_name'=>'Admin']);

@@ -15,6 +15,8 @@ class TruncateSeeder extends Seeder {
     {
     	
         // Nodos Globales
+        \Solunes\Master\App\UniqueCheck::truncate();
+        \Solunes\Master\App\TempFile::truncate();
         \Solunes\Master\App\ImageSize::truncate();
         \Solunes\Master\App\ImageFolder::truncate();
         \Solunes\Master\App\TempFile::truncate();
