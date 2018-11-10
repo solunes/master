@@ -44,7 +44,7 @@ class AuthController extends Controller {
         $last_session = session()->getId();
         Auth::login($authUser, true);
         if($authUser->status=='ask_password'){
-            return redirect(config('customer.after_login_no_password'))->with('message_error', 'Inició sesión correctamente, sin embargo le recomendamos cambiar su contraseña.');
+            return redirect(config('customer.after_login_no_password'))->with('message_success', 'Inició sesión correctamente, sin embargo le recomendamos cambiar su contraseña.');
         } else if($authUser->status=='banned'||$authUser->status=='pending_confirmation'){
             $message = trans('master::form.login_'.$authUser->status);
             Auth::logout();
