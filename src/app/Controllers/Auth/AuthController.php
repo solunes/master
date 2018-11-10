@@ -43,7 +43,9 @@ class AuthController extends Controller {
         $authUser = $this->findOrCreateUser($user, $provider);
         $last_session = session()->getId();
         Auth::login($authUser, true);
-        if($authUser->status=='banned'||$authUser->status=='pending_confirmation'){
+        if($authUser->status=='ask_password'){
+            return redirect(config('customer.after_login_no_password'))->with('message_error', 'Inició sesión correctamente, sin embargo le recomendamos cambiar su contraseña.');
+        } else if($authUser->status=='banned'||$authUser->status=='pending_confirmation'){
             $message = trans('master::form.login_'.$authUser->status);
             Auth::logout();
             if($authUser->status=='pending_confirmation'){
@@ -88,6 +90,12 @@ class AuthController extends Controller {
         if(config('solunes.customer')){
             $authCustomer = \Solunes\Customer\App\Customer::where('email', $user->email)->first();
             if(!$authCustomer){
+                $authUser = User::where('email', $user->email)->first();
+                if($authUser){
+                    $status = 'normal';
+                } else {
+                    $status = 'ask_password';
+                }
                 $name = \External::reduceName($user->name);
                 $first_name = $name['first_name'];
                 $last_name = $name['last_name'];
@@ -97,6 +105,7 @@ class AuthController extends Controller {
                     'password'     => '12345678',
                     'name'     => $user->name,
                     'email'    => $user->email,
+                    'status'    => $status,
                 ]);
             }
         }
