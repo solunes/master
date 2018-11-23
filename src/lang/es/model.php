@@ -46,6 +46,7 @@ return [
     'page' => 'Página|Páginas',
     'section' => 'Sección|Secciones',
     'site' => 'Sitio|Sitios',
+    'unique_checks' => 'Unique|Uniques',
     'user' => 'Usuario|Usuarios',
     'variable' => 'Variable|Variables',
 

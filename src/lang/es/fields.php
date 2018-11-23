@@ -98,6 +98,7 @@ return [
     'initial_date' => 'Fecha Inicial',
     'is_sent' => '¿Fue Enviado?',
     'item' => 'Item',
+    'key' => 'Clave',
     'keywords' => 'Palabras Clave',
     'label' => 'Etiqueta',
     'last_activity' => 'Última Actividad',
