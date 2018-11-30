@@ -243,7 +243,7 @@ class MasterDatabase extends Migration
         }
         Schema::create('unique_checks', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('key')->nullable();
+            $table->string('key', 50)->nullable();
             $table->string('value')->nullable();
             $table->unique(['key', 'value']);
             $table->timestamps();
