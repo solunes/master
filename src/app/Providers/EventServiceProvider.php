@@ -26,6 +26,12 @@ class EventServiceProvider extends ServiceProvider
     public function boot(DispatcherContract $events)
     {
         
+        if('solunes.product'){
+            $events->listen('eloquent.saved: Solunes\Product\App\Product', '\Solunes\Product\App\Listeners\ProductSaved');
+        }
+        if('solunes.business'){
+            $events->listen('eloquent.saving: Solunes\Business\App\ProductBridge', '\Solunes\Business\App\Listeners\ProductBridgeSaving');
+        }
         $events->listen('Illuminate\Auth\Events\Login', 'Solunes\Master\App\Listeners\UserLoggedIn');
         $events->listen('eloquent.created: Solunes\Master\App\Node', '\Solunes\Master\App\Listeners\CreatedNode');
         $events->listen('eloquent.deleted: Solunes\Master\App\Node', '\Solunes\Master\App\Listeners\DeletedNode');
