@@ -60,8 +60,10 @@ class Menu extends Model {
     public function getRealLinkAttribute(){
       if($this->page){
         return url($this->page->translate()->slug);
-      } else if(($this->type=='normal'||$this->type=='external')&&$this->translate()->link){
+      } else if($this->type=='external'){
         return $this->translate()->link;
+      } else if($this->type=='normal'&&$this->translate()->link){
+        return url($this->translate()->link);
       } else {
         return '#';
       }
