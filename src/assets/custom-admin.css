@@ -1112,6 +1112,12 @@
       line-height: 90px;
       color: #136957; }
 
+@media (min-width: 1025px) {
+  .admin-site .m-header .m-header__bottom {
+    height: 56px; }
+
+  .m-body .m-wrapper {
+    padding-top: 50px; } }
 body.error-site {
   font-size: 26px; }
   body.error-site .container {
