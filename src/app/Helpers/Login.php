@@ -121,4 +121,34 @@ class Login {
         });
     }
 
+    public static function find_or_create_customer($api_email, $api_name) {
+        $authCustomer = NULL;
+        if(config('solunes.customer')){
+            $authCustomer = \Solunes\Customer\App\Customer::where('email', $api_email)->first();
+            if(!$authCustomer){
+                $authUser = \App\User::where('email', $api_email)->first();
+                if($authUser){
+                    $status = 'normal';
+                    $user_id = $authUser->id;
+                } else {
+                    $status = 'ask_password';
+                    $user_id = NULL;
+                }
+                $name = \External::reduceName($api_name);
+                $first_name = $name['first_name'];
+                $last_name = $name['last_name'];
+                $authCustomer = \Solunes\Customer\App\Customer::create([
+                    'first_name'     => $first_name,
+                    'last_name'     => $last_name,
+                    'password'     => '12345678',
+                    'name'     => $api_name,
+                    'email'    => $api_email,
+                    'status'    => $status,
+                    'user_id' => $user_id
+                ]);
+            }
+        }
+        return $authCustomer;
+    }
+
 }

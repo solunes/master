@@ -42,6 +42,11 @@ class LoginController extends Controller {
 			}
 			if($logged){
 			  $user = Auth::user();
+        	  $authCustomer = \Login::find_or_create_customer($user->email, $user->name);
+        	  if(!$authCustomer->user_id){
+        	  	$authCustomer->user_id = $user->id;
+        	  	$authCustomer->save();
+        	  }
 			  if($user->status=='banned'||$user->status=='pending_confirmation'){
 			  	$message = trans('master::form.login_'.$user->status);
 			  	Auth::logout();

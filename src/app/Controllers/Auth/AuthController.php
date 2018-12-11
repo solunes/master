@@ -87,28 +87,7 @@ class AuthController extends Controller {
      */
     public function findOrCreateUser($user, $provider)
     {
-        if(config('solunes.customer')){
-            $authCustomer = \Solunes\Customer\App\Customer::where('email', $user->email)->first();
-            if(!$authCustomer){
-                $authUser = User::where('email', $user->email)->first();
-                if($authUser){
-                    $status = 'normal';
-                } else {
-                    $status = 'ask_password';
-                }
-                $name = \External::reduceName($user->name);
-                $first_name = $name['first_name'];
-                $last_name = $name['last_name'];
-                $authCustomer = \Solunes\Customer\App\Customer::create([
-                    'first_name'     => $first_name,
-                    'last_name'     => $last_name,
-                    'password'     => '12345678',
-                    'name'     => $user->name,
-                    'email'    => $user->email,
-                    'status'    => $status,
-                ]);
-            }
-        }
+        $authCustomer = \Login::find_or_create_customer($user->email, $user->name);
         $authUser = User::where('provider_id', $user->id)->first();
         if ($authUser) {
             return $authUser;
