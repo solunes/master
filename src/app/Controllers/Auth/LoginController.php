@@ -43,7 +43,7 @@ class LoginController extends Controller {
 			if($logged){
 			  $user = Auth::user();
         	  $authCustomer = \Login::find_or_create_customer($user->email, $user->name);
-        	  if(!$authCustomer->user_id){
+        	  if($authCustomer&&!$authCustomer->user_id){
         	  	$authCustomer->user_id = $user->id;
         	  	$authCustomer->save();
         	  }
