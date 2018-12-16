@@ -363,16 +363,18 @@ class Field {
             }
         } else {
             $response = NULL;
-            if(request()->has('download-pdf')){
-                $response .= '<div style="height: '.config('solunes.default_map_height').'; width: 1200px;">';
-            }
-            $response .= '<div id="map-'.$name.'" class="map-box" style="height: '.config('solunes.default_map_height').'; width: 100%;"></div>';
-            if(request()->has('download-pdf')){
-                $response .= '</div>';
-            }
-            $response .= '<input id="search-'.$name.'" class="map-search-box" type="text" placeholder="Buscar">';
             if($value==NULL){
                 $value = config('solunes.default_location');
+            } 
+            if(request()->has('download-pdf')){
+                $value = str_replace(';',',', $value);
+                $height_int = str_replace('px','',config('solunes.default_map_height'));
+                $response .= '<div style="height: '.config('solunes.default_map_height').'; width: 1000px;">';
+                $response .= '<img width="100%" height="'.config('solunes.default_map_height').'" border="0" src="https://maps.googleapis.com/maps/api/staticmap?center='.$value.'&zoom='.config('solunes.default_zoom').'&size=1000x'.$height_int.'&maptype=roadmap&markers=color:red%7Clabel:A%7C'.$value.'&key='.config('solunes.google_maps_key').'" alt="Points of Interest in Lower Manhattan">';
+                $response .= '</div>';
+            } else {
+                $response .= '<div id="map-'.$name.'" class="map-box" style="height: '.config('solunes.default_map_height').'; width: 100%;"></div>';
+                $response .= '<input id="search-'.$name.'" class="map-search-box" type="text" placeholder="Buscar">';
             }
         }
         $response .= Form::hidden($name, $value, $array);
