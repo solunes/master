@@ -27,6 +27,10 @@ class FieldRelation extends Model {
         return $this->belongsTo('Solunes\Master\App\Field', 'related_field_code');
     }
 
+    public function parent() {
+        return $this->belongsTo('Solunes\Master\App\Field');
+    }
+
     public function field() {
         return $this->belongsTo('Solunes\Master\App\Field', 'parent_id');
     }
