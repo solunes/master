@@ -142,6 +142,7 @@ return [
     'picture' => 'Imagen',
     'plural' => 'Plural',
     'preset' => 'Prellenado',
+    'provider' => 'Proveedor',
     'qr' => 'Código QR',
     'quantity' => 'Cantidad',
     'related_field_code' => 'Campo Relacionado Real',
