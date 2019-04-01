@@ -61,7 +61,11 @@ class LoginController extends Controller {
 			    if(\Auth::user()->can('dashboard')){
 			  		$redirect = 'admin';
 			  	} else {
-			  		$redirect = '';
+			  		if(config('customer.redirect_after_login')){
+			  			$redirect = config('customer.redirect_after_login');
+			  		} else {
+			  			$redirect = '';
+			  		}
 			  	}
 			  	return Login::success($request->session(), $last_session, Auth::user(), $redirect, trans('master::form.login_success'));
 			  }
