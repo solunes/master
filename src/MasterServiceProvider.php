@@ -68,6 +68,7 @@ class MasterServiceProvider extends ServiceProvider {
         $loader->alias('Login', '\Solunes\Master\App\Helpers\Login');
         $loader->alias('DataManager', '\Solunes\Master\App\Helpers\DataManager');
         $loader->alias('External', '\Solunes\Master\App\Helpers\External');
+        $loader->alias('Reports', '\Solunes\Master\App\Helpers\Reports');
 
         /* Comandos de Consola */
         $this->commands([
