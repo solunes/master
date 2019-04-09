@@ -183,6 +183,7 @@ return array(
 	"subchild" => "Subchild",
 	"field" => "Campo",
 	"integer" => "Número",
+	"decimal" => "Decimal",
 	"content" => "Content",
 	"excel" => "Excel",
 	"none" => "Ninguno",

@@ -73,6 +73,10 @@ class FuncNode {
             foreach(explode("','",$value_array) as $subvalue){
               array_push($field_options, ['name'=>$subvalue]);
             }
+        } else if($col_type=='integer'||strpos($col_type, 'int(') === true){
+            $type = 'integer';
+        } else if($col_type=='decimal'||strpos($col_type, 'decimal') === true){
+            $type = 'decimal';
         } else if($col_type=='timestamp'||$col_type=='date'||$col_type=='time'){
             $type = 'date';
             if($node->type=='subchild'){

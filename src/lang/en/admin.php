@@ -180,6 +180,7 @@ return array(
 	"subchild" => "Subchild",
 	"field" => "Field",
 	"integer" => "Number",
+	"decimal" => "Decimal",
 	"content" => "Content",
 	"excel" => "Excel",
 	"none" => "None",
