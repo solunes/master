@@ -101,13 +101,17 @@ class Dynamic {
       return $field;
     }
 
-    public static function generate_field_table($node, $field_type, $field_name, $relation, $last_field, $second_attribute = NULL) {
+    public static function generate_field_table($node, $field_type, $field_name, $relation, $last_field, $second_attribute = NULL, $third_attribute = NULL) {
       if(!in_array($field_type, ['title','content','custom','subchild','field'])&&!\Schema::hasColumn($node->table_name, $field_name)){
         $column_type = 'string';
         if($field_type=='text'||$field_type=='checkbox'||$field_type=='map'||$field_type=='file'||$field_type=='image'){
           $column_type = 'text';
         } else if($field_type=='integer'){
           $column_type = 'integer';
+        } else if($field_type=='decimal'){
+          $column_type = 'decimal';
+          $second_attribute = 10;
+          $third_attribute = 2;
         } else if($field_type=='date'){
           if($field_name=='created_at'||$field_name=='updated_at'||$field_name=='deleted_at'){
             $column_type = 'timestamp';
@@ -118,17 +122,21 @@ class Dynamic {
         if($relation){
           $column_type = 'integer';
         }
-        \Schema::table($node->table_name, function ($table) use($column_type, $field_name, $last_field, $second_attribute){
+        \Schema::table($node->table_name, function ($table) use($column_type, $field_name, $last_field, $second_attribute, $third_attribute){
           if($field_name=='id'){
             $table->increments();
           } else if($last_field) {
-            if($second_attribute){
+            if($third_attribute){
+              $table->$column_type($field_name, $second_attribute, $third_attribute)->nullable()->after($last_field->name);
+            } else if($second_attribute){
               $table->$column_type($field_name, $second_attribute)->nullable()->after($last_field->name);
             } else {
               $table->$column_type($field_name)->nullable()->after($last_field->name);
             }
           } else {
-            if($second_attribute){
+            if($third_attribute){
+              $table->$column_type($field_name, $second_attribute, $third_attribute)->nullable();
+            } else if($second_attribute){
               $table->$column_type($field_name, $second_attribute)->nullable();
             } else {
               $table->$column_type($field_name)->nullable();
