@@ -92,6 +92,9 @@ Route::group(['prefix'=>'asset'], function(){
     Route::post('upload', 'AssetController@postUpload');
     Route::post('delete', 'AssetController@postDelete');
 });
+Route::group(['prefix'=>'filter'], function(){
+    Route::get('standard-filter/{parent_node_name}/{relation_name}/{parent_value}', 'FilterController@getStandardFilter');
+});
 Route::group(['prefix'=>'test'], function(){
     Route::get('general-test', 'TestController@getGeneralTest');
     Route::get('generate-help-edit-fields/{node}/{type}/{action}/{id}', 'TestController@generateHelpEditFields');

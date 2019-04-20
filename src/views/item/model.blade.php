@@ -64,9 +64,9 @@
       @include('scripts.'.$file.'-js')
     @endforeach
   @endif
-  @if(config('solunes.store')&&config('store.item_add_script')&&array_key_exists($node->name, config('store.item_add_script')))
-    @foreach(config('store.item_add_script')[$node->name] as $file)
-      @include('store::scripts.'.$file.'-js')
+  @if(config('solunes.inventory')&&config('inventory.item_add_script')&&array_key_exists($node->name, config('inventory.item_add_script')))
+    @foreach(config('inventory.item_add_script')[$node->name] as $file)
+      @include('inventory::scripts.'.$file.'-js')
     @endforeach
   @endif
 @endsection

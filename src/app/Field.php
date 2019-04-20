@@ -120,8 +120,8 @@ class Field extends Model {
                         }
                     }
                 }
-                if(config('solunes.store')&&config('store.get_options_relation')&&$this->relation_cond){
-                    $submodel = \CustomStore::get_options_relation($submodel, $this, $subnode, request()->segment(5));
+                if(config('solunes.business')&&config('business.product_variations')&&$this->relation_cond){
+                    $submodel = \CustomBusiness::get_options_relation($submodel, $this, $subnode, request()->segment(5));
                 }
                 if(config('solunes.get_options_relation')&&$this->relation_cond){
                     $submodel = \CustomFunc::get_options_relation($submodel, $this, $subnode, request()->segment(5));
