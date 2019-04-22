@@ -27,8 +27,12 @@ class FilterController extends Controller {
 		$parent_node = \FuncNode::get_node($parent_node_name);
 		$parent_model = \FuncNode::node_check_model($parent_node);
 		$parent_model = $parent_model->find($parent_value);
-	    $options = $parent_model->$relation_name()->get();
-	    $array['options'] = $options;
+		if($parent_model){
+		    $options = $parent_model->$relation_name()->get();
+		    $array['options'] = $options;
+		} else {
+		    $array['options'] = [];
+		}
 	    return $array;
 	}
 
