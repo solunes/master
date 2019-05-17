@@ -42,6 +42,11 @@ class LoginController extends Controller {
 			}
 			if($logged){
 			  $user = Auth::user();
+              if(config('solunes.customer')&&config('customer.tracking')){
+                if($customer = $user->customer){
+                	\Customer::createCustomerActivity($customer, 'login', 'El usuario inició sesión correctamente.');
+                }
+              }
         	  $authCustomer = \Login::find_or_create_customer($user->email, $user->name);
         	  if($authCustomer&&!$authCustomer->user_id){
         	  	$authCustomer->user_id = $user->id;
@@ -78,6 +83,12 @@ class LoginController extends Controller {
     }
 
 	public function getLogout(Request $request) {
+        if(config('solunes.customer')&&config('customer.tracking')){
+        	$user = auth()->user();
+        	if($customer = $user->customer){
+            	\Customer::createCustomerActivity($customer, 'logout', 'El usuario cerró sesión correctamente.');
+        	}
+        }
 		return Login::logout($request->session(), 'auth/login', trans('master::form.logout_success'));
 	}
 

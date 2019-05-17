@@ -43,6 +43,11 @@ class AuthController extends Controller {
         $authUser = $this->findOrCreateUser($user, $provider);
         $last_session = session()->getId();
         Auth::login($authUser, true);
+        if(config('solunes.customer')&&config('customer.tracking')){
+            if($customer = $authUser->customer){
+                \Customer::createCustomerActivity($customer, 'login', 'El usuario inició sesión correctamente.');
+            }
+        }
         if($authUser->status=='ask_password'){
             return redirect(config('customer.after_login_no_password'))->with('message_success', 'Inició sesión correctamente, sin embargo le recomendamos cambiar su contraseña.');
         } else if($authUser->status=='banned'||$authUser->status=='pending_confirmation'){
