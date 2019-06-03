@@ -577,8 +577,6 @@ class FuncNode {
         return $subarray;
     }
 
-
-
     public static function slugify($text) {
       // replace non letter or digits by -
       $text = preg_replace('~[^\pL\d]+~u', '-', $text);

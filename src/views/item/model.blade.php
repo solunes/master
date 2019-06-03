@@ -46,6 +46,7 @@
   @if(!$layout)
     <?php $scripts_array[] = 'child-ajax'; ?>
     <?php $scripts_array[] = 'date'; ?>
+    <?php $scripts_array[] = 'time'; ?>
   @else
     <?php $scripts_array = array_merge($scripts_array, ['map','child','leave-form','select','lightbox']); ?>
   @endif

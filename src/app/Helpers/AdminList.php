@@ -188,6 +188,7 @@ class AdminList {
                 } else if($action_field=='create-child'){
                     $response .= '<td class="restore">'.trans('master::admin.create-child').'</td>';
                 } else {
+                    $response .= \SolunesFunc::get_action_field_labels($response, $action_field, $langs);
                     $response .= \CustomFunc::get_action_field_labels($response, $action_field, $langs);
                 }
             }
@@ -464,6 +465,7 @@ class AdminList {
                     }
                     $response .= '<td class="ineditable restore"><a href="'.$preurl.'">'.trans('master::admin.create-child').'</a></td>';
                 } else {
+                    $response .= \SolunesFunc::get_action_field_values($response, $module, $model, $item, $action_field, $langs);
                     $response .= \CustomFunc::get_action_field_values($response, $module, $model, $item, $action_field, $langs);
                 } 
             }
