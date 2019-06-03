@@ -138,6 +138,7 @@ return array(
 	"pagostt" => "PagosTT",
 	"customer" => "Cliente",
 	"reservation" => "Reservas",
+	'staff' => 'Staff',
 
 	// GLOBAL TRANS
 	"0" => "No",

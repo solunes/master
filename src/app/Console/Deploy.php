@@ -65,6 +65,9 @@ class Deploy extends Command
             if(config('solunes.notification')){
                 $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/notification/src/database/migrations']);
             }
+            if(config('solunes.staff')){
+                $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/staff/src/database/migrations']);
+            }
             if(config('solunes.customer')){
                 $this->callSilent('migrate', ['--path'=>'/'.config('solunes.solunes_path').'/customer/src/database/migrations']);
             }

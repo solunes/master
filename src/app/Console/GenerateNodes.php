@@ -167,6 +167,9 @@ class GenerateNodes extends Command
         if(config('solunes.notification')){
           $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/notification/src/nodes.xlsx')));
         }
+        if(config('solunes.staff')){
+          $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/staff/src/nodes.xlsx')));
+        }
         if(config('solunes.customer')){
           $this->info(\FuncNode::load_nodes_excel(base_path(config('solunes.solunes_path').'/customer/src/nodes.xlsx')));
         }
