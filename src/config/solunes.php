@@ -129,6 +129,8 @@ return [
 	'custom_field' => false,
 	'get_options_relation' => false,
 	'check_custom_filter' => false,
+	'custom_admin_item_fields'=>false,
+	'custom_admin_item_variables'=>false,
 	'custom_filter' => false,
 	'custom_filter_field' => false,
 	'custom_pdf_header' => false,

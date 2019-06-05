@@ -77,8 +77,8 @@ class AdminItem {
         if(isset($options['child'])){
             $fields = $fields->where('type', '!=', 'child');
         }
-        if(config('solunes.custom_admin_get_item')){
-            $fields = \CustomFunc::custom_admin_get_item($node, $item, $fields);
+        if(config('solunes.custom_admin_item_fields')){
+            $fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $fields);
         }
         $variables['fields'] = $fields->whereNull('child_table')->checkPermission()->with('translations','field_extras','field_options_active')->get();
         if($node->fields()->whereIn('type', ['image', 'file'])->count()>0){
@@ -98,6 +98,9 @@ class AdminItem {
             $variables['barcode_enabled'] = true;
         } else {
             $variables['barcode_enabled'] = false;
+        }
+        if(config('solunes.custom_admin_item_variables')){
+            $variables = \CustomFunc::custom_admin_item_variables($module, $node, $item, $variables);
         }
         return $variables;
     }
@@ -182,7 +185,7 @@ class AdminItem {
         }
     }
 
-    public static function post_request($single_model, $action, $request, $additional_rules = NULL) {
+    public static function post_request($module, $single_model, $action, $request, $additional_rules = NULL) {
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
         $model = \FuncNode::node_check_model($node);
         if($action=='edit'){
@@ -194,6 +197,9 @@ class AdminItem {
         $rules = [];
         if($node->dynamic){
             $required_fields = $node->fields()->required()->lists('name')->toArray();
+            if(config('solunes.custom_admin_item_fields')){
+                $required_fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $required_fields);
+            }
             if(count($required_fields)){
                 $rules = array_combine($required_fields, array_fill(1, count($required_fields), 'required'));
             } else {
@@ -225,7 +231,7 @@ class AdminItem {
         return [$validator, $item, $model];
     }
 
-    public static function post_request_success($request, $model, $item, $type = 'admin') {
+    public static function post_request_success($module, $request, $model, $item, $type = 'admin') {
         $node = \Solunes\Master\App\Node::where('name', $model)->first();
         if($type=='admin'){
             if (\Gate::denies('node-admin', ['item', $type, $node, $request->input('action_form'), $request->input('id')])) {
@@ -238,7 +244,11 @@ class AdminItem {
             $display_array = ['show'];
         }
         $total_ponderation = 0;
-        foreach($node->fields()->fillables()->displayItem($display_array)->with('field_extras')->get() as $field){
+        $fields = $node->fields()->fillables()->displayItem($display_array)->with('field_extras')->get();
+        if(config('solunes.custom_admin_item_fields')){
+            $fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $fields);
+        }
+        foreach($fields as $field){
             $field_name = $field->name;
             $input = NULL;
             if($request->has($field_name)) {
