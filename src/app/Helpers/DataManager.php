@@ -144,7 +144,7 @@ class DataManager {
         return ['count_rows'=>$count_rows, 'super_parent_array'=>$super_parent_array];
     }
 
-    public static function exportNodeExcel($excel, $alphabet, $node, $just_last = false, $database = false) {
+    public static function exportNodeExcel($excel, $alphabet, $node, $just_last = false, $database = false, $filters = []) {
         $sheet_title = $node->name;
         $languages = \Solunes\Master\App\Language::where('code','!=',config('solunes.main_lang'))->lists('code');
         $array = \DataManager::generateExportArray($alphabet, $node, $languages);
@@ -156,7 +156,11 @@ class DataManager {
         if($just_last){
             $items = \FuncNode::node_check_model($node)->orderBy('id','DESC')->limit(1)->get();
         } else {
-            $items = \FuncNode::node_check_model($node)->orderBy('id','ASC')->get();
+            $items = \FuncNode::node_check_model($node);
+            foreach($filters as $filter_key => $filter_val){
+                $items = $items->where($filter_key, $filter_val);
+            }
+            $items = $items->orderBy('id','ASC')->get();
         }
         return \DataManager::generateSheet($excel, $alphabet, $sheet_title, $col_array, $col_width, $fields_array, $field_options_array, $items, $trans_array, NULL, $database, $just_last);
     }
