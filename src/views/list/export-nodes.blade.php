@@ -17,7 +17,11 @@
           @foreach ($items as $key => $item)
             <tr>
               <td>{{ $key+1 }}</td>
-              <td>{{ $item->name }}</td>
+              <td>{{ $item->name }} 
+                @if(auth()->user()->isSuperAdmin())
+                  - <a href="{{ url('admin/export-node-system/'.$item->name) }}">Exportar Nodo</a>
+                @endif
+              </td>
               <td>{{ $item->plural }}</td>
               <td><input class="checkbox-item" type="checkbox" name="nodes[]" value="{{ $item->name }}" /></td>
             </tr>

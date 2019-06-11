@@ -58,6 +58,7 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('export-nodes', 'DynamicFormController@getExportNodes');
     Route::post('export-nodes', 'DynamicFormController@postExportNodes');
     Route::get('export-node/{node_name?}', 'DynamicFormController@getExportNode');
+    Route::get('export-node-system/{node_name}', 'DynamicFormController@getExportNodeSystem');
     Route::get('form-list', 'DynamicFormController@getFormList');
     Route::get('form-fields/{id}', 'DynamicFormController@getFormFields');
     Route::get('form/{action}/{id?}', 'DynamicFormController@getForm');
