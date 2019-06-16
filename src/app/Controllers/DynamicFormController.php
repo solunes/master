@@ -36,8 +36,12 @@ class DynamicFormController extends Controller {
         if(!$request->hasFile('file')||!$request->file('file')->isValid()){
             return redirect($this->prev)->with('message_error', 'Por favor seleccione un archivo para importar en XLS o XLSX.');
         }
-        $name_array = \Solunes\Master\App\Node::where('location', '!=','package')->withTrashed()->lists('name')->toArray();
-        $name_array = array_merge(['image-folder','email'], $name_array);
+        if(auth()->user()->isSuperAdmin()){
+            $name_array = \Solunes\Master\App\Node::withTrashed()->lists('name')->toArray();
+        } else {
+            $name_array = \Solunes\Master\App\Node::where('location', '!=','package')->withTrashed()->lists('name')->toArray();
+            $name_array = array_merge(['image-folder','email'], $name_array);
+        }
         $languages = \Solunes\Master\App\Language::get();
         $total_count = 0;
         $nodes_count = 0;
@@ -74,6 +78,26 @@ class DynamicFormController extends Controller {
         } else {
             return redirect($this->prev)->with('message_success', 'Se importó el documento correctamente con '.$this->nodesCount.' nodo(s) y '.$this->rowsCount.' item(s) en total.');
         }
+    }
+
+    public function getExportNodeSystem($node_name) {
+        $dir = public_path('excel');
+        array_map('unlink', glob($dir.'/*'));
+        $search_node = \Solunes\Master\App\Node::where('name', $node_name)->with('fields')->first();
+        $node = \Solunes\Master\App\Node::where('name', 'node')->with('fields')->first();
+        $alphabet = \DataManager::generateAlphabet(count($node->fields));
+        $file = \Excel::create($node_name, function($excel) use($node, $search_node, $alphabet) {
+            \DataManager::generateInstructionsSheet($excel);
+            \DataManager::exportNodeExcel($excel, $alphabet, $node, false, true, ['id'=>$search_node->id]);
+            $children = $node->children()->where('type', '!=', 'field')->get();
+            if(count($children)>0){
+                foreach($children as $child){
+                    $alphabet = \DataManager::generateAlphabet(count($child->fields));
+                    \DataManager::exportNodeExcel($excel, $alphabet, $child, false, true, ['parent_id'=>$search_node->id]);
+                }
+            }
+        })->store('xlsx', $dir, true);
+        return response()->download($file['full']);
     }
 
     public function getExportNode($node_name) {
