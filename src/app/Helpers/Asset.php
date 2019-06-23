@@ -228,4 +228,43 @@ class Asset {
     	return $code;
     }
 
+    public static function apply_pdf_template($pdf, $title) {
+        $site = \Solunes\Master\App\Site::first();
+        $site_title = $site->name;
+        $array = ['title'=>$title,'site_name'=>$site_title];
+        if(config('solunes.pdf_custom_data')){
+            $array = \CustomFunc::pdf_custom_data($array);
+        }
+        if(config('solunes.pdf_header')){
+            $header = \view('master::pdf.header', $array);
+            $pdf = $pdf->setOption('header-html', $header);
+        }
+        if(config('solunes.pdf_footer')){
+            $header = \view('master::pdf.footer', $array);
+            $pdf = $pdf->setOption('footer-html', $header);
+        }
+        if(config('solunes.pdf_margin_top')){
+            $pdf = $pdf->setOption('margin-top', config('solunes.pdf_margin_top'));
+        }
+        if(config('solunes.pdf_margin_bottom')){
+            $pdf = $pdf->setOption('margin-bottom', config('solunes.pdf_margin_bottom'));
+        }
+        if(config('solunes.pdf_margin_right')){
+            $pdf = $pdf->setOption('margin-right', config('solunes.pdf_margin_right'));
+        }
+        if(config('solunes.pdf_margin_left')){
+            $pdf = $pdf->setOption('margin-left', config('solunes.pdf_margin_left'));
+        }
+        $pdf = $pdf->setPaper(config('solunes.pdf_default_paper'));
+        return $pdf;
+    }
+
+    public static function upload_pdf_template($pdf, $folder, $file) {
+        $temp_file = 'tmp/'.$file.'-'.rand(10000000,99999999).'.pdf';
+        $pdf->save($temp_file);
+        $file_name = \Asset::upload_file(asset($temp_file), $folder.'-'.$file);
+        unlink($temp_file);
+        return $file_name;
+    }
+
 }

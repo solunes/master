@@ -103,6 +103,16 @@ return [
 	'item_add_script' => [],
 	'item_add_script_store' => [],
 
+    // PDF ATTRIBUTES
+    'pdf_header' => true,
+    'pdf_footer' => true,
+    'pdf_custom_data' => false,
+    'pdf_default_paper' => 'letter',
+    'pdf_margin_top' => '70mm',
+    'pdf_margin_bottom' => '20mm',
+    'pdf_margin_right' => '30mm',
+    'pdf_margin_left' => '30mm',
+
 	// CUSTOM FUNC
 	'get_page_array' => false,
     'before_migrate' => false,
