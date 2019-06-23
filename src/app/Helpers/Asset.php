@@ -228,13 +228,33 @@ class Asset {
     	return $code;
     }
 
-    public static function apply_pdf_template($pdf, $title) {
+    public static function apply_pdf_template($pdf, $title, $custom_options = []) {
         $site = \Solunes\Master\App\Site::first();
         $site_title = $site->name;
         $array = ['title'=>$title,'site_name'=>$site_title];
+        $custom_array = [];
+        foreach($custom_options as $custom_option_key => $custom_option_val){
+            $custom_array[$custom_option_key] = $custom_option_val;
+        }
+        if(!isset($custom_array['margin-top'])&&config('solunes.pdf_margin_top')){
+            $custom_array['margin-top'] = config('solunes.pdf_margin_top');
+        }
+        if(!isset($custom_array['margin-bottom'])&&config('solunes.pdf_margin_bottom')){
+            $custom_array['margin-bottom'] = config('solunes.pdf_margin_bottom');
+        }
+        if(!isset($custom_array['margin-right'])&&config('solunes.pdf_margin_right')){
+            $custom_array['margin-right'] = config('solunes.pdf_margin_right');
+        }
+        if(!isset($custom_array['margin-left'])&&config('solunes.pdf_margin_left')){
+            $custom_array['margin-left'] = config('solunes.pdf_margin_left');
+        }
+        foreach($custom_array as $custom_option_key => $custom_option_val){
+            $pdf = $pdf->setOption($custom_option_key, $custom_option_val);
+        }
         if(config('solunes.pdf_custom_data')){
             $array = \CustomFunc::pdf_custom_data($array);
         }
+        $array['pdf_options'] = $custom_array;
         if(config('solunes.pdf_header')){
             $header = \view('master::pdf.header', $array);
             $pdf = $pdf->setOption('header-html', $header);
@@ -242,18 +262,6 @@ class Asset {
         if(config('solunes.pdf_footer')){
             $header = \view('master::pdf.footer', $array);
             $pdf = $pdf->setOption('footer-html', $header);
-        }
-        if(config('solunes.pdf_margin_top')){
-            $pdf = $pdf->setOption('margin-top', config('solunes.pdf_margin_top'));
-        }
-        if(config('solunes.pdf_margin_bottom')){
-            $pdf = $pdf->setOption('margin-bottom', config('solunes.pdf_margin_bottom'));
-        }
-        if(config('solunes.pdf_margin_right')){
-            $pdf = $pdf->setOption('margin-right', config('solunes.pdf_margin_right'));
-        }
-        if(config('solunes.pdf_margin_left')){
-            $pdf = $pdf->setOption('margin-left', config('solunes.pdf_margin_left'));
         }
         $pdf = $pdf->setPaper(config('solunes.pdf_default_paper'));
         return $pdf;

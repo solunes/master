@@ -967,17 +967,17 @@ class AdminList {
         if(config('solunes.custom_field')){
             $array['header_title'] = \CustomFunc::custom_pdf_header($array['node'], $id);
         } else {
-            $array['header_title'] = 'Reporte';
+            $array['header_title'] = strtoupper($array['node']->plural);
         }
         $array['title'] = 'Reporte de '.$array['node']->plural;
         $array['site'] = \Solunes\Master\App\Site::find(1);
         $pdf = \PDF::loadView('master::list.general-list', $array);
+        $pdf = \Asset::apply_pdf_template($pdf, $array['header_title'], ['margin-top'=>'25mm','margin-bottom'=>'15mm','margin-right'=>'12mm','margin-left'=>'12mm']);
         $zoom = config('snappy.pdf.options.zoom');
         if(!$zoom){
             $zoom = 0.7;
         }
-        $header = \View::make('pdf.header', $array);
-        return $pdf->setPaper('letter')->setOrientation('landscape')->setOption('zoom', round($zoom*0.8, 1))->setOption('header-html', $header->render())->stream($array['node']->plural.'_'.date('Y-m-d').'.pdf');
+        return $pdf->setOrientation('landscape')->setOption('zoom', round($zoom*0.8, 1))->stream($array['node']->plural.'_'.date('Y-m-d').'.pdf');
     }
 
     public static function generate_query_excel_file($array, $dir) {

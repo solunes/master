@@ -358,9 +358,9 @@ class AdminController extends Controller {
 	    $array['header_title'] = 'Manual de Administrador';    
 	    $array['site'] = \Solunes\Master\App\Site::find(1);
 	    $array['nodes'] = \Solunes\Master\App\Node::whereNull('parent_id')->whereIn('permission', $permission_array)->with('fields', 'children.fields', 'children.children.fields')->get();
-	    $pdf = \PDF::loadView('master::pdf.manual', $array);
-	    $header = \View::make('pdf.header', $array);
-	    return $pdf->setPaper('letter')->setOption('header-html', $header->render())->stream(trans('master::admin.manual').'_'.date('Y-m-d').'.pdf');
+        $pdf = \PDF::loadView('master::pdf.manual', $array);
+        $pdf = \Asset::apply_pdf_template($pdf, 'MANUAL DE ADMINISTRACIÓN', ['margin-top'=>'35mm','margin-bottom'=>'25mm','margin-right'=>'25mm','margin-left'=>'25mm']);
+        return $pdf->stream();
 	}
 
 	public function getModelList($model) {

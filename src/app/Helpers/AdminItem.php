@@ -145,13 +145,14 @@ class AdminItem {
         if(config('solunes.custom_field')){
             $variables['header_title'] = \CustomFunc::custom_pdf_header($node, $id);
         } else {
-            $variables['header_title'] = 'Formulario';
+            $variables['header_title'] = strtoupper($node->singular).' #'.$id;
         }
         $variables['title'] = 'Formulario de '.$node->singular;
         $variables['site'] = \Solunes\Master\App\Site::find(1);
         $pdf = \PDF::loadView($view, $variables);
-        $header = \View::make('pdf.header', $variables);
-        return $pdf->setPaper('letter')->setOption('margin-bottom', '18mm')->setOption('margin-left', '16mm')->setOption('margin-right', '16mm')->setOption('margin-top', '28mm')->setOption('enable-javascript', true)->setOption('enable-smart-shrinking', true)->setOption('no-stop-slow-scripts', true)->setOption('header-html', $header->render())->stream($node->singular.'_'.date('Y-m-d').'.pdf');
+        $pdf = \Asset::apply_pdf_template($pdf, $variables['header_title'], ['margin-top'=>'35mm','margin-bottom'=>'25mm','margin-right'=>'25mm','margin-left'=>'25mm']);
+        $pdf = $pdf->setOption('enable-javascript', true)->setOption('enable-smart-shrinking', true)->setOption('no-stop-slow-scripts', true);
+        return $pdf->stream($node->singular.'_'.date('Y-m-d').'.pdf');
     }
 
     public static function delete_restore_item($module, $prev, $node, $model, $single_model, $action, $id, $options, $additional_vars = NULL) {

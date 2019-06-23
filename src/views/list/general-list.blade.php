@@ -1,6 +1,11 @@
 @extends('master::layouts/admin')
 
 @section('css')
+  <link href="https://fonts.googleapis.com/css?family=Dosis&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Dosis', sans-serif; }
+    table .title { color: {{ config('solunes.app_color') }} !important; }
+  </style>
   @include('master::scripts.lightbox-css')
 @endsection
 @section('content')
