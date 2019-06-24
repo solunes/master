@@ -6,7 +6,7 @@ use Validator;
 
 class AdminItem {
 
-    public static function get_request_variables($module, $node, $model, $single_model, $action, $id, $options, $additional_vars = NULL) {
+    public static function get_request_variables($module, $node, $model, $single_model, $action, $id, $options, $additional_vars = NULL, $custom_type = NULL) {
         $variables = ['module'=>$module, 'node'=>$node, 'model'=>$single_model, 'action'=>$action, 'id'=>$id, 'preset_field'=>false, 'dt'=>'form', 'pdf'=>false];
         $parent_id = NULL;
         if($module=='process'){
@@ -78,7 +78,13 @@ class AdminItem {
             $fields = $fields->where('type', '!=', 'child');
         }
         if(config('solunes.custom_admin_item_fields')){
-            $fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $fields);
+            $fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $fields, $custom_type);
+        }
+        if($custom_type){
+            $dashadmin_fields = config('solunes.dashadmin_nodes')[$single_model][$custom_type];
+            if(is_array($dashadmin_fields)){
+                $fields = $fields->whereIn('name', $dashadmin_fields);
+            }
         }
         $variables['fields'] = $fields->whereNull('child_table')->checkPermission()->with('translations','field_extras','field_options_active')->get();
         if($node->fields()->whereIn('type', ['image', 'file'])->count()>0){
@@ -186,7 +192,7 @@ class AdminItem {
         }
     }
 
-    public static function post_request($module, $single_model, $action, $request, $additional_rules = NULL) {
+    public static function post_request($module, $single_model, $action, $request, $additional_rules = NULL, $custom_type = NULL) {
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
         $model = \FuncNode::node_check_model($node);
         if($action=='edit'){
@@ -199,7 +205,7 @@ class AdminItem {
         if($node->dynamic){
             $required_fields = $node->fields()->required()->lists('name')->toArray();
             if(config('solunes.custom_admin_item_fields')){
-                $required_fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $required_fields);
+                $required_fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $required_fields, $custom_type);
             }
             if(count($required_fields)){
                 $rules = array_combine($required_fields, array_fill(1, count($required_fields), 'required'));
@@ -212,6 +218,18 @@ class AdminItem {
             $rules = $model::$rules_edit;
         } else if($action=='create'){
             $rules = $model::$rules_create;
+        }
+        if($custom_type){
+            $new_rules = [];
+            $dashadmin_fields = config('solunes.dashadmin_nodes')[$single_model][$custom_type];
+            if(is_array($dashadmin_fields)){
+                foreach($rules as $rule_key => $rule_val){
+                    if(in_array($rule_key, $dashadmin_fields)){
+                        $new_rules[$rule_key] = $rule_val;
+                    }
+                }
+                $rules = $new_rules;
+            }
         }
         if($additional_rules){
             $rules = $rules + $additional_rules;
@@ -232,7 +250,7 @@ class AdminItem {
         return [$validator, $item, $model];
     }
 
-    public static function post_request_success($module, $request, $model, $item, $type = 'admin') {
+    public static function post_request_success($module, $request, $model, $item, $type = 'admin', $custom_type = NULL) {
         $node = \Solunes\Master\App\Node::where('name', $model)->first();
         if($type=='admin'){
             if (\Gate::denies('node-admin', ['item', $type, $node, $request->input('action_form'), $request->input('id')])) {
@@ -247,7 +265,13 @@ class AdminItem {
         $total_ponderation = 0;
         $fields = $node->fields()->fillables()->displayItem($display_array)->with('field_extras')->get();
         if(config('solunes.custom_admin_item_fields')){
-            $fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $fields);
+            $fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $fields, $custom_type);
+        }
+        if($custom_type){
+            $dashadmin_fields = config('solunes.dashadmin_nodes')[$model][$custom_type];
+            if(is_array($dashadmin_fields)){
+                $fields = $fields->whereIn('name', $dashadmin_fields);
+            }
         }
         foreach($fields as $field){
             $field_name = $field->name;

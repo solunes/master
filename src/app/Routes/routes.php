@@ -83,10 +83,6 @@ Route::group(['prefix'=>'password'], function(){
     Route::get('reset/{token?}', 'Auth\PasswordController@getReset');
     Route::post('update', 'Auth\PasswordController@postUpdate');
 });
-Route::group(['prefix'=>'account'], function(){
-    Route::get('/', 'Auth\AccountController@getIndex');
-    Route::post('password', 'Auth\AccountController@postPassword');
-});
 Route::group(['prefix'=>'asset'], function(){
     Route::post('froala-image-upload', 'AssetController@postFroalaImageUpload');
     Route::post('froala-file-upload', 'AssetController@postFroalaFileUpload');

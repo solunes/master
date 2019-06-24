@@ -517,14 +517,15 @@ class AdminController extends Controller {
       $model = $request->input('model_node');
       $action = $request->input('action_form');
       $lang_code = $request->input('lang_code');
+      $custom_type = $request->input('custom_type');
 	  if($lang_code){
 		\App::setLocale($lang_code);
 	  }
-      $response = AdminItem::post_request($this->module, $model, $action, $request);
+      $response = AdminItem::post_request($this->module, $model, $action, $request, NULL, $custom_type);
       $item = $response[1];
       $node_model = $response[2];
 	  if($response[0]->passes()) {
-	  	$item = AdminItem::post_request_success($this->module, $request, $model, $item, 'admin');
+	  	$item = AdminItem::post_request_success($this->module, $request, $model, $item, 'admin', $custom_type);
 	  	/*if($model=='indicator'&&$action=='create'){
 	  		$indicator = \Solunes\Master\App\Indicator::find($item->id);
 		  	if(config('solunes.custom_indicator_values')){

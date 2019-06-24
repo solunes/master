@@ -141,6 +141,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes(Router $router)
     {
+        $router->group(['namespace' => $this->solunesNamespace, 'middleware' => 'web'], function ($router) {
+            require __DIR__ . '/../Routes/web-routes.php';
+        });
         if(config('solunes.business')){
             $router->group(['namespace' => $this->businessNamespace, 'middleware' => 'web'], function ($router) {
                 require __DIR__ . '/../../../../business/src/app/Routes/routes.php';

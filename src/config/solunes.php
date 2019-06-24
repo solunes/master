@@ -113,6 +113,13 @@ return [
     'pdf_margin_right' => '30mm',
     'pdf_margin_left' => '30mm',
 
+	// DASHBOARD ADMIN
+    'dashadmin_container' => true,
+    'dashadmin_title' => true,
+    'dashadmin_layout' => 'layouts/master',
+    'dashadmin_nodes' => [], // ['user'=>['default'=>['name']]]
+    'dashadmin_custom_redirect' => [], // ['user'=>'asd/{id}']
+
 	// CUSTOM FUNC
 	'get_page_array' => false,
     'before_migrate' => false,
