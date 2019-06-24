@@ -1,6 +1,7 @@
 @extends(config('solunes.dashadmin_layout'))
 
 @section('css')
+  <link rel="stylesheet" href="{{ asset('assets/admin/css/admin.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/froala.css') }}">
   @include('master::scripts.lightbox-css')
   @if(config('solunes.item_add_css')&&array_key_exists($node->name, config('solunes.item_add_css')))
@@ -40,18 +41,14 @@
 @endsection
 
 @section('script')
+  <script src="{{ asset('assets/admin/scripts/admin.js') }}"></script>
+  @include('master::scripts.date-js')
+  @include('master::scripts.time-js')
   @include('master::helpers.froala')
   <?php $scripts_array = ['conditionals','upload','tooltip','accordion','radio']; ?>
-  @if($barcode_enabled)
-    <?php $scripts_array[] = 'barcode'; ?>
-  @endif
-  @if(!$layout)
-    <?php $scripts_array[] = 'child-ajax'; ?>
-    <?php $scripts_array[] = 'date'; ?>
-    <?php $scripts_array[] = 'time'; ?>
-  @else
-    <?php $scripts_array = array_merge($scripts_array, ['map','child','leave-form','select','lightbox']); ?>
-  @endif
+  <?php $scripts_array[] = 'date'; ?>
+  <?php $scripts_array[] = 'time'; ?>
+  <?php $scripts_array = array_merge($scripts_array, ['map','child','leave-form','select','lightbox']); ?>
   <?php $scripts_array[] = 'map-field'; ?>
   @if(config('solunes.item_remove_scripts')&&array_key_exists($node->name, config('solunes.item_remove_scripts')))
     <?php $scripts_array = array_diff($scripts_array, config('solunes.item_remove_scripts')[$node->name]); ?>
