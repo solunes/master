@@ -37,6 +37,7 @@ class MasterServiceProvider extends ServiceProvider {
         $this->app->register('Dimsav\Translatable\TranslatableServiceProvider');
         $this->app->register('Maatwebsite\Excel\ExcelServiceProvider');
         $this->app->register('Barryvdh\Snappy\ServiceProvider');
+        $this->app->register('SimpleSoftwareIO\QrCode\QrCodeServiceProvider');
         $this->app->register('Intervention\Image\ImageServiceProvider');
         $this->app->register('Laravel\Socialite\SocialiteServiceProvider');
         $this->app->register('Anhskohbo\NoCaptcha\NoCaptchaServiceProvider');
@@ -54,6 +55,7 @@ class MasterServiceProvider extends ServiceProvider {
         $loader->alias('PDF', 'Barryvdh\Snappy\Facades\SnappyPdf');
         $loader->alias('PDFImage', 'Barryvdh\Snappy\Facades\SnappyImage');
         $loader->alias('Image', 'Intervention\Image\Facades\Image');
+        $loader->alias('QrCode', 'SimpleSoftwareIO\QrCode\Facades\QrCode');
         $loader->alias('BarcodeGenerator', 'CodeItNow\BarcodeBundle\Utils\BarcodeGenerator');
         $loader->alias('Debugbar', 'Barryvdh\Debugbar\Facade');
         $loader->alias('NoCaptcha', 'Anhskohbo\NoCaptcha\Facades\NoCaptcha');

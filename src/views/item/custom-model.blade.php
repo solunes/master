@@ -1,6 +1,7 @@
 @extends(config('solunes.dashadmin_layout'))
 
 @section('css')
+  <link rel="stylesheet" href="{{ asset('assets/admin/css/master.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/admin.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/froala.css') }}">
   @include('master::scripts.lightbox-css')
@@ -41,9 +42,8 @@
 @endsection
 
 @section('script')
+  <script src="{{ asset('assets/admin/scripts/master.js') }}"></script>
   <script src="{{ asset('assets/admin/scripts/admin.js') }}"></script>
-  @include('master::scripts.date-js')
-  @include('master::scripts.time-js')
   @include('master::helpers.froala')
   <?php $scripts_array = ['conditionals','upload','tooltip','accordion','radio']; ?>
   <?php $scripts_array[] = 'date'; ?>
