@@ -96,6 +96,7 @@ return [
     'indicator_graphs' => 'Gráficos de Indicadores',
     'indicator_values' => 'Valores de Indicadores',
     'initial_date' => 'Fecha Inicial',
+    'internal_url' => 'URL Interna',
     'is_sent' => '¿Fue Enviado?',
     'item' => 'Item',
     'key' => 'Clave',

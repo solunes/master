@@ -240,5 +240,9 @@ return array(
 	"email" => "Email",
 	"sms" => "SMS",
 	"original" => "Original",
+	'cancelled' => 'Cancelado',
+	'error' => 'Error',
+	'success' => 'Éxito',
+	'timeout' => 'Timeout',
 
 );

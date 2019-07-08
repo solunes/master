@@ -29,6 +29,7 @@ return [
 
     // GLOBAL
     'activity' => 'Actividad|Actividades',
+    'trigger' => 'Gatillo|Gatillos',
     'alert' => 'Alerta|Alertas',
     'alert-action' => 'Acción de Alerta|Acciones de Alerta',
     'alert-conditional' => 'Condicionante de Alerta|Condicionantes de Alerta',
