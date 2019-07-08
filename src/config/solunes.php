@@ -15,6 +15,9 @@ return [
 	'master_dashboard' => true,
 	'main_lang' => 'es',
 	'socialite' => false,
+	'test_enabled' => false,
+	'scheduler_url' => 'https://scheduler.solunes.site/api',
+	'scheduler_api_key' => null, // Generar código
 
 	// APP VARS
 	'app_name' => strtoupper(env('APP_NAME', 'Web App')),

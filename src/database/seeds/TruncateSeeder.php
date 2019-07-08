@@ -36,6 +36,7 @@ class TruncateSeeder extends Seeder {
             \Solunes\Master\App\AlertAction::truncate();
             \Solunes\Master\App\Alert::truncate();
         }
+        \Solunes\Master\App\Trigger::truncate();
         // Usuarios
         DB::table('permission_role')->truncate();
         DB::table('role_user')->truncate();  

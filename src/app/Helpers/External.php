@@ -145,6 +145,42 @@ class External {
     return ['first_name'=>$first_name, 'last_name'=>$last_name];
   }
 
+  public static function generateTrigger($name, $date, $time, $internal_url) {
+    $trigger = new \Solunes\Master\App\Trigger;
+    $trigger->name = $name;
+    $trigger->internal_url = $internal_url;
+    $trigger->date = $date;
+    $trigger->time = $time;
+    $trigger->save();
+    \External::sendTrigger($trigger->id);
+    return $trigger;
+  }
+
+  public static function sendTrigger($trigger_id) {
+    if($trigger = \Solunes\Master\App\Trigger::find($trigger_id)){
+      $token = config('solunes.scheduler_api_key');
+      if(config('solunes.test_enabled')){
+        $type = 'test';
+      } else {
+        $type = 'production';
+      }
+      \External::guzzleGet(config('solunes.scheduler_url'), 'create-trigger/'.$token.'/'.$trigger->name.'/'.$trigger->internal_url.'/'.$trigger->date.'/'.$trigger->time.'/'.$type, []);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public static function cancelTrigger($trigger_id) {
+    $token = config('solunes.scheduler_api_key');
+    if($trigger = \Solunes\Master\App\Trigger::find($trigger_id)){
+      \External::guzzleGet(config('solunes.scheduler_url'), 'cancel-trigger/'.$token.'/'.$trigger_id, []);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public static function guzzleGet($url, $action, $parameters, $headers = []) {
     $url .= '/'.$action;
     $rand_code = rand(100000, 999999);

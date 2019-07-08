@@ -54,6 +54,7 @@ class MasterSeeder extends Seeder {
         $node_role_user = \Solunes\Master\App\Node::create(['name'=>'role-user', 'table_name'=>'role_user', 'location'=>'package', 'type'=>'field', 'model'=>'\Solunes\Master\App\Role', 'parent_id'=>$node_user->id]);
 
         // Normal Nodes
+        $node_trigger = \Solunes\Master\App\Node::create(['name'=>'trigger', 'folder'=>'global']);
         if(config('solunes.alerts')){
             $node_alert = \Solunes\Master\App\Node::create(['name'=>'alert', 'folder'=>'global']);
             \Solunes\Master\App\Node::create(['name'=>'alert-action', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_alert->id]);

@@ -13,6 +13,16 @@ class NodesDatabase extends Migration
     public function up()
     {
         // Global
+        Schema::create('triggers', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name')->nullable();
+            $table->string('internal_url')->nullable();
+            $table->date('date')->nullable();
+            $table->time('time')->nullable();
+            $table->enum('status', ['holding','success','timeout','error','cancelled'])->nullable()->default('holding');
+            $table->text('message')->nullable();
+            $table->timestamps();
+        });
         if(config('solunes.alerts')){
             Schema::create('alerts', function (Blueprint $table) {
                 $table->increments('id');
@@ -194,5 +204,6 @@ class NodesDatabase extends Migration
         Schema::dropIfExists('alert_conditionals');
         Schema::dropIfExists('alert_actions');
         Schema::dropIfExists('alerts');
+        Schema::dropIfExists('triggers');
     }
 }
