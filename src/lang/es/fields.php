@@ -194,6 +194,7 @@ return [
     'graph_type' => 'Tipo de Gráfico',
     'indicator_users' => 'Usuarios de Indicador',
     'indicators' => 'Indicadores',
+    'city_other' => 'Otra Ciudad',
 
     /* Filter Fields  */
     'none' => 'Ninguna Acción',
