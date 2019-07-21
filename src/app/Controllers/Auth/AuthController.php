@@ -49,6 +49,12 @@ class AuthController extends Controller {
             }
         }
         if($authUser->status=='ask_password'){
+            if(config('solunes.sales')){
+                \CustomSales::after_login($authUser, $last_session, config('customer.after_login_no_password'));
+            }
+            if(config('solunes.after_login')){
+                \CustomFunc::after_login($authUser, $last_session, config('customer.after_login_no_password'));
+            }
             return redirect(config('customer.after_login_no_password'))->with('message_success', 'Inició sesión correctamente, sin embargo le recomendamos cambiar su contraseña.');
         } else if($authUser->status=='banned'||$authUser->status=='pending_confirmation'){
             $message = trans('master::form.login_'.$authUser->status);
@@ -70,6 +76,8 @@ class AuthController extends Controller {
         } else {
             if(\Auth::user()->can('dashboard')){
                 $redirect = 'admin';
+            } else if(config('customer.redirect_after_login')) {
+                $redirect = config('customer.redirect_after_login');
             } else {
                 $redirect = '';
             }
