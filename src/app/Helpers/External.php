@@ -146,8 +146,9 @@ class External {
   }
 
   public static function resetTriggers() {
+    $token = config('solunes.scheduler_api_key');
     if(config('solunes.test_enabled')){
-      \External::guzzleGet(config('solunes.scheduler_url'), 'reset-trigger/'.$token, []);
+      \External::guzzleGet(config('solunes.scheduler_url'), 'reset-triggers/'.$token, []);
     }
   }
 
