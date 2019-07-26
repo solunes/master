@@ -145,6 +145,12 @@ class External {
     return ['first_name'=>$first_name, 'last_name'=>$last_name];
   }
 
+  public static function resetTriggers() {
+    if(config('solunes.test_enabled')){
+      \External::guzzleGet(config('solunes.scheduler_url'), 'reset-trigger/'.$token, []);
+    }
+  }
+
   public static function generateTrigger($name, $date, $time, $internal_url) {
     $trigger = new \Solunes\Master\App\Trigger;
     $trigger->name = $name;
