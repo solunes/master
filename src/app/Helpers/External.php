@@ -171,7 +171,7 @@ class External {
       } else {
         $type = 'production';
       }
-      \External::guzzleGet(config('solunes.scheduler_url'), 'create-trigger/'.$token.'/'.$trigger->name.'/'.urlencode(str_replace('%2F','_-%-_',$trigger->internal_url)).'/'.$trigger->date.'/'.$trigger->time.'/'.$type, []);
+      \External::guzzleGet(config('solunes.scheduler_url'), 'create-trigger/'.$token.'/'.$trigger->name.'/'.str_replace('%2F','_-%-_',urlencode($trigger->internal_url)).'/'.$trigger->date.'/'.$trigger->time.'/'.$type, []);
       return true;
     } else {
       return false;
