@@ -33,7 +33,7 @@ class EventServiceProvider extends ServiceProvider
             $events->listen('eloquent.saving: Solunes\Business\App\ProductBridge', '\Solunes\Business\App\Listeners\ProductBridgeSaving');
         }
         if('solunes.sales'){
-            $events->listen('eloquent.saving: Solunes\Sales\App\Sale', '\Solunes\Sales\App\Listeners\SaleSaving');
+            $events->listen('eloquent.updating: Solunes\Sales\App\Sale', '\Solunes\Sales\App\Listeners\SaleUpdating');
         }
         $events->listen('Illuminate\Auth\Events\Login', 'Solunes\Master\App\Listeners\UserLoggedIn');
         $events->listen('eloquent.created: Solunes\Master\App\Node', '\Solunes\Master\App\Listeners\CreatedNode');
