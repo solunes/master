@@ -145,6 +145,13 @@ class External {
     return ['first_name'=>$first_name, 'last_name'=>$last_name];
   }
 
+  public static function resetTriggers() {
+    $token = config('solunes.scheduler_api_key');
+    if(config('solunes.test_enabled')){
+      \External::guzzleGet(config('solunes.scheduler_url'), 'reset-triggers/'.$token, []);
+    }
+  }
+
   public static function generateTrigger($name, $date, $time, $internal_url) {
     $trigger = new \Solunes\Master\App\Trigger;
     $trigger->name = $name;
@@ -164,7 +171,7 @@ class External {
       } else {
         $type = 'production';
       }
-      \External::guzzleGet(config('solunes.scheduler_url'), 'create-trigger/'.$token.'/'.$trigger->name.'/'.$trigger->internal_url.'/'.$trigger->date.'/'.$trigger->time.'/'.$type, []);
+      \External::guzzleGet(config('solunes.scheduler_url'), 'create-trigger/'.$token.'/'.$trigger->name.'/'.str_replace('%2F','_-%-_',urlencode($trigger->internal_url)).'/'.$trigger->date.'/'.$trigger->time.'/'.$type, []);
       return true;
     } else {
       return false;
