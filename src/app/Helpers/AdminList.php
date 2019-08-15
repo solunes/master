@@ -71,7 +71,7 @@ class AdminList {
                 $sub_node = \Solunes\Master\App\Node::where('name', str_replace('_', '-', $relation->value))->first();
                 // Error en caso de que no esté bien definida la relación
                 if(!$sub_node){
-                    $message = 'Agregar a nodes.xlsx, hoja "edit-fields" las <br>siguientes lineas y luego haga un deploy:<br><br>';
+                    $message = 'Agregar a nodes.xlsx, hoja "edit-fields" las <br>siguientes lineas o cambiar su "value" por el correcto y luego haga un deploy:<br><br>';
                     $message .= ''.$single_model.' | '.$relation->name.' | relation | 0<br>';
                     $message .= ''.$single_model.' | '.$relation->name.' | type | string';
                     abort(506, $message);

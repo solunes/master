@@ -137,6 +137,9 @@ class Seed extends Command
             if(config('solunes.project')&&config('project.after_seed')){
                 $this->info('96%: '.\CustomProject::after_seed_actions());
             }
+            if(config('solunes.customer')&&config('customer.after_seed')){
+                $this->info('96%: '.\CustomCustomer::after_seed_actions());
+            }
             if(config('solunes.sales')&&config('sales.after_seed')){
                 $this->info('97%: '.\CustomSales::after_seed_actions());
             }

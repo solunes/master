@@ -66,8 +66,8 @@ return [
 	'table_pagination_count' => 25,
 	'list_inline_edit' => false,
 	'list_export_pdf' => true,
-	'filter_subptions' => true,
-	'filter_subptions_exceptions' => [],
+	'filter_suboptions' => true,
+	'filter_suboptions_exceptions' => [],
 	'delete_item_custom_message' => false,
 
 	// MAP SERVICES

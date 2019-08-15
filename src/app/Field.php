@@ -107,11 +107,11 @@ class Field extends Model {
             $node_value = str_replace('_', '-', $this->value);
             if($subnode = \Solunes\Master\App\Node::where('name', $node_value)->first()){
                 $submodel = \FuncNode::node_check_model($subnode);
-                if(config('solunes.filter_subptions')){
+                if(config('solunes.filter_suboptions')){
                     $fields = $subnode->fields()->where('type','select')->lists('name');
                     foreach($fields as $field){
                         $field_name = 'f_'.$field;
-                        if(isset(config('solunes.filter_subptions_exceptions')[$node_value])&&config('solunes.filter_subptions_exceptions')[$node_value]==$field){
+                        if(isset(config('solunes.filter_suboptions_exceptions')[$node_value])&&config('solunes.filter_suboptions_exceptions')[$node_value]==$field){
                         } else {
                             if(request()->has($field_name)){
                                 $value = request()->input($field_name);
