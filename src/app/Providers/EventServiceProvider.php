@@ -26,11 +26,32 @@ class EventServiceProvider extends ServiceProvider
     public function boot(DispatcherContract $events)
     {
         
+        if('solunes.business'){
+            $events->listen('eloquent.created: Solunes\Business\App\Company', '\Solunes\Business\App\Listeners\CompanyCreated');
+            $events->listen('eloquent.created: Solunes\Business\App\Contact', '\Solunes\Business\App\Listeners\ContactCreated');
+            $events->listen('eloquent.created: Solunes\Business\App\Deal', '\Solunes\Business\App\Listeners\DealCreated');
+            $events->listen('eloquent.saving: Solunes\Business\App\ProductBridge', '\Solunes\Business\App\Listeners\ProductBridgeSaving');
+        }
+        if('solunes.customer'){
+            $events->listen('eloquent.saving: Solunes\Customer\App\Customer', '\Solunes\Customer\App\Listeners\CustomerSaving');
+            $events->listen('eloquent.created: Solunes\Customer\App\CustomerContact', '\Solunes\Customer\App\Listeners\CustomerContactCreated');
+            $events->listen('eloquent.updating: Solunes\Customer\App\CustomerContact', '\Solunes\Customer\App\Listeners\CustomerContactUpdating');
+            $events->listen('eloquent.creating: Solunes\Customer\App\CustomerNote', '\Solunes\Customer\App\Listeners\CustomerNoteCreating');
+            $events->listen('eloquent.created: Solunes\Customer\App\CustomerNote', '\Solunes\Customer\App\Listeners\CustomerNoteCreated');
+        }
+        if('solunes.payments'){
+            $events->listen('eloquent.saved: Solunes\Payments\App\TransactionPayment', '\Solunes\Payments\App\Listeners\TransactionPaymentSaved');
+        }
         if('solunes.product'){
             $events->listen('eloquent.saved: Solunes\Product\App\Product', '\Solunes\Product\App\Listeners\ProductSaved');
         }
-        if('solunes.business'){
-            $events->listen('eloquent.saving: Solunes\Business\App\ProductBridge', '\Solunes\Business\App\Listeners\ProductBridgeSaving');
+        if('solunes.inventory'){
+            $events->listen('eloquent.created: Solunes\Inventory\App\StockAddition', '\Solunes\Inventory\App\Listeners\StockAdditionCreated');
+            $events->listen('eloquent.created: Solunes\Inventory\App\StockTransfer', '\Solunes\Inventory\App\Listeners\StockTransferCreated');
+            $events->listen('eloquent.created: Solunes\Inventory\App\StockRemoval', '\Solunes\Inventory\App\Listeners\StockRemovalCreated');
+        }
+        if('solunes.reservation'){
+            $events->listen('eloquent.saved: Solunes\Reservation\App\Accommodation', '\Solunes\Reservation\App\Listeners\AccommodationSaved');
         }
         if('solunes.sales'){
             $events->listen('eloquent.updating: Solunes\Sales\App\Sale', '\Solunes\Sales\App\Listeners\SaleUpdating');
