@@ -48,6 +48,40 @@ $(document).ready(function() {
             }
         },
     });
+    $('table.admin-table-scroll').dataTable({
+        "paging": {{ config('solunes.table_pagination') }},
+        @if(config('solunes.table_pagination')=='true')
+        "pageLength": {{ config('solunes.table_pagination_count') }},
+        "lengthMenu": [[{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, -1], [{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, "Todos"] ],
+        @endif
+        "scrollX": true,
+        "autoWidth": false,
+        "order": [0, "asc"],
+        "language": {
+            @if(config('solunes.table_pagination')=='true')
+            "info": "Mostrando la página _PAGE_ de _PAGES_",
+            @else
+            "info": " ",
+            @endif
+            "infoEmpty": "No hay datos en la tabla",
+            "infoFiltered": "(filtrado de _MAX_ items)",
+            "lengthMenu": "Mostrar _MENU_ items por página",
+            "zeroRecords": "No se encontró nada",
+            "search": "Buscar en página:",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Último",
+                "next":       "Siguiente",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": activa para ordenar de manera ascendente",
+                "sortDescending": ": activa para ordenar de manera descendente"
+            }
+        },
+    });
     $('table.admin-multilevel-table').dataTable({
         "paging": {{ config('solunes.table_pagination') }},
         @if(config('solunes.table_pagination')=='true')
