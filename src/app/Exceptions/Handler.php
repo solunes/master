@@ -22,27 +22,31 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        if(!$e instanceof ModelNotFoundException && !$e instanceof HttpException){
-            // Activar si está dado de baja
-            if (\App::isDownForMaintenance()){
-                \Artisan::call('up');
-            }
-            // Enviar email
-            if (config('solunes.error_report') === true && config('app.debug') === false) {
-            //if(!$e instanceof HttpException){
-                // ENVIAR EMAIL CON LOG DEL ERROR A SOPORTE@SOLUNES.COM
-                $app_name = config('app.name');
-                if(\Auth::check()){
-                    $user = auth()->user()->name;
-                } else {
-                    $user = 'Usuario no identificado';
+        if($e instanceof \GuzzleHttp\Exception\ClientException&&\Request::url()==url('auth/facebook/callback')&&request()->has('error')&&request()->input('error')=='access_denied'){
+            \Log::info('Cancelación recibida de Facebook en OAuth.');
+        } else {
+            if(!$e instanceof ModelNotFoundException && !$e instanceof HttpException){
+                // Activar si está dado de baja
+                if (\App::isDownForMaintenance()){
+                    \Artisan::call('up');
                 }
-                \Mail::send('master::emails.error', ['app_name' => $app_name, 'user' => $user, 'url'=>request()->url(), 'log' => str_replace('#', '<br>#', $e)], function ($m) use($app_name) {
-                    $m->to('edumejia30@gmail.com', 'Eduardo Mejia')->subject('Error de sistema en: '.strtoupper($app_name));
-                });
+                // Enviar email
+                if (config('solunes.error_report') === true && config('app.debug') === false) {
+                //if(!$e instanceof HttpException){
+                    // ENVIAR EMAIL CON LOG DEL ERROR A SOPORTE@SOLUNES.COM
+                    $app_name = config('app.name');
+                    if(\Auth::check()){
+                        $user = auth()->user()->name;
+                    } else {
+                        $user = 'Usuario no identificado';
+                    }
+                    \Mail::send('master::emails.error', ['app_name' => $app_name, 'user' => $user, 'url'=>request()->url(), 'log' => str_replace('#', '<br>#', $e)], function ($m) use($app_name) {
+                        $m->to('edumejia30@gmail.com', 'Eduardo Mejia')->subject('Error de sistema en: '.strtoupper($app_name));
+                    });
+                }
             }
+            return parent::report($e);
         }
-        return parent::report($e);
     }
 
     /**
@@ -70,6 +74,8 @@ class Handler extends ExceptionHandler
             if (view()->exists('master::errors.'.$e->getStatusCode())) {
                 return response()->view('master::errors.'.$e->getStatusCode(), ['message'=>$e->getMessage()], $e->getStatusCode());
             }
+        } else if( $e instanceof \GuzzleHttp\Exception\ClientException&&\Request::url()==url('auth/facebook/callback')&&request()->has('error')&&request()->input('error')=='access_denied'){
+            return redirect('')->with('message_error','Debe aceptar la validación de Facebook para utilizar este canal.');
         } else {
             if (config('app.debug') === false) {
                 return response()->view('master::errors.500', [], 500);
