@@ -96,6 +96,7 @@ Route::group(['prefix'=>'test'], function(){
     Route::get('general-test', 'TestController@getGeneralTest');
     Route::get('generate-help-edit-fields/{node}/{type}/{action}/{id}', 'TestController@generateHelpEditFields');
     Route::get('preview-email/{msg}', 'TestController@previewEmail');
+    Route::get('test-template-2', 'TestController@previewTemplate2');
 });
 Route::get('auth/{provider}', 'Auth\AuthController@redirectToProvider');
 Route::get('auth/{provider}/callback', 'Auth\AuthController@handleProviderCallback');

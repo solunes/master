@@ -10,7 +10,7 @@ class ComposerServiceProvider extends ServiceProvider
 
     public function boot(ViewFactory $view)
     {
-        view()->composer(['layouts.master', 'master::layouts.admin'], function ($view) {
+        view()->composer(['layouts.master', 'master::layouts.admin', 'master::layouts.admin-2'], function ($view) {
             $array['site'] = \Solunes\Master\App\Site::with('translations')->where('id', 1)->first();
             if(auth()->check()){
                 $user_id = auth()->user()->id;

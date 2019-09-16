@@ -201,4 +201,9 @@ class TestController extends Controller {
         return view('master::emails.test', $array);
     }
 
+    public function previewTemplate2(){
+        $array = [];
+        return view('master::list.dashboard-test-2', $array);
+    }
+
 }
