@@ -4365,7 +4365,7 @@ $(document).ready(function () {
     columnDefs: [{
       orderable: true,
       targets: 0,
-      checkboxes: { selectRow: true },
+      //checkboxes: { selectRow: true },
     }],
     "dom": '<"top"<"actions action-btns"B><"action-filters"lf>><"clear">rt<"bottom"<"actions">p>',
     "oLanguage": {
@@ -4373,14 +4373,15 @@ $(document).ready(function () {
       "sSearch": ""
     },
     "aLengthMenu": [[4, 10, 15, 20], [4, 10, 15, 20]],
-    select: {
+    select: false,
+    /*select: {
       selector: 'td:first-child',
       style: 'multi'
-    },
+    },*/
     order: [[1, 'asc']],
     bInfo: false,
     "pageLength": 4,
-    buttons: [
+    /*buttons: [
       {
         text: "<i class='feather icon-plus'></i> Add New",
         action: function () {
@@ -4390,7 +4391,7 @@ $(document).ready(function () {
         },
         className: "btn-outline-primary",
       }
-    ],
+    ],*/
     initComplete: function (settings, json) {
       $(".dt-buttons .btn").removeClass("btn-secondary");
     },
