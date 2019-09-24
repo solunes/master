@@ -4381,7 +4381,7 @@ $(document).ready(function () {
     order: [[1, 'asc']],
     bInfo: false,
     "pageLength": 4,
-    buttons: [
+    /*buttons: [
       {
         text: "<i class='feather icon-plus'></i> Add New",
         action: function () {
@@ -4391,7 +4391,7 @@ $(document).ready(function () {
         },
         className: "btn-outline-primary",
       }
-    ],
+    ],*/
     initComplete: function (settings, json) {
       $(".dt-buttons .btn").removeClass("btn-secondary");
     },
