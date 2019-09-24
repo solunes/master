@@ -72,7 +72,7 @@ class MasterDatabase extends Migration
             $table->integer('level')->nullable()->default(1);
             $table->integer('order')->nullable()->default(0);
             $table->boolean('active')->nullable()->default(1);
-            $table->enum('menu_type', ['site', 'admin'])->default('site');
+            $table->enum('menu_type', ['site', 'customer', 'admin'])->default('site');
             $table->enum('type', ['normal', 'external', 'blank'])->default('normal');
             $table->string('permission')->nullable();
             $table->integer('page_id')->nullable();
