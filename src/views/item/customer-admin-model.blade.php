@@ -65,7 +65,8 @@
   }
   .flex-item label {
     padding: 30px 0px 5px 0px;
-    font-size: 14px
+    font-size: 14px;
+    font-weight: 600
   }
   .flex-item .mt-radio {
     padding: 20px 0px
