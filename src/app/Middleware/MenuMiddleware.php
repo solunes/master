@@ -88,6 +88,28 @@ class MenuMiddleware
             }
           }
         });
+        if(config('solunes.customer_dashboard')){
+          $menu_options = \Solunes\Master\App\Menu::where('site_id', 1)->menuQuery('customer', 1)->get();
+          Menu::make('main2', function($menu) use($request, $menu_options, $user_permissions) {
+            foreach($menu_options as $key => $menu_option){
+              if(!$menu_option->permission||(auth()->check()&&$user_permissions->contains($menu_option->permission))){
+                $first_level = $menu->add($menu_option->name, $menu_option->real_link);
+                if(count($menu_option->children)>0||$menu_option->page_id==2){
+                  foreach($menu_option->children as $menu_children){
+                    if(!$menu_children->permission||(auth()->check()&&$user_permissions->contains($menu_children->permission))){
+                      $second_level = $first_level->add($menu_children->name, $menu_children->real_link);
+                      if(count($menu_children->children)>0){
+                        foreach($menu_children->children as $menu_children2){
+                          $third_level = $second_level->add($menu_children2->name, $menu_children2->real_link);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
       }
       return $next($request);
     }

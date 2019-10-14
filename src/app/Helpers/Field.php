@@ -22,7 +22,7 @@ class Field {
         return $response;
     }
 
-    public static function form_input($i, $data_type, $field, $extras, $array_parameters = []) {
+    public static function form_input($i, $data_type, $field, $extras, $array_parameters = [], $template = 'admin') {
         $name = $field['name'];
         $type = $field['type'];
         if($type=='date'){

@@ -104,7 +104,7 @@
         </div>
         <div class="row flex">
       @endif
-      {!! Field::form_input($i, $dt, $field->toArray(), $field->extras) !!}
+      {!! Field::form_input($i, $dt, $field->toArray(), $field->extras, [], 'customer-admin') !!}
     @endif
   @endforeach
 </div>

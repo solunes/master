@@ -136,6 +136,9 @@ class AdminItem {
                 }
             }
         }
+        if($module=='customer-admin'){
+            $view = 'master::item.customer-admin-model';
+        }
         /*else if($node->customized){
             $view = 'item.'.$single_model;
         }*/

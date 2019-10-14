@@ -19,6 +19,10 @@ return [
 	'scheduler_url' => 'https://scheduler.solunes.site/api',
 	'scheduler_api_key' => null, // Generar código
 
+	// SUBADMIN
+	'customer_dashboard' => false,
+	'customer_dashboard_nodes' => ['customer'=>'edit'],
+
 	// APP VARS
 	'app_name' => strtoupper(env('APP_NAME', 'Web App')),
 	'app_version' => env('APP_VERSION', 'v1.0.0'),

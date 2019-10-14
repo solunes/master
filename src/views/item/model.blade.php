@@ -8,6 +8,7 @@
       @include('scripts.'.$file.'-css')
     @endforeach
   @endif
+  
 @endsection
 @section('content')
   @if($pdf===false)
@@ -36,6 +37,9 @@
   @else
     </div>
   @endif
+
+
+
 @endsection
 @section('script')
   @include('master::helpers.froala')

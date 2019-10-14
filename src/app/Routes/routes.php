@@ -68,6 +68,26 @@ Route::group(['prefix'=>'admin'], function(){
     Route::get('form-field-order/{parent_id}/{name}/{action}', 'DynamicFormController@getFormFieldOrder');
     Route::get('export-forms', 'DynamicFormController@getExportForms');
 });
+
+Route::group(['prefix'=>'customer-admin'], function(){
+    if(config('solunes.master_dashboard')){
+        Route::get('/', 'AdminController@getIndex');
+    }
+    // Modelos globales
+    Route::get('model-list/{model}', 'CustomerAdminController@getModelList');
+    Route::get('model/{model}/{action}/{id?}/{lang?}', 'CustomerAdminController@getModel');
+    Route::get('child-model/{model}/{action}/{id?}/{lang?}', 'CustomerAdminController@getChildModel');
+    Route::post('model', 'CustomerAdminController@postModel');
+    // Inbox
+    Route::get('my-inbox', 'CustomerAdminController@getMyInbox');
+    Route::get('create-inbox', 'CustomerAdminController@getCreateInbox');
+    Route::post('create-inbox', 'CustomerAdminController@postCreateInbox');
+    Route::get('inbox/{id}', 'CustomerAdminController@getInboxId');
+    Route::post('inbox-reply', 'CustomerAdminController@postInboxReply');
+    // Editar Lista
+    Route::get('edit-list/{category}/{type}/{category_id}/{node_name}', 'CustomerAdminController@getModalEditList');
+    Route::post('edit-list', 'CustomerAdminController@postModalEditList');
+});
 Route::group(['prefix'=>'auth'], function(){
     Route::get('login', 'Auth\LoginController@getLogin');
     Route::post('login', 'Auth\LoginController@postLogin');
