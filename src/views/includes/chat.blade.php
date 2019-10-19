@@ -1,39 +1,49 @@
-<div class="active-chat d-none">
+<div class="active-chat">
     <div class="chat_navbar">
         <header class="chat_header d-flex justify-content-between align-items-center p-1">
             <div class="vs-con-items d-flex align-items-center">
                 <div class="sidebar-toggle d-block d-lg-none mr-1"><i class="feather icon-menu font-large-1"></i></div>
                 <div class="avatar user-profile-toggle m-0 m-0 mr-1">
-                    <img src="{{ asset('assets/img/chat-patron.jpg') }}" alt="" height="40" width="40" />
+                    @if($item->other_user->user->image)
+                        <img src="{{ \Asset::get_image_path('user-image', 'normal', $item->other_user->user->image) }}" alt="avatar" height="40" width="40" />
+                    @else
+                        <img src="{{ asset('assets/admin/img/user.jpg') }}" alt="avatar" height="40" width="40" />
+                    @endif
                     <span class="avatar-status-busy"></span>
                 </div>
-                <h6 class="mb-0">Felecia Rower111</h6>
+                <h6 class="mb-0">
+                    @foreach($item->other_users as $key => $other_user)
+                        @if($key>0) / @endif
+                        {{ $other_user->user->name }}
+                    @endforeach
+                </h6>
             </div>
             <span class="favorite"><i class="feather icon-star font-medium-5"></i></span>
         </header>
     </div>
-    <div class="user-chats" style="background: url('{{ asset('assets/img/chat-patron.jpg') }}');background-size: 30%;">
+    <div class="user-chats" style="background: url('{{ asset('assets/admin/img/chat-patron.jpg') }}');background-size: 30%;">
         <div class="chats">
+            @foreach($item->last_inbox_messages as $message)
             <div class="chat">
                 <div class="chat-avatar">
                     <a class="avatar m-0" data-toggle="tooltip" href="#" data-placement="right" title="" data-original-title="">
-                        <img src="{{ \Asset::get_image_path('user-image', 'normal', auth()->user()->image) }}" alt="avatar" height="40" width="40" />
+                      @if($message->user->image)
+                        <img src="{{ \Asset::get_image_path('user-image', 'normal', $message->user->image) }}" alt="avatar" height="40" width="40" />
+                      @else
+                        <img src="{{ asset('assets/admin/img/user.jpg') }}" alt="avatar" height="40" width="40" />
+                      @endif
                     </a>
                 </div>
                 <div class="chat-body">
                     <div class="chat-content" style="text-align: left;">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>{{ $message->message }}</p>
                         <div class="chat-footer" style="text-align: right;">
-                            <small>12:00</small>
+                            <small>{{ $message->created_at->format('H:i') }}</small>
                         </div>
                     </div>
                 </div>
             </div>
+            @endforeach
             {{-- <div class="chat chat-left">
                 <div class="chat-avatar">
                     <a class="avatar m-0" data-toggle="tooltip" href="#" data-placement="left" title="" data-original-title="">
@@ -131,10 +141,11 @@
         </div>
     </div>
     <div class="chat-app-form">
-        <form class="chat-app-input d-flex" onsubmit="enter_chat();" action="javascript:void(0);">
-            <input type="text" class="form-control message mr-1 ml-50" id="iconLeft4-1" placeholder="Type your message">
+        {!! Form::open(array('name'=>'inbox-reply', 'id'=>'reply', 'role'=>'form', 'url'=>'customer-admin/inbox-reply', 'class'=>'chat-app-input d-flex', 'autocomplete'=>'off', 'onsubmit'=>'enter_chat();', 'action'=>'javascript:void(0);')) !!}
+            {{ \Form::text('message', NULL, ['class'=>'form-control message mr-1 ml-50','placeholder'=>'Escriba un mensaje...']) }}
+            <input type="hidden" name="parent_id" value="{{ $item->id }}">
             <button type="button" class="btn btn-primary send" onclick="enter_chat();"><i class="fa fa-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">Enviar</span></button>
-        </form>
+        {!! Form::close() !!}
     </div>
 </div>
               

@@ -334,16 +334,26 @@ class CustomerAdminController extends Controller {
 	      }
 	}
 
-    public function getMyInbox() {
+    public function getMyInbox($id = NULL) {
         $array['items'] = \Solunes\Master\App\Inbox::userInbox(auth()->user()->id)->with('me','other_users','last_message')->orderBy('updated_at','DESC')->paginate(25);    
+        $item = NULL;
+        if($id){
+            $item = \Solunes\Master\App\Inbox::userInbox(auth()->user()->id)->where('id', $id)->with('me','other_users','last_message')->first();    
+        }
+        $array['preset_item'] = $item;
         return view('master::list.my-inbox-2', $array);
+    }
+
+    public function getInboxConversation($id) {
+        $array['item'] = \Solunes\Master\App\Inbox::userInbox(auth()->user()->id)->where('id', $id)->with('me','other_users','last_message')->first();    
+        return view('master::includes.chat', $array);
     }
 
     public function getCreateInbox() {
         $node = \Solunes\Master\App\Node::where('name','inbox-message')->first();
         $array['attachment_field'] = $node->fields()->where('name','attachments')->first();
         $array['users'] = \App\User::where('id', '!=', auth()->user()->id)->get();
-        return view('master::list.create-inbox', $array);
+        return view('master::list.create-inbox-2', $array);
     }
 
     public function postCreateInbox(Request $request) {
@@ -367,7 +377,7 @@ class CustomerAdminController extends Controller {
                 $message->attachments = json_encode($request->input('attachments'));
             }
             $message->save();
-            return redirect('admin/inbox/'.$inbox->id);
+            return redirect('customer-admin/my-inbox/'.$inbox->id);
         } else {
             return redirect($this->prev)->with('message_error','Debe introducir algún texto y participantes para crear la conversación.')->withInput();
         }

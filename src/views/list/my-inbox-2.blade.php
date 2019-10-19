@@ -18,39 +18,49 @@
                     <div class="d-flex align-items-center">
                         <div class="sidebar-profile-toggle position-relative d-inline-flex">
                             <div class="avatar">
-                                <img src="{{ \Asset::get_image_path('user-image', 'normal', auth()->user()->image) }}" alt="user_avatar" height="40" width="40">
+                                @if(auth()->user()->image)
+                                  <img src="{{ \Asset::get_image_path('user-image', 'normal', auth()->user()->image) }}" alt="user_avatar" height="40" width="40">
+                                @else
+                                  <img src="{{ asset('assets/admin/img/user.jpg') }}" alt="user_avatar" height="40" width="40" />
+                                @endif
                                 <span class="avatar-status-online"></span>
                             </div>
                             <div class="bullet-success bullet-sm position-absolute"></div>
                         </div>
-                        <fieldset class="form-group position-relative has-icon-left mx-1 my-0 w-100">
+                        <!--<fieldset class="form-group position-relative has-icon-left mx-1 my-0 w-100">
                             <input type="text" class="form-control round" id="chat-search" placeholder="Buscar contacto...">
                             <div class="form-control-position">
                                 <i class="feather icon-search"></i>
                             </div>
-                        </fieldset>
+                        </fieldset>-->
                     </div>
                 </div>
                 <div id="users-list" class="chat-user-list list-group position-relative">
                     <ul class="chat-users-list-wrapper media-list">
-                      @foreach ($items as $chat)
-                      <li>
+                      @foreach ($items as $item)
+                        <li @if($preset_item&&$preset_item->id==$item->id) class="active" @endif data-id="{{ $item->id }}">
                           <div class="pr-1">
-                              <span class="avatar m-0 avatar-md"><img class="media-object rounded-circle" src="{{ Asset::get_image_path('user-image','normal', $chat->user->image ) }}" height="42" width="42" alt="">
-                                  <i></i>
+                              <span class="avatar m-0 avatar-md">
+                                @if($item->other_user->user->image)
+                                  <img class="media-object rounded-circle" src="{{ Asset::get_image_path('user-image','normal', $item->other_user->user->image) }}" height="42" width="42" alt="">
+                                @else
+                                  <img class="media-object rounded-circle" src="{{ asset('assets/admin/img/user.jpg') }}" height="42" width="42" alt="">
+                                @endif
+                                <i></i>
                               </span>
                           </div>
                           <div class="user-chat-info">
                               <div class="contact-info">
-                                  <h5 class="font-weight-bold mb-0">{{ $chat->user->name }}</h5>
-                                  <p class="truncate">{{ $chat->message }}</p>
+                                  <h5 class="font-weight-bold mb-0">{{ $item->other_user->user->name }}
+                                    @if(count($item->other_users)==2) & 1 más @elseif(count($item->other_users)>2) & {{ count($item->other_users)-1 }} más @endif
+                                  </h5>
                               </div>
                               <div class="contact-meta">
-                                  <span class="float-right mb-25" title="{{ date('d M Y | H:i', strtotime($chat->created_at)) }}">{{ date('d M', strtotime($chat->created_at)) }}</span>
-                                  <span class="badge badge-primary badge-pill float-right">{{ count($items) }}</span>
+                                  <span class="float-right mb-25" title="{{ date('d M Y | H:i', strtotime($item->created_at)) }}">{{ date('d M', strtotime($item->created_at)) }}</span>
+                                  <!--<span class="badge badge-primary badge-pill float-right">{{ count($item->inbox_messages) }}</span>-->
                               </div>
                           </div>
-                      </li>
+                        </li>
                       @endforeach
                     </ul>
                     <!--<h3 class="primary p-1 mb-0">Contactos</h3>
@@ -83,12 +93,17 @@
             <div class="content-header row">
             </div>
             <div class="content-body">
-                <section class="chat-app-window">
+                <section id="chat-app-window" class="chat-app-window">
+                  @if($preset_item)
+                    @include('master::includes.chat', ['item'=>$preset_item])
+                  @else
                     <div class="start-chat-area" style="background: url('{{ asset('assets/img/chat-patron.jpg') }}');background-size: 30%;">
-                        <span class="mb-1 start-chat-icon feather icon-message-square"></span>
+                      <span class="mb-1 start-chat-icon feather icon-message-square"></span>
+                      <a href="{{ url('customer-admin/create-inbox') }}">
                         <h4 class="py-50 px-1 sidebar-toggle start-chat-text">Comienza una conversación</h4>
+                      </a>
                     </div>
-                   @include('master::includes.chat')
+                  @endif
                 </section>
                 <!-- User Chat profile right area -->
                 <div class="user-profile-sidebar">
@@ -123,7 +138,9 @@
     new CBPFWTabs(document.getElementById('tabs'));
   </script>-->
   <script type="text/javascript">
+
   $(".chat-application .chat-user-list ul li").on('click', function(){
+    var id = $(this).data('id');
     if($('.chat-user-list ul li').hasClass('active')){
       $('.chat-user-list ul li').removeClass('active');
     }
@@ -137,6 +154,7 @@
       $('.start-chat-area').removeClass('d-none');
       $('.active-chat').addClass('d-none');
     }
+    $('#chat-app-window').load("{{ url('customer-admin/conversation') }}/"+id);
   });
   </script>
 @endsection
