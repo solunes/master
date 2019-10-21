@@ -33,7 +33,7 @@
   @yield('css')
 </head>
 @if(!$pdf)
-<body class="vertical-layout vertical-menu-modern 2-columns chat-application navbar-floating footer-static admin-site-2 " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
+<body class="vertical-layout vertical-menu-modern 2-columns @if(request()->segment(2)=='my-inbox') chat-application @endif navbar-floating footer-static admin-site-2 " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
 
     <!-- BEGIN: Main Menu-->
     <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
@@ -99,6 +99,11 @@
                             </li>-->
                             @if(auth()->check())
                             <li class="dropdown dropdown-notification nav-item">
+                              <a class="nav-link" href="{{ url('customer-admin/my-inbox') }}" data-toggle="tooltip" data-placement="top" title="Mensajes">
+                                <i class="ficon feather icon-message-circle"></i><span class="badge badge-pill badge-primary badge-up">0</span>
+                              </a>
+                            </li>
+                            <li class="dropdown dropdown-notification nav-item">
                               <a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon feather icon-bell"></i>
                                 @if($notifications_unread>0)
                                 <span class="badge badge-pill badge-primary badge-up">5</span>
@@ -147,7 +152,10 @@
         </nav>
         <!-- END: Header-->
 
-        <div class="content-wrapper">
+        @if(request()->segment(2)=='my-inbox')
+            @yield('content')
+        @else
+          <div class="content-wrapper">
             <div class="content-header row">
             </div>
             <div class="content-body">
@@ -158,7 +166,8 @@
               @endif
               @yield('content')
             </div>
-        </div>
+          </div>
+        @endif
     </div>
     <!-- END: Content-->
 

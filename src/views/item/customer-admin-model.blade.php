@@ -40,7 +40,7 @@
           <div class="card-content">
             <div class="card-body">
               {!! Form::open(AdminItem::make_form($module, $model, $action, $files)) !!}
-              @include('master::includes.form')
+              @include('master::includes.customer-form')
               <div class="row"><div class="col-sm-12 left">
                 {!! Form::hidden('action_form', $action) !!}
                 {!! Form::hidden('model_node', $action) !!}

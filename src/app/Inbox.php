@@ -31,6 +31,10 @@ class Inbox extends Model {
         return $this->hasMany('Solunes\Master\App\InboxUser', 'parent_id', 'id')->where('user_id', '!=', auth()->user()->id)->orderBy('updated_at', 'DESC');
     }
 
+    public function other_user() {
+        return $this->hasOne('Solunes\Master\App\InboxUser', 'parent_id', 'id')->where('user_id', '!=', auth()->user()->id)->orderBy('updated_at', 'DESC');
+    }
+
     public function last_message() {
         return $this->hasOne('Solunes\Master\App\InboxMessage', 'parent_id', 'id')->orderBy('created_at', 'DESC');
     }
@@ -41,6 +45,14 @@ class Inbox extends Model {
 
     public function inbox_messages() {
         return $this->hasMany('Solunes\Master\App\InboxMessage', 'parent_id', 'id');
+    }
+
+    public function last_inbox_messages() {
+        return $this->hasMany('Solunes\Master\App\InboxMessage', 'parent_id', 'id')->orderBy('id','DESC')->take(10);
+    }
+
+    public function last_inbox_message() {
+        return $this->hasOne('Solunes\Master\App\InboxMessage', 'parent_id', 'id')->orderBy('id','DESC');
     }
 
     public function scopeUserInbox($query, $user_id) {

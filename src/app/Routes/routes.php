@@ -79,7 +79,8 @@ Route::group(['prefix'=>'customer-admin'], function(){
     Route::get('child-model/{model}/{action}/{id?}/{lang?}', 'CustomerAdminController@getChildModel');
     Route::post('model', 'CustomerAdminController@postModel');
     // Inbox
-    Route::get('my-inbox', 'CustomerAdminController@getMyInbox');
+    Route::get('my-inbox/{id?}', 'CustomerAdminController@getMyInbox');
+    Route::get('conversation/{inbox_id}', 'CustomerAdminController@getInboxConversation');
     Route::get('create-inbox', 'CustomerAdminController@getCreateInbox');
     Route::post('create-inbox', 'CustomerAdminController@postCreateInbox');
     Route::get('inbox/{id}', 'CustomerAdminController@getInboxId');

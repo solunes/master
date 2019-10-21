@@ -9,7 +9,7 @@ class AdminItem {
     public static function get_request_variables($module, $node, $model, $single_model, $action, $id, $options, $additional_vars = NULL, $custom_type = NULL) {
         $variables = ['module'=>$module, 'node'=>$node, 'model'=>$single_model, 'action'=>$action, 'id'=>$id, 'preset_field'=>false, 'dt'=>'form', 'pdf'=>false];
         $parent_id = NULL;
-        if($module=='process'){
+        if($module=='process'||$module=='customer-admin'){
             $hidden_array = ['show'];
         } else {
             $hidden_array = ['admin','show'];

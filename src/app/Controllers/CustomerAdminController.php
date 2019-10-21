@@ -71,11 +71,19 @@ class CustomerAdminController extends Controller {
             $items = $items->whereNull('parent_id')->with('children','children.children');
         }
         if($single_model=='customer'){
+<<<<<<< HEAD
             $items =  $items->where('id', $customer->id);// IMPORTANTE
         } else if(\Schema::hasColumn($node->table_name, 'customer_id')) {
             $items =  $items->where('customer_id', $customer->id);// IMPORTANTE
         } else if(\Schema::hasColumn($node->table_name, 'user_id')) {
             $items =  $items->where('user_id', $user->id);// IMPORTANTE
+=======
+        	$items =  $items->where('id', $customer->id);// IMPORTANTE
+        } else if(\Schema::hasColumn($node->table_name, 'customer_id')){
+            $items =  $items->where('customer_id', $customer->id);// IMPORTANTE
+        } else if(\Schema::hasColumn($node->table_name, 'user_id')){
+        	$items =  $items->where('user_id', $user->id);// IMPORTANTE
+>>>>>>> 55ac1e3886e42ab0e5f91a7ca4bdff17434a2a47
         }
         $node_array = [$node->id];
         if(request()->has('download-excel')){
@@ -336,16 +344,26 @@ class CustomerAdminController extends Controller {
 	      }
 	}
 
-    public function getMyInbox() {
+    public function getMyInbox($id = NULL) {
         $array['items'] = \Solunes\Master\App\Inbox::userInbox(auth()->user()->id)->with('me','other_users','last_message')->orderBy('updated_at','DESC')->paginate(25);    
+        $item = NULL;
+        if($id){
+            $item = \Solunes\Master\App\Inbox::userInbox(auth()->user()->id)->where('id', $id)->with('me','other_users','last_message')->first();    
+        }
+        $array['preset_item'] = $item;
         return view('master::list.my-inbox-2', $array);
+    }
+
+    public function getInboxConversation($id) {
+        $array['item'] = \Solunes\Master\App\Inbox::userInbox(auth()->user()->id)->where('id', $id)->with('me','other_users','last_message')->first();    
+        return view('master::includes.chat', $array);
     }
 
     public function getCreateInbox() {
         $node = \Solunes\Master\App\Node::where('name','inbox-message')->first();
         $array['attachment_field'] = $node->fields()->where('name','attachments')->first();
         $array['users'] = \App\User::where('id', '!=', auth()->user()->id)->get();
-        return view('master::list.create-inbox', $array);
+        return view('master::list.create-inbox-2', $array);
     }
 
     public function postCreateInbox(Request $request) {
@@ -369,7 +387,7 @@ class CustomerAdminController extends Controller {
                 $message->attachments = json_encode($request->input('attachments'));
             }
             $message->save();
-            return redirect('admin/inbox/'.$inbox->id);
+            return redirect('customer-admin/my-inbox/'.$inbox->id);
         } else {
             return redirect($this->prev)->with('message_error','Debe introducir algún texto y participantes para crear la conversación.')->withInput();
         }
@@ -392,8 +410,10 @@ class CustomerAdminController extends Controller {
     }
 
     public function postInboxReply(Request $request) {
+        \Log::info(json_encode($request->all()));
         if(($request->has('message')&&$request->input('message')!=='')||($request->input('attachments')&&count($request->input('attachments'))>0)){
             if($request->has('parent_id')&&$inbox = \Solunes\Master\App\Inbox::find($request->input('parent_id'))){
+                $last_message = $inbox->last_inbox_message;
                 $message = new \Solunes\Master\App\InboxMessage;
                 $message->parent_id = $inbox->id;
                 $message->user_id = auth()->user()->id;
@@ -403,12 +423,17 @@ class CustomerAdminController extends Controller {
                 }
                 $message->save();
                 $inbox->touch();
-                return redirect($this->prev);
+                $join_message = false;
+                if($message->user_id==$last_message->user_id){
+                    $join_message = true;
+                }
+                $html = view('master::includes.chat-line', ['message'=>$message, 'last_message'=>$last_message])->render();
+                return ['process'=>true, 'message'=>$html, 'join_message'=>$join_message, 'last_timestamp'=>$message->created_at->format('H:i')];
             } else {
-                return redirect($this->prev)->with('message_error','Hubo un error al enviar el mensaje.');
+                return ['process'=>false, 'message'=>'Hubo un error al enviar el mensaje.'];
             }
         } else {
-            return redirect($this->prev)->with('message_error','Debe introducir algún texto o archivo para enviar.');
+            return ['process'=>false, 'message'=>'Debe introducir algún texto o archivo para enviar.'];
         }
     }
 

@@ -77,6 +77,16 @@ class MasterSeeder extends Seeder {
         $image_folder = \Solunes\Master\App\ImageFolder::create(['site_id'=>1,'name'=>'upload','extension'=>'jpg']);
         \Solunes\Master\App\ImageSize::create(['parent_id'=>$image_folder->id,'code'=>'normal','type'=>'resize','width'=>1000,'height'=>NULL]);
 
+        // Customer Dashboard
+        if(config('solunes.customer')){
+            \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Pagos Pendientes','link'=>'account/my-payments/1354351278','order'=>5]);
+            \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Historial de Pagos','link'=>'account/my-history/1354351278','order'=>5]);
+            if(config('customer.subscription')){
+                \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Suscripciones','link'=>'account/subscriptions/0/1354351278','order'=>5]);
+                \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Mis Suscripciones','link'=>'account/my-subscriptions/1354351278','order'=>5]);
+            }
+        }
+
         // Creación de Permisos y Rangos
         $admin = \Solunes\Master\App\Role::create(['name'=>'admin', 'display_name'=>'Admin']);
         $member = \Solunes\Master\App\Role::create(['name'=>'member', 'display_name'=>'Miembro']);
