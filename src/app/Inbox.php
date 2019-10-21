@@ -51,6 +51,10 @@ class Inbox extends Model {
         return $this->hasMany('Solunes\Master\App\InboxMessage', 'parent_id', 'id')->orderBy('id','DESC')->take(10);
     }
 
+    public function last_inbox_message() {
+        return $this->hasOne('Solunes\Master\App\InboxMessage', 'parent_id', 'id')->orderBy('id','DESC');
+    }
+
     public function scopeUserInbox($query, $user_id) {
         return $query->whereHas('inbox_users', function($q) use($user_id) {
             $q->where('user_id', $user_id);

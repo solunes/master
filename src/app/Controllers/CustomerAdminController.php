@@ -402,8 +402,10 @@ class CustomerAdminController extends Controller {
     }
 
     public function postInboxReply(Request $request) {
+        \Log::info(json_encode($request->all()));
         if(($request->has('message')&&$request->input('message')!=='')||($request->input('attachments')&&count($request->input('attachments'))>0)){
             if($request->has('parent_id')&&$inbox = \Solunes\Master\App\Inbox::find($request->input('parent_id'))){
+                $last_message = $inbox->last_inbox_message;
                 $message = new \Solunes\Master\App\InboxMessage;
                 $message->parent_id = $inbox->id;
                 $message->user_id = auth()->user()->id;
@@ -413,12 +415,17 @@ class CustomerAdminController extends Controller {
                 }
                 $message->save();
                 $inbox->touch();
-                return redirect($this->prev);
+                $join_message = false;
+                if($message->user_id==$last_message->user_id){
+                    $join_message = true;
+                }
+                $html = view('master::includes.chat-line', ['message'=>$message, 'last_message'=>$last_message])->render();
+                return ['process'=>true, 'message'=>$html, 'join_message'=>$join_message, 'last_timestamp'=>$message->created_at->format('H:i')];
             } else {
-                return redirect($this->prev)->with('message_error','Hubo un error al enviar el mensaje.');
+                return ['process'=>false, 'message'=>'Hubo un error al enviar el mensaje.'];
             }
         } else {
-            return redirect($this->prev)->with('message_error','Debe introducir algún texto o archivo para enviar.');
+            return ['process'=>false, 'message'=>'Debe introducir algún texto o archivo para enviar.'];
         }
     }
 

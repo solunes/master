@@ -39,6 +39,13 @@ class EventServiceProvider extends ServiceProvider
             $events->listen('eloquent.updating: Solunes\Customer\App\CustomerContact', '\Solunes\Customer\App\Listeners\CustomerContactUpdating');
             $events->listen('eloquent.creating: Solunes\Customer\App\CustomerNote', '\Solunes\Customer\App\Listeners\CustomerNoteCreating');
             $events->listen('eloquent.created: Solunes\Customer\App\CustomerNote', '\Solunes\Customer\App\Listeners\CustomerNoteCreated');
+            // Suscripciones
+            $events->listen('eloquent.creating: Solunes\Customer\App\CustomerSubscription', '\Solunes\Customer\App\Listeners\CustomerSubscriptionCreating');
+            $events->listen('eloquent.created: Solunes\Customer\App\CustomerSubscription', '\Solunes\Customer\App\Listeners\CustomerSubscriptionCreated');
+            $events->listen('eloquent.creating: Solunes\Customer\App\CustomerSubscriptionMonth', '\Solunes\Customer\App\Listeners\CustomerSubscriptionMonthCreating');
+            $events->listen('eloquent.saving: Solunes\Customer\App\CustomerSubscriptionMonth', '\Solunes\Customer\App\Listeners\CustomerSubscriptionMonthSaving');
+            $events->listen('eloquent.saved: Solunes\Customer\App\SubscriptionPlan', '\Solunes\Customer\App\Listeners\SubscriptionPlanSaved');
+            $events->listen('eloquent.saved: Solunes\Customer\App\Ppv', '\Solunes\Customer\App\Listeners\PpvSaved');
         }
         if('solunes.payments'){
             $events->listen('eloquent.saved: Solunes\Payments\App\TransactionPayment', '\Solunes\Payments\App\Listeners\TransactionPaymentSaved');

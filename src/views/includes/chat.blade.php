@@ -22,29 +22,13 @@
         </header>
     </div>
     <div class="user-chats" style="background: url('{{ asset('assets/admin/img/chat-patron.jpg') }}');background-size: 30%;">
-        <div class="chats">
-            @foreach($item->last_inbox_messages as $message)
-            <div class="chat">
-                <div class="chat-avatar">
-                    <a class="avatar m-0" data-toggle="tooltip" href="#" data-placement="right" title="" data-original-title="">
-                      @if($message->user->image)
-                        <img src="{{ \Asset::get_image_path('user-image', 'normal', $message->user->image) }}" alt="avatar" height="40" width="40" />
-                      @else
-                        <img src="{{ asset('assets/admin/img/user.jpg') }}" alt="avatar" height="40" width="40" />
-                      @endif
-                    </a>
-                </div>
-                <div class="chat-body">
-                    <div class="chat-content" style="text-align: left;">
-                        <p>{{ $message->message }}</p>
-                        <div class="chat-footer" style="text-align: right;">
-                            <small>{{ $message->created_at->format('H:i') }}</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="chats" style="height: 100%; overflow-y: scroll;">
+            <?php $last_message = NULL; ?>
+            @foreach($item->last_inbox_messages()->get()->sortBy('id') as $message)
+                @include('master::includes.chat-line', ['message'=>$message, 'last_message'=>$last_message])
+                <?php $last_message = $message; ?>
             @endforeach
-            {{-- <div class="chat chat-left">
+            {{-- <div class="chat ">
                 <div class="chat-avatar">
                     <a class="avatar m-0" data-toggle="tooltip" href="#" data-placement="left" title="" data-original-title="">
                         <img src="{{ asset('assets/admin/img/no_picture.jpg') }}" alt="avatar" height="40" width="40" />
@@ -141,10 +125,10 @@
         </div>
     </div>
     <div class="chat-app-form">
-        {!! Form::open(array('name'=>'inbox-reply', 'id'=>'reply', 'role'=>'form', 'url'=>'customer-admin/inbox-reply', 'class'=>'chat-app-input d-flex', 'autocomplete'=>'off', 'onsubmit'=>'enter_chat();', 'action'=>'javascript:void(0);')) !!}
-            {{ \Form::text('message', NULL, ['class'=>'form-control message mr-1 ml-50','placeholder'=>'Escriba un mensaje...']) }}
+        {!! Form::open(array('name'=>'inbox-reply', 'id'=>'reply', 'role'=>'form', 'url'=>'customer-admin/inbox-reply', 'class'=>'chat-app-input d-flex', 'autocomplete'=>'off', 'onsubmit'=>'enter_final_chat();', 'action'=>'javascript:void(0);')) !!}
+            {{ \Form::text('message', NULL, ['class'=>'form-control message mr-1 ml-50', 'id'=>'message-field', 'placeholder'=>'Escriba un mensaje...']) }}
             <input type="hidden" name="parent_id" value="{{ $item->id }}">
-            <button type="button" class="btn btn-primary send" onclick="enter_chat();"><i class="fa fa-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">Enviar</span></button>
+            <button type="button" class="btn btn-primary send" onclick="enter_final_chat();"><i class="fa fa-paper-plane-o d-lg-none"></i> <span class="d-none d-lg-block">Enviar</span></button>
         {!! Form::close() !!}
     </div>
 </div>

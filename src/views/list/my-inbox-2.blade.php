@@ -134,27 +134,42 @@
 @endsection
 
 @section('script')
-  <!--<script>
-    new CBPFWTabs(document.getElementById('tabs'));
-  </script>-->
   <script type="text/javascript">
+    $(".chats").scrollTop($(".chats").height());
 
-  $(".chat-application .chat-user-list ul li").on('click', function(){
-    var id = $(this).data('id');
-    if($('.chat-user-list ul li').hasClass('active')){
-      $('.chat-user-list ul li').removeClass('active');
+    $(".chat-application .chat-user-list ul li").on('click', function(){
+      var id = $(this).data('id');
+      if($('.chat-user-list ul li').hasClass('active')){
+        $('.chat-user-list ul li').removeClass('active');
+      }
+      $(this).addClass("active");
+      $(this).find(".badge").remove();
+      if($('.chat-user-list ul li').hasClass('active')){
+        $('.start-chat-area').addClass('d-none');
+        $('.active-chat').removeClass('d-none');
+      }
+      else{
+        $('.start-chat-area').removeClass('d-none');
+        $('.active-chat').addClass('d-none');
+      }
+      $('#chat-app-window').load("{{ url('customer-admin/conversation') }}/"+id, function() {
+        $(".chats").scrollTop($(".chats").height());
+      });
+    });
+
+    // Add message to chat
+    function enter_final_chat(source) {
+      var message = $(".message").val();
+      if(message != ""){
+        var html = '<div class="chat-content">' + "<p>" + message + "</p>" + "</div>";
+        $.post("{{ url('customer-admin/inbox-reply') }}", $("#reply").serialize(), function(data) {
+          if(data['process']){
+            $(".chats").append(data['message']);
+            $(".chats").scrollTop($(".chats").height());
+            $(".message").val("");
+          }
+        });
+      }
     }
-    $(this).addClass("active");
-    $(this).find(".badge").remove();
-    if($('.chat-user-list ul li').hasClass('active')){
-      $('.start-chat-area').addClass('d-none');
-      $('.active-chat').removeClass('d-none');
-    }
-    else{
-      $('.start-chat-area').removeClass('d-none');
-      $('.active-chat').addClass('d-none');
-    }
-    $('#chat-app-window').load("{{ url('customer-admin/conversation') }}/"+id);
-  });
   </script>
 @endsection

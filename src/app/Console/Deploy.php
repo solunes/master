@@ -29,7 +29,7 @@ class Deploy extends Command
         if(\App::environment('local')){
             $this->callSilent('down');
             $this->info('0%: Deploy iniciado. Modo Mantenimiento iniciado');
-            if(config('solunes.scheduler_api_key')&&\Solunes\Master\App\Trigger::where('status','holding')->count()>0){
+            if(config('solunes.scheduler_api_key')&&\Schema::hasTable('triggers')&&\Solunes\Master\App\Trigger::where('status','holding')->count()>0){
                 \External::resetTriggers();
             }
             if(config('solunes.before_migrate')){
