@@ -71,9 +71,11 @@ class CustomerAdminController extends Controller {
             $items = $items->whereNull('parent_id')->with('children','children.children');
         }
         if($single_model=='customer'){
-        	$items =  $items->where('id', $customer->id);// IMPORTANTE
-        } else {
-        	$items =  $items->where('customer_id', $customer->id);// IMPORTANTE
+            $items =  $items->where('id', $customer->id);// IMPORTANTE
+        } else if(\Schema::hasColumn($node->table_name, 'customer_id')) {
+            $items =  $items->where('customer_id', $customer->id);// IMPORTANTE
+        } else if(\Schema::hasColumn($node->table_name, 'user_id')) {
+            $items =  $items->where('user_id', $user->id);// IMPORTANTE
         }
         $node_array = [$node->id];
         if(request()->has('download-excel')){
