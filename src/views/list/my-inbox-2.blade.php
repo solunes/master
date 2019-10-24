@@ -105,7 +105,7 @@
                     </div>
                   @endif
                 </section>
-                <!-- User Chat profile right area -->
+                <!-- User Chat profile right area 
                 <div class="user-profile-sidebar">
                     <header class="user-profile-header">
                         <span class="close-icon">
@@ -124,7 +124,7 @@
                         <p>Toffee caramels jelly-o tart gummi bears cake I love ice cream lollipop. Sweet liquorice croissant candy danish dessert icing. Cake macaroon gingerbread toffee sweet.</p>
                     </div>
                 </div>
-                <!--/ User Chat profile right area -->
+                User Chat profile right area -->
 
             </div>
         </div>
@@ -154,6 +154,16 @@
       }
       $('#chat-app-window').load("{{ url('customer-admin/conversation') }}/"+id, function() {
         $(".chats").scrollTop($(".chats").height());
+      });
+    });
+
+    $(document).ready(function(){
+      $('#message-field').keypress(function(ev){
+        //If user pressed Enter Key then trigger Submit click
+        if(ev.keyCode==13){
+          event.preventDefault();
+          enter_final_chat();
+        }
       });
     });
 

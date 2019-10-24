@@ -83,7 +83,7 @@ class LoginController extends Controller {
     }
 
 	public function getLogout(Request $request) {
-        if(config('solunes.customer')&&config('customer.tracking')){
+        if(config('solunes.customer')&&config('customer.tracking')&&auth()->check()){
         	$user = auth()->user();
         	if($customer = $user->customer){
             	\Customer::createCustomerActivity($customer, 'logout', 'El usuario cerró sesión correctamente.');
