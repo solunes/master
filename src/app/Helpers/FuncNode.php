@@ -254,7 +254,7 @@ class FuncNode {
       return true;
     }
 
-    public static function generate_translations($name, $menu) {
+    public static function generate_translations($menu) {
       $languages = \Solunes\Master\App\Language::get();
       foreach($languages as $language){
         \App::setLocale($language->code);
