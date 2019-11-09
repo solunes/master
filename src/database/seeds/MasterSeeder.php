@@ -79,11 +79,15 @@ class MasterSeeder extends Seeder {
 
         // Customer Dashboard
         if(config('solunes.customer')){
-            \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Pagos Pendientes','link'=>'account/my-payments/1354351278','order'=>5]);
-            \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Historial de Pagos','link'=>'account/my-history/1354351278','order'=>5]);
+            $menu = \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Pagos Pendientes','link'=>'account/my-payments/1354351278','order'=>5]);
+            $menu = \FuncNode::generate_translations($menu);
+            $menu = \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Historial de Pagos','link'=>'account/my-history/1354351278','order'=>5]);
+            $menu = \FuncNode::generate_translations($menu);
             if(config('customer.subscriptions')){
-                \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Suscripciones','link'=>'account/subscriptions/0/1354351278','order'=>5]);
-                \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Mis Suscripciones','link'=>'account/my-subscriptions/1354351278','order'=>5]);
+                $menu = \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Suscripciones','link'=>'account/subscriptions/0/1354351278','order'=>5]);
+                $menu = \FuncNode::generate_translations($menu);
+                $menu = \Solunes\Master\App\Menu::create(['menu_type'=>'customer','icon'=>'table','name'=>'Mis Suscripciones','link'=>'account/my-subscriptions/1354351278','order'=>5]);
+                $menu = \FuncNode::generate_translations($menu);
             }
         }
 

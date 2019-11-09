@@ -254,6 +254,18 @@ class FuncNode {
       return true;
     }
 
+    public static function generate_translations($name, $menu) {
+      $languages = \Solunes\Master\App\Language::get();
+      foreach($languages as $language){
+        \App::setLocale($language->code);
+        $menu->translateOrNew($language->code)->name = $menu->name;
+        $menu->translateOrNew($language->code)->link = $menu->link;
+      }
+      \App::setLocale(config('solunes.main_lang'));
+      $menu->save();
+      return $menu;
+    }
+
     public static function load_nodes_excel($path, $return = '') {
         $languages = \Solunes\Master\App\Language::get();
         \Excel::load($path, function($reader) use($return, $languages) {
