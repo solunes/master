@@ -70,12 +70,17 @@ class CustomerAdminController extends Controller {
         if($node->multilevel){
             $items = $items->whereNull('parent_id')->with('children','children.children');
         }
-        if($single_model=='customer'){
-            $items =  $items->where('id', $customer->id);// IMPORTANTE
-        } else if(\Schema::hasColumn($node->table_name, 'customer_id')) {
-            $items =  $items->where('customer_id', $customer->id);// IMPORTANTE
-        } else if(\Schema::hasColumn($node->table_name, 'user_id')) {
-            $items =  $items->where('user_id', $user->id);// IMPORTANTE
+        if(config('solunes.customer_dashboard_filters')){
+            if($single_model=='customer'&&$customer){
+                $items =  $items->where('id', $customer->id);// IMPORTANTE
+            } else if(\Schema::hasColumn($node->table_name, 'customer_id')&&$customer) {
+                $items =  $items->where('customer_id', $customer->id);// IMPORTANTE
+            } else if(\Schema::hasColumn($node->table_name, 'user_id')&&$user) {
+                $items =  $items->where('user_id', $user->id);// IMPORTANTE
+            }
+        }
+        if(config('solunes.customer_dashboard_custom_filters')){
+            $items = \CustomFunc::customer_dashboard_custom_filters($module, $node, $items);
         }
         $node_array = [$node->id];
         if(request()->has('download-excel')){

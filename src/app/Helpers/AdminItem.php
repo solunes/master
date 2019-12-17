@@ -234,6 +234,14 @@ class AdminItem {
                 $rules = $new_rules;
             }
         }
+        if($module=='customer-admin'){
+            $exclude_fields = $node->fields()->where('display_item','admin')->lists('name')->toArray();
+            foreach($exclude_fields as $exclude_field){
+                if(isset($rules[$exclude_field])){
+                    unset($rules[$exclude_field]);
+                }
+            }
+        }
         if($additional_rules){
             $rules = $rules + $additional_rules;
         }
@@ -266,9 +274,12 @@ class AdminItem {
             $display_array = ['show'];
         }
         $total_ponderation = 0;
-        $fields = $node->fields()->fillables()->displayItem($display_array)->with('field_extras')->get();
-        if(config('solunes.custom_admin_item_fields')){
-            $fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $fields, $custom_type);
+        $fields = $node->fields()->fillables()->displayItem($display_array)->with('field_extras');
+        if($module=='customer-admin'){
+            $exclude_fields = $node->fields()->whereIn('display_item',['admin','none'])->lists('name')->toArray();
+            if(count($exclude_fields)>0){
+                $fields = $fields->whereNotIn('name', $exclude_fields);
+            }
         }
         if($custom_type){
             $dashadmin_fields = config('solunes.dashadmin_nodes')[$model][$custom_type];
@@ -276,6 +287,10 @@ class AdminItem {
                 $fields = $fields->whereIn('name', $dashadmin_fields);
             }
         }
+        if(config('solunes.custom_admin_item_fields')){
+            $fields = \CustomFunc::custom_admin_item_fields($module, $node, $item, $fields, $custom_type);
+        }
+        $fields = $fields->get();
         foreach($fields as $field){
             $field_name = $field->name;
             $input = NULL;

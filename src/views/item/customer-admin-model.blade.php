@@ -43,10 +43,11 @@
               @include('master::includes.customer-form')
               <div class="row"><div class="col-sm-12 left">
                 {!! Form::hidden('action_form', $action) !!}
-                {!! Form::hidden('model_node', $action) !!}
+                {!! Form::hidden('model_node', $model) !!}
                 @if($action=='edit')
                 {!! Form::hidden('id', $i->id) !!}
                 @endif
+                <br>
                 {!! Form::submit(trans('master::admin.save'), array('class'=>'btn btn-primary mr-1 mb-1 btn-site')) !!}
               </div></div>
               {!! Form::close() !!}

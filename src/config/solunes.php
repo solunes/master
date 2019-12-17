@@ -22,6 +22,8 @@ return [
 	// SUBADMIN
 	'customer_dashboard' => false,
 	'customer_dashboard_nodes' => ['customer'=>'edit'],
+    'customer_dashboard_filters' => true,
+	'customer_dashboard_custom_filters' => false,
 
 	// APP VARS
 	'app_name' => strtoupper(env('APP_NAME', 'Web App')),
