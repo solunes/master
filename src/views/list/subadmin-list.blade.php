@@ -41,7 +41,7 @@
                     <div class="actions action-btns">
                       <div class="btn-group dropdown actions-dropodown"></div>
                       <div class="dt-buttons btn-group">
-                        <a href="{{ url('customer-admin/model/customer/create') }}">
+                        <a href="{{ url('customer-admin/model/'.$model.'/create') }}">
                           <button class="btn btn-outline-primary" tabindex="0" aria-controls="DataTables_Table_0"><span><i class="feather icon-plus"></i> Crear Nuevo</span></button>
                         </a>
                       </div>

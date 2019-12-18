@@ -52,6 +52,7 @@ class EventServiceProvider extends ServiceProvider
         }
         if('solunes.product'){
             $events->listen('eloquent.saved: Solunes\Product\App\Product', '\Solunes\Product\App\Listeners\ProductSaved');
+            $events->listen('eloquent.saving: Solunes\Product\App\Product', '\Solunes\Product\App\Listeners\ProductSaving');
         }
         if('solunes.inventory'){
             $events->listen('eloquent.created: Solunes\Inventory\App\StockAddition', '\Solunes\Inventory\App\Listeners\StockAdditionCreated');
