@@ -425,6 +425,7 @@ class FuncNode {
         $notification->save();
         foreach($notifications_array as $type){
           $final_message = $message;
+          $sent = false;
           if($type=='dashboard'){
             // Se genera bien
             $sent = true;
@@ -448,12 +449,13 @@ class FuncNode {
             $sent = \FuncNode::make_email($email_name, [$user->email], $vars, $vars_if, $vars_foreach);
           } else if($type=='sms'){
             // ENVIAR SMS
-            // TODO: INTEGRAR CON AWS SNS PARA HACER UN POST Y REGISTRARLO EN ALGUNA APP DE SMS
-            $sent = false;
+            $result = \Notification::sendSms($user->cellphone, $final_message);
+            if($result){
+              $sent = true;
+            }
           } else if($type=='app'){
             // ENVIAR PUSH NOTIFICATION A APP
-            // TODO: INTEGRAR CON ALGUNA HERRAMIENTA PARA HACER PUSHES
-            $sent = false;
+            $sent = \Notification::sendNotificationToUser($user->id, $final_message);
           }
           $subnotification = new \Solunes\Master\App\NotificationMessage;
           $subnotification->parent_id = $notification->id;
