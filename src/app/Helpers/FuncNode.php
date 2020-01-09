@@ -610,4 +610,31 @@ class FuncNode {
       return $text;
     }
 
+    public static function generateRawCode($digits) {
+        $digits = $digits -1;
+        $chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; 
+        srand((double)microtime()*1000000); 
+        $i = 0; 
+        $pass = ''; 
+
+        while ($i <= $digits) { 
+            $num = rand(1,31); 
+            $tmp = substr($chars, $num, 1); 
+            $pass = $pass . $tmp; 
+            $i++; 
+        } 
+        return $pass;
+    }
+
+    public static function putUniqueValue($key, $value) {
+      $inserted = 0;
+      try { 
+          $message = \DB::table('unique_checks')->insert(['key' => $key, 'value' => $value]);
+          $inserted = 1;
+      } catch(\Illuminate\Database\QueryException $ex){ 
+          $inserted = 0;
+      }
+      return $inserted;
+    }
+
 }
