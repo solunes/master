@@ -628,6 +628,7 @@ class FuncNode {
 
     public static function putUniqueValue($key, $value) {
       $inserted = 0;
+      \Log::info('test: '.$value);
       try { 
           $message = \DB::table('unique_checks')->insert(['key' => $key, 'value' => $value]);
           $inserted = 1;
@@ -635,6 +636,17 @@ class FuncNode {
           $inserted = 0;
       }
       return $inserted;
+    }
+
+    public static function generateUniqueCode($parameter, $digits) {
+      $code = \FuncNode::generateRawCode($digits);
+      $check_unique = \FuncNode::putUniqueValue($parameter, $code);
+      \Log::info('generate_unique: '.$check_unique);
+      if($check_unique===0){
+        \Log::info('unique_failed');
+        $code = \FuncNode::generateUniqueCode($parameter, $digits);
+      }
+      return $code;
     }
 
 }
