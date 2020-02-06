@@ -23,13 +23,13 @@ class UsersDatabase extends Migration
             $table->string('password', 60)->nullable();
             $table->enum('status', ['normal','ask_password','pending_confirmation','banned'])->default('normal');
             $table->boolean('notifications_email')->default(0);
-            if(config('solunes.send_notification_sms'){
+            if(config('solunes.send_notification_sms')){
                 $table->boolean('notifications_app')->default(0);
             }
-            if(config('solunes.send_notification_sms'){
+            if(config('solunes.send_notification_sms')){
                 $table->boolean('notifications_sms')->default(0);
             }
-            if(config('solunes.send_notification_whatsapp'){
+            if(config('solunes.send_notification_whatsapp')){
                 $table->boolean('notifications_whatsapp')->default(0);
             }
             $table->integer('notifications_last_read')->nullable();
