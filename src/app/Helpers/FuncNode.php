@@ -414,6 +414,10 @@ class FuncNode {
           // ENVIAR SMS
           array_push($notifications_array, 'sms');
         }
+        if(config('solunes.send_notification_whatsapp')&&$user->cellphone&&$user->notifications_whatsapp){
+          // ENVIAR SMS
+          array_push($notifications_array, 'whatsapp');
+        }
         if(config('solunes.send_notification_app')){
           // ENVIAR APP PUSH
           array_push($notifications_array, 'app');
@@ -451,6 +455,12 @@ class FuncNode {
             // ENVIAR SMS
             $result = \Notification::sendSms($user->cellphone, $final_message);
             if($result){
+              $sent = true;
+            }
+          } else if($type=='whatsapp'){
+            // ENVIAR Whatsapp
+            $result = \Notification::sendWhatsappTwilo($user->cellphone, $final_message);
+            if($response=='queued'||$result=='sent'){
               $sent = true;
             }
           } else if($type=='app'){

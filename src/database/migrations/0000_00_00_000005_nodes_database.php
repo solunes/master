@@ -103,7 +103,7 @@ class NodesDatabase extends Migration
         Schema::create('notification_messages', function(Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->unsigned();
-            $table->enum('type', ['dashboard','email','sms','app'])->default('dashboard');
+            $table->enum('type', ['dashboard','email','sms','whatsapp','app'])->default('dashboard');
             $table->text('message')->nullable();
             $table->boolean('is_sent')->nullable()->default(0);
             $table->foreign('parent_id')->references('id')->on('notifications')->onDelete('cascade');

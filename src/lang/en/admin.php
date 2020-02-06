@@ -234,6 +234,11 @@ return array(
 	"black" => "Black",
 	"email" => "Email",
 	"sms" => "SMS",
+	"whatsapp" => "WhatsApp",
 	"original" => "Original",
+	'cancelled' => 'Cancelled',
+	'error' => 'Error',
+	'success' => 'Success',
+	'timeout' => 'Timeout',
 
 );

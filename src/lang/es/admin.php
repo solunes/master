@@ -239,6 +239,7 @@ return array(
 	"black" => "Negro",
 	"email" => "Email",
 	"sms" => "SMS",
+	"whatsapp" => "WhatsApp",
 	"original" => "Original",
 	'cancelled' => 'Cancelado',
 	'error' => 'Error',

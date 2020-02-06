@@ -182,6 +182,7 @@
         </p>
     </footer>
     <!-- END: Footer-->
+    
   <script src="{{ asset('assets/admin/scripts/admin-2.js') }}"></script>
   @yield('script')
 </body>

@@ -10,6 +10,7 @@ return [
 	'varchar_lenght' => 64,
 	'error_report' => true,
 	'send_notification_sms' => false,
+	'send_notification_whatsapp' => false,
 	'send_notification_app' => false,
 	'master_admin_id' => 1,
 	'master_dashboard' => true,

@@ -129,6 +129,7 @@ return [
     'notifications_email' => 'Notifications by Email',
     'notifications_last_read' => 'Last Read Notification',
     'notifications_sms' => 'Notifications by SMS',
+    'notifications_whatsapp' => 'Notifications by WhatsApp',
     'observations' => 'Observations',
     'order' => 'Order',
     'page' => 'Page',

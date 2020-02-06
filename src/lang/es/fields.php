@@ -130,6 +130,7 @@ return [
     'notifications_email' => 'Notificaciones por Email',
     'notifications_last_read' => 'Última Notificación Leida',
     'notifications_sms' => 'Notificaciones por SMS',
+    'notifications_whatsapp' => 'Notificaciones por WhatsApp',
     'observations' => 'Observaciones',
     'order' => 'Orden',
     'page' => 'Página',
