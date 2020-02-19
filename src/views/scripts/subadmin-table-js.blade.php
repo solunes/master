@@ -7,10 +7,10 @@
 <script type="text/javascript"> 
 $(document).ready(function() {
     $('table.admin-table').dataTable({
-        "paging": 2,
-        @if(config('solunes.table_pagination')=='true')
-        "pageLength": {{ config('solunes.table_pagination_count') }},
-        "lengthMenu": [[{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, -1], [{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, "Todos"] ],
+        "paging": {{ config('solunes.subadmin_table_pagination') }},
+        @if(config('solunes.subadmin_table_pagination')=='true')
+        "pageLength": {{ config('solunes.subadmin_table_pagination_count') }},
+        "lengthMenu": [[{{ config('solunes.subadmin_table_pagination_count') }}, {{ config('solunes.subadmin_table_pagination_count')*2 }}, {{ config('solunes.subadmin_table_pagination_count')*5 }}, {{ config('solunes.subadmin_table_pagination_count')*10 }}, -1], [{{ config('solunes.subadmin_table_pagination_count') }}, {{ config('solunes.subadmin_table_pagination_count')*2 }}, {{ config('solunes.subadmin_table_pagination_count')*5 }}, {{ config('solunes.subadmin_table_pagination_count')*10 }}, "Todos"] ],
         @endif
         @if(config('solunes.list_vertical_scroll')>0)
         "scrollY": "{{ config('solunes.list_vertical_scroll') }}px",
@@ -24,7 +24,7 @@ $(document).ready(function() {
         "autoWidth": false,
         "order": [0, "asc"],
         "language": {
-            @if(config('solunes.table_pagination')=='true')
+            @if(config('solunes.subadmin_table_pagination')=='true')
             "info": "Mostrando la página _PAGE_ de _PAGES_",
             @else
             "info": " ",
@@ -49,16 +49,16 @@ $(document).ready(function() {
         },
     });
     $('table.admin-table-scroll').dataTable({
-        "paging": {{ config('solunes.table_pagination') }},
-        @if(config('solunes.table_pagination')=='true')
-        "pageLength": {{ config('solunes.table_pagination_count') }},
-        "lengthMenu": [[{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, -1], [{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, "Todos"] ],
+        "paging": {{ config('solunes.subadmin_table_pagination') }},
+        @if(config('solunes.subadmin_table_pagination')=='true')
+        "pageLength": {{ config('solunes.subadmin_table_pagination_count') }},
+        "lengthMenu": [[{{ config('solunes.subadmin_table_pagination_count') }}, {{ config('solunes.subadmin_table_pagination_count')*2 }}, {{ config('solunes.subadmin_table_pagination_count')*5 }}, {{ config('solunes.subadmin_table_pagination_count')*10 }}, -1], [{{ config('solunes.subadmin_table_pagination_count') }}, {{ config('solunes.subadmin_table_pagination_count')*2 }}, {{ config('solunes.subadmin_table_pagination_count')*5 }}, {{ config('solunes.subadmin_table_pagination_count')*10 }}, "Todos"] ],
         @endif
         "scrollX": true,
         "autoWidth": false,
         "order": [0, "asc"],
         "language": {
-            @if(config('solunes.table_pagination')=='true')
+            @if(config('solunes.subadmin_table_pagination')=='true')
             "info": "Mostrando la página _PAGE_ de _PAGES_",
             @else
             "info": " ",
@@ -83,10 +83,10 @@ $(document).ready(function() {
         },
     });
     $('table.admin-multilevel-table').dataTable({
-        "paging": {{ config('solunes.table_pagination') }},
-        @if(config('solunes.table_pagination')=='true')
-        "pageLength": {{ config('solunes.table_pagination_count') }},
-        "lengthMenu": [[{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, -1], [{{ config('solunes.table_pagination_count') }}, {{ config('solunes.table_pagination_count')*2 }}, {{ config('solunes.table_pagination_count')*5 }}, {{ config('solunes.table_pagination_count')*10 }}, "Todos"] ],
+        "paging": {{ config('solunes.subadmin_table_pagination') }},
+        @if(config('solunes.subadmin_table_pagination')=='true')
+        "pageLength": {{ config('solunes.subadmin_table_pagination_count') }},
+        "lengthMenu": [[{{ config('solunes.subadmin_table_pagination_count') }}, {{ config('solunes.subadmin_table_pagination_count')*2 }}, {{ config('solunes.subadmin_table_pagination_count')*5 }}, {{ config('solunes.subadmin_table_pagination_count')*10 }}, -1], [{{ config('solunes.subadmin_table_pagination_count') }}, {{ config('solunes.subadmin_table_pagination_count')*2 }}, {{ config('solunes.subadmin_table_pagination_count')*5 }}, {{ config('solunes.subadmin_table_pagination_count')*10 }}, "Todos"] ],
         @endif
         @if(config('solunes.list_vertical_scroll')>0)
         "scrollY": "{{ config('solunes.list_vertical_scroll') }}px",
@@ -100,7 +100,7 @@ $(document).ready(function() {
         "autoWidth": false,
         "bSort" : false,
         "language": {
-            @if(config('solunes.table_pagination')=='true')
+            @if(config('solunes.subadmin_table_pagination')=='true')
             "info": "Mostrando la página _PAGE_ de _PAGES_",
             @else
             "info": " ",

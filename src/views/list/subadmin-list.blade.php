@@ -31,6 +31,7 @@
         <div class="card">
           <div class="card-header">
             <h3>Listado General</h3>
+
           </div>
           <div class="card-content">
             <div class="card-body">
@@ -48,7 +49,10 @@
                     </div>
                   </div>
                 @endif
-                <table id="general-list" class="admin-table table data-thumb-view editable-list table table-striped table-bordered table-hover @if(config('solunes.list_horizontal_scroll')=='true') nowrap @else dt-responsive @endif">
+                @if(!$pdf)
+                  {!! $items->appends(request()->except(array('page')))->render() !!}
+                @endif
+                <table id="general-list" class="admin-table table table table-striped table-bordered table-hover @if(config('solunes.list_horizontal_scroll')=='true') nowrap @else dt-responsive @endif">
                   <thead>
                     <tr class="title" style="font-weight: bold;">
                       <td>Nº</td>
@@ -130,6 +134,7 @@
   @if(!$pdf)
     @include('master::scripts.lightbox-js')
     @include('master::scripts.select-js')
+    @include('master::scripts.filter-js')
     @if(config('solunes.list_inline_edit'))
       @include('master::scripts.inline-edit-ajax-js')
     @endif

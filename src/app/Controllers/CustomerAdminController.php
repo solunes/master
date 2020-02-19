@@ -143,7 +143,7 @@ class CustomerAdminController extends Controller {
         if(request()->has('download-excel')||request()->has('download-pdf')){
             $array['items'] = $items->get();
         } else {
-            $array['items'] = $items->paginate(config('solunes.pagination_count'));
+            $array['items'] = $items->paginate(config('solunes.subadmin_pagination_count'));
         }
         $array['pdf'] = false;
 

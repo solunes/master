@@ -67,10 +67,13 @@ return [
 
 	// LIST
 	'pagination_count' => 500,
+	'subadmin_pagination_count' => 100,
 	'list_horizontal_scroll' => false,
 	'list_vertical_scroll' => 0, // En pixeles
 	'table_pagination' => 'false',
 	'table_pagination_count' => 25,
+	'subadmin_table_pagination' => 'true',
+	'subadmin_table_pagination_count' => 10,
 	'list_inline_edit' => false,
 	'list_export_pdf' => true,
 	'filter_suboptions' => true,
