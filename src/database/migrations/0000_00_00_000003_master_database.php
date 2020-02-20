@@ -132,7 +132,7 @@ class MasterDatabase extends Migration
         Schema::create('filters', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('order')->nullable()->default(0);
-            $table->enum('category', ['admin','indicator','site','custom'])->default('admin');
+            $table->enum('category', ['admin','indicator','site','customer','custom'])->default('admin');
             $table->enum('display', ['all','user'])->default('all');
             $table->enum('type', ['field','parent_field','custom'])->default('field');
             $table->enum('subtype', ['select','date','string','field'])->default('select');

@@ -28,6 +28,10 @@ class CustomerAdminController extends Controller {
 	public function getModelList($single_model) {
 		$user = auth()->user();
 		$customer = $user->customer;
+
+        if(!isset(config('solunes.customer_dashboard_nodes')[$single_model])){
+            return redirect($this->prev)->with('message_error', 'Esta vista no está habilitada para clientes.');
+        }
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
 
 	    $object = $this;
@@ -125,7 +129,7 @@ class CustomerAdminController extends Controller {
             }
         }
 
-        $array = \AdminList::filter_node($array, $node, $model, $items, 'admin');
+        $array = \AdminList::filter_node($array, $node, $model, $items, 'customer');
         $items = $array['items'];
         if(config('solunes.custom_admin_get_list')){
             $items = \CustomFunc::custom_admin_get_list($module, $node, $items, $array);
@@ -166,6 +170,9 @@ class CustomerAdminController extends Controller {
 		if($lang){
 			\App::setLocale($lang);
 		}
+        if(!isset(config('solunes.customer_dashboard_nodes')[$single_model])){
+            return redirect($this->prev)->with('message_error', 'Esta vista no está habilitada para clientes.');
+        }
         $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
         $model = \FuncNode::node_check_model($node);
         $options = [];

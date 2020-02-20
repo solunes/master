@@ -35,6 +35,7 @@
           </div>
           <div class="card-content">
             <div class="card-body">
+              @include('master::helpers.subadmin-filter')
               <!-- dataTable starts -->
               <div class="table-responsive">
                 @if(isset(config('solunes.customer_dashboard_nodes.'.$model)['create']))
@@ -134,7 +135,6 @@
   @if(!$pdf)
     @include('master::scripts.lightbox-js')
     @include('master::scripts.select-js')
-    @include('master::scripts.filter-js')
     @if(config('solunes.list_inline_edit'))
       @include('master::scripts.inline-edit-ajax-js')
     @endif

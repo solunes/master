@@ -7,6 +7,7 @@
 </style>
 <script type="text/javascript"> 
 $(document).ready(function() {
+    $.fn.dataTableExt.oStdClasses.sPageButton = "page-link";
     $('table.admin-table').dataTable({
         "paging": {{ config('solunes.subadmin_table_pagination') }},
         @if(config('solunes.subadmin_table_pagination')=='true')
