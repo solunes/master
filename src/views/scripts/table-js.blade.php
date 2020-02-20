@@ -2,6 +2,7 @@
     div.dataTables_wrapper {
         width: 100%;
         margin: 0 auto;
+        display: block !important;
     }
 </style>
 <script type="text/javascript"> 

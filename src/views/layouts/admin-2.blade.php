@@ -20,7 +20,7 @@
   @endif
 
   <!-- BEGIN GLOBAL MANDATORY STYLES -->
-  <link rel="stylesheet" href="{{ asset('assets/admin/css/vendor-2.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/admin/css/master.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/admin/css/admin-2.css') }}">
   @if(!$pdf)
   <link rel="stylesheet" href="{{ url(elixir("assets/css/main.css")) }}">
@@ -185,6 +185,7 @@
     <!-- END: Footer-->
     
   <script src="{{ asset('assets/admin/scripts/admin-2.js') }}"></script>
+  <script src="{{ asset('assets/admin/scripts/master.js') }}"></script>
   @include('master::scripts.date-js')
   @include('master::scripts.time-js')
   @include('master::scripts/filter-js')
