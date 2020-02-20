@@ -1,5 +1,5 @@
-<div class="filter_container">
-  @if(isset($filters)&&$filters)  
+@if(isset($filters)&&$filters)  
+  <div class="filter_container">
     {!! Form::open(['url'=>request()->url(), 'method'=>'GET', 'class'=>'form-horizontal filter']) !!}
       <div class="row">
         @foreach($filters as $field_name => $field)
@@ -26,7 +26,5 @@
       </div>
       {!! Form::hidden('search', 1) !!}
     {!! Form::close() !!}
-  @else
-    <p>{{ trans('master::admin.filter_no_data') }}</p>
-  @endif
-</div>
+  </div>
+@endif
