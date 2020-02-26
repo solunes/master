@@ -60,6 +60,7 @@ class MasterServiceProvider extends ServiceProvider {
         $loader->alias('Debugbar', 'Barryvdh\Debugbar\Facade');
         $loader->alias('NoCaptcha', 'Anhskohbo\NoCaptcha\Facades\NoCaptcha');
         $loader->alias('Socialite', 'Laravel\Socialite\Facades\Socialite');
+        $loader->alias('WebPConvert', 'WebPConvert\WebPConvert');
 
         $loader->alias('AdminList', '\Solunes\Master\App\Helpers\AdminList');
         $loader->alias('AdminItem', '\Solunes\Master\App\Helpers\AdminItem');
@@ -83,6 +84,7 @@ class MasterServiceProvider extends ServiceProvider {
             \Solunes\Master\App\Console\GenerateTranslations::class,
             \Solunes\Master\App\Console\TestSystem::class,
             \Solunes\Master\App\Console\BackupSave::class,
+            \Solunes\Master\App\Console\WebpAllFiles::class,
         ]);
 
         $this->mergeConfigFrom(

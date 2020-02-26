@@ -18,12 +18,68 @@ class Asset {
 
     public static function get_image_path($folder, $code, $file) {
     	$path = $folder.'/'.$code.'/'.$file;
-    	if(config('filesystems.cloud')=='cloudfront'){
-    		$final_path = config('filesystems.disks.cloudfront.url').'/'.$path;
-    	} else {
-    		$final_path = Storage::url($path);
-    	}
-    	return $final_path;
+        if(config('solunes.storage_webp_enable')){
+            $final_path = \Asset::get_webp_image_path($path);
+        } else {
+            if(config('filesystems.cloud')=='cloudfront'){
+                $final_path = config('filesystems.disks.cloudfront.url').'/'.$path;
+            } else {
+                $final_path = Storage::url($path);
+            }
+        }
+        if(config('solunes.storage_return_asset')){
+            return asset($final_path);
+        } else {
+            return $final_path;
+        }
+    }
+
+    public static function get_webp_image_path($source, $force_check_exists = false) {
+        $destination_real = $source . '.webp';
+        if($force_check_exists||config('solunes.storage_webp_check_exists')){
+            $exists = \Storage::exists($destination_real);
+        } else {
+            $exists = true;
+        }
+        if(!$exists || config('solunes.storage_webp_regenerate_all')){
+            \Asset::upload_webp_image($source);
+        }
+        if(config('filesystems.cloud')=='cloudfront'){
+            $final_path = config('filesystems.disks.cloudfront.url').'/'.$destination_real;
+        } else {
+            $final_path = Storage::url($destination_real);
+        }
+        return $final_path;
+    }
+
+    public static function upload_webp_image($source) {
+        $storagePath  = \Storage::getDriver()->getAdapter()->getPathPrefix();
+        $new_source = $storagePath.$source;
+        $destination = $new_source . '.webp';
+        if(config('filesystems.cloud')=='cloudfront'||config('solunes.storage_webp_upload_cloud')){
+            //$destination = NULL; // TODO: LOCAL FILE PATH TO UPLOAD
+        }
+        \WebPConvert::convert($new_source, $destination, [
+          'fail' => 'original',     // If failure, serve the original image (source). Other options include 'throw', '404' and 'report'
+          // 'show-report' => true,  // Generates a report instead of serving an image
+          'serve-image' => [
+            'headers' => [
+              //'cache-control' => true,
+              'vary-accept' => true,
+              //'expires' => false,
+              //'last-modified' => true,
+              // other headers can be toggled...
+            ],
+            'cache-control-header' => 'max-age=3600',
+          ],
+        'convert' => [
+          // all convert option can be entered here (ie "quality")
+          ],
+        ]);
+        if(config('filesystems.cloud')=='cloudfront'||config('solunes.storage_webp_upload_cloud')){
+            //$new_source = NULL; // TODO: LOCAL FILE PATH UPLOAD TO SERVER
+        }
+        return $destination;
     }
 
     public static function upload_image($file, $folder, $encode = false) {
@@ -60,6 +116,9 @@ class Asset {
 		    }
 			$handle = fopen($new_filename, 'r+');
     		Storage::put($folder.'/'.$size['code'].'/'.$filename.'.'.$size_extension, $handle);
+            if(config('solunes.storage_webp_enable')){
+                \Asset::get_webp_image_path($folder.'/'.$size['code'].'/'.$filename.'.'.$size_extension, true);
+            }
     		fclose($handle);
     		unlink($new_filename);
 		  }

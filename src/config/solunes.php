@@ -19,6 +19,12 @@ return [
 	'test_enabled' => false,
 	'scheduler_url' => 'https://scheduler.solunes.site/api',
 	'scheduler_api_key' => null, // Generar código
+    'storage_webp_enable'=>false, // Habilitar WebP en Storage
+    'storage_webp_check_exists'=>false, // Habilitar en WebP que se revise cada archivo antes de generarlo
+    'storage_webp_regenerate_all'=>false, // Habilitar en WebP que se revisen todos los archivos
+    'storage_webp_upload_cloud'=>false, // Habilitar subida a la nube de WebP
+    'storage_webp_mass_convert'=>false, // Habilitar subida a la nube de WebP
+    'storage_return_asset'=>false, // Habilitar función asset () en Storage por defecto
 
 	// SUBADMIN
 	'customer_dashboard' => false,
