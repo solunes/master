@@ -99,18 +99,20 @@ class Asset {
             \WebPConvert::convert($real_path_source, $destination, [
               'fail' => 'original',     // If failure, serve the original image (source). Other options include 'throw', '404' and 'report'
               // 'show-report' => true,  // Generates a report instead of serving an image
+              'suppress-warnings' => true,            // if you set to false, make sure that warnings are not echoed out!
               'serve-image' => [
                 'headers' => [
-                  //'cache-control' => true,
-                  'vary-accept' => true,
+                  'cache-control' => true,        
+                  'expires' => false,
                   //'expires' => false,
                   //'last-modified' => true,
                   // other headers can be toggled...
                 ],
-                'cache-control-header' => 'max-age=3600',
+                'cache-control-header' => 'public, max-age=31536000',
               ],
             'convert' => [
               // all convert option can be entered here (ie "quality")
+                'quality' => 'auto',
               ],
             ]);
         } catch (Exception $e) {
