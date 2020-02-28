@@ -24,6 +24,7 @@ return [
     'storage_webp_regenerate_all'=>false, // Habilitar en WebP que se revisen todos los archivos
     'storage_webp_upload_cloud'=>false, // Habilitar subida a la nube de WebP
     'storage_webp_mass_convert'=>false, // Habilitar subida a la nube de WebP
+    'storage_webp_public_folders'=>[], // Habilitar array de folder para validar webpg. Ej: assets/images
     'storage_return_asset'=>false, // Habilitar función asset () en Storage por defecto
 
 	// SUBADMIN

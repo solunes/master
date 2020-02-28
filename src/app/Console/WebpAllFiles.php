@@ -30,13 +30,29 @@ class WebpAllFiles extends Command
             $files = \Storage::allFiles();
             $count = 0;
             foreach($files as $file){
-                if(strpos($file, '.webp') === false){
-                    $this->info('Convirtiendo a webp: '.$file);
+                $is_image = \Asset::isImageFile($file);
+                if($is_image&&strpos($file, '.webp') === false){
+                    //$this->info('Convirtiendo a webp: '.$file);
                     $final_path = \Asset::get_webp_image_path($file);
+                    $this->info('Webp obtenido: '.$final_path);
                     $count++;
                 }
             }
-            $this->info('Finalizado. Archivos: '.$count);
+            foreach(config('solunes.storage_webp_public_folders') as $folder){
+                $files = \Asset::getDirContents('public/'.$folder);
+                foreach($files as $file){
+                    $is_image = \Asset::isImageFile($file);
+                    if($is_image&&strpos($file, '.webp') === false){
+                        //$file = '/'.$file; Genera error
+                        //$this->info('Convirtiendo a webp: '.$file);
+                        $final_path = \Asset::get_webp_public_image($file, true);
+                        $this->info('Webp obtenido: '.$final_path);
+                        $count++;
+                    }
+                }
+                $this->info('Finalizado folder en public: '.$folder);
+            }
+            $this->info('Finalizado proceso. Convertidos: '.$count);
         } else {
             $this->info('No autorizado.');
         }

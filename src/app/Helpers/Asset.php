@@ -52,15 +52,51 @@ class Asset {
         return $final_path;
     }
 
+    public static function get_webp_public_image($source, $real_path = false, $force_check_exists = false) {
+        $final_destination = $source;
+        if(!$real_path){
+            $source = realpath($source);
+        } else {
+            $replace = realpath('public');
+            $final_destination = str_replace($replace, '', $final_destination);
+            $final_destination = str_replace('\\', '/', $final_destination);
+        }
+        $destination_real = $source . '.webp';
+        $final_destination .= '.webp';
+        if($force_check_exists||config('solunes.storage_webp_check_exists')){
+            $exists = file_exists($destination_real);
+        } else {
+            $exists = true;
+        }
+        if(!$exists || config('solunes.storage_webp_regenerate_all')){
+            \Asset::upload_webp_public_image($source);
+        }
+        return $final_destination;
+    }
+
     public static function upload_webp_image($source) {
         $storagePath  = \Storage::getDriver()->getAdapter()->getPathPrefix();
-        $new_source = $storagePath.$source;
-        $destination = $new_source . '.webp';
+        $source = $storagePath.$source;
+        if(config('filesystems.cloud')=='cloudfront'||config('solunes.storage_webp_upload_cloud')){
+            //$destination = NULL; // TODO: LOCAL FILE PATH TO UPLOAD
+        }
+        $destination = \Asset::upload_webp_finish($source);
+        if(config('filesystems.cloud')=='cloudfront'||config('solunes.storage_webp_upload_cloud')){
+            //$new_source = NULL; // TODO: LOCAL FILE PATH UPLOAD TO SERVER
+        }
+        return $destination;
+    }
+
+    public static function upload_webp_public_image($source) {
+        $destination = \Asset::upload_webp_finish($source);
+        return $destination;
+    }
+
+    public static function upload_webp_finish($real_path_source) {
+        $destination = $real_path_source . '.webp';
+        //\Log::info('Uploading: '.$real_path_source);
         try {
-            if(config('filesystems.cloud')=='cloudfront'||config('solunes.storage_webp_upload_cloud')){
-                //$destination = NULL; // TODO: LOCAL FILE PATH TO UPLOAD
-            }
-            \WebPConvert::convert($new_source, $destination, [
+            \WebPConvert::convert($real_path_source, $destination, [
               'fail' => 'original',     // If failure, serve the original image (source). Other options include 'throw', '404' and 'report'
               // 'show-report' => true,  // Generates a report instead of serving an image
               'serve-image' => [
@@ -77,11 +113,8 @@ class Asset {
               // all convert option can be entered here (ie "quality")
               ],
             ]);
-            if(config('filesystems.cloud')=='cloudfront'||config('solunes.storage_webp_upload_cloud')){
-                //$new_source = NULL; // TODO: LOCAL FILE PATH UPLOAD TO SERVER
-            }
         } catch (Exception $e) {
-            // do something
+            \Log::info('Error al generar webpg en: '.$real_path_source);
         }
         return $destination;
     }
@@ -336,6 +369,32 @@ class Asset {
         $file_name = \Asset::upload_file(asset($temp_file), $folder.'-'.$file);
         unlink($temp_file);
         return $file_name;
+    }
+
+    public static function getDirContents($dir, $results = array()) {
+        $files = scandir($dir);
+
+        foreach ($files as $key => $value) {
+            $path = $dir . DIRECTORY_SEPARATOR . $value;
+            $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+            if (!is_dir($path)) {
+                $results[] = $path;
+            } else if ($value != "." && $value != "..") {
+                $results = \Asset::getDirContents($path, $results);
+            }
+        }
+        return $results;
+    }
+
+    public static function isImageFile($path) {
+        $image_array = ['.png','.jpg','jpeg'];
+        $path = strtolower($path);
+        foreach($image_array as $image_type){
+            if(stripos($path,$image_type) !== false){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -24,3 +24,8 @@ Route::get('artisan/test-system', function () {
   Artisan::call('test-system');
   return dd(Artisan::output());
 });
+
+Route::get('artisan/webp-all-files', function () {
+  Artisan::call('webp-all-files');
+  return dd(Artisan::output());
+});
