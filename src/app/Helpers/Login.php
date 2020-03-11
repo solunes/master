@@ -121,12 +121,22 @@ class Login {
         });
     }
 
-    public static function find_or_create_customer($api_email, $api_name) {
+    public static function find_or_create_customer($api_email, $api_name, $agency = NULL) {
         $authCustomer = NULL;
         if(config('solunes.customer')){
-            $authCustomer = \Solunes\Customer\App\Customer::where('email', $api_email)->first();
+            if(config('customer.different_customers_by_agency')&&$agency){
+                $authCustomer = \Solunes\Customer\App\Customer::where('email', $api_email)->where('agency_id', $agency->id)->first();
+            } else if(!config('customer.different_customers_by_agency')) {
+                $authCustomer = \Solunes\Customer\App\Customer::where('email', $api_email)->first();
+            } else {
+                return NULL;
+            }
             if(!$authCustomer){
-                $authUser = \App\User::where('email', $api_email)->first();
+                if(config('customer.different_customers_by_agency')&&$agency){
+                    $authUser = \App\User::where('email', $api_email)->where('agency_id', $agency->id)->first();
+                } else if(!config('customer.different_customers_by_agency')) {
+                    $authUser = \App\User::where('email', $api_email)->first();
+                } 
                 if($authUser){
                     $status = 'normal';
                     $user_id = $authUser->id;
@@ -140,12 +150,15 @@ class Login {
                 $authCustomer = \Solunes\Customer\App\Customer::create([
                     'first_name'     => $first_name,
                     'last_name'     => $last_name,
-                    'password'     => '12345678',
+                    'password'     => config('customer.default_password'),
                     'name'     => $api_name,
                     'email'    => $api_email,
                     'status'    => $status,
                     'user_id' => $user_id
                 ]);
+                if(config('customer.different_customers_by_agency')&&$authUser->agency_id){
+                    $authCustomer->agency_id = $authUser->agency_id;
+                }
             }
         }
         return $authCustomer;

@@ -29,17 +29,36 @@ class LoginController extends Controller {
     	if(config('solunes.nocaptcha_login')){
     		$rules['g-recaptcha-response'] = 'required|captcha';
     	}
+    	if(config('customer.different_customers_by_agency')){
+    		$rules['agency_token'] = 'required';
+      		$agency = \Business::getAgencyByToken($request->input('agency_token'));
+    	} else {
+    		$agency = NULL;
+    	}
 	    $validator = Validator::make($request->all(), $rules);
 	    $logged = false;
 		if ($validator->passes()) {
 			$last_session = session()->getId();
-			if (Auth::attempt(array('email'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
-				$logged = true;
-			} else if (Auth::attempt(array('username'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
-				$logged = true;
-			} else if (Auth::attempt(array('cellphone'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
-				$logged = true;
-			}
+    		if(config('customer.different_customers_by_agency')){
+				if(!$agency){
+        			return redirect($this->prev)->with(array('message_error' => 'Su agencia no existe en la base de datos'))->withErrors($validator)->withInput();
+				}
+				if (Auth::attempt(array('email'=>$request->input('user'), 'password'=>$request->input('password'), 'agency_id'=>$agency->id), true)) {
+					$logged = true;
+				} else if (Auth::attempt(array('username'=>$request->input('user'), 'password'=>$request->input('password'), 'agency_id'=>$agency->id), true)) {
+					$logged = true;
+				} else if (Auth::attempt(array('cellphone'=>$request->input('user'), 'password'=>$request->input('password'), 'agency_id'=>$agency->id), true)) {
+					$logged = true;
+				}
+    		} else {
+				if (Auth::attempt(array('email'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
+					$logged = true;
+				} else if (Auth::attempt(array('username'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
+					$logged = true;
+				} else if (Auth::attempt(array('cellphone'=>$request->input('user'), 'password'=>$request->input('password')), true)) {
+					$logged = true;
+				}
+    		}
 			if($logged){
 			  $user = Auth::user();
               if(config('solunes.customer')&&config('customer.tracking')){
@@ -83,11 +102,19 @@ class LoginController extends Controller {
     }
 
 	public function getLogout(Request $request) {
+        $customer = NULL;
         if(config('solunes.customer')&&config('customer.tracking')&&auth()->check()){
         	$user = auth()->user();
         	if($customer = $user->customer){
             	\Customer::createCustomerActivity($customer, 'logout', 'El usuario cerró sesión correctamente.');
         	}
+        }
+        if($customer){
+        	$agency_token = NULL;
+        	if(config('customer.different_customers_by_agency')&&$customer->agency){
+        		$agency_token = $customer->agency->token;
+        	}
+			return Login::logout($request->session(), 'account/login/'.config('customer.customers_token').'/'.$agency_token, trans('master::form.logout_success'));
         }
 		return Login::logout($request->session(), 'auth/login', trans('master::form.logout_success'));
 	}

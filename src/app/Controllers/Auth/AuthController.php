@@ -24,9 +24,13 @@ class AuthController extends Controller {
      *
      * @return Response
      */
-    public function redirectToProvider($provider)
+    public function redirectToProvider($provider, $agency_token = NULL)
     {
-        return Socialite::driver($provider)->stateless()->redirect();
+        if($agency_token){
+            return Socialite::driver($provider)->stateless()->with(['agency_token' => $agency_token])->redirect();
+        } else {
+            return Socialite::driver($provider)->stateless()->redirect();
+        }
     }
 
     /**
@@ -40,7 +44,12 @@ class AuthController extends Controller {
     public function handleProviderCallback($provider)
     {
         $user = Socialite::driver($provider)->stateless()->user();
-        $authUser = $this->findOrCreateUser($user, $provider);
+        $agency_token = request()->input('agency_token');
+        $agency = NULL;
+        if(config('customer.different_customers_by_agency')&&$agency_token){
+            $agency = \Business::getAgencyByToken($agency_token);
+        }
+        $authUser = $this->findOrCreateUser($user, $provider, $agency);
         $last_session = session()->getId();
         Auth::login($authUser, true);
         if(config('solunes.customer')&&config('customer.tracking')){
@@ -98,9 +107,9 @@ class AuthController extends Controller {
      * @param $provider Social auth provider
      * @return  User
      */
-    public function findOrCreateUser($user, $provider)
+    public function findOrCreateUser($user, $provider, $agency = NULL)
     {
-        $authCustomer = \Login::find_or_create_customer($user->email, $user->name);
+        $authCustomer = \Login::find_or_create_customer($user->email, $user->name, $agency);
         $authUser = User::where('provider_id', $user->id)->first();
         if ($authUser) {
             return $authUser;
@@ -118,7 +127,7 @@ class AuthController extends Controller {
         $authUser = User::create([
             'first_name'     => $first_name,
             'last_name'     => $last_name,
-            'password'     => '12345678',
+            'password'     => config('customer.default_password'),
             'name'     => $user->name,
             'email'    => $user->email,
             'provider' => $provider,
