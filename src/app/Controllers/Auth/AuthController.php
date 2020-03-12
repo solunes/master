@@ -109,7 +109,11 @@ class AuthController extends Controller {
      */
     public function findOrCreateUser($user, $provider, $agency = NULL)
     {
-        $authCustomer = \Login::find_or_create_customer($user->email, $user->name, $agency);
+        $avatar = NULL;
+        if(config('customer.fields.image')){
+            $avatar = $user->getAvatar();
+        }
+        $authCustomer = \Login::find_or_create_customer($user->email, $user->name, $avatar, $agency);
         $authUser = User::where('provider_id', $user->id)->first();
         if ($authUser) {
             return $authUser;

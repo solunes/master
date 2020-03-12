@@ -121,7 +121,7 @@ class Login {
         });
     }
 
-    public static function find_or_create_customer($api_email, $api_name, $agency = NULL) {
+    public static function find_or_create_customer($api_email, $api_name, $api_avatar = NULL, $agency = NULL) {
         $authCustomer = NULL;
         if(config('solunes.customer')){
             if(config('customer.different_customers_by_agency')&&$agency){
@@ -159,6 +159,9 @@ class Login {
                 if(config('customer.different_customers_by_agency')&&$authUser->agency_id){
                     $authCustomer->agency_id = $authUser->agency_id;
                 }
+            }
+            if(config('customer.fields.image')&&!$authCustomer->image){
+                $authCustomer->image = \Asset::upload_image($avatar, 'customer-image');
             }
         }
         return $authCustomer;
