@@ -131,6 +131,7 @@ class Login {
             } else {
                 return NULL;
             }
+            $change = false;
             if(!$authCustomer){
                 if(config('customer.different_customers_by_agency')&&$agency){
                     $authUser = \App\User::where('email', $api_email)->where('agency_id', $agency->id)->first();
@@ -158,10 +159,15 @@ class Login {
                 ]);
                 if(config('customer.different_customers_by_agency')&&$authUser->agency_id){
                     $authCustomer->agency_id = $authUser->agency_id;
+                    $change = true;
                 }
             }
             if(config('customer.fields.image')&&!$authCustomer->image){
-                $authCustomer->image = \Asset::upload_image($avatar, 'customer-image');
+                $authCustomer->image = \Asset::upload_image(file_get_contents($avatar), 'customer-image');
+                $change = true;
+            }
+            if($change){
+                $authCustomer->save();
             }
         }
         return $authCustomer;
