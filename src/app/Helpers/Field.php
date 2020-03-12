@@ -42,8 +42,8 @@ class Field {
         $parameters = [];
         if($type=='select'||$type=='checkbox'||$type=='radio'){
             $parameters['options'] = $field['options'];
-            if($type=='select'&&!$required){
-                $parameters['options'] = [''=>'-'] + $parameters['options'];
+            if($type=='select'){
+                $parameters['options'] = [''=>'Seleccione una opción...'] + $parameters['options'];
             } else if($type=='checkbox'||$type=='radio'){
                 if(isset($parameters['options']['first_label'])){
                     $parameters['first_label'] = $parameters['options']['first_label'];
@@ -103,8 +103,14 @@ class Field {
         if(isset($field['relation'])&&$field['relation']&&in_array($name, config('solunes.relation_fast_create_array'))){
             $label .= ' (<a href="'.url('admin/child-model/'.$field['value'].'/create/es').'&lightbox[width]=1000&lightbox[height]=600" class="lightbox" data-url="'.url('admin/child-model/'.$field['value'].'/create/es').'">Crear nuevo</a>)';
         }
-        if(isset($field['tooltip'])&&$field['tooltip']&&$data_type!='view'){
-            $label .= ' <a href="#" class="help" title="'.$field['tooltip'].'"><i class="fa fa-question-circle"></i></a>';
+        if($template=='customer-admin'){
+            if(isset($field['tooltip'])&&$field['tooltip']&&$data_type!='view'){
+                $label .= ' <button type="button" class="btn btn-icon btn-icon rounded-circle btn-flat-success mr-1 mb-1 waves-effect waves-light" data-toggle="tooltip" data-original-title="'.$field['tooltip'].'" data-trigger="focus"><i class="feather icon-help-circle"></i></button>';
+            }
+        } else {
+            if(isset($field['tooltip'])&&$field['tooltip']&&$data_type!='view'){
+                $label .= ' <a href="#" class="help" title="'.$field['tooltip'].'"><i class="fa fa-question-circle"></i></a>';
+            }
         }
         if(isset($field['filter_delete'])&&isset($field['filter'])){
             if($field['filter_delete']){
@@ -193,6 +199,11 @@ class Field {
             $array['disabled'] = true;
         } else if($extras&&array_key_exists('readonly', $extras)) {
             $array['readonly'] = true;
+        }
+
+        // MAXLENGTH
+        if($extras&&isset($extras['maxlength'])){
+            $array['maxlength'] = $extras['maxlength'];
         }
 
         // PLACEHOLDER
@@ -468,10 +479,10 @@ class Field {
           }
           $response .= '</div>';
           if($data_type!='view'){
+              $response .= Form::file('uploader_'.$name, $array);
               $response .= '<div class="progress_bar"><div class="bar" style="width: 0%;"></div>';
               $response .= '<a class="cancel_upload_button" href="#">Cancelar</a></div>';
               $response .= '<div class="error_bar"></div>';
-              $response .= Form::file('uploader_'.$name, $array);
           }
           return $response;
     }

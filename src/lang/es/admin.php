@@ -194,6 +194,7 @@ return array(
 	"folder" => "Carpeta",
 	"append" => "Anexar (Adelante)",
 	"prepend" => "Anexar (Atras)",
+	"maxlength" => "Máximo de Caracteres",
 	"placeholder" => "Placeholder",
 	"label" => "Etiqueta",
 	"cols" => "Columnas",

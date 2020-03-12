@@ -190,6 +190,7 @@ return array(
 	"folder" => "Folder",
 	"append" => "Append",
 	"prepend" => "Prepend",
+	"maxlength" => "Max. Length",
 	"placeholder" => "Placeholder",
 	"label" => "Label",
 	"cols" => "Cols",

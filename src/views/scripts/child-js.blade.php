@@ -45,6 +45,11 @@ $(document).ready(function(){
     var realcount = $('#'+rel+'>tbody>tr:last td.table-counter').data('count')+1;
     $('#'+rel+'>tbody>tr:last td.table-counter').attr('data-count', realcount);
     $('#'+rel+'>tbody>tr:last td.table-counter').html(realcount);
+    // Remover y resetear datos de imagen cargada
+    if ($(".file_container")[0]){
+      $('#'+rel+'>tbody>tr:last td .file_container').html('<div class="file_limitations"><p>La imagen debe ser: JPG, JPEG, PNG o GIF.</p></div>');
+      createFileUploads();
+    }
     // Remover uno al counter_val si el contador si existe
     /*var counter_val = $('#'+rel+'>tfoot .calculate-count').val();
     $('#'+rel+'>tfoot .calculate-count').val(parseInt(counter_val)+1);*/
