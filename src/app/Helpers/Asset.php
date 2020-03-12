@@ -121,17 +121,26 @@ class Asset {
         return $destination;
     }
 
-    public static function upload_image($file, $folder, $encode = false) {
+    public static function upload_image($file, $folder, $encode = false, $width = NULL, $height = NULL, $extension = NULL) {
         $filename = $folder.'_'.substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 20);
         $image_folder = \Solunes\Master\App\ImageFolder::where('name', $folder)->first();
         if($image_folder&&count($image_folder->image_sizes)>0){
           $size_extension = $image_folder->extension;
+          if($extension){
+            $size_extension = $extension;
+          }
           $new_filename = public_path('tmp/'.$filename.'.'.$size_extension);
           $image_sizes = $image_folder->image_sizes()->get(['code','type','width','height'])->toArray();
           array_push($image_sizes, ['code'=>'mini','type'=>'fit','width'=>150,'height'=>150]);
           $image_quality = config('solunes.image_quality');
           foreach($image_sizes as $size){
             $type = $size['type'];
+            if($size['code']=='custom'&&$width){
+                $size['width'] = $width;
+            }
+            if($size['code']=='custom'&&$height){
+                $size['height'] = $height;
+            }
             if($encode===true){
                 if(config('app.system')=='linux'){
                     $encoded_file = utf8_decode(utf8_encode($file));

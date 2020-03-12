@@ -178,6 +178,20 @@ class NodesDatabase extends Migration
             $table->integer('height')->nullable();
             $table->foreign('parent_id')->references('id')->on('image_folders')->onDelete('cascade');
         });
+        if(config('solunes.content_images_table')){
+            Schema::create('image_contents', function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('code')->nullable();
+                $table->string('name')->nullable();
+                $table->string('image')->nullable();
+                $table->boolean('locked')->nullable()->default(false);
+                $table->enum('type', ['original','resize','fit'])->default('original');
+                $table->enum('extension', ['jpg','png','gif'])->default('jpg');
+                $table->integer('width')->nullable();
+                $table->integer('height')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -187,6 +201,8 @@ class NodesDatabase extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('image_content_images');
+        Schema::dropIfExists('image_contents');
         Schema::dropIfExists('image_sizes');
         Schema::dropIfExists('image_folders');
         Schema::dropIfExists('temp_files');

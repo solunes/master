@@ -37,6 +37,7 @@ return [
     'email' => 'Email|Emails',
     'image-folder' => 'Image Folder|Images Folder',
     'image-size' => 'Image Size|Image Sizes',
+    'image-content' => 'Image Content|Image Contents',
     'inbox' => 'Inbox|Inbox',
     'inbox-user' => 'Inbox User|Inbox Users',
     'inbox-message' => 'Message|Message',

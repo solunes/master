@@ -194,7 +194,10 @@ return [
     'graph_type' => 'Graph Type',
     'indicator_users' => 'Indicator Users',
     'indicators' => 'Indicators',
-    
+    'locked' => 'Locked?',
+    'product_group' => 'Product Group',
+    'subscription' => 'Subscription',
+
     /* Filter Fields  */
     'none' => 'None',
     'is' => 'Is the same as',

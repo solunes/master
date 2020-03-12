@@ -19,6 +19,7 @@ return [
 	'test_enabled' => false,
 	'scheduler_url' => 'https://scheduler.solunes.site/api',
 	'scheduler_api_key' => null, // Generar código
+	'content_images_table' => false, // Crear tabla de imagenes para contenido variado
     'storage_webp_enable'=>false, // Habilitar WebP en Storage
     'storage_webp_check_exists'=>false, // Habilitar en WebP que se revise cada archivo antes de generarlo
     'storage_webp_regenerate_all'=>false, // Habilitar en WebP que se revisen todos los archivos

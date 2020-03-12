@@ -197,6 +197,9 @@ return [
     'indicator_users' => 'Usuarios de Indicador',
     'indicators' => 'Indicadores',
     'city_other' => 'Otra Ciudad',
+    'locked' => '¿Bloqueado?',
+    'product_group' => 'Grupo de Producto',
+    'subscription' => 'Suscripción',
 
     /* Filter Fields  */
     'none' => 'Ninguna Acción',

@@ -48,6 +48,11 @@ class AssetController extends Controller {
 	  	$type = $request->input('type');
 	  	$folder = $request->input('folder');
 	  	$file = $request->file('file');
+	  	if($request->has('custom')){
+	  		$custom = $request->input('custom');
+	  	} else {
+	  		$custom = false;
+	  	}
 	  	if($type=='image'){
       		$filesize = \FuncNode::check_var('image_size');
         	$file_array = explode(',', \FuncNode::check_var('image_extension'));
@@ -78,7 +83,11 @@ class AssetController extends Controller {
 	  }
 	  if($error===false){
 	  	if($type=='image'){
-	    	$new_file = Asset::upload_image($file, $folder);
+	  		if($custom){
+	    		$new_file = Asset::upload_image($file, $folder, false, $request->input('width'), $request->input('height'), $request->input('extension'));
+	  		} else {
+	    		$new_file = Asset::upload_image($file, $folder);
+	  		}
 	    	$get_file = Asset::get_image_path($folder, 'normal', $new_file);
 	    	$get_thumb = Asset::get_image_path($folder, 'mini', $new_file);
 	  	} else {

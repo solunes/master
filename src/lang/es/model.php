@@ -38,6 +38,7 @@ return [
     'email' => 'Email|Emails',
     'image-folder' => 'Folder de Imagen|Folders de Imágenes',
     'image-size' => 'Tamaño de Imagen|Tamaño de Imágenes',
+    'image-content' => 'Contenido de Imagen|Contenidos de Imágen',
     'inbox' => 'Bandeja de Entrada|Bandeja de Entrada',
     'inbox-user' => 'Conversación de Usuario|Conversaciones de Usuario',
     'inbox-message' => 'Mensaje|Mensajes',

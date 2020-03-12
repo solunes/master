@@ -90,7 +90,11 @@ class DataManager {
                                         } else {
                                             $file_path = public_path('seed/'.$node->name.'/'.$subinput);
                                         }
-                                        $input_array[] = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true);
+                                        if($node->name.'-'.$field->name=='image-content-image'){
+                                            $input_array[] = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true, $row->width, $row->height, $row->extension);
+                                        } else {
+                                            $input_array[] = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true);
+                                        }
                                     }
                                     $input = json_encode($input_array);
                                 } else {
@@ -99,7 +103,11 @@ class DataManager {
                                     } else {
                                         $file_path = public_path('seed/'.$node->name.'/'.$input);
                                     }
-                                    $input = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true);
+                                    if($node->name.'-'.$field->name=='image-content-image'){
+                                        $input = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true, $row->width, $row->height, $row->extension);
+                                    } else {
+                                        $input = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true);
+                                    }
                                 }
                             }
                             $item = \FuncNode::put_data_field($item, $field, $input, $language_code);

@@ -8,6 +8,9 @@
       var folder = $item.data('folder');
       var count = $item.data('count');
       var multiple = $item.data('multiple');
+      var width = $item.data('width');
+      var height = $item.data('height');
+      var extension = $item.data('extension');
       var file_name = $item.attr('name').replace("uploader_", "");
       var $fcontainer = $item.parent().find('.file_container');
       var $fprogress = $item.parent().find('.progress_bar');
@@ -16,7 +19,7 @@
         url: '{{ url("asset/upload") }}',
         dataType: 'json',
         paramName: 'file',
-        formData: [{name: 'type', value: type}, {name: 'folder', value: folder}, {name: '_token', value: "{{ csrf_token() }}" }],
+        formData: [{name: 'type', value: type}, {name: 'folder', value: folder}, {name: 'width', value: width}, {name: 'height', value: height}, {name: 'extension', value: extension}, {name: '_token', value: "{{ csrf_token() }}" }],
         dropZone: $(this),
         add: function (e, data) {
           $fprogress.show('fast');

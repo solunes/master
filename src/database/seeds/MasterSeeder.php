@@ -73,9 +73,17 @@ class MasterSeeder extends Seeder {
         \Solunes\Master\App\Node::create(['name'=>'image-size', 'type'=>'subchild', 'location'=>'package', 'parent_id'=>$node_image_folder->id]);
         $node_temp_file = \Solunes\Master\App\Node::create(['name'=>'temp-file', 'folder'=>'system']);
         $node_unique_check = \Solunes\Master\App\Node::create(['name'=>'unique-check', 'folder'=>'system']);
+        if(config('solunes.content_images_table')){
+            $node_image_content = \Solunes\Master\App\Node::create(['name'=>'image-content', 'folder'=>'global']);
+        }
 
         $image_folder = \Solunes\Master\App\ImageFolder::create(['site_id'=>1,'name'=>'upload','extension'=>'jpg']);
         \Solunes\Master\App\ImageSize::create(['parent_id'=>$image_folder->id,'code'=>'normal','type'=>'resize','width'=>1000,'height'=>NULL]);
+        if(config('solunes.content_images_table')){
+            $content_image_folder = \Solunes\Master\App\ImageFolder::create(['site_id'=>1,'name'=>'image-content-image','extension'=>'jpg']);
+            \Solunes\Master\App\ImageSize::create(['parent_id'=>$content_image_folder->id,'code'=>'normal','type'=>'original','width'=>NULL,'height'=>NULL]);
+            \Solunes\Master\App\ImageSize::create(['parent_id'=>$content_image_folder->id,'code'=>'custom','type'=>'original','width'=>NULL,'height'=>NULL]);
+        }
 
         // Customer Dashboard
         if(config('solunes.customer')){
