@@ -91,7 +91,7 @@ class DataManager {
                                             $file_path = public_path('seed/'.$node->name.'/'.$subinput);
                                         }
                                         if($node->name.'-'.$field->name=='image-content-image'){
-                                            $input_array[] = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true, $row->width, $row->height, $row->extension);
+                                            $input_array[] = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true, $row->type, $row->width, $row->height, $row->extension);
                                         } else {
                                             $input_array[] = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true);
                                         }
@@ -104,7 +104,7 @@ class DataManager {
                                         $file_path = public_path('seed/'.$node->name.'/'.$input);
                                     }
                                     if($node->name.'-'.$field->name=='image-content-image'){
-                                        $input = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true, $row->width, $row->height, $row->extension);
+                                        $input = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true, $row->type, $row->width, $row->height, $row->extension);
                                     } else {
                                         $input = \Asset::$action_name($file_path, $node->name.'-'.$field->name, true);
                                     }

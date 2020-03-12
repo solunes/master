@@ -84,7 +84,7 @@ class AssetController extends Controller {
 	  if($error===false){
 	  	if($type=='image'){
 	  		if($custom){
-	    		$new_file = Asset::upload_image($file, $folder, false, $request->input('width'), $request->input('height'), $request->input('extension'));
+	    		$new_file = Asset::upload_image($file, $folder, false, $request->input('new-type'), $request->input('width'), $request->input('height'), $request->input('extension'));
 	  		} else {
 	    		$new_file = Asset::upload_image($file, $folder);
 	  		}

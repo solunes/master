@@ -163,9 +163,10 @@ class Field {
 
         // IMAGENES
         if($type=='file'||$type=='image'){
-            if($extras['folder']=='content-image-image'){
+            if($extras['folder']=='image-content-image'){
                 $content_image = \Solunes\Master\App\CustomImage::find($id);
                 if($content_image){
+                    $array['data-new-type'] = $content_image->type;
                     $array['data-width'] = $content_image->width;
                     $array['data-height'] = $content_image->height;
                     $array['data-extension'] = $content_image->extension;
