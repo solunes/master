@@ -27,6 +27,7 @@ return [
     'storage_webp_mass_convert'=>false, // Habilitar subida a la nube de WebP
     'storage_webp_public_folders'=>[], // Habilitar array de folder para validar webpg. Ej: assets/images
     'storage_return_asset'=>false, // Habilitar función asset () en Storage por defecto
+	'redirect_login_customer' => true,
 
 	// SUBADMIN
 	'customer_dashboard' => false,

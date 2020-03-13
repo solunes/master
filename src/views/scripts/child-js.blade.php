@@ -23,6 +23,15 @@ $(document).ready(function(){
     e.preventDefault();
     var rel = $(this).attr('rel');
     var count = $(this).data('count')+1;
+    var maxrows = $(this).data('maxrows');
+    if(maxrows){
+      real_count = $('#'+rel+'>tbody>tr').length;
+      maxrows = parseInt(maxrows);
+      if(maxrows>0&&real_count>0&&maxrows<=real_count){
+        alert('Alcanzó el límite de filas permitido para esta sección.')
+        return false;
+      }
+    }
     $(this).data('count', count);
     $('#'+rel+'>tbody>tr:last').clone().insertAfter('#'+rel+'>tbody>tr:last');
     $('#'+rel+'>tbody>tr:last input, #'+rel+'>tbody>tr:last select, #'+rel+'>tbody>tr:last textarea').each(function(){
@@ -77,7 +86,7 @@ $(document).ready(function(){
   $('.child').on('click', 'a.delete_row', function(e){
     e.preventDefault();
     var rel = $(this).attr('rel');
-    var count = $('#'+rel+'>tbody>tr').size();
+    var count = $('#'+rel+'>tbody>tr').length;
     // Remover uno al counter_val si el contador si existe
     /*var counter_val = $('#'+rel+'>tfoot .calculate-count').val();
     $('#'+rel+'>tfoot .calculate-count').val(parseInt(counter_val)-1);*/

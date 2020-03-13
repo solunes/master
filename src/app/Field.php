@@ -138,7 +138,18 @@ class Field extends Model {
 
     public function getChildFieldsAttribute() {
         if($this->type=='subchild'){
-            $return = \Solunes\Master\App\Node::where('name', $this->value)->first()->fields()->displayItem(['excel','show'])->whereNotIn('name', ['id', 'parent_id'])->orderBy('order','ASC')->orderBy('id','ASC')->get();
+            $return = \Solunes\Master\App\Node::where('name', $this->value)->first()->fields()->displayItem(['show','admin'])->whereNotIn('name', ['id', 'parent_id'])->orderBy('order','ASC')->orderBy('id','ASC')->get();
+        } else if($this->type=='child'){
+            $return = \Solunes\Master\App\Node::where('name', $this->value)->first()->fields()->displayList(['show'])->whereNotIn('name', ['id', 'parent_id'])->orderBy('order','ASC')->orderBy('id','ASC')->get();
+        } else {
+            $return = NULL;
+        }
+        return $return;
+    }
+
+    public function getSubadminChildFieldsAttribute() {
+        if($this->type=='subchild'){
+            $return = \Solunes\Master\App\Node::where('name', $this->value)->first()->fields()->displayItem(['show'])->whereNotIn('name', ['id', 'parent_id'])->orderBy('order','ASC')->orderBy('id','ASC')->get();
         } else if($this->type=='child'){
             $return = \Solunes\Master\App\Node::where('name', $this->value)->first()->fields()->displayList(['show'])->whereNotIn('name', ['id', 'parent_id'])->orderBy('order','ASC')->orderBy('id','ASC')->get();
         } else {

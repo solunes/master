@@ -192,6 +192,7 @@ return array(
 	"prepend" => "Prepend",
 	"maxlength" => "Max. Length",
 	"placeholder" => "Placeholder",
+	"maxrows" => "Max. Rows",
 	"label" => "Label",
 	"cols" => "Cols",
 	"rows" => "Rows",

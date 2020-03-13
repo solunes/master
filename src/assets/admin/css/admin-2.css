@@ -42089,10 +42089,10 @@ _:-ms-lang(x) .table-responsive .top .dataTables_filter .form-control:after,
     padding-bottom: 0; }
   .admin-site-2 label.mt-checkbox, .admin-site-2 label.mt-radio {
     margin-right: 10px;
-    font-weight: 400; }
+    font-weight: 400;
+    padding-top: 0; }
   .admin-site-2 input.form-control, .admin-site-2 select.form-control {
     height: auto;
-    padding: 10px;
     width: 100%; }
   .admin-site-2 .table .file_container {
     width: 48%;
@@ -42232,7 +42232,7 @@ _:-ms-lang(x) .table-responsive .top .dataTables_filter .form-control:after,
       position: absolute;
       top: 5px;
       right: 5px;
-      z-index: 9999;
+      z-index: 99;
       background: #eee;
       border-bottom: 1px solid #ccc;
       border-left: 1px solid #ccc;
@@ -42310,6 +42310,8 @@ _:-ms-lang(x) .table-responsive .top .dataTables_filter .form-control:after,
     border-bottom: none; }
   .admin-site-2 .admin-table.admin-menu .borde {
     border-left: 5px solid #f9f9f9; }
+  .admin-site-2 .child {
+    margin-top: 50px; }
   .admin-site-2 .form-horizontal label {
     margin-top: 5px; }
   .admin-site-2 .form-horizontal .control-label {

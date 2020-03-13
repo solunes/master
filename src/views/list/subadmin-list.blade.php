@@ -89,36 +89,6 @@
                     @endforeach
                   </tbody>
                 </table>
-                <!--<table class="table data-thumb-view">
-                    <thead>
-                        <tr>
-                            <th>N°</th>
-                            {!! AdminList::make_fields($langs, $fields, $action_fields) !!}
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                      @foreach ($items as $key => $item)
-                      <tr>
-                          <td>{{ $key+1 }}</td>
-                          <td class="product-img"><img src="{!! Asset::get_image_path('block-image', 'thumb', $item->image) !!}" alt="Img placeholder">
-                          </td>
-                          <td class="product-name">{{ $item->name }}</td>
-                          <td class="product-category">{{ $item->type }}</td>
-                          <td>
-                            <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal{{ $item->id }}">
-                                Editar
-                            </button>
-                          </td>
-                          <td class="product-price">
-                            <a href="#" class="btn btn-outline-danger" style=" color: #ea5455;">
-                                Borrar
-                            </a>
-                          </td>
-                      </tr>
-                      @endforeach
-                    </tbody>
-                </table>-->
               </div>
               <!-- dataTable ends -->
             </div>

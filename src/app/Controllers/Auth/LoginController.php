@@ -20,6 +20,9 @@ class LoginController extends Controller {
 
 	public function getLogin(Request $request) {
 		$check = Login::check($request->session());
+		if(config('solunes.redirect_login_customer')&&config('solunes.customer')){
+			return redirect('account/login/'.config('customer.customers_token'));
+		}
       	return view('master::auth.login', ['failed_attempts'=>$check['failed_attempts'], 'blocked_time'=>$check['blocked_time']]);
 	}
 

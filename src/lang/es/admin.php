@@ -196,6 +196,7 @@ return array(
 	"prepend" => "Anexar (Atras)",
 	"maxlength" => "Máximo de Caracteres",
 	"placeholder" => "Placeholder",
+	"maxrows" => "Filas Máximas",
 	"label" => "Etiqueta",
 	"cols" => "Columnas",
 	"rows" => "Filas",

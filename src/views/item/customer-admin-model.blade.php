@@ -17,7 +17,7 @@
                   <h2 class="content-header-title float-left mb-0">{{ $node->singular }}</h2>
                   <div class="breadcrumb-wrapper col-12">
                       <ol class="breadcrumb">
-                          <li class="breadcrumb-item"><a href="index.html">Inicio</a>
+                          <li class="breadcrumb-item"><a href="{{ url('') }}">Inicio</a>
                           </li>
                           <li class="breadcrumb-item active">{{ $node->singular }}
                           </li>
