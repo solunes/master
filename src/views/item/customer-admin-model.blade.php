@@ -40,6 +40,9 @@
           <div class="card-content">
             <div class="card-body">
               {!! Form::open(AdminItem::make_form($module, $model, $action, $files)) !!}
+              @if(config('solunes.item_form_add_html_before_form'))
+                {!! \CustomFunc::item_form_add_html_before_form($module, $model, $action, $files, $fields); !!}
+              @endif
               @include('master::includes.customer-form')
               <div class="row"><div class="col-sm-12 left">
                 {!! Form::hidden('action_form', $action) !!}
@@ -47,10 +50,16 @@
                 @if($action=='edit')
                 {!! Form::hidden('id', $i->id) !!}
                 @endif
+                @if(config('solunes.item_form_add_html_before_form'))
+                  {!! \CustomFunc::item_form_add_html_before_button($module, $model, $action, $files, $fields); !!}
+                @endif
                 <br>
                 {!! Form::submit(trans('master::admin.save'), array('class'=>'btn btn-primary mr-1 mb-1 btn-site')) !!}
               </div></div>
               {!! Form::close() !!}
+              @if(config('solunes.item_form_add_html_before_form'))
+                {!! \CustomFunc::item_form_add_html_after_form($module, $model, $action, $files, $fields); !!}
+              @endif
             </div>
           </div>
         </div>

@@ -124,6 +124,9 @@ return [
 	'item_remove_scripts' => [],
 	'item_add_script' => [],
 	'item_add_script_store' => [],
+	'item_form_add_html_before_form' => false, // Añadir true si se agregara contenido antes del formulario
+	'item_form_add_html_before_button' => false, // Añadir true si se agregara contenido antes del boton
+	'item_form_add_html_after_form' => false, // Añadir true si se agregara contenido despues del formulario
 
     // PDF ATTRIBUTES
     'pdf_header' => true,
