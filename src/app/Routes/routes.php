@@ -119,5 +119,5 @@ Route::group(['prefix'=>'test'], function(){
     Route::get('preview-email/{msg}', 'TestController@previewEmail');
     Route::get('test-template-2', 'TestController@previewTemplate2');
 });
-Route::get('auth/{provider}/{agency_id?}', 'Auth\AuthController@redirectToProvider');
 Route::get('auth/{provider}/callback', 'Auth\AuthController@handleProviderCallback');
+Route::get('auth/{provider}/{agency_id?}', 'Auth\AuthController@redirectToProvider');
