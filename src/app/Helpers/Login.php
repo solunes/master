@@ -162,8 +162,8 @@ class Login {
                     $change = true;
                 }
             }
-            if(config('customer.fields.image')&&!$authCustomer->image){
-                $authCustomer->image = \Asset::upload_image(file_get_contents($avatar), 'customer-image');
+            if(config('customer.fields.image')&&!$authCustomer->image&&$api_avatar){
+                $authCustomer->image = \Asset::upload_image(file_get_contents($api_avatar), 'customer-image');
                 $change = true;
             }
             if($change){
