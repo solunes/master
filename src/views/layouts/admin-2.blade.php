@@ -99,43 +99,48 @@
                                 </div>
                             </li>-->
                             @if(auth()->check())
-                            <li class="dropdown dropdown-notification nav-item">
-                              <a class="nav-link" href="{{ url('customer-admin/my-inbox') }}" data-toggle="tooltip" data-placement="top" title="Mensajes">
-                                <i class="ficon feather icon-message-circle"></i><span class="badge badge-pill badge-primary badge-up">0</span>
-                              </a>
-                            </li>
-                            <li class="dropdown dropdown-notification nav-item">
-                              <a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon feather icon-bell"></i>
-                                @if($notifications_unread>0)
-                                <span class="badge badge-pill badge-primary badge-up">5</span>
-                                @endif
-                              </a>
-                              @if(count($notifications)>0)
-                                <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
-                                    <li class="dropdown-menu-header">
-                                        <div class="dropdown-header m-0 p-2">
-                                            <h3 class="white">{{ count($notifications) }} New</h3><span class="notification-title">App Notifications</span>
-                                        </div>
-                                    </li>
+                              @if(!config('solunes.admin_inbox_disabled'))
+                              <li class="dropdown dropdown-notification nav-item">
+                                <a class="nav-link" href="{{ url('customer-admin/my-inbox') }}" data-toggle="tooltip" data-placement="top" title="Mensajes">
+                                  <i class="ficon feather icon-message-circle"></i><span class="badge badge-pill badge-primary badge-up">0</span>
+                                </a>
+                              </li>
+                              @endif
+                              <li class="dropdown dropdown-notification nav-item">
+                                <a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="ficon feather icon-bell"></i>
+                                  @if($notifications_unread>0)
+                                  <span class="badge badge-pill badge-primary badge-up">5</span>
+                                  @endif
+                                </a>
+                                @if(count($notifications)>0)
+                                  <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
+                                      <li class="dropdown-menu-header">
+                                          <div class="dropdown-header m-0 p-2">
+                                              <h3 class="white">{{ count($notifications) }} New</h3><span class="notification-title">App Notifications</span>
+                                          </div>
+                                      </li>
                                     <li class="scrollable-container media-list">
                                       @foreach($notifications as $notification)
                                         <a class="d-flex justify-content-between" href="javascript:void(0)">
-                                            <div class="media d-flex align-items-start">
-                                                <div class="media-left"><i class="feather icon-plus-square font-medium-5 primary"></i></div>
-                                                <div class="media-body">
-                                                    <h6 class="primary media-heading">You have new order!</h6><small class="notification-text"> Are your going to meet me tonight?</small>
-                                                </div><small>
-                                                    <time class="media-meta" datetime="2015-06-11T18:29:20+08:00">9 hours ago</time></small>
-                                            </div>
-                                          </a>
-                                        @endforeach
-                                      </li>
+                                          <div class="media d-flex align-items-start">
+                                            <div class="media-left"><i class="feather icon-plus-square font-medium-5 primary"></i></div>
+                                              <div class="media-body">
+                                                <h6 class="primary media-heading">{{ $notification->notification_message->message }}</h6><small class="notification-text"> Are your going to meet me tonight?</small>
+                                              </div>
+                                              <small>
+                                                <time class="media-meta" datetime="{{ $notification->created_at->format('Y-m-d H:i:s') }}">{{ $notification->created_at->format('d/m/Y H:i') }}</time>
+                                              </small>
+                                          </div>
+                                        </a>
+                                      @endforeach
+                                    </li>
                                     <li class="dropdown-menu-footer"><a class="dropdown-item p-1 text-center" href="javascript:void(0)">Read all notifications</a></li>
-                                </ul>
-                              @endif
-                            </li>
-                            <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-                                    <div class="user-nav d-sm-flex d-none"><span class="user-name text-bold-600">{{ auth()->user()->name }}</span><span class="user-status">Disponible</span></div><span><img class="round" src="{{ asset('assets/admin/img/no_picture.jpg') }}" alt="avatar" height="40" width="40" /></span>
+                                  </ul>
+                                @endif
+                              </li>
+                              <li class="dropdown dropdown-user nav-item">
+                                <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+                                  <div class="user-nav d-sm-flex d-none"><span class="user-name text-bold-600">{{ auth()->user()->name }}</span><span class="user-status">Disponible</span></div><span><img class="round" src="{{ asset('assets/admin/img/no_picture.jpg') }}" alt="avatar" height="40" width="40" /></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                   <a class="dropdown-item" href="{{ url('account/my-account/1354351278') }}"><i class="feather icon-user"></i> Editar Perfil</a>
@@ -144,7 +149,7 @@
                                   <a class="dropdown-item" href="#"><i class="feather icon-message-square"></i> Chats</a>-->
                                     <div class="dropdown-divider"></div><a class="dropdown-item" href="{{ url('auth/logout') }}"><i class="feather icon-power"></i> Cerrar Sesión</a>
                                 </div>
-                            </li>
+                              </li>
                             @endif
                         </ul>
                     </div>

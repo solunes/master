@@ -36,6 +36,10 @@ class Notification extends Model {
         return $this->hasMany('Solunes\Master\App\NotificationMessage', 'parent_id');
     }
 
+    public function notification_message() {
+        return $this->hasOne('Solunes\Master\App\NotificationMessage', 'parent_id');
+    }
+
     public function scopeMe($query) {
         return $query->where('user_id', auth()->user()->id);
     }

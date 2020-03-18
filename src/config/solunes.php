@@ -106,8 +106,7 @@ return [
         'my_profile'=> true,
         'logout'=> true
     ],
-	'admin_inbox_disabled' => false,
-	'admin_inbox_disabled' => false,
+	'admin_inbox_disabled' => true,
 	'admin_inbox_excluded' => ['member'], // Incluir roles a ser excluidos del inbox, por defecto member
 
 	// FORM
