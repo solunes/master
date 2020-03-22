@@ -394,7 +394,7 @@ class Field {
                 $response .= '</div>';
             } else {
                 $response .= '<div id="map-'.$name.'" class="map-box" style="height: '.config('solunes.default_map_height').'; width: 100%;"></div>';
-                $response .= '<input id="search-'.$name.'" class="map-search-box" type="text" placeholder="Buscar">';
+                $response .= '<input name="search-'.$name.'" id="search-'.$name.'" class="map-search-box" type="text" placeholder="Utilice este buscador...">';
             }
         }
         $response .= Form::hidden($name, $value, $array);

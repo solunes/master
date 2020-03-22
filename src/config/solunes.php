@@ -95,6 +95,7 @@ return [
 	'default_map' => 'google.maps.MapTypeId.ROADMAP',
 	'default_zoom' => '17',
 	'default_map_height' => '500px',
+	'default_map_restrict_country' => 'bo', // Introduzca el nombre del pais para filtrar o null si quita filtro
 
 	// GLOBAL
 	'login_instructions' => false,
