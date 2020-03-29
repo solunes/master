@@ -30,8 +30,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h3>Listado General</h3>
-
+            {!! AdminList::make_list_header($module, $node, $id, $parent, $appends, count($items), $items_count, $action_nodes) !!}
           </div>
           <div class="card-content">
             <div class="card-body">

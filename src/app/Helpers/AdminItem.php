@@ -431,7 +431,12 @@ class AdminItem {
     }
 
     public static function make_item_header($i, $module, $node, $action, $layout = true, $parent_id = false) {
-        $result = '<h3>'.trans('master::admin.'.$action).' '.$node->singular;
+        if($module=='customer-admin'){
+            $h_tag = 'h4';
+        } else {
+            $h_tag = 'h3';
+        }
+        $result = '<'.$h_tag.'>'.trans('master::admin.'.$action).' '.$node->singular;
         if($layout){
             if($parent_id==NULL||$node->multilevel){
                 $back_url = url($module.'/model-list/'.$node->name);
@@ -452,7 +457,7 @@ class AdminItem {
         } else {
             $url .= '?download-pdf=true';
         }
-        if($action!='create'){
+        if($action!='create'&&$module!='customer-admin'){
             $download = ' | <a href="'.url($url).'" target="_blank"><i class="fa fa-file-pdf-o"></i> '.trans('master::admin.generate').' PDF</a>';
         } else {
             $download = NULL;
@@ -461,7 +466,7 @@ class AdminItem {
             $create_url = url($module.'/model/'.$node->name.'/create');
             $download .= ' | <a href="'.$create_url.'"><i class="fa fa-plus"></i> '.trans('master::admin.create').'</a>';
         }
-        $result .= $download.'</h3>';
+        $result .= $download.'</'.$h_tag.'>';
         if($action=='edit'&&$i&&$i->created_at){
             $result .= '<p>'.trans('master::admin.created_at').': ';
             $result .= $i->created_at->format('Y-m-d H:i');

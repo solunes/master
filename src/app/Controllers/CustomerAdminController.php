@@ -43,9 +43,7 @@ class CustomerAdminController extends Controller {
         if($action_field = $node->node_action_fields->first()){
             $array['action_fields'] = json_decode($action_field->value_array, true);
         }
-        if($action_node = $node->node_action_nodes->first()){
-            $array['action_nodes'] = json_decode($action_node->value_array, true);
-        }
+        $array['action_nodes'] = ['back'];
         if(request()->has('parent_id')){
             $id = request()->input('parent_id');
             $array['id'] = $id;

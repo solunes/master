@@ -35,7 +35,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header">
-            <h4>{!! trans('master::admin.'.$action).' '.$node->singular.' | <a href="'.url($module.'/model-list/'.$node->name).'"><i class="fa fa-arrow-circle-o-left"></i> '.trans('master::admin.back').'</a>' !!}</h4>
+            {!! AdminItem::make_item_header($i, $module, $node, $action, $layout, $parent_id) !!}
           </div>
           <div class="card-content">
             <div class="card-body">
