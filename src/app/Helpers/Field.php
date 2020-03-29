@@ -101,7 +101,7 @@ class Field {
             $label .= ' (*)';
         }
         if(isset($field['relation'])&&$field['relation']&&in_array($name, config('solunes.relation_fast_create_array'))){
-            $label .= ' (<a href="'.url('admin/child-model/'.$field['value'].'/create/es').'&lightbox[width]=1000&lightbox[height]=600" class="lightbox" data-url="'.url('admin/child-model/'.$field['value'].'/create/es').'">Crear nuevo</a>)';
+            $label .= ' (<a href="'.url($template.'/child-model/'.$field['value'].'/create/es').'&lightbox[width]=1000&lightbox[height]=600" class="lightbox" data-url="'.url($template.'/child-model/'.$field['value'].'/create/es').'">Crear nuevo</a>)';
         }
         if($template=='customer-admin'){
             if(isset($field['tooltip'])&&$field['tooltip']&&$data_type!='view'){
@@ -114,7 +114,7 @@ class Field {
         }
         if(isset($field['filter_delete'])&&isset($field['filter'])){
             if($field['filter_delete']){
-                $label .= ' <a href="'.url('admin/delete-filter/'.$field['filter']).'" onclick="return confirm(\''.trans('master::admin.delete_confirmation').'\');">( X )</a>';
+                $label .= ' <a href="'.url($template.'/delete-filter/'.$field['filter']).'" onclick="return confirm(\''.trans('master::admin.delete_confirmation').'\');">( X )</a>';
             } else {
                 $label .= ' (Filtro Global)';
             }
@@ -217,7 +217,7 @@ class Field {
             $array['autofocus'] = true;
             $array['placeholder'] = 'Enfoque el código con el lector o introduzcalo manualmente. Si no tiene código, déjelo en blanco.';
             if($value){
-                $label .= ' -> <a target="_blank" href="'.url('admin/generate-barcode-image/'.$value).'">Imprimir</a>';
+                $label .= ' -> <a target="_blank" href="'.url($template.'/generate-barcode-image/'.$value).'">Imprimir</a>';
             } else {
                 $node_id = $field['parent_id'];
                 if($i){

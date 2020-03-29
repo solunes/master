@@ -253,7 +253,12 @@ class AdminList {
             }
             if($field->relation){
                 if($field->type=='child'){
-                    $url = url('admin/model-list/'.$field->value.'?parent_id='.$item->id);
+                    if(request()->segment(1)=='customer-admin'){
+                        $template = 'customer-admin';
+                    } else {
+                        $template = 'admin';
+                    }
+                    $url = url($template.'/model-list/'.$field->value.'?parent_id='.$item->id);
                     if($appends){
                         $url .= '&'.$appends;
                     }
@@ -624,7 +629,7 @@ class AdminList {
                 }          
                 $response .= ' | <a class="admin_link lightbox" href="'.$create_url.'"><i class="fa fa-plus"></i> '.trans('master::admin.create').'</a>'; 
             } else if($action_node=='excel'){
-                $download_url = url('admin/model-list/'.$node_name.'?parent_id='.$parent_id.'&download-excel=true');
+                $download_url = url($module.'/model-list/'.$node_name.'?parent_id='.$parent_id.'&download-excel=true');
                 $response .= ' | <a href="'.$download_url.'"><i class="fa fa-download"></i> '.trans('master::admin.download').'</a>';
             } else {
                 $response .= ' | '.\CustomFunc::get_action_node($response, $node, $parent_id, $action_node);
