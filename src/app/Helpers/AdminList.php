@@ -548,7 +548,14 @@ class AdminList {
         foreach($action_nodes as $key => $action_node){
             if($action_node=='back'){
                 if($id!=NULL){
-                    $back_url = url($module.'/model-list/'.$parent);
+                    $parent_node = \Solunes\Master\App\Node::where('name', $parent)->first();
+                    $submodel = \FuncNode::node_check_model($parent_node);
+                    $subitem = $submodel::find($id);
+                    if($subitem&&$subitem->parent_id){
+                        $back_url = url($module.'/model-list/'.$parent.'?parent_id='.$subitem->parent_id);
+                    } else {
+                        $back_url = url($module.'/model-list/'.$parent);
+                    }
                     if(request()->has('parameters')){
                         $parameters = json_decode(request()->input('parameters'));
                         $back_url .= '?'.http_build_query($parameters);
