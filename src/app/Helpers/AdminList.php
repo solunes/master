@@ -547,20 +547,29 @@ class AdminList {
         $response = '<h3>'.$title;
         foreach($action_nodes as $key => $action_node){
             if($action_node=='back'){
+                $back_name = NULL;
                 if($id!=NULL){
                     $parent_node = \Solunes\Master\App\Node::where('name', $parent)->first();
                     $submodel = \FuncNode::node_check_model($parent_node);
                     $subitem = $submodel::find($id);
+                    $back_name = $parent_node->singular;
                     if($subitem&&$subitem->parent_id){
                         $back_url = url($module.'/model-list/'.$parent.'?parent_id='.$subitem->parent_id);
                     } else {
                         $back_url = url($module.'/model-list/'.$parent);
                     }
+                    if($subitem&&$subitem->name){
+                        $back_name .= '( '.$subitem->name.' )';
+                    }
                     if(request()->has('parameters')){
                         $parameters = json_decode(request()->input('parameters'));
                         $back_url .= '?'.http_build_query($parameters);
                     }
-                    $response .= ' | <a href="'.$back_url.'"><i class="fa fa-arrow-circle-o-left"></i> '.trans('master::admin.back').'</a>';
+                    if($back_name){
+                        $response .= ' | <a href="'.$back_url.'"><i class="fa fa-arrow-circle-o-left"></i> '.trans('master::admin.back').' a '.$back_name.'</a>';
+                    } else {
+                        $response .= ' | <a href="'.$back_url.'"><i class="fa fa-arrow-circle-o-left"></i> '.trans('master::admin.back').'</a>';
+                    }
                 }
             } else if($action_node=='create'){
                 if($id==NULL){
