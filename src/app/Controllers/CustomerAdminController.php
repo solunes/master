@@ -231,7 +231,7 @@ class CustomerAdminController extends Controller {
       $item = $response[1];
       $node_model = $response[2];
 	  if($response[0]->passes()) {
-	  	$item = AdminItem::post_request_success($this->module, $request, $model, $item, 'admin', $custom_type);
+        $item = AdminItem::post_request_success($this->module, $request, $model, $item, 'customer-admin', $custom_type);
 	  	/*if($model=='indicator'&&$action=='create'){
 	  		$indicator = \Solunes\Master\App\Indicator::find($item->id);
 		  	if(config('solunes.custom_indicator_values')){
