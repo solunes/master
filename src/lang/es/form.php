@@ -23,7 +23,7 @@ return [
     'password_match_error' => 'Ambas contrasñeas deben ser las mismas.',
     'email_exists_error' => 'Este correo electrónico no fue encontrado en nuestra base de datos.',
     'password_request_success' => 'Le enviamos un correo electrónico con los pasos para resetear su cuenta.',
-    'password_request_error' => 'No pudimos procesar su pedido.',
+    'password_request_error' => 'Hubo un error, debe introducir un correo electrónico válido.',
     'password_reset_success' => 'Su contraseña fue actualizada correctamente.',
     'password_reset_error' => 'Hubo un error al enviar el formulario, le recomendamos llenar el formulario nuevamente.',
     'password_edited' => 'Su contraseña fue actualizada correctamente.',

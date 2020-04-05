@@ -28,6 +28,7 @@ return [
     'storage_webp_public_folders'=>[], // Habilitar array de folder para validar webpg. Ej: assets/images
     'storage_return_asset'=>false, // Habilitar función asset () en Storage por defecto
 	'redirect_login_customer' => true,
+	'enable_mail_icons' => false,
 
 	// SUBADMIN
 	'customer_dashboard' => false,

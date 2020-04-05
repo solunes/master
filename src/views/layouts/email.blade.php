@@ -8,7 +8,7 @@
       h2 { color: #555; font-family: Arial, Helvetica, sans-serif;margin-top: 16px;margin-bottom: 8px;word-break: break-word;font-size: 28px;line-height: 38px;font-weight: bold; }
       h3 { color: #555; font-family: Arial, Helvetica, sans-serif;margin-top: 16px;margin-bottom: 8px;word-break: break-word;font-size: 28px;line-height: 38px;font-weight: bold; }
       h4 { color: #555; font-family: Arial, Helvetica, sans-serif;margin-top: 16px;margin-bottom: 8px;word-break: break-word;font-size: 28px;line-height: 38px;font-weight: bold; }
-      p { color: #555; font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 32px;word-break: break-word;font-size: 19px;line-height: 31px; }
+      p { color: #555; font-family: Arial, Helvetica, sans-serif;margin-top: 16px;margin-bottom: 32px;word-break: break-word;font-size: 19px;line-height: 31px; }
     </style>
   </head>
   <body class="email-site">
@@ -16,11 +16,11 @@
       <tr>
         <td class="email_bg bg_light px py_lg editable" data-bgcolor="Light" style="font-size: 0;text-align: center;line-height: 100%;background-color: #e0e0e0;padding-top: 64px;padding-bottom: 64px;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
             <!--[if (mso)|(IE)]>
-            <table width="416" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align:top;Margin:0 auto;">
+            <table width="600" border="0" cellspacing="0" cellpadding="0" align="center" style="vertical-align:top;Margin:0 auto;">
               <tr>
                 <td align="center" style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;vertical-align:top;">
                 <![endif]-->
-                <table class="content_section_xs" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 416px;margin: 0 auto;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                <table class="content_section_xs" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px;margin: 0 auto;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
                   <tr>
                     <td class="content_cell bg_white brounded bt_primary px py_md" data-bgcolor="White" data-border-top-color="Border Primary" style="font-size: 0;text-align: center;background-color: #ffffff;border-top: 4px solid {{ config('solunes.app_color') }};border-radius: 4px;padding-top: 32px;padding-bottom: 32px;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
                       <table class="column" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="vertical-align: top;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
@@ -53,16 +53,18 @@
                         </div>
                         <table class="column" align="center" width="100%" cellspacing="0" cellpadding="0" border="0" style="vertical-align: top;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
                           <tr>
-                            <td class="column_cell px py_md text_dark text_center editable" data-color="Dark" style="vertical-align: top;color: #333333;text-align: center;padding-top: 32px;padding-bottom: 32px;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                              <table class="column column_inline" align="center" cellspacing="0" cellpadding="0" border="0" style="vertical-align: top;width: auto;margin: 0 auto;clear: both;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                <tr>
-                                  <td class="column_cell bg_primary brounded_circle px py text_white text_center" data-bgcolor="Primary" data-color="White" style="vertical-align: top;background-color: {{ config('solunes.app_color') }};color: #ffffff;border-radius: 50%;text-align: center;padding-top: 16px;padding-bottom: 16px;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                    <p class="img_full" style="color: inherit;font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 0px;word-break: break-word;font-size: 0 !important;line-height: 100%;clear: both;">
-                                      <img src="{{ asset('assets/admin/img/email-icons') }}/@yield('icon', 'Mail').png" width="48" height="48" alt="" style="max-width: 48px;-ms-interpolation-mode: bicubic;border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;display: block;width: 100%;margin: 0px auto;" />
-                                    </p>
-                                  </td>
-                                </tr>
-                              </table>
+                            <td class="column_cell px py_md text_dark text_center editable" data-color="Dark" style="vertical-align: top;color: #333333;text-align: center;padding-top: 16px;padding-bottom: 32px;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                              @if(config('solunes.enable_mail_icons')&&\View::hasSection('icon'))
+                                <table class="column column_inline" align="center" cellspacing="0" cellpadding="0" border="0" style="vertical-align: top;width: auto;margin: 0 auto;clear: both;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                  <tr>
+                                    <td class="column_cell bg_primary brounded_circle px py text_white text_center" data-bgcolor="Primary" data-color="White" style="vertical-align: top;background-color: {{ config('solunes.app_color') }};color: #ffffff;border-radius: 50%;text-align: center;padding-top: 16px;padding-bottom: 16px;padding-left: 16px;padding-right: 16px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
+                                      <p class="img_full" style="color: inherit;font-family: Arial, Helvetica, sans-serif;margin-top: 0px;margin-bottom: 0px;word-break: break-word;font-size: 0 !important;line-height: 100%;clear: both;">
+                                        <img src="{{ asset('assets/admin/img/email-icons') }}/@yield('icon', 'Mail').png" width="48" height="48" alt="" style="max-width: 48px;-ms-interpolation-mode: bicubic;border: 0;height: auto;line-height: 100%;outline: none;text-decoration: none;display: block;width: 100%;margin: 0px auto;" />
+                                      </p>
+                                    </td>
+                                  </tr>
+                                </table>
+                              @endif
                               @yield('content')
                             </td>
                           </tr>
