@@ -132,6 +132,9 @@ class Field extends Model {
             foreach($this->field_options_active as $item){
                 $return[$item->name] = $item->label;
             }
+            if(config('solunes.get_options_no_relation')&&$this->relation_cond){
+                $return = \CustomFunc::get_options_no_relation($return, $this);
+            }
         }
         return $return;
     }

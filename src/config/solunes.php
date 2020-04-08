@@ -171,6 +171,7 @@ return [
 	'custom_indicator' => false,
 	'custom_field' => false,
 	'get_options_relation' => false,
+	'get_options_no_relation' => false,
 	'check_custom_filter' => false,
 	'custom_admin_item_fields'=>false,
 	'custom_admin_item_variables'=>false,
