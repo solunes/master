@@ -54,7 +54,7 @@
                   {!! \CustomFunc::item_form_add_html_before_button($module, $model, $action, $files, $fields); !!}
                 @endif
                 <br>
-                {!! Form::submit(trans('master::admin.save'), array('class'=>'btn btn-primary mr-1 mb-1 btn-site')) !!}
+                <button type="submit" name="button" class="btn btn-primary mr-1 mb-1 btn-site" >{{ trans('master::admin.save') }}</button>
               </div></div>
               {!! Form::close() !!}
               @if(config('solunes.item_form_add_html_before_form'))
