@@ -74,6 +74,13 @@
                       <tr>
                         <td class="ineditable">{{ $key+1 }}</td>
                         {!! AdminList::make_fields_values_rows($langs, $module, $model, $item, $fields, $field_options, $appends, []) !!}
+                        @if(isset(config('solunes.customer_dashboard_nodes.'.$model)['view']))
+                          <td class="product-price">
+                            <a href="{{ url($module.'/model/'.$model.'/view/'.$item->id) }}" class="btn btn-outline-success" style=" color: #28c76f;">
+                              Editar
+                            </a>
+                          </td>
+                        @endif
                         @if(isset(config('solunes.customer_dashboard_nodes.'.$model)['edit']))
                           <td class="product-price">
                             <a href="{{ url($module.'/model/'.$model.'/edit/'.$item->id) }}" class="btn btn-outline-success" style=" color: #28c76f;">
