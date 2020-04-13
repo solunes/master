@@ -630,6 +630,10 @@ class AdminList {
         } else {
             $action_nodes = ['back','create','excel'];
         }
+        if($module=='customer-admin'&&in_array('excel',$action_nodes)){
+            $pos = array_search('excel', $action_nodes);
+            unset($action_nodes[$pos]);
+        }
         if(config('solunes.custom_admin_node_actions')){
             $action_nodes = \CustomFunc::custom_admin_node_actions($node, $action_nodes);
         }

@@ -3,7 +3,7 @@
     @if($field->type=='child')
       @if(isset(config('solunes.customer_dashboard_nodes.'.$model)[$field->name]))
         </div>
-        <div id="field_{{ $field->name }}">
+        <div class="admin-child-table subadmin-child-table" id="field_{{ $field->name }}">
           @if($action=='edit'||$action=='view')
             @if($action=='view')
               <h3>{{ $field->label }}</h3>

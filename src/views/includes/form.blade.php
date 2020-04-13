@@ -2,7 +2,7 @@
   @foreach($fields as $field)
     @if($field->type=='child')
       </div>
-      <div id="field_{{ $field->name }}">
+      <div class="admin-child-table" id="field_{{ $field->name }}">
         @if($action=='edit'||$action=='view')
           @if($action=='view')
             <h3>{{ $field->label }}</h3>
