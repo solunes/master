@@ -1,6 +1,36 @@
 <div class="row flex">
   @foreach($fields as $field)
     @if($field->type=='child')
+      @if(isset(config('solunes.customer_dashboard_nodes.'.$model)[$field->name]))
+        </div>
+        <div id="field_{{ $field->name }}">
+          @if($action=='edit'||$action=='view')
+            @if($action=='view')
+              <h3>{{ $field->label }}</h3>
+            @else
+              {!! \AdminList::child_list_header($module, $field->value, $field->label, $i->id) !!}
+            @endif
+            @if($field->message)
+              <label><div class="field-message">{{ $field->message }}</div></label>
+            @endif
+            <table class="admin-table table table-striped table-bordered table-hover dt-responsive dataTable no-footer dtr-inline" id="{{ $field->name }}">
+              <thead><tr class="title"><td>#</td>
+                {!! \AdminList::make_fields([], $field->child_fields, ['child_field'=>$field->value]) !!}
+              </tr></thead>
+              <tbody>
+                <?php $field_name = $field->name; ?>
+                @foreach($i->$field_name as $key => $si)
+                  @include('master::item_child.multiple-child', ['count'=>$key])
+                @endforeach
+              </tbody>
+            </table>
+          @else
+            <h3>{{ $field->label }}</h3>
+            <p>Podrá llenar este campo una vez cree el formulario principal.</p>
+          @endif
+        </div>
+        <div class="row flex">
+      @endif
     @elseif($field->type=='subchild')
       </div>
       @if($field->multiple)
