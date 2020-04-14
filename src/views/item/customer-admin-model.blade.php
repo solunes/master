@@ -53,6 +53,10 @@
                 @if(config('solunes.item_form_add_html_before_form'))
                   {!! \CustomFunc::item_form_add_html_before_button($module, $model, $action, $files, $fields); !!}
                 @endif
+                @if(!$layout)
+                  <input type="hidden" name="child-page" value="1">
+                  <input type="hidden" name="child-url" value="{{ request()->fullUrlWithQuery([]) }}">
+                @endif
                 <br>
                 <button type="submit" name="button" class="btn btn-primary mr-1 mb-1 btn-site" >{{ trans('master::admin.save') }}</button>
               </div></div>

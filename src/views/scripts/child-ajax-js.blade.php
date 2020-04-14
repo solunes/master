@@ -19,9 +19,11 @@
             console.log('cerrar ventana y recargar con:' + data);
             parent.location.reload();
           } else {
+            $('.featherlight').remove();
             console.log('redireccionar lightbox');
-            $('.jquery-lightbox-html').html(data);
-            $('.jquery-lightbox-html').animate({ scrollTop: 0 }, 600);
+            $.featherlight(data);
+            //$('.featherlight-inner').html(data);
+            //$('.featherlight-inner').animate({ scrollTop: 0 }, 600);
           }
         }, error: function(error) {
           console.log('error' + error);
