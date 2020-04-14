@@ -1,5 +1,2 @@
-<script type="text/javascript">
-  jQuery(document).ready(function($){
-    $('.lightbox').lightbox();
-  });
-</script>
+<script src="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+<link href="//cdn.jsdelivr.net/npm/featherlight@1.7.14/release/featherlight.min.css" type="text/css" rel="stylesheet" />

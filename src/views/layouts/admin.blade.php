@@ -507,7 +507,7 @@
   <!--[if lt IE 9]>
       <script src="{{ url(elixir("assets/js/ie8.js")) }}"></script> 
   <![endif]-->
-  <script src="{{ asset('assets/admin/scripts/vendor.js') }}"></script>
+    <script src="{{ asset('assets/admin/scripts/vendor.js') }}"></script>
   <script src="{{ asset('assets/admin/scripts/master.js') }}"></script>
   <script src="{{ asset('assets/admin/scripts/admin.js') }}"></script>
   @include('master::scripts.date-js')

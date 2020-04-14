@@ -15,12 +15,12 @@
             @endif
             <table class="admin-table table table-striped table-bordered table-hover dt-responsive dataTable no-footer dtr-inline" id="{{ $field->name }}">
               <thead><tr class="title"><td>#</td>
-                {!! \AdminList::make_fields([], $field->child_fields, ['child_field'=>$field->value]) !!}
+                {!! \AdminList::make_fields([], $field->child_fields, ['subadmin_child_field'=>$field->value]) !!}
               </tr></thead>
               <tbody>
                 <?php $field_name = $field->name; ?>
                 @foreach($i->$field_name as $key => $si)
-                  @include('master::item_child.multiple-child', ['count'=>$key])
+                  @include('master::item_child.multiple-child-subadmin', ['count'=>$key])
                 @endforeach
               </tbody>
             </table>

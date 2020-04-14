@@ -1,4 +1,4 @@
-@extends('master::layouts/admin-2')
+@extends($layout ? 'master::layouts/admin-2' : 'master::layouts/child-admin')
 
 @section('css')
   <link rel="stylesheet" href="{{ asset('assets/admin/css/froala.css') }}">

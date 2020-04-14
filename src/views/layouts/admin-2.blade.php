@@ -189,6 +189,7 @@
     </footer>
     <!-- END: Footer-->
     
+  <script src="{{ asset('assets/admin/scripts/vendor.js') }}"></script>
   <script src="{{ asset('assets/admin/scripts/admin-2.js') }}"></script>
   <script src="{{ asset('assets/admin/scripts/master.js') }}"></script>
   @include('master::scripts.date-js')

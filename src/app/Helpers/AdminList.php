@@ -128,7 +128,17 @@ class AdminList {
     }
 
     public static function make_fields($langs, $fields, $action_fields = ['edit', 'delete']) {
-        if(isset($action_fields['child_field'])){
+        if(isset($action_fields['subadmin_child_field'])){
+            $node_name = $action_fields['subadmin_child_field'];
+            $subaction_fields = config('solunes.customer_dashboard_nodes.'.$node_name);
+            $action_fields = [];
+            foreach($subaction_fields as $subaction_field => $key){
+                if($subaction_field=='create'||$subaction_field=='download'){
+                } else {
+                    $action_fields[] = $subaction_field;
+                }
+            }
+        } else if(isset($action_fields['child_field'])){
             $node_name = $action_fields['child_field'];
             $node = \Solunes\Master\App\Node::where('name',$node_name)->first();
             if($node_extra = $node->node_extras()->where('type','action_field')->first()){
@@ -387,7 +397,21 @@ class AdminList {
     }
 
     public static function make_fields_values_rows($langs, $module, $model, $item, $fields, $field_options, $appends, $action_fields = ['edit', 'delete']) {
-        if(isset($action_fields['child_field'])){
+        if(isset($action_fields['subadmin_child_field'])){
+            $node_name = $action_fields['subadmin_child_field'];
+            $subaction_fields = config('solunes.customer_dashboard_nodes.'.$node_name);
+            $action_fields = [];
+            foreach($subaction_fields as $subaction_field => $key){
+                if($subaction_field=='create'||$subaction_field=='download'){
+                } else if($subaction_field=='edit'){
+                    $action_fields[] = 'edit-child';
+                } else if($subaction_field=='view'){
+                    $action_fields[] = 'view-child';
+                } else {
+                    $action_fields[] = $subaction_field;
+                }
+            }
+        } else if(isset($action_fields['child_field'])){
             $node_name = $action_fields['child_field'];
             $node = \Solunes\Master\App\Node::where('name',$node_name)->first();
             if($node_extra = $node->node_extras()->where('type','action_field')->first()){
@@ -507,8 +531,8 @@ class AdminList {
         }
         $url = url($preurl);
         if($child){
-            $url .= '?lightbox[width]=1000&lightbox[height]=600';
-            $class = 'class="lightbox"';
+            //$url .= '?lightbox[width]=1000&lightbox[height]=600';
+            $class = ' data-featherlight="ajax" ';
         } else {
             if($appends!=NULL){
                 $url .= '?'.$appends;
@@ -643,11 +667,11 @@ class AdminList {
         $response = '<h3>'.$title;
         foreach($action_nodes as $key => $action_node){
             if($action_node=='create'){
-                $create_url = url($module.'/child-model/'.$node->name.'/create?parent_id='.$parent_id.'&lightbox[width]=1000&lightbox[height]=600');           
+                $create_url = url($module.'/child-model/'.$node->name.'/create?parent_id='.$parent_id);           
                 if($node->multilevel){
                     $create_url .= '&level=1';
                 }          
-                $response .= ' | <a class="admin_link lightbox" href="'.$create_url.'"><i class="fa fa-plus"></i> '.trans('master::admin.create').'</a>'; 
+                $response .= ' | <a class="admin_link" data-featherlight="ajax" href="'.$create_url.'"><i class="fa fa-plus"></i> '.trans('master::admin.create').'</a>'; 
             } else if($action_node=='excel'){
                 $download_url = url($module.'/model-list/'.$node_name.'?parent_id='.$parent_id.'&download-excel=true');
                 $response .= ' | <a href="'.$download_url.'"><i class="fa fa-download"></i> '.trans('master::admin.download').'</a>';
