@@ -27,7 +27,7 @@
 					    @elseif($item->trigger_show=='is_not')
 					    if(val!='{{ $item->trigger_value }}'){
 					    @elseif($item->trigger_show=='where_in')
-					    if($.inArray(val, trigger_array)){
+					    if($.inArray(val, trigger_array)>=0){
 					   	@endif
 				    		$("#field_{{ $item->field->name }}").slideDown(500);
 				    	} else {
