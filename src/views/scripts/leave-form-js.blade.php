@@ -16,5 +16,8 @@
     $("input[type='button']").click(function() {
         formmodified = 0;
     });
+    $("button[type='submit']").click(function() {
+        formmodified = 0;
+    });
   });
 </script>
