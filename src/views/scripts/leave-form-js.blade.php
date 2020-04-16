@@ -10,13 +10,13 @@
             return "New information not saved. Do you wish to leave the page?";
         }
     }
-    $("input[type='submit']").click(function() {
+    $("form.prevent-double-submit input[type='submit']").click(function() {
         formmodified = 0;
     });
-    $("input[type='button']").click(function() {
+    $("form.prevent-double-submit input[type='button']").click(function() {
         formmodified = 0;
     });
-    $("button[type='submit']").click(function() {
+    $("form.prevent-double-submit button[type='submit']").click(function() {
         formmodified = 0;
     });
   });
