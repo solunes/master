@@ -67,6 +67,7 @@ class AssetController extends Controller {
 	  	$file_size = $file->getClientSize();
 	  	$file_name = (string) $file->getClientOriginalName();
 	  	$file_ext = (string) $file->getClientOriginalExtension();
+	  	$file_ext = strtolower($file_ext);
 	  	if($file_size>$filesize*1000000){
 	  		$error = $file_name.': '.$error_size;
 	  	} else if(!in_array($file_ext, $file_array)){

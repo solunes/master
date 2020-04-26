@@ -101,7 +101,7 @@ class Field {
             $label .= ' (*)';
         }
         if(isset($field['relation'])&&$field['relation']&&in_array($name, config('solunes.relation_fast_create_array'))){
-            $label .= ' (<a href="'.url($template.'/child-model/'.$field['value'].'/create/es').'&lightbox[width]=1000&lightbox[height]=600" class="lightbox" data-url="'.url($template.'/child-model/'.$field['value'].'/create/es').'">Crear nuevo</a>)';
+            $label .= ' (<a href="'.url($template.'/child-model/'.$field['value'].'/create/es').'&lightbox[width]=1000&lightbox[height]=600" data-featherlight="ajax" class="lightbox" data-url="'.url($template.'/child-model/'.$field['value'].'/create/es').'">Crear nuevo</a>)';
         }
         if($template=='customer-admin'){
             if(isset($field['tooltip'])&&$field['tooltip']&&$data_type!='view'){
@@ -379,7 +379,7 @@ class Field {
             if($data_type=='view'){
                 $response = $value;
             } else {
-                $response = '<a id="link-'.$name.'" class="lightbox" href="'.url('admin/modal-map/'.$name.'/'.$value.'?lightbox[width]=800&lightbox[height]=500').'" rel="'.$array['rel'].'" data-value="'.$value.'">'.$map_text.'</a>';
+                $response = '<a id="link-'.$name.'" class="lightbox" data-featherlight="ajax" href="'.url('admin/modal-map/'.$name.'/'.$value.'?lightbox[width]=800&lightbox[height]=500').'" rel="'.$array['rel'].'" data-value="'.$value.'">'.$map_text.'</a>';
             }
         } else {
             $response = NULL;
@@ -453,7 +453,7 @@ class Field {
                 }
                 $response .= '<div class="upload_thumb '.$type.'_thumb">';
                 if($type=='image'){
-                  $response .= '<a class="lightbox" href="'.Asset::get_image_path($folder, 'normal', $value).'">';
+                  $response .= '<a class="lightbox" data-featherlight="image" href="'.Asset::get_image_path($folder, 'normal', $value).'">';
                   if(request()->has('download-pdf')){
                     $response .= '<img src="data:image/jpeg;base64,'.base64_encode(@file_get_contents(asset(Asset::get_image_path($folder, 'mini', $value)))).'" />';
                   } else {

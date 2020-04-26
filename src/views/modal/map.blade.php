@@ -64,7 +64,7 @@
               var link_text = "{{ url('admin/modal-map/'.$name) }}/"+ coordinates +"?lightbox[width]=800&lightbox[height]=500";
               link.innerHTML = "Editar Mapa ("+ coordinates +")";
               link.setAttribute('href', link_text);
-
+              link.setAttribute('data-featherlight', 'ajax');
           });
           google.maps.event.addListener(searchBox, 'places_changed', function() {
             var places = searchBox.getPlaces();
@@ -80,6 +80,7 @@
               var link_text = "{{ url('admin/modal-map/'.$name) }}/"+ coordinates +"?lightbox[width]=800&lightbox[height]=500";
               link.innerHTML = "Editar Mapa ("+ coordinates +")";
               link.setAttribute('href', link_text);
+              link.setAttribute('data-featherlight', 'ajax');
             }
 
           });

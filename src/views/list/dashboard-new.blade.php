@@ -47,7 +47,7 @@
       <a href="{{ url('admin/model/indicator/create') }}" class="btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">Crear un Indicador</a>
       @endif
       @if($not_added_indicators>0)
-      <a href="{{ url('admin/assign-indicator-modal?lightbox[width]=600&lightbox[height]=400') }}" class="lightbox btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">Asignarme un Indicador</a>
+      <a href="{{ url('admin/assign-indicator-modal?lightbox[width]=600&lightbox[height]=400') }}" data-featherlight="ajax" class="lightbox btn btn-accent m-btn m-btn--custom m-btn--icon m-btn--pill m-btn--air">Asignarme un Indicador</a>
       @endif
     </div><br>
 

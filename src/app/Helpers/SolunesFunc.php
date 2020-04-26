@@ -28,12 +28,12 @@ class SolunesFunc {
             $confirm_message = "'¿Está seguro que desea ingresar como este cliente? Se cerrará su sesión actual.'";
             $response .= '<td class="ineditable restore"><a onclick="return confirm('.$confirm_message.')" href="'.url('admin/login-as/'.$item->id).'">Login</a></td>';
         } else if($action_field=='create-customer-note'){
-            $response .= '<td class="restore"><a class="lightbox" href="'.url('admin/child-model/customer-note/create?parent_id='.$item->id).'&lightbox[width]=600&lightbox[height]=400">Nota</a></td>';
+            $response .= '<td class="restore"><a class="lightbox" data-featherlight="ajax" href="'.url('admin/child-model/customer-note/create?parent_id='.$item->id).'&lightbox[width]=600&lightbox[height]=400">Nota</a></td>';
         } else if($action_field=='create-customer-contact'){
-            $response .= '<td class="restore"><a class="lightbox" href="'.url('admin/child-model/customer-contact/create?parent_id='.$item->id).'&lightbox[width]=600&lightbox[height]=400">Crear Cita</a></td>';
+            $response .= '<td class="restore"><a class="lightbox" data-featherlight="ajax" href="'.url('admin/child-model/customer-contact/create?parent_id='.$item->id).'&lightbox[width]=600&lightbox[height]=400">Crear Cita</a></td>';
         } else if($action_field=='edit-customer-contact'){
             if($item->status=='pending'){
-                $response .= '<td class="restore"><a class="lightbox" href="'.url('admin/child-model/customer-contact/edit/'.$item->id).'?lightbox[width]=600&lightbox[height]=400">Contactado</a></td>';
+                $response .= '<td class="restore"><a class="lightbox" data-featherlight="ajax" href="'.url('admin/child-model/customer-contact/edit/'.$item->id).'?lightbox[width]=600&lightbox[height]=400">Contactado</a></td>';
             } else {
                 $response .= '<td class="restore">-</td>';
             }

@@ -36,7 +36,7 @@
             }
             $.each(data.result.files, function (index, file) {
             if(type=='image'){
-              var file_response = '<div class="upload_thumb image_thumb"><a class="lightbox" href="'+ file.url +'"><img src="'+ file.thumbUrl +'" /></a>';
+              var file_response = '<div class="upload_thumb image_thumb"><a data-featherlight="image" class="lightbox" href="'+ file.url +'"><img src="'+ file.thumbUrl +'" /></a>';
             } else {
               var file_response = '<div class="upload_thumb file_thumb"><a href="'+ file.url +'" target="_blank">' + file.name + '</a>';
             }
