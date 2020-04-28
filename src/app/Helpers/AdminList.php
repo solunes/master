@@ -77,7 +77,8 @@ class AdminList {
                     abort(506, $message);
                 }
                 if($sub_node->translation){
-                    $items = $items->with([$relation->trans_name, $relation->trans_name.'.translations']);
+                    //$items = $items->with([$relation->trans_name, $relation->trans_name.'.translations']);
+                    $items = $items->with($relation->trans_name);
                 } else {
                     $items = $items->with($relation->trans_name);
                 }

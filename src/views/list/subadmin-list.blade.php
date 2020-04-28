@@ -37,18 +37,25 @@
               @include('master::helpers.subadmin-filter')
               <!-- dataTable starts -->
               <div class="table-responsive">
-                @if(isset(config('solunes.customer_dashboard_nodes.'.$model)['create']))
+                @if(isset(config('solunes.customer_dashboard_nodes.'.$model)['create'])||isset(config('solunes.customer_dashboard_nodes.'.$model)['excel']))
                   <div class="top">
                     <div class="actions action-btns">
                       <div class="btn-group dropdown actions-dropodown"></div>
                       <div class="dt-buttons btn-group">
-                        @if($id)
-                          <a href="{{ url('customer-admin/model/'.$model.'/create?parent_id='.$id) }}">
-                        @else
-                          <a href="{{ url('customer-admin/model/'.$model.'/create') }}">
+                        @if(isset(config('solunes.customer_dashboard_nodes.'.$model)['create']))
+                          @if($id)
+                            <a href="{{ url('customer-admin/model/'.$model.'/create?parent_id='.$id) }}">
+                          @else
+                            <a href="{{ url('customer-admin/model/'.$model.'/create') }}">
+                          @endif
+                            <button class="btn btn-outline-primary" tabindex="0" aria-controls="DataTables_Table_0"><span><i class="feather icon-plus"></i> Crear Nuevo</span></button>
+                          </a>
                         @endif
-                          <button class="btn btn-outline-primary" tabindex="0" aria-controls="DataTables_Table_0"><span><i class="feather icon-plus"></i> Crear Nuevo</span></button>
-                        </a>
+                        @if(isset(config('solunes.customer_dashboard_nodes.'.$model)['excel']))
+                          <a href="{{ url('customer-admin/model-list/'.$model.'?download-excel=1') }}">
+                            <button class="btn btn-outline-primary" tabindex="0" aria-controls="DataTables_Table_0"><span><i class="feather icon-plus"></i> Descargar Excel</span></button>
+                          </a>
+                        @endif
                       </div>
                     </div>
                   </div>
