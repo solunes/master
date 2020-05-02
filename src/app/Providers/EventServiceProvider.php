@@ -41,6 +41,8 @@ class EventServiceProvider extends ServiceProvider
             $events->listen('eloquent.creating: Solunes\Customer\App\CustomerNote', '\Solunes\Customer\App\Listeners\CustomerNoteCreating');
             $events->listen('eloquent.created: Solunes\Customer\App\CustomerNote', '\Solunes\Customer\App\Listeners\CustomerNoteCreated');
             $events->listen('eloquent.creating: Solunes\Customer\App\CustomerPayment', '\Solunes\Customer\App\Listeners\CustomerPaymentCreating');
+            $events->listen('eloquent.updating: Solunes\Customer\App\CustomerPayment', '\Solunes\Customer\App\Listeners\CustomerPaymentUpdating');
+            $events->listen('eloquent.deleting: Solunes\Customer\App\CustomerPayment', '\Solunes\Customer\App\Listeners\CustomerPaymentDeleting');
             // Suscripciones
             $events->listen('eloquent.creating: Solunes\Customer\App\CustomerSubscription', '\Solunes\Customer\App\Listeners\CustomerSubscriptionCreating');
             $events->listen('eloquent.created: Solunes\Customer\App\CustomerSubscription', '\Solunes\Customer\App\Listeners\CustomerSubscriptionCreated');
