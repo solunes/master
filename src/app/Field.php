@@ -104,6 +104,7 @@ class Field extends Model {
     public function getOptionsAttribute() {
         $return = [];
         if($this->relation){
+            \Log::info($this->id.' - '.$this->value);
             $node_value = str_replace('_', '-', $this->value);
             if($subnode = \Solunes\Master\App\Node::where('name', $node_value)->first()){
                 $submodel = \FuncNode::node_check_model($subnode);
@@ -126,7 +127,22 @@ class Field extends Model {
                 if(config('solunes.get_options_relation')&&$this->relation_cond){
                     $submodel = \CustomFunc::get_options_relation($submodel, $this, $subnode, request()->segment(5));
                 }
-                $return = $return+$submodel->get()->sortBy('name')->lists('name', 'id')->toArray();
+                // REGLA IMPROVISADA PARA VARIATION, MEJORAR
+                if(request()->segment(3)=='product'&&$this->value=='variation-option'){
+                    $subitem = \Solunes\Product\App\Product::find(request()->segment(5));
+                    $subresults = $submodel->whereIn('parent_id', $subitem->product_bridge_variation()->lists('variation_id')->toArray())->get()->sortBy('name');
+                    $subarray = [];
+                    foreach($subresults as $subresult){
+                        if($subresult->parent->subtype=='color'){
+                            $subarray[$subresult->parent->name][$subresult->id] = '<span style="width: 15px; height: 15px; display: inline-block; border-radius: 50%; background-color: '.$subresult->name.';"></span>';
+                        } else {
+                            $subarray[$subresult->parent->name][$subresult->id] = $subresult->name;
+                        }
+                    }
+                    $return = $subarray;
+                } else {
+                    $return = $return+$submodel->get()->sortBy('name')->lists('name', 'id')->toArray();
+                }
             }
         } else if($this->type=='select'||$this->type=='radio'||$this->type=='checkbox'){
             foreach($this->field_options_active as $item){

@@ -354,12 +354,24 @@ class Field {
         }
         foreach($option_array as $key => $option) {
             $array['class'] = 'field_'.$name.' option_'.$key;
-            if($type=='radio'||$type=='score'||$type=='main_score'){
-                $response .= '<label class="mt-radio">'.$option.' '.Form::radio($name, $key, AdminItem::make_radio_value($key, $value), $array);
-            } else if($type=='checkbox'){
-                $response .= '<label class="mt-checkbox">'.$option.' '.Form::checkbox($name.'[]', $key, AdminItem::make_checkbox_value($key, $value), $array);
+            if(is_array($option)){
+                $response .= '<div><strong>'.$key.'</strong></div>';
+                foreach($option as $subkey => $suboption){
+                    if($type=='radio'||$type=='score'||$type=='main_score'){
+                        $response .= '<label class="mt-radio">'.$suboption.' '.Form::radio($name, $subkey, AdminItem::make_radio_value($subkey, $value), $array);
+                    } else if($type=='checkbox'){
+                        $response .= '<label class="mt-checkbox">'.$suboption.' '.Form::checkbox($name.'[]', $subkey, AdminItem::make_checkbox_value($subkey, $value), $array);
+                    }
+                    $response .= '<span></span></label>';
+                }
+            } else {
+                if($type=='radio'||$type=='score'||$type=='main_score'){
+                    $response .= '<label class="mt-radio">'.$option.' '.Form::radio($name, $key, AdminItem::make_radio_value($key, $value), $array);
+                } else if($type=='checkbox'){
+                    $response .= '<label class="mt-checkbox">'.$option.' '.Form::checkbox($name.'[]', $key, AdminItem::make_checkbox_value($key, $value), $array);
+                }
+                $response .= '<span></span></label>';
             }
-            $response .= '<span></span></label>';
         }
         if(isset($parameters['last_label'])){
             $response .= '<label class="mt-radio">'.$parameters['last_label'].'</label>';

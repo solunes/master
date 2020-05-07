@@ -50,10 +50,16 @@ class DataManager {
                             if (!is_null($super_parent_sheet)&&$field->name=='parent_id'&&strpos($input, 'new-') !== false) {
                                 $input = $super_parent_array[$input];
                             } else {
-                                if($sub_model = \Solunes\Master\App\Node::where('name', $field->value)->first()){
-                                    $sub_model = $sub_model->model;
-                                    if($get_submodel = $sub_model::where('name', $input)->first()){
-                                        $input = $get_submodel->id;
+                                if($sub_node = \Solunes\Master\App\Node::where('name', $field->value)->first()){
+                                    $sub_model = $sub_node->model;
+                                    if($sub_node->translation){
+                                        if($get_submodel = $sub_model::whereTranslation('name', $input)->first()){
+                                            $input = $get_submodel->id;
+                                        }
+                                    } else {
+                                        if($get_submodel = $sub_model::where('name', $input)->first()){
+                                            $input = $get_submodel->id;
+                                        }
                                     }
                                 }
                             }
@@ -116,18 +122,31 @@ class DataManager {
                         $field = $field_sub_array[$column];
                         if($field->multiple){
                             $array_insert = [];
+                            $sub_node = \Solunes\Master\App\Node::where('table_name', $column)->first();
+                            $sub_model = $sub_node->model;
                             foreach(explode(';',$input) as $value){
-                                if($value&&!is_numeric($value)){
-                                    $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
-                                    array_push($array_insert, $sub_model::where('name', $value)->first()->id);
-                                } else if($value) {
+                                if($value){
+                                    if($sub_node->translation){
+                                        $subval = $sub_model::whereTranslation('name', $value)->first();
+                                        if($subval){ $value = $subval->id; }
+                                    } else {
+                                        $subval = $sub_model::where('name', $value)->first();
+                                        if($subval){ $value = $subval->id; }
+                                    }
+                                }
+                                if($value){
                                     array_push($array_insert, $value);
                                 }
                             }
                         } else {
                             if($input&&!is_numeric($input)){
-                                $sub_model = \Solunes\Master\App\Node::where('table_name', $column)->first()->model;
-                                $array_insert = $sub_model::where('name', $input)->first()->id;
+                                $sub_node = \Solunes\Master\App\Node::where('table_name', $column)->first();
+                                $sub_model = $sub_node->model;
+                                if($sub_node->translation){
+                                    $array_insert = $sub_model::whereTranslation('name', $input)->first()->id;
+                                } else {
+                                    $array_insert = $sub_model::where('name', $input)->first()->id;
+                                }
                             } else {
                                 $array_insert = $input;
                             }
