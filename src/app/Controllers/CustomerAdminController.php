@@ -159,7 +159,7 @@ class CustomerAdminController extends Controller {
             return $extra_actions;
         } else {
             if($array['node']->multilevel){
-                return view('master::list.multilevel-list', $array);
+                return view('master::list.multilevel-subadmin-list', $array);
             }
             return view('master::list.subadmin-list', $array);
         }

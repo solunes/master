@@ -129,14 +129,15 @@ class AdminItem {
             if(\View::exists('includes.select-parent-'.$node->name)){
                 $view = 'includes.select-parent-'.$node->name;
             } else {
-                if($single_model=='indicator'){
+                if($module=='customer-admin'){
+                    $view = 'master::includes.select-parent-customer';
+                } else if($single_model=='indicator'){
                     $view = 'master::includes.select-parent-indicator';
                 } else {
                     $view = 'master::includes.select-parent';
                 }
             }
-        }
-        if($module=='customer-admin'){
+        } else if($module=='customer-admin'){
             $view = 'master::item.customer-admin-model';
         }
         /*else if($node->customized){

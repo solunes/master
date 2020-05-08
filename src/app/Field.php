@@ -128,13 +128,15 @@ class Field extends Model {
                     $submodel = \CustomFunc::get_options_relation($submodel, $this, $subnode, request()->segment(5));
                 }
                 // REGLA IMPROVISADA PARA VARIATION, MEJORAR
-                if(request()->segment(3)=='product'&&$this->value=='variation-option'){
+                if(request()->segment(3)=='product'&&request()->segment(4)=='create'&&$this->value=='variation-option'){
+                    $return = [];
+                } else if(request()->segment(3)=='product'&&request()->segment(4)=='edit'&&$this->value=='variation-option'){
                     $subitem = \Solunes\Product\App\Product::find(request()->segment(5));
                     $subresults = $submodel->whereIn('parent_id', $subitem->product_bridge_variation()->lists('variation_id')->toArray())->get()->sortBy('name');
                     $subarray = [];
                     foreach($subresults as $subresult){
                         if($subresult->parent->subtype=='color'){
-                            $subarray[$subresult->parent->name][$subresult->id] = '<span style="width: 15px; height: 15px; display: inline-block; border-radius: 50%; background-color: '.$subresult->name.';"></span>';
+                            $subarray[$subresult->parent->name][$subresult->id] = '<span style="width: 15px; height: 15px; display: inline-block; border-radius: 50%; border: 1px solid #989898; background-color: '.$subresult->name.';"></span>';
                         } else {
                             $subarray[$subresult->parent->name][$subresult->id] = $subresult->name;
                         }
