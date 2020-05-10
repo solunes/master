@@ -432,10 +432,13 @@ class AdminItem {
     }
 
     public static function make_item_header($i, $module, $node, $action, $layout = true, $parent_id = false) {
-        if($module=='customer-admin'){
+        if($module=='customer-admin'||$module=='process'){
             $h_tag = 'h4';
         } else {
             $h_tag = 'h3';
+        }
+        if($module=='process'){
+            $layout = false;
         }
         $result = '<'.$h_tag.'>'.trans('master::admin.'.$action).' '.$node->singular;
         if($layout){
