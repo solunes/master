@@ -137,7 +137,7 @@ class AdminItem {
                     $view = 'master::includes.select-parent';
                 }
             }
-        } else if($module=='customer-admin'){
+        } else if($module=='customer-admin'||$module=='process'){
             $view = 'master::item.customer-admin-model';
         }
         /*else if($node->customized){
