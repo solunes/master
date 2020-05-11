@@ -43,7 +43,7 @@
           var latitude = coordinates_arr[0];
           var longitude = coordinates_arr[1];
 
-          @if($i&&$i->$field_name)
+          @if($i&&$i->$field_name&&isset($array[0])&&isset($array[1]))
             <?php $array = explode(';',$i->$field_name); ?>
               marker = new google.maps.Marker({
                   id: {{ $i->id }},
