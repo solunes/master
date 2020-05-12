@@ -133,10 +133,12 @@ class AdminList {
             $node_name = $action_fields['subadmin_child_field'];
             $subaction_fields = config('solunes.customer_dashboard_nodes.'.$node_name);
             $action_fields = [];
-            foreach($subaction_fields as $subaction_field => $key){
-                if($subaction_field=='create'||$subaction_field=='download'){
-                } else {
-                    $action_fields[] = $subaction_field;
+            if(count($subaction_fields)>0){
+                foreach($subaction_fields as $subaction_field => $key){
+                    if($subaction_field=='create'||$subaction_field=='download'){
+                    } else {
+                        $action_fields[] = $subaction_field;
+                    }
                 }
             }
         } else if(isset($action_fields['child_field'])){
@@ -402,14 +404,16 @@ class AdminList {
             $node_name = $action_fields['subadmin_child_field'];
             $subaction_fields = config('solunes.customer_dashboard_nodes.'.$node_name);
             $action_fields = [];
-            foreach($subaction_fields as $subaction_field => $key){
-                if($subaction_field=='create'||$subaction_field=='download'){
-                } else if($subaction_field=='edit'){
-                    $action_fields[] = 'edit-child';
-                } else if($subaction_field=='view'){
-                    $action_fields[] = 'view-child';
-                } else {
-                    $action_fields[] = $subaction_field;
+            if(count($subaction_fields)>0){
+                foreach($subaction_fields as $subaction_field => $key){
+                    if($subaction_field=='create'||$subaction_field=='download'){
+                    } else if($subaction_field=='edit'){
+                        $action_fields[] = 'edit-child';
+                    } else if($subaction_field=='view'){
+                        $action_fields[] = 'view-child';
+                    } else {
+                        $action_fields[] = $subaction_field;
+                    }
                 }
             }
         } else if(isset($action_fields['child_field'])){

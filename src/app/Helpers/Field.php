@@ -304,6 +304,9 @@ class Field {
             $response .= Field::generate_map_field($name, $type, $parameters, $array, $value, $data_type);
         } else if($type=='string'||$type=='barcode'){
             $response = Form::text($name, $value, $array);
+        } else if($type=='color'){
+            $array['id'] = 'hidden-color-field';
+            $response = '<div class="picker-wrapper"><div class="picker-wrapper-color" style="background-color: '.$value.'"></div><button type="button" class="btn btn-site">Seleccionar Color</button><div class="color-picker"></div></div>'.Form::hidden($name, $value, $array);
         } else if($type=='integer'){
             $response = Form::input('number', $name, $value, $array);
         } else if($type=='hidden'){

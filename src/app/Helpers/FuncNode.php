@@ -34,6 +34,8 @@ class FuncNode {
                 $value = $node->name;
               }
             }
+        } else if($name=='color'||strpos($name, 'color') !== false){
+          $type = 'color';
         } else if($name=='image'||$name=='file'||$name=='logo'||$name=='isotype'||strpos($name, 'image') !== false||strpos($name, 'file') !== false){
           if($name=='file'||strpos($name, 'file') !== false){
             $type = 'file';

@@ -90,7 +90,7 @@
 @endsection
 @section('script')
   @include('master::helpers.froala')
-  <?php $scripts_array = ['conditionals','upload','tooltip','accordion','radio']; ?>
+  <?php $scripts_array = ['conditionals','upload','tooltip','accordion','radio','color']; ?>
   @if($barcode_enabled)
     <?php $scripts_array[] = 'barcode'; ?>
   @endif

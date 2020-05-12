@@ -136,7 +136,7 @@ class Field extends Model {
                     $subarray = [];
                     foreach($subresults as $subresult){
                         if($subresult->parent->subtype=='color'){
-                            $subarray[$subresult->parent->name][$subresult->id] = '<span style="width: 15px; height: 15px; display: inline-block; border-radius: 50%; border: 1px solid #989898; background-color: '.$subresult->name.';"></span>';
+                            $subarray[$subresult->parent->name][$subresult->id] = '<span style="width: 15px; height: 15px; display: inline-block; border-radius: 50%; border: 1px solid #989898; background-color: '.$subresult->color.';" alt="'.$subresult->name.'"></span>';
                         } else {
                             $subarray[$subresult->parent->name][$subresult->id] = $subresult->name;
                         }
