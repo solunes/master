@@ -94,8 +94,7 @@
         var yeri = event.latLng;
         infowindow.setContent(latlongi);
         infowindow.open(map, marker);
-
-        document.getElementById('map_coordinates').value = yeri.lat().toFixed(6)+ ";" +yeri.lng().toFixed(6);
+        $('#map_coordinates').val(yeri.lat().toFixed(6)+ ";" +yeri.lng().toFixed(6)).trigger('change');;
     });
     searchBox.addListener('place_changed', function() {
       var place = searchBox.getPlace();
@@ -104,7 +103,7 @@
         map.setCenter(place.geometry.location); // setCenter takes a LatLng object
         map.setZoom(16);
         var yeri = place.geometry.location;
-        document.getElementById('map_coordinates').value = yeri.lat().toFixed(6)+ ";" +yeri.lng().toFixed(6);
+        $('#map_coordinates').val(yeri.lat().toFixed(6)+ ";" +yeri.lng().toFixed(6)).trigger('change');;
       //}
     });
 
