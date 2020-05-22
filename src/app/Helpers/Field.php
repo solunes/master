@@ -43,7 +43,11 @@ class Field {
         if($type=='select'||$type=='checkbox'||$type=='radio'){
             $parameters['options'] = $field['options'];
             if($type=='select'){
-                $parameters['options'] = [''=>'Seleccione una opción...'] + $parameters['options'];
+                if(isset($field['filter'])&&strpos($field['name'], '_action') !== false){
+                    $parameters['options'] = $parameters['options'];
+                } else {
+                    $parameters['options'] = [''=>'Seleccione una opción...'] + $parameters['options'];
+                }
             } else if($type=='checkbox'||$type=='radio'){
                 if(isset($parameters['options']['first_label'])){
                     $parameters['first_label'] = $parameters['options']['first_label'];

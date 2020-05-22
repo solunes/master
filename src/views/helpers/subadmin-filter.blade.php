@@ -20,7 +20,7 @@
         @endforeach
         <div class="filter_button col-sm-3">
           @if(isset($filters)&&$filters)
-            {!! Form::submit(trans('master::admin.search'), array('class'=>'btn btn-site')) !!}
+            <button type="submit" name="button" class="btn btn-primary mr-1 mb-1 btn-site" >{{ trans('master::admin.search') }}</button>
           @endif
         </div>
       </div>
