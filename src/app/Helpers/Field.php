@@ -43,7 +43,7 @@ class Field {
         if($type=='select'||$type=='checkbox'||$type=='radio'){
             $parameters['options'] = $field['options'];
             if($type=='select'){
-                if(isset($field['filter'])&&strpos($field['name'], '_action') !== false){
+                if(isset($field['filter'])&&strpos($field['name'], '_action') !== false&&$field['name']!='search-product'){
                     $parameters['options'] = $parameters['options'];
                 } else {
                     $parameters['options'] = [''=>'Seleccione una opción...'] + $parameters['options'];
@@ -174,7 +174,7 @@ class Field {
         // IMAGENES
         if($type=='file'||$type=='image'){
             if($extras['folder']=='image-content-image'){
-                $content_image = \Solunes\Master\App\CustomImage::find($id);
+                $content_image = \Solunes\Master\App\ImageContent::find($i->id);
                 if($content_image){
                     $array['data-new-type'] = $content_image->type;
                     $array['data-width'] = $content_image->width;
