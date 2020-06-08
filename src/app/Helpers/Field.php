@@ -43,7 +43,7 @@ class Field {
         if($type=='select'||$type=='checkbox'||$type=='radio'){
             $parameters['options'] = $field['options'];
             if($type=='select'){
-                if(isset($field['filter'])&&strpos($field['name'], '_action') !== false&&$field['name']!='search-product'){
+                if((isset($field['filter'])&&strpos($field['name'], '_action') !== false)||isset($field['preselected'])||$field['name']=='search-product'){
                     $parameters['options'] = $parameters['options'];
                 } else {
                     $parameters['options'] = [''=>'Seleccione una opción...'] + $parameters['options'];
