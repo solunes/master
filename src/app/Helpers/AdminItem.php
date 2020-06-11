@@ -340,6 +340,17 @@ class AdminItem {
                 } else {
                     $field_array = [];
                 }
+                // CORRECCION PARA PRODUCTOS
+                if(($field_name=='product_bridge_variation_option'||$field_name=='product_bridge_variation'||$field_name=='product_bridge_channel')&&$item->product_bridge_id){
+                    $item->load('product_bridge');
+                    if($item->product_bridge){
+                        $new_field_array = [];
+                        foreach($field_array as $field_subitem){
+                            $new_field_array[$field_subitem] = ['product_bridge_id'=>$item->product_bridge->id];
+                        }
+                        $field_array = $new_field_array;
+                    }
+                }
                 $item->$field_name()->sync($field_array);
             }
         }

@@ -173,7 +173,7 @@ class Field {
 
         // IMAGENES
         if($type=='file'||$type=='image'){
-            if($extras['folder']=='image-content-image'){
+            if($extras['folder']=='image-content-image'&&$data_type=='edit'){
                 $content_image = \Solunes\Master\App\ImageContent::find($i->id);
                 if($content_image){
                     $array['data-new-type'] = $content_image->type;
