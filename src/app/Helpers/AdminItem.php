@@ -253,6 +253,7 @@ class AdminItem {
                 $rules['barcode'] = 'required|unique:'.$node->table_name.',barcode,'.$id;
             }
         }
+        \Log::info(json_encode($rules));
         $correctNames = [];
         foreach($node->fields as $field){
             $correctNames[$field->name] = '"'.$field->label.'"';

@@ -221,7 +221,7 @@ class Field {
             $array['autofocus'] = true;
             $array['placeholder'] = 'Enfoque el código con el lector o introduzcalo manualmente. Si no tiene código, déjelo en blanco.';
             if($value){
-                $label .= ' -> <a target="_blank" href="'.url($template.'/generate-barcode-image/'.$value).'">Imprimir</a>';
+                $label .= ' -> <a target="_blank" href="'.url('admin/generate-barcode-image/'.$value).'">Imprimir</a>';
             } else {
                 $node_id = $field['parent_id'];
                 if($i){

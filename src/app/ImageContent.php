@@ -12,7 +12,7 @@ class ImageContent extends Model {
 	/* Creating rules */
 	public static $rules_create = array(
 		'code'=>'required',
-		'name'=>'name',
+		'name'=>'required',
 		'type'=>'required',
 		'extension'=>'required',
 	);
@@ -21,8 +21,8 @@ class ImageContent extends Model {
 	public static $rules_edit = array(
 		'id'=>'required',
 		'code'=>'required',
-		'name'=>'name',
-		'image'=>'name',
+		'name'=>'required',
+		'image'=>'required',
 		'type'=>'required',
 		'extension'=>'required',
 	);
