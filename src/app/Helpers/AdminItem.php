@@ -227,10 +227,8 @@ class AdminItem {
             $new_rules = [];
             $dashadmin_fields = config('solunes.dashadmin_nodes')[$single_model][$custom_type];
             if(is_array($dashadmin_fields)){
-                foreach($rules as $rule_key => $rule_val){
-                    if(in_array($rule_key, $dashadmin_fields)){
-                        $new_rules[$rule_key] = $rule_val;
-                    }
+                foreach($dashadmin_fields as $rule_key => $rule_val){
+                    $new_rules[$rule_key] = $rule_val;
                 }
                 $rules = $new_rules;
             }
