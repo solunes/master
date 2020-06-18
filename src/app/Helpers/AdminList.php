@@ -943,7 +943,7 @@ class AdminList {
         if(count($graphs)>0&&$model::count()>0){
             foreach($graphs as $graph){
                 $graph_value = json_decode($graph->value_array, true);
-                foreach($graph_value as $graph_item){
+                foreach($graph_value as $graph_item_key => $graph_item){
                     $cloned_model = clone $items;
                     if($graph->type=='parent_graph'){
                         $relation_table = $graph_item['parent'];
@@ -955,8 +955,14 @@ class AdminList {
                         $parent_node = \Solunes\Master\App\Node::where('table_name', $relation_table)->first();
                         $field = $parent_node->fields()->where('name', $graph_item_name)->first();
                     } else {
-                        $graph_item_name = $graph_item;
-                        $graph_model = $cloned_model->groupBy($graph_item_name)->select($graph_item_name, \DB::raw('count(*) as total'))->get();
+                        $graph_item_name = $graph_item_key;
+                        $graph_item_value = $graph_item;
+                        if($graph_item_value){
+                            $graph_model = $cloned_model->groupBy($graph_item_name)->select($graph_item_name, \DB::raw('sum('.$graph_item_value.') as total'))->get();
+                        } else {
+                            $graph_model = $cloned_model->groupBy($graph_item_name)->select($graph_item_name, \DB::raw('count(*) as total'))->get();
+                        }
+                        \Log::info(json_encode($graph_model));
                         $field = $node->fields()->where('name', $graph_item_name)->first();
                     }
                     $field_names = [];
@@ -987,7 +993,15 @@ class AdminList {
                               if($graph->type=='parent_graph'){
                                 $count .= $model::leftJoin($relation_table, $relation_table.'.id', '=', $node_table.'.'.$relation_field)->whereIn($node_table.'.id', $graph_model_array)->where($graph_item_name, $graph_subitem->$graph_item_name)->where( \DB::raw('MONTH('.$node_table.'.created_at)'), '=', $month )->count().',';
                               } else {
-                                $count .= $cloned_model->where($graph_item_name, $graph_subitem->$graph_item_name)->where( \DB::raw('MONTH(created_at)'), '=', $month )->count().',';
+                                if($graph_item_value){
+                                    $sum = $cloned_model->where($graph_item_name, $graph_subitem->$graph_item_name)->where( \DB::raw('MONTH(created_at)'), '=', $month )->sum($graph_item_value);
+                                    if($sum==NULL){
+                                        $sum = '0';
+                                    }
+                                    $count .= $sum.',';
+                                } else {
+                                    $count .= $cloned_model->where($graph_item_name, $graph_subitem->$graph_item_name)->where( \DB::raw('MONTH(created_at)'), '=', $month )->count().',';
+                                }
                               }
                             }
                             $count .= ']';
@@ -995,9 +1009,9 @@ class AdminList {
                           }
                         } else {
                           foreach($graph_model as $graph_subitem){
-                            $cloned_model = clone $items;
-                            $count = $cloned_model->where($graph_item_name, $graph_subitem->$graph_item_name)->count();
-                            $subitems[$graph_subitem->$graph_item_name] = $count;
+                            //$cloned_model = clone $items;
+                            //$count = $cloned_model->where($graph_item_name, $graph_subitem->$graph_item_name)->count();
+                            $subitems[$graph_subitem->$graph_item_name] = $graph_subitem->total;
                           }
                         }
                         $array['graphs'][$graph_item_name.'-'.$graph->parameter] = ['name'=>$graph_item_name,'label'=>$field->label,'type'=>$graph->parameter,'items'=>$graph_model,'subitems'=>$subitems,'field_names'=>$field_names];
