@@ -21,9 +21,6 @@
   </div>
 </div>
 
-
-<!-- Data list view starts -->
-
 <section id="data-thumb-view" class="data-thumb-view-header">
   <div class="match-height">
     <div class="row">
@@ -34,6 +31,15 @@
           </div>
           <div class="card-content">
             <div class="card-body">
+  @if(!$pdf&&isset($graphs)&&$graphs&&count($graphs)>0)
+    <div class="row">
+      @foreach($graphs as $graph_name => $graph)
+        <div class="col-sm-{{ $graph_col_size }}">
+          <div id="list-graph-{{ $graph_name }}"></div>
+        </div>
+      @endforeach
+    </div>
+  @endif
               @include('master::helpers.subadmin-filter')
               <!-- dataTable starts -->
               <div class="table-responsive">

@@ -35,6 +35,7 @@ return [
 	'customer_dashboard_nodes' => ['customer'=>'edit'],
     'customer_dashboard_filters' => true,
 	'customer_dashboard_custom_filters' => false,
+    'customer_dashboard_graphs' => [],
 
 	// APP VARS
 	'app_name' => strtoupper(env('APP_NAME', 'Web App')),

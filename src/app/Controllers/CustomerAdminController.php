@@ -141,6 +141,8 @@ class CustomerAdminController extends Controller {
                 $items->with($item_relation->trans_name);
             }
         }
+        
+        $array = \AdminList::graph_node($array, $node, $model, $items, $node->node_graphs);
 
         $array['items_count'] = $items->count();
         if(request()->has('download-excel')||request()->has('download-pdf')){
