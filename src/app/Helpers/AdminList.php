@@ -993,6 +993,12 @@ class AdminList {
                             $count .= ']';
                             $subitems[$graph_subitem->$graph_item_name] = $count;
                           }
+                        } else {
+                          foreach($graph_model as $graph_subitem){
+                            $cloned_model = clone $items;
+                            $count = $cloned_model->where($graph_item_name, $graph_subitem->$graph_item_name)->count();
+                            $subitems[$graph_subitem->$graph_item_name] = $count;
+                          }
                         }
                         $array['graphs'][$graph_item_name.'-'.$graph->parameter] = ['name'=>$graph_item_name,'label'=>$field->label,'type'=>$graph->parameter,'items'=>$graph_model,'subitems'=>$subitems,'field_names'=>$field_names];
                     }
