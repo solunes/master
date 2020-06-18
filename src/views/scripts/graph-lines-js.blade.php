@@ -39,7 +39,7 @@
           },
           series: [
             @foreach($graph_items as $subitem_label => $subitem_total)
-              {name: <?php echo '"'.$subitem_label.'"'; ?>, data: <?php echo $subitem_total; ?> },
+              {name: <?php echo '"'.$field_names[$subitem_label].'"'; ?>, data: <?php echo $subitem_total; ?> },
             @endforeach
           ]
       });

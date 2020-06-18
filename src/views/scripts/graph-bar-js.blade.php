@@ -33,7 +33,7 @@
           name: '{{ trans("master::admin.graph_quantity") }}',
           data: [
             @foreach($graph_items as $subitem_label => $subitem_total)
-              [<?php echo '"'.$subitem_label.'"'; ?>,  {{ $subitem_total }}],
+              [<?php echo '"'.$field_names[$subitem_label].'"'; ?>,  {{ $subitem_total }}],
             @endforeach
           ],
           dataLabels: {
