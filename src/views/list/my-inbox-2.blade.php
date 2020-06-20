@@ -158,10 +158,11 @@
     });
 
     $(document).ready(function(){
-      $('#message-field').keypress(function(ev){
+      $(document).keydown(function(event){
         //If user pressed Enter Key then trigger Submit click
-        if(ev.keyCode==13){
+        if(event.keyCode==13){
           event.preventDefault();
+          event.stopPropagation();
           enter_final_chat();
         }
       });

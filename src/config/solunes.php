@@ -86,7 +86,7 @@ return [
 	'subadmin_table_pagination_count' => 10,
 	'list_inline_edit' => false,
 	'list_export_pdf' => true,
-	'filter_suboptions' => true,
+	'filter_suboptions' => false,
 	'filter_suboptions_exceptions' => [],
 	'delete_item_custom_message' => false,
 

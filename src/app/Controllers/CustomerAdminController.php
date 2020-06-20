@@ -360,7 +360,10 @@ class CustomerAdminController extends Controller {
     }
 
     public function getInboxConversation($id) {
-        $array['item'] = \Solunes\Master\App\Inbox::userInbox(auth()->user()->id)->where('id', $id)->with('me','other_users','last_message')->first();    
+        $inbox = \Solunes\Master\App\Inbox::userInbox(auth()->user()->id)->where('id', $id)->with('me','other_users','last_message')->first();
+        $me = $inbox->me;
+        $me->checked = true;
+        $me->save();        $array['item'] = $inbox;    
         return view('master::includes.chat', $array);
     }
 
@@ -428,6 +431,12 @@ class CustomerAdminController extends Controller {
                 }
                 $message->save();
                 $inbox->touch();
+                if(count($inbox->other_checked_users)>0){
+                    foreach($inbox->other_checked_users as $checked_user){
+                        $checked_user->checked = false;
+                        $checked_user->save();
+                    }
+                }
                 $join_message = false;
                 if($message->user_id==$last_message->user_id){
                     $join_message = true;

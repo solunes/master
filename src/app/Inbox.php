@@ -31,6 +31,10 @@ class Inbox extends Model {
         return $this->hasMany('Solunes\Master\App\InboxUser', 'parent_id', 'id')->where('user_id', '!=', auth()->user()->id)->orderBy('updated_at', 'DESC');
     }
 
+    public function other_checked_users() {
+        return $this->hasMany('Solunes\Master\App\InboxUser', 'parent_id', 'id')->where('user_id', '!=', auth()->user()->id)->where('checked', 1);
+    }
+
     public function other_user() {
         return $this->hasOne('Solunes\Master\App\InboxUser', 'parent_id', 'id')->where('user_id', '!=', auth()->user()->id)->orderBy('updated_at', 'DESC');
     }

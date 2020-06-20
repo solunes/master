@@ -342,6 +342,12 @@ class AdminController extends Controller {
 				}
 				$message->save();
 				$inbox->touch();
+                if(count($inbox->other_checked_users)>0){
+                    foreach($inbox->other_checked_users as $checked_user){
+                        $checked_user->checked = false;
+                        $checked_user->save();
+                    }
+                }
 		      	return redirect($this->prev);
 			} else {
 	      		return redirect($this->prev)->with('message_error','Hubo un error al enviar el mensaje.');
