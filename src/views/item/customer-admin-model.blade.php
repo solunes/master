@@ -41,7 +41,7 @@
             <div class="card-body">
               {!! Form::open(AdminItem::make_form($module, $model, $action, $files)) !!}
               @if(config('solunes.item_form_add_html_before_form'))
-                {!! \CustomFunc::item_form_add_html_before_form($module, $model, $action, $files, $fields); !!}
+                {!! \CustomFunc::item_form_add_html_before_form($module, $model, $action, $files, $fields, $i); !!}
               @endif
               @include('master::includes.customer-form')
               <div class="row"><div class="col-sm-12 left">
@@ -50,8 +50,8 @@
                 @if($action=='edit')
                 {!! Form::hidden('id', $i->id) !!}
                 @endif
-                @if(config('solunes.item_form_add_html_before_form'))
-                  {!! \CustomFunc::item_form_add_html_before_button($module, $model, $action, $files, $fields); !!}
+                @if(config('solunes.item_form_add_html_before_button'))
+                  {!! \CustomFunc::item_form_add_html_before_button($module, $model, $action, $files, $fields, $i); !!}
                 @endif
                 @if(!$layout)
                   <input type="hidden" name="child-page" value="1">
@@ -61,8 +61,8 @@
                 <button type="submit" name="button" class="btn btn-primary mr-1 mb-1 btn-site" >{{ trans('master::admin.save') }}</button>
               </div></div>
               {!! Form::close() !!}
-              @if(config('solunes.item_form_add_html_before_form'))
-                {!! \CustomFunc::item_form_add_html_after_form($module, $model, $action, $files, $fields); !!}
+              @if(config('solunes.item_form_add_html_after_form'))
+                {!! \CustomFunc::item_form_add_html_after_form($module, $model, $action, $files, $fields, $i); !!}
               @endif
             </div>
           </div>
