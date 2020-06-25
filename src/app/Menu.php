@@ -62,7 +62,7 @@ class Menu extends Model {
         return url($this->page->translate()->slug);
       } else if($this->type=='external'){
         return $this->translate()->link;
-      } else if($this->type=='normal'&&$this->translate()->link&&$this->translate()->link!='#'){
+      } else if($this->type=='normal'&&$this->translate()&&$this->translate()->link&&$this->translate()->link!='#'){
         return url($this->translate()->link);
       } else {
         return '#';
