@@ -132,6 +132,7 @@ class Field extends Model {
                     $return = [];
                 } else if($this->value=='variation-option'&&request()->segment(4)=='edit'){
                     $node = \FuncNode::get_node(request()->segment(3));
+                    $node = \FuncNode::node_check_model($node);
                     $subitem = $node->find(request()->segment(5));
                     $subresults = $submodel->whereIn('parent_id', $subitem->product_bridge_variation()->lists('variation_id')->toArray())->get()->sortBy('name');
                     $subarray = [];
