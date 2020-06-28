@@ -128,10 +128,11 @@ class Field extends Model {
                     $submodel = \CustomFunc::get_options_relation($submodel, $this, $subnode, request()->segment(5));
                 }
                 // REGLA IMPROVISADA PARA VARIATION, MEJORAR
-                if(request()->segment(3)=='product'&&request()->segment(4)=='create'&&$this->value=='variation-option'){
+                if($this->value=='variation-option'&&request()->segment(4)=='create'){
                     $return = [];
-                } else if(request()->segment(3)=='product'&&request()->segment(4)=='edit'&&$this->value=='variation-option'){
-                    $subitem = \Solunes\Product\App\Product::find(request()->segment(5));
+                } else if($this->value=='variation-option'&&request()->segment(4)=='edit'){
+                    $node = \FuncNode::get_node(request()->segment(3));
+                    $subitem = $node->find(request()->segment(5));
                     $subresults = $submodel->whereIn('parent_id', $subitem->product_bridge_variation()->lists('variation_id')->toArray())->get()->sortBy('name');
                     $subarray = [];
                     foreach($subresults as $subresult){
