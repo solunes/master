@@ -49,7 +49,11 @@
                           </a>
                         @endif
                         @if(isset(config('solunes.customer_dashboard_nodes.'.$model)['excel']))
-                          <a href="{{ url('customer-admin/model-list/'.$model.'?download-excel=1') }}">
+                          @if(url()->full()!=url()->current())
+                            <a href="{{ url()->full().'&download-excel=1' }}">
+                          @else
+                            <a href="{{ url('customer-admin/model-list/'.$model.'?download-excel=1') }}">
+                          @endif
                             <button class="btn btn-outline-primary" tabindex="0" aria-controls="DataTables_Table_0"><span><i class="feather icon-plus"></i> Descargar Excel</span></button>
                           </a>
                         @endif
