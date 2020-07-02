@@ -810,10 +810,12 @@ class AdminList {
             }
         } else if($filter->subtype=='date'){
             if($field_from = request()->input('f_'.$field_name.'_from')){ 
+                $field_from .= ' 00:00:00';
                 $custom_value[$field_from] = 'is_greater';
             }
             $appends['f_'.$field_name.'_from'] = $field_from;
             if($field_to = request()->input('f_'.$field_name.'_to')){ 
+                $field_to .= ' 23:59:59';
                 $custom_value[$field_to] = 'is_less';
             }
             $appends['f_'.$field_name.'_to'] = $field_to;
@@ -871,14 +873,14 @@ class AdminList {
 
     public static function filter_date_field($array, $date_model, $filter, $field_name) {
         if($filter->subtype=='date'){
-            \Log::info($date_model);
+            //\Log::info($date_model);
             if($first_day_field = $date_model::whereNotNull($field_name)->orderBy($field_name,'ASC')->first()){
                 $array['filters'][$field_name]['first_day'] = $first_day_field->$field_name;
             } else {
                 $array['filters'][$field_name]['first_day'] = NULL;
             }
             if($last_day_field = $date_model::orderBy($field_name,'DESC')->first()){
-                $array['filters'][$field_name]['last_day'] = date('Y-m-d', strtotime($last_day_field->$field_name . ' +1 day'));
+                $array['filters'][$field_name]['last_day'] = date('Y-m-d', strtotime($last_day_field->$field_name));
             } else {
                 $array['filters'][$field_name]['last_day'] = NULL;
             }
