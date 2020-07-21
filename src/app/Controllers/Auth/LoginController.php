@@ -82,6 +82,8 @@ class LoginController extends Controller {
 			  		session()->set('confirmation_url', $confirmation_url);
 			  	}
 			  	return Login::fail($request->session(), $this->prev, $validator, $message, 10, 5);
+			  } else if($request->has('redirect_url')){
+			  	return Login::success($request->session(), $last_session, Auth::user(), $request->input('redirect_url'), trans('master::form.login_success'));
 			  } else if(session()->has('url.intended')){
 			  	return Login::success($request->session(), $last_session, Auth::user(), session()->get('url.intended'), trans('master::form.login_success'));
 			  } else {

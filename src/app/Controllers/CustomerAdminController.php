@@ -438,7 +438,7 @@ class CustomerAdminController extends Controller {
                     }
                 }
                 $join_message = false;
-                if($message->user_id==$last_message->user_id){
+                if($last_message&&$message->user_id==$last_message->user_id){
                     $join_message = true;
                 }
                 $html = view('master::includes.chat-line', ['message'=>$message, 'last_message'=>$last_message])->render();
