@@ -57,7 +57,7 @@ class AuthController extends Controller {
                 \Customer::createCustomerActivity($customer, 'login', 'El usuario inició sesión correctamente.');
             }
         }
-        if($authUser->status=='ask_password'){
+        /*if($authUser->status=='ask_password'){
             if(config('solunes.sales')){
                 \CustomSales::after_login($authUser, $last_session, config('customer.after_login_no_password'));
             }
@@ -65,7 +65,8 @@ class AuthController extends Controller {
                 \CustomFunc::after_login($authUser, $last_session, config('customer.after_login_no_password'));
             }
             return redirect(config('customer.after_login_no_password'))->with('message_success', 'Inició sesión correctamente, sin embargo le recomendamos cambiar su contraseña.');
-        } else if($authUser->status=='banned'||$authUser->status=='pending_confirmation'){
+        } else */
+        if($authUser->status=='banned'||$authUser->status=='pending_confirmation'){
             $message = trans('master::form.login_'.$authUser->status);
             Auth::logout();
             if($authUser->status=='pending_confirmation'){
