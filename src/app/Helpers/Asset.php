@@ -206,12 +206,12 @@ class Asset {
                 $file = $file_info['dirname'].'/'.$file_info['basename'];
             }
             $filename = time().'_'.\Illuminate\Support\Str::slug($file_info['filename']).'.'.$file_info['extension'];
-            copy($file, 'tmp/'.$filename);
+            copy($file, public_path('tmp/'.$filename));
         }
-        $handle = fopen('tmp/'.$filename, 'r+');
+        $handle = fopen(public_path('tmp/'.$filename), 'r+');
         Storage::put($folder.'/'.$filename, $handle);
         fclose($handle);
-        unlink('tmp/'.$filename);
+        unlink(public_path('tmp/'.$filename));
         return $filename;
     }
 
