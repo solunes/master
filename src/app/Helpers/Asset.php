@@ -162,7 +162,7 @@ class Asset {
                         //$constraint->upsize();
                     })->encode($size_extension);
                     if(config('solunes.enable_image_manipulation')){
-                        $img = \CustomFunc::image_manipulation($img, $size['code'], $type, $size['width'], $size['height']);
+                        $img = \CustomFunc::image_manipulation($img, $image_folder, $size['code'], $type, $size['width'], $size['height']);
                     }
                     $img->save($new_filename, $image_quality);
                 } catch (\Intervention\Image\Exception\NotReadableException $e) {
