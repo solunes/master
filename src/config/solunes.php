@@ -29,6 +29,7 @@ return [
     'storage_return_asset'=>false, // Habilitar función asset () en Storage por defecto
 	'redirect_login_customer' => true,
 	'enable_mail_icons' => false,
+	'enable_image_manipulation' => false,
 
 	// SUBADMIN
 	'customer_dashboard' => false,

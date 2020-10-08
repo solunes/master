@@ -160,7 +160,11 @@ class Asset {
                     $img = \Image::make($encoded_file)->$type($size['width'], $size['height'], function ($constraint) {
                         $constraint->aspectRatio();
                         //$constraint->upsize();
-                    })->encode($size_extension)->save($new_filename, $image_quality);
+                    })->encode($size_extension);
+                    if(config('solunes.enable_image_manipulation')){
+                        $img = \CustomFunc::image_manipulation($img, $size['code'], $type, $size['width'], $size['height']);
+                    }
+                    $img->save($new_filename, $image_quality);
                 } catch (\Intervention\Image\Exception\NotReadableException $e) {
                     return false;
                 }
