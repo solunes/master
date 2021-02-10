@@ -112,15 +112,25 @@ class CustomerAdminController extends Controller {
             }
         }
         
+        $initial_date = date('Y-m-d');
+        $last_date = date('Y-m-d');
+
+        $items_first_date = clone $items;
+        $items_first_date = $items_first_date->orderBy('created_at','ASC')->first();
+        if($items_first_date){
+            $initial_date = $items_first_date->created_at->format('Y-m-d');
+        }
+        $items_last_date = clone $items;
+        $items_last_date = $items_last_date->orderBy('created_at','DESC')->first();
+        if($items_last_date){
+            $last_date = $items_last_date->created_at->format('Y-m-d');
+        }
+
         $main_cols_complete = [];
         $totals_data = [];
         $total_data = 0;
         $real_dates = [];
         $dates = [];
-        $initial_date = date('Y-m-d');
-        $last_date = date('Y-m-d');
-        $initial_date = '2020-07-01';
-        $last_date = '2020-08-01';
         $now = strtotime($last_date); // or your date as well
         $your_date = strtotime($initial_date);
         $datediff = $now - $your_date;
@@ -130,7 +140,7 @@ class CustomerAdminController extends Controller {
         $period = new \DatePeriod( new \DateTime($initial_date), new \DateInterval('P'.$days_ratio.'D'), new \DateTime($last_date));
         foreach($period as $key => $period_item){
             $period_date = $period_item->format('Y-m-d');
-            \Log::info($period_date);
+            //\Log::info($period_date);
             if($key==0){
                 $last_initial_date = $period_date;
             } else {
