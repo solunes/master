@@ -78,7 +78,7 @@
           <ul class="list-unstyled mb-0 year-section" style="text-align: left;">
             @if(count($years)>0)
               <ul class="admin-list">
-                @foreach($years as $year)
+                @foreach($years as $year => $year_max)
                   <li class="d-inline-block mr-2" style="width: 100%;">
                     <fieldset>
                       <div class="vs-checkbox-con vs-checkbox-primary">
@@ -88,7 +88,7 @@
                             <i class="vs-icon feather icon-check"></i>
                           </span>
                         </span>
-                        <span class="">{{ $year }}</span>
+                        <span class="">{{ $year.' - '.$year_max }}</span>
                       </div>
                     </fieldset>
                   </li>

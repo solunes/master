@@ -54,7 +54,11 @@
                 id: "<?php echo $year_id; ?>",
                 data: [
                   @foreach($main_cols_complete as $col_name => $col_value)
+                    @if($totals_data[$year_id]==0)
+                    ["<?php echo $col_name.' - Total: '.$col_value[$year_id]; ?>", <?php echo 0; ?>],
+                    @else
                     ["<?php echo $col_name.' - Total: '.$col_value[$year_id]; ?>", <?php echo round(($col_value[$year_id]/$totals_data[$year_id])*100,2); ?>],
+                    @endif
                   @endforeach
                 ]
             },

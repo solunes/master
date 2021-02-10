@@ -116,11 +116,33 @@ class CustomerAdminController extends Controller {
         $totals_data = [];
         $total_data = 0;
         $real_dates = [];
-        $dates = ['2020-07-01'=>'2020-07-01','2020-07-02'=>'2020-07-02','2020-07-05'=>'2020-07-05','2020-07-23'=>'2020-07-23'];
+        $dates = [];
+        $initial_date = date('Y-m-d');
+        $last_date = date('Y-m-d');
+        $initial_date = '2020-07-01';
+        $last_date = '2020-08-01';
+        $now = strtotime($last_date); // or your date as well
+        $your_date = strtotime($initial_date);
+        $datediff = $now - $your_date;
+        $days = round($datediff / (60 * 60 * 24));
+        $days_ratio = ceil($days / 10);
+        //$days_ratio = 3;
+        $period = new \DatePeriod( new \DateTime($initial_date), new \DateInterval('P'.$days_ratio.'D'), new \DateTime($last_date));
+        foreach($period as $key => $period_item){
+            $period_date = $period_item->format('Y-m-d');
+            \Log::info($period_date);
+            if($key==0){
+                $last_initial_date = $period_date;
+            } else {
+                $dates[$last_initial_date] = $period_date;
+                $last_initial_date = date('Y-m-d', strtotime('+1 day', strtotime($period_date)));
+            }
+        }
+        //$dates = ['2020-07-01'=>'2020-07-01','2020-07-02'=>'2020-07-02','2020-07-05'=>'2020-07-05','2020-07-23'=>'2020-07-23'];
         if(request()->has('filter-date')){
-            foreach($dates as $date_id => $date_name){
-                if(in_array($date_id, request()->input('filter-date'))){
-                    $real_dates[$date_id] = $date_name;
+            foreach($dates as $date_min => $date_max){
+                if(in_array($date_min, request()->input('filter-date'))){
+                    $real_dates[$date_min] = $date_max;
                 }
             }
         } else {
@@ -130,31 +152,31 @@ class CustomerAdminController extends Controller {
             $last_field = request()->input('filter-field');
             $field = $node->fields()->where('id',request()->input('filter-field'))->first();
             $array['field_options'] = $field->options;
-            foreach($real_dates as $date){
+            foreach($real_dates as $date_min => $date_max){
                 foreach($field->options as $option_key => $option_label){
                     if(!request()->has('filter-field-option')||(request()->input('last_field')!=request()->input('filter-field')||in_array($option_key, request()->input('filter-field-option')))){
                         $new_items = clone $items;
-                        $count = $new_items->where($field->name,$option_key)->where('created_at','>=',$date.' 00:00:00')->where('created_at','<=',$date.' 23:59:59')->count();
-                        $main_cols_complete[$option_label][$date] = $count;
-                        if(isset($totals_data[$date])){
-                            $totals_data[$date] = $totals_data[$date] + $count;
+                        $count = $new_items->where($field->name,$option_key)->where('created_at','>=',$date_min.' 00:00:00')->where('created_at','<=',$date_max.' 23:59:59')->count();
+                        $main_cols_complete[$option_label][$date_min] = $count;
+                        if(isset($totals_data[$date_min])){
+                            $totals_data[$date_min] = $totals_data[$date_min] + $count;
                         } else {
-                            $totals_data[$date] = $count;
+                            $totals_data[$date_min] = $count;
                         }
                     } else {
-                        $totals_data[$date] = 0;
+                        $totals_data[$date_min] = 0;
                     }
                 }
-                $total_data += $totals_data[$date];
+                $total_data += $totals_data[$date_min];
             }
         } else {
             $last_field = NULL;
-            foreach($real_dates as $date){
+            foreach($real_dates as $date_min => $date_max){
                 $new_items = clone $items;
-                $count = $new_items->where('created_at','>=',$date.' 00:00:00')->where('created_at','<=',$date.' 23:59:59')->count();
-                $main_cols_complete['Total'][$date] = $count;
-                $totals_data[$date] = $count;
-                $total_data += $totals_data[$date];
+                $count = $new_items->where('created_at','>=',$date_min.' 00:00:00')->where('created_at','<=',$date_max.' 23:59:59')->count();
+                $main_cols_complete['Total'][$date_min] = $count;
+                $totals_data[$date_min] = $count;
+                $total_data += $totals_data[$date_min];
             }
         }
 
