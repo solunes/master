@@ -25,6 +25,165 @@ class CustomerAdminController extends Controller {
 	  $this->module = 'customer-admin';
 	}
 
+
+    public function getModelListGraph($single_model) {
+        $user = auth()->user();
+        $customer = $user->customer;
+
+        if(!isset(config('solunes.customer_dashboard_nodes')[$single_model])){
+            return redirect($this->prev)->with('message_error', 'Esta vista no está habilitada para clientes.');
+        }
+        $node = \Solunes\Master\App\Node::where('name', $single_model)->first();
+
+        $object = $this;
+        $module = $object->module;
+        $model = \FuncNode::node_check_model($node);
+
+        $array = ['module'=>$module, 'node'=>$node, 'model'=>$single_model, 'i'=>NULL, 'filter_category'=>'admin', 'filter_category_id'=>'0', 'filter_type'=>'field', 'filter_node'=>$node->name, 'dt'=>'form', 'id'=>NULL, 'parent'=>NULL, 'action_nodes'=>['back','create','excel'], 'action_fields'=>['edit','delete']];
+        
+        if($action_field = $node->node_action_fields->first()){
+            $array['action_fields'] = json_decode($action_field->value_array, true);
+        }
+        $array['action_nodes'] = ['back'];
+        if(request()->has('parent_id')){
+            $id = request()->input('parent_id');
+            $array['id'] = $id;
+            $items = $model->whereHas('parent', function($q) use($id) {
+                $q->where('id', $id);
+            });
+        } else {
+            $items = $model->whereNotNull('id');
+        }
+
+        if($node->translation==1){
+            $array['langs'] = \Solunes\Master\App\Language::get();
+        } else {
+            $array['langs'] = [];
+        }
+
+        if($node->soft_delete==1&&request()->has('view-trash')&&request()->input('view-trash')=='true'){
+            $items->onlyTrashed();
+        }
+        if($node->translation){
+            $items->with('translations');
+        }
+        if($node->parent){
+            $array['parent'] = $node->parent->name;
+        }
+        if($node->multilevel){
+            $items = $items->whereNull('parent_id')->with('children','children.children');
+        }
+        if(config('solunes.customer_dashboard_filters')){
+            if($single_model=='customer'&&$customer){
+                $items =  $items->where('id', $customer->id);// IMPORTANTE
+            } else if(\Schema::hasColumn($node->table_name, 'customer_id')&&$customer) {
+                $items =  $items->where('customer_id', $customer->id);// IMPORTANTE
+            } else if(\Schema::hasColumn($node->table_name, 'user_id')&&$user) {
+                $items =  $items->where('user_id', $user->id);// IMPORTANTE
+            }
+        }
+        if(config('solunes.customer_dashboard_custom_filters')){
+            $items = \CustomFunc::customer_dashboard_custom_filters($module, $node, $items);
+        }
+        $node_array = [$node->id];
+        if(request()->has('download-excel')){
+            $display_fields = ['show','excel'];
+            foreach($node->children as $child){
+                array_push($node_array, $child->id);
+            }
+        } else {
+            $display_fields = ['show'];
+        }
+        $array['fields'] = $node->fields()->whereIn('type', ['select','radio'])->with('translations', 'field_options', 'field_extras', 'field_relations')->get();
+        $array['field_options'] = [];
+
+
+        $array = \AdminList::filter_node($array, $node, $model, $items, 'customer');
+        $items = $array['items'];
+        if(config('solunes.custom_admin_get_list')){
+            $items = \CustomFunc::custom_admin_get_list($module, $node, $items, $array);
+        }
+        $items_relations = $node->fields()->where('name','!=','parent_id')->where(function ($query) {
+            $query->whereIn('type', ['child','subchild'])->orWhere('relation', 1);
+        })->get();
+        if(count($items_relations)>0){
+            foreach($items_relations as $item_relation){
+                $items->with($item_relation->trans_name);
+            }
+        }
+        
+        $main_cols_complete = [];
+        $totals_data = [];
+        $total_data = 0;
+        $real_dates = [];
+        $dates = ['2020-07-01'=>'2020-07-01','2020-07-02'=>'2020-07-02','2020-07-05'=>'2020-07-05','2020-07-23'=>'2020-07-23'];
+        if(request()->has('filter-date')){
+            foreach($dates as $date_id => $date_name){
+                if(in_array($date_id, request()->input('filter-date'))){
+                    $real_dates[$date_id] = $date_name;
+                }
+            }
+        } else {
+            $real_dates = $dates;
+        }
+        if(request()->has('filter-field')&&request()->input('filter-field')!='total'){
+            $last_field = request()->input('filter-field');
+            $field = $node->fields()->where('id',request()->input('filter-field'))->first();
+            $array['field_options'] = $field->options;
+            foreach($real_dates as $date){
+                foreach($field->options as $option_key => $option_label){
+                    if(!request()->has('filter-field-option')||(request()->input('last_field')!=request()->input('filter-field')||in_array($option_key, request()->input('filter-field-option')))){
+                        $new_items = clone $items;
+                        $count = $new_items->where($field->name,$option_key)->where('created_at','>=',$date.' 00:00:00')->where('created_at','<=',$date.' 23:59:59')->count();
+                        $main_cols_complete[$option_label][$date] = $count;
+                        if(isset($totals_data[$date])){
+                            $totals_data[$date] = $totals_data[$date] + $count;
+                        } else {
+                            $totals_data[$date] = $count;
+                        }
+                    } else {
+                        $totals_data[$date] = 0;
+                    }
+                }
+                $total_data += $totals_data[$date];
+            }
+        } else {
+            $last_field = NULL;
+            foreach($real_dates as $date){
+                $new_items = clone $items;
+                $count = $new_items->where('created_at','>=',$date.' 00:00:00')->where('created_at','<=',$date.' 23:59:59')->count();
+                $main_cols_complete['Total'][$date] = $count;
+                $totals_data[$date] = $count;
+                $total_data += $totals_data[$date];
+            }
+        }
+
+        $array['items_count'] = $items->count();
+        if(request()->has('download-excel')||request()->has('download-pdf')){
+            $array['items'] = $items->get();
+        } else {
+            $array['items'] = $items->paginate(config('solunes.subadmin_pagination_count'));
+        }
+        $array['pdf'] = false;
+
+        // GRAFICOS
+        $array['last_field'] = $last_field;
+        $array['years'] = $dates;
+        $array['real_years'] = $real_dates;
+        $array['totals_data'] = $totals_data;
+        $array['total_data'] = $total_data;
+        if(request()->has('graph-type')){
+            $array['graph_type'] = request()->input('graph-type');
+        } else {
+            $array['graph_type'] = 'graph-bar';
+        }
+        $array['group_categories'] = [];
+        $array['main_cols_complete'] = $main_cols_complete;
+        // FINALIZAR GRAFICOS
+
+        return view('master::list.subadmin-graph', $array);
+    }
+
 	public function getModelList($single_model) {
 		$user = auth()->user();
 		$customer = $user->customer;

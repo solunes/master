@@ -74,6 +74,7 @@ Route::group(['prefix'=>'customer-admin'], function(){
         Route::get('/', 'AdminController@getIndex');
     }
     // Modelos globales
+    Route::get('graphs/{model}', 'CustomerAdminController@getModelListGraph');
     Route::get('model-list/{model}', 'CustomerAdminController@getModelList');
     Route::get('model/{model}/{action}/{id?}/{lang?}', 'CustomerAdminController@getModel');
     Route::get('child-model/{model}/{action}/{id?}/{lang?}', 'CustomerAdminController@getChildModel');
