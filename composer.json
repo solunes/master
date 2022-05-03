@@ -24,7 +24,6 @@
         "intervention/imagecache": "2.3.*",
         "html2text/html2text": "4.*",
         "barryvdh/laravel-debugbar": "2.*",
-        "codeitnowin/barcode": "2.*",
         "simplesoftwareio/simple-qrcode": "1.*",
         "google/cloud-translate": "1.0.*",
         "anhskohbo/no-captcha": "3.*",
